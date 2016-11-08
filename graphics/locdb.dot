@@ -1,0 +1,51 @@
+digraph locdb {
+        node [shape=rect];
+        subgraph cluster_Kaiserslautern {
+                labeljust=l;
+                labelloc=t;
+                label="Kaiserslautern";
+                style=dashed;
+                color=red;
+                LD [label="Layout Detection", fillcolor=lightblue, style=filled];
+                OCR [label="Optical Character Recognition", fillcolor=lightblue, style=filled];
+                SE [label="Structured Data Extraction", fillcolor=lightblue, style=filled];
+                RESTAPI [label="REST Interface", fillcolor=green, style=filled];
+                RESTAPI -> LD, OCR, SE;
+                LD -> OCR -> SE -> RESTAPI;
+        }
+        subgraph cluster_Stuttgart {
+                labeljust=l;
+                labelloc=t;
+                label="Stuttgart";
+                style=dashed;
+                color=red;
+                linker [label="Open Data Linking", fillcolor=lightblue,
+                style=filled];
+                REST [label="REST Endpoint", style=filled, fillcolor=green];
+                REST -> linker -> REST;
+        }
+        subgraph cluster_Mannheim {
+                labeljust=l;
+                labelloc=t;
+                label="Mannheim";
+                style=dashed;
+                color=red;
+                LOCDB [label="LOC-DB", fillcolor=orange, style=filled];
+        }
+
+        subgraph cluster_Kiel {
+                labeljust=l;
+                labelloc=t;
+                label="Kiel";
+                style=dashed;
+                color=red;
+                frontend [label="Editorial System", fillcolor=turquoise, style=filled];
+        }
+
+        frontend -> REST -> frontend;
+        REST -> RESTAPI -> REST;
+        linker -> LODcloud -> linker;
+        linker -> LOCDB -> linker;
+        LODcloud [label="Linked Open Data Cloud", shape=octagon, color=magenta, style=rounded];
+}
+
