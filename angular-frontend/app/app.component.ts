@@ -18,9 +18,15 @@ export class Citation {
 @Component({
   selector: 'loc-db',
   template: `
-  <div style="display:flex;flex-direction:row">
-    <div style="flex:1"><citation-form></citation-form></div>
-    <div style="flex:1"><img src="ex_scan.png" width=380></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <citation-form></citation-form>
+      </div>
+      <div class="col-md-5">
+        <img src="ex_scan.png" class="img-responsive" alt="Scanned image">
+      </div>
+    </div>
   </div>
   `
 })

@@ -6,13 +6,14 @@ import { FormsModule } from '@angular/forms'
 
 import { AppComponent }  from './app.component';
 import { CitationFormComponent } from './citation-form.component';
+import { CitationSelectorComponent } from './citation-selector.component';
 
 
 @NgModule({
   imports: [ BrowserModule,
     FormsModule
     ],
-  declarations: [ AppComponent, CitationFormComponent ],
+  declarations: [ AppComponent, CitationFormComponent, CitationSelectorComponent],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

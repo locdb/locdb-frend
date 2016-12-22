@@ -1,78 +1,97 @@
-{{diagnostic}}
-<div class="container">
-  <h1>Literatur erschließen</h1>
-  <!-- <form *ngIf="active" (ngSubmit)="onSubmit()" #citationForm="ngForm"> -->
-  <form (ngSubmit)="onSubmit()" #citationForm="ngForm">
-    <div class="form-group">
-      <label for="type">Typ</label>
-      <select class="form-control"  id="reftype"
-                                    required
-                                    [(ngModel)]="model.reftype" name="reftype">
-        <option *ngFor="let t of reftypes" [value]="t">{{t}}</option>
-      </select>
-    </div>
+<!-- {{diagnostic}} -->
+<div class="panel panel-default">
+  <div class="panel-heading"><b>Literatur erschließen</b></div>
+  <div class="panel-body">
+    <!-- <form *ngIf="active" (ngSubmit)="onSubmit()" #citationForm="ngForm"> -->
+    <form (ngSubmit)="onSubmit()" #citationForm="ngForm">
+      <div class="form-group">
+        <label for="type">Typ</label>
+        <select class="form-control"  id="reftype"
+                                      required
+                                      [(ngModel)]="model.reftype" name="reftype">
+          <option *ngFor="let t of reftypes" [value]="t">{{t}}</option>
+        </select>
+      </div>
 
-    <div class="form-group">
-      <label for="title">Titel</label>
-      <input type="text" class="form-control" id="title"
-                                              required
-                                              [(ngModel)]="model.title" name="title"
-                                              #title="ngModel">
-    </div>
-    <div [hidden]="title.valid || title.pristine" class="alert alert-danger">
-      Title is required
-    </div>
+      <div class="form-group">
+        <label for="title">Titel</label>
+        <input type="text" class="form-control" id="title"
+                                                required
+                                                [(ngModel)]="model.title" name="title"
+                                                                          #title="ngModel">
+      </div>
+      <div [hidden]="title.valid || title.pristine" class="alert alert-danger">
+        Title is required
+      </div>
 
-    <div class="form-group">
-      <!-- make this more huebsch with <div class="row", "col-md-5"...> -->
-      <label for="author">Autoren</label>
-    <table>
-        <tr *ngFor="let author of model.authors; let i = index" style="margin-bottom: 10px;">
+      <div class="form-group">
+        <!-- make this more huebsch with <div class="row", "col-md-5"...> -->
+        <label for="author">Autoren</label>
+        <table>
+          <tr *ngFor="let author of model.authors; let i = index" style="margin-bottom: 10px;">
             <td>{{ author }}</td> <td><button class="btn btn-default" (click)="model.removeAuthor(i)">Entfernen</button></td>
-        </tr>
-        <tr>
-          <td><input type="text" class="form-control" id="author" name="author" [(ngModel)]="authorCandidate" placeholder="Neuer Autor"></td>
-          <td><input type="button" (click)="addAuthorToModel()" value="Hinzufügen" class="btn btn-primary"></td>
-        </tr>
-    </table>
-    </div>
+          </tr>
+          <tr>
+            <td><input type="text" class="form-control" id="author" name="author" [(ngModel)]="authorCandidate" placeholder="Neuer Autor"></td>
+            <td><input type="button" (click)="addAuthorToModel()" value="Hinzufügen" class="btn btn-primary"></td>
+          </tr>
+        </table>
+        </div>
 
 
-    <div class="form-group">
-      <label for="year">Jahr</label>
-      <input type="number"  class="form-control" id="year" required
-                                                 [(ngModel)]="model.year" name="year" #year="ngModel">
-    </div>
-    <div [hidden]="year.valid || year.pristine" class="alert alert-danger">
-      Year is required
-    </div>
+        <div class="row">
+          <div class="col-xs-2">
+            <div class="form-group">
+              <label for="year">Jahr</label>
+              <input type="number"  class="form-control" id="year" required
+                                                         [(ngModel)]="model.year" name="year" #year="ngModel">
+            </div>
+            <div [hidden]="year.valid || year.pristine" class="alert alert-danger">
+              Year is required
+            </div>
+          </div>
 
-    <div class="form-group">
-      <label for="journal">Journal</label>
-      <input type="text"  class="form-control" id="journal"
-                                               [(ngModel)]="model.journal" name="journal">
-    </div>
+          <div class="col-xs-8">
+            <div class="form-group">
+              <label for="journal">Journal</label>
+              <input type="text"  class="form-control" id="journal"
+                                                       [(ngModel)]="model.journal" name="journal">
+            </div>
+          </div>
+        </div>
 
-    <div class="form-group">
-      <label for="volume">Band</label>
-      <input type="number"  class="form-control" id="volume"
-                                                 [(ngModel)]="model.volume" name="volume">
-    </div>
 
-    <div class="form-group">
-      <label for="issue">Heft</label>
-      <input type="number"  class="form-control" id="issue"
-                                                 [(ngModel)]="model.issue" name="issue">
-    </div>
 
-    <div class="form-group">
-      <label for="pages">Seite(n)</label>
-      <input type="text"  class="form-control" id="pages"
-                                               [(ngModel)]="model.pages" name="pages">
-    </div>
+        <div class="row">
+          <div class="col-xs-2">
+            <div class="form-group">
+              <label for="volume">Band</label>
+              <input type="number"  class="form-control" id="volume"
+                                                         [(ngModel)]="model.volume" name="volume">
+            </div>
+          </div>
+          <div class="col-xs-2">
+            <div class="form-group">
+              <label for="issue">Heft</label>
+              <input type="number"  class="form-control" id="issue"
+                                                         [(ngModel)]="model.issue" name="issue">
+            </div>
+          </div>
 
-    <!-- <button type="button" class="btn btn-default" (click)="prev()">Previous</button> -->
-    <!-- <button type="button" class="btn btn-default" (click)="next()">Next</button> -->
-    <button type="submit" class="btn btn-default" [disabled]="!citationForm.form.valid">Bestätigen</button>
-  </form>
+          <div class="col-xs-2">
+            <div class="form-group">
+              <label for="pages">Seite(n)</label>
+              <input type="text"  class="form-control" id="pages"
+                                                       [(ngModel)]="model.pages" name="pages">
+            </div>
+          </div>
+        </div>
+
+        <!-- <button type="button" class="btn btn-default" (click)="prev()">Previous</button> -->
+        <!-- <button type="button" class="btn btn-default" (click)="next()">Next</button> -->
+        <div align="right">
+          <button type="submit" class="btn btn-primary" [disabled]="!citationForm.form.valid">Bestätigen</button>
+        </div>
+    </form>
+  </div>
 </div>

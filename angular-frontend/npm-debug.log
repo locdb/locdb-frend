@@ -9,8 +9,8 @@
 6 silly lifecycle angular-quickstart@1.0.0~prestart: no script for prestart, continuing
 7 info lifecycle angular-quickstart@1.0.0~start: angular-quickstart@1.0.0
 8 verbose lifecycle angular-quickstart@1.0.0~start: unsafe-perm in lifecycle true
-9 verbose lifecycle angular-quickstart@1.0.0~start: PATH: /home/lpag/.nvm/versions/node/v6.7.0/lib/node_modules/npm/bin/node-gyp-bin:/home/lpag/git/locdb-frontend/node_modules/.bin:/home/lpag/.nvm/versions/node/v6.7.0/bin:/home/lpag/.nvm/versions/node/v6.7.0/bin:/usr/lib64/qt-3.3/bin:/usr/lib64/ccache:/usr/local/bin:/usr/bin:/bin:/home/lpag/bin:/usr/local/sbin:/usr/sbin:/home/lpag/.cabal/bin:/usr/local/texlive/2016/bin/x86_64-linux:/usr/share/elasticsearch/bin:/home/lpag/.local/bin:/home/lpag/bin:/usr/local/texlive/2016/bin/x86_64-linux:/usr/share/elasticsearch/bin:/home/lpag/.local/bin
-10 verbose lifecycle angular-quickstart@1.0.0~start: CWD: /home/lpag/git/locdb-frontend
+9 verbose lifecycle angular-quickstart@1.0.0~start: PATH: /home/lpag/.nvm/versions/node/v6.7.0/lib/node_modules/npm/bin/node-gyp-bin:/home/lpag/git/locdb/angular-frontend/node_modules/.bin:/home/lpag/.nvm/versions/node/v6.7.0/bin:/home/lpag/.nvm/versions/node/v6.7.0/bin:/usr/lib64/qt-3.3/bin:/usr/lib64/ccache:/home/lpag/.rvm/gems/ruby-2.3.3/bin:/home/lpag/.rvm/gems/ruby-2.3.3@global/bin:/home/lpag/.rvm/rubies/ruby-2.3.3/bin:/usr/local/bin:/usr/bin:/bin:/home/lpag/.rvm/bin:/home/lpag/tvim:/home/lpag/bin:/usr/local/sbin:/usr/sbin:/home/lpag/.cabal/bin:/usr/local/texlive/2016/bin/x86_64-linux:/usr/share/elasticsearch/bin:/home/lpag/.local/bin:/home/lpag/.rvm/bin:/home/lpag/bin:/usr/local/texlive/2016/bin/x86_64-linux:/usr/share/elasticsearch/bin:/home/lpag/.local/bin:/home/lpag/.rvm/bin
+10 verbose lifecycle angular-quickstart@1.0.0~start: CWD: /home/lpag/git/locdb/angular-frontend
 11 silly lifecycle angular-quickstart@1.0.0~start: Args: [ '-c', 'tsc && concurrently "tsc -w" "lite-server" ' ]
 12 silly lifecycle angular-quickstart@1.0.0~start: Returned: code: 2  signal: null
 13 info lifecycle angular-quickstart@1.0.0~start: Failed to exec start script
@@ -25,8 +25,8 @@
 14 verbose stack     at maybeClose (internal/child_process.js:877:16)
 14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
 15 verbose pkgid angular-quickstart@1.0.0
-16 verbose cwd /home/lpag/git/locdb-frontend
-17 error Linux 4.7.6-200.fc24.x86_64
+16 verbose cwd /home/lpag/git/locdb/angular-frontend
+17 error Linux 4.8.12-200.fc24.x86_64
 18 error argv "/home/lpag/.nvm/versions/node/v6.7.0/bin/node" "/home/lpag/.nvm/versions/node/v6.7.0/bin/npm" "start"
 19 error node v6.7.0
 20 error npm  v3.10.3
