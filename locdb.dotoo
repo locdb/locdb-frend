@@ -14,3 +14,8 @@
    - Beginn 9:00, Ende 15:30
 
 ** HOLD Abrechnung der Dienstreise
+
+* NEXT Prototype
+  - [ ] Rename citation data type => reference
+  - [ ] Add prettyprint-authors function to reference data type
+  - [ ] Add functionality for switching between candidates

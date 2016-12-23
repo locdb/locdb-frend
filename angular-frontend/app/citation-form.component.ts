@@ -25,8 +25,10 @@ export class CitationFormComponent {
                          'Suhrkamp (Frankfurt)')
 
   ];
+  @Input()
+  selected : number = 0;
 
-  model : citation = Object.create(this.references[0]);
+  model : citation = Object.create(this.references[this.selected]);
 
   submitted = false;
   authorCandidate = '';

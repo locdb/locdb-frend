@@ -7,12 +7,15 @@
         <div class="panel-heading"><b>Scan</b></div>
         <div class="panel-body">
           <img src="ex_scan.png" class="img-responsive" alt="Scanned image">
+          <div align="right">
+            <button type="button" class="btn btn-primary">Auswählen...</button>
+          </div>
         </div>
       </div>
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4">
       <div class="panel panel-default">
-        <div class="panel-heading"><b>Reference Candidates</b></div>
+        <div class="panel-heading"><b>Kandidaten auswählen</b></div>
         <div class="panel-body">
           <div class="list-group">
             <a href="#" *ngFor="let r of references" class="list-group-item list-group-item-action list-group-item-info">
@@ -38,7 +41,7 @@
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4">
       <div class="panel panel-default">
-        <div class="panel-heading"><b>Approve</b></div>
+        <div class="panel-heading"><b>Auswahl bestätigen</b></div>
         <div class="panel-body">
           <!-- <form *ngIf="active" (ngSubmit)="onSubmit()" #citationForm="ngForm"> -->
           <form (ngSubmit)="onSubmit()" #citationForm="ngForm">
