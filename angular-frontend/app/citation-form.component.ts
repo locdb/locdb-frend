@@ -7,24 +7,23 @@ import { Citation } from './citation';
   templateUrl: 'citation-form.component.html'
 })
 export class CitationFormComponent {
-  REFTYPES = ['Article', 'Journal', 'Book', 'Other'];
   @Input()
   references: Citation[] = [
     new Citation(42,
                  'LOCDB',
-                 this.REFTYPES[1],
+                 Citation.REFTYPES[1],
                  ['Abramson, L.Y.', 'Seligman, M.E.P.', 'Teasdale, J.D.'],
                  'Learned helplessness in hu-mans: Critique and reformula',
                  1978, 'Journal of Abnormal Psychology', null, 87, '49-74'),
 
     new Citation(43,
                  'DOAJ',
-                 this.REFTYPES[1],
+                 Citation.REFTYPES[1],
                  ['Abramson, L.Y.', 'Seligman, M.E.P.', 'Teasdale, J.D.'],
                  'Learned healthiness in humans: Critique and reformula',
                  1978, 'Journal of Normal Psychology', null, 87, '46-78'),
 
-                 new Citation(44, 'DOAJ', this.REFTYPES[0], ['Adorno, T.W.'],
+                 new Citation(44, 'DOAJ', Citation.REFTYPES[0], ['Adorno, T.W.'],
                               'Studien zum autoritären Charakter', 1973,
                               'Suhrkamp (Frankfurt)')
 
