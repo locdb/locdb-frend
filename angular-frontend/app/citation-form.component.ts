@@ -32,6 +32,7 @@ export class CitationFormComponent {
   selected : number = 0;
 
   model : Citation = Object.create(this.references[this.selected]);
+  reftypes = Citation.REFTYPES;
 
   submitted = false;
   authorCandidate = '';

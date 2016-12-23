@@ -1,5 +1,6 @@
 // const REFTYPES = ['Article', 'Journal', 'Book', 'Other'];
 export class Citation {
+  public static REFTYPES = ['Article', 'Journal', 'Book', 'Other'];
   constructor(
   public id: number,
   public source: string,
