@@ -1,9 +1,4 @@
-export class Author {
-  constructor(
-  public id: number,
-  public name: string
-  ) { }
-}
+// const REFTYPES = ['Article', 'Journal', 'Book', 'Other'];
 export class Citation {
   constructor(
   public id: number,

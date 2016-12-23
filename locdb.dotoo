@@ -19,3 +19,4 @@
   - [ ] Rename citation data type => reference
   - [ ] Add prettyprint-authors function to reference data type
   - [ ] Add functionality for switching between candidates
+  - [ ] Add functionality for choose-scan button
