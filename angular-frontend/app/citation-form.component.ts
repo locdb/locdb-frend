@@ -9,12 +9,16 @@ import { Citation }    from './citation';
 export class CitationFormComponent {
   reftypes = ['Article', 'Journal', 'Book', 'Other'];
   @Input()
-  citations: Citation[] = [
-    new Citation(42, this.reftypes[1], ['Abramson, L.Y.', 'Seligman, M.E.P.', 'Teasdale, J.D.'],
+  references: Citation[] = [
+    new Citation(42, 'LOCDB', this.reftypes[1], ['Abramson, L.Y.', 'Seligman, M.E.P.', 'Teasdale, J.D.'],
   'Learned helplessness in hu-mans: Critique and reformula', 1978,
   'Journal of Abnormal Psychology',
   null, 87, '49-74'),
-  new Citation(42, this.reftypes[0],
+    new Citation(43, 'DOAJ', this.reftypes[1], ['Abramson, L.Y.', 'Seligman, M.E.P.', 'Teasdale, J.D.'],
+  'Learned healthiness in humans: Critique and reformula', 1978,
+  'Journal of Normal Psychology',
+  null, 87, '46-78'),
+  new Citation(44, 'DOAJ', this.reftypes[0],
                          ['Adorno, T.W.'],
                           'Studien zum autoritären Charakter',
                          1973,
@@ -22,7 +26,8 @@ export class CitationFormComponent {
 
   ];
 
-  model = this.citations.shift();
+  model : citation = Object.create(this.references[0]);
+
   submitted = false;
   authorCandidate = '';
 
@@ -31,7 +36,7 @@ export class CitationFormComponent {
       this.authorCandidate = '';
   }
 
-  onSubmit() { this.submitted = true; this.model = this.citations.shift(); }
+  onSubmit() { this.submitted = true; this.model = null}
 
 
   // TODO: Remove this when we're done

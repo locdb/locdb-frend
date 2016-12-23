@@ -17,18 +17,7 @@ export class Citation {
     // </div>
 @Component({
   selector: 'loc-db',
-  template: `
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <citation-form></citation-form>
-      </div>
-      <div class="col-md-5">
-        <img src="ex_scan.png" class="img-responsive" alt="Scanned image">
-      </div>
-    </div>
-  </div>
-  `
+  template: '<citation-form></citation-form>'
 })
 export class AppComponent {
   // src: string = "";

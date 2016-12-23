@@ -7,6 +7,7 @@ export class Author {
 export class Citation {
   constructor(
   public id: number,
+  public source: string,
   public reftype: string,
   public authors: any[],
   public title: string,

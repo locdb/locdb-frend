@@ -1,12 +1,4 @@
-    {
-      "app/*.ts": {
-        "alternate": "app/{}.html",
-        "type": "source"
-      },
-      "app/*.html": {
-        "alternate": "app/{}.ts",
-        "type": "test"
-      },
-      "*.java": {"dispatch": "javac {file}"},
-      "*": {"make": "mvn"}
-    }
+{
+    "app/*.html": {"alternate": "app/{}.ts", "type": "html"},
+    "app/*.ts": {"alternate": "app/{}.html", "type": "ts"}
+}
