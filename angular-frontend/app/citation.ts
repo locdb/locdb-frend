@@ -1,4 +1,3 @@
-// const REFTYPES = ['Article', 'Journal', 'Book', 'Other'];
 export class Citation {
   public static REFTYPES = ['Article', 'Journal', 'Book', 'Other'];
   constructor(
@@ -20,12 +19,8 @@ export class Citation {
   addAuthor(name: string) {
     return this.authors.push(name);
   }
-  // deleteAuthor(author: string) {
-  //   // submit also called???
-  //   let index = myArray.indexOf(author, 0);
-  //   if (index > -1) {
-  //        myArray.splice(index, 1);
-  //   }
+
+  // deepcopy() {
   // }
 }
 
