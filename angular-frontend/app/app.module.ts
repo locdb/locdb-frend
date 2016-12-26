@@ -9,13 +9,6 @@ import { AppComponent }  from './app.component';
 import { CitationFormComponent } from './citation-form.component';
 
 
-RouterModule.forRoot([
-  {
-    path: 'locdb',
-    component: CitationFormComponent
-  }
-
-
 @NgModule({
   imports: [ BrowserModule,
     FormsModule
