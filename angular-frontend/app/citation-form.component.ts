@@ -29,21 +29,20 @@ export class CitationFormComponent {
 
   ];
   @Input()
-  selected : number = 0;
-
-  model : Citation = Object.create(this.references[this.selected]);
+  model : Citation = this.references[0].deepcopy();
   reftypes = Citation.REFTYPES;
 
   submitted = false;
   authorCandidate = '';
 
   addAuthorToModel() {
-      this.model.addAuthor(this.authorCandidate);
+      this.model.add_author(this.authorCandidate);
       this.authorCandidate = '';
   }
 
-  select(index : number) {
-    this.model = this.references[index]
+  onSelect(reference : Citation) {
+    // TODO store old?
+    this.model = reference.deepcopy()
   }
 
   onSubmit() { this.submitted = true; this.model = null}

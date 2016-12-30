@@ -7,13 +7,14 @@ import { RouterModule } from '@angular/router'
 
 import { AppComponent }  from './app.component';
 import { CitationFormComponent } from './citation-form.component';
+import { ScanComponent } from './scan.component'
 
 
 @NgModule({
   imports: [ BrowserModule,
     FormsModule
     ],
-  declarations: [ AppComponent, CitationFormComponent ],
+  declarations: [ AppComponent, CitationFormComponent, ScanComponent ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

@@ -13,14 +13,29 @@ export class Citation {
   public pages?: string,
   ) {  }
 
-  removeAuthor(position: number) {
+  remove_author(position: number) {
     return this.authors.splice(position, 1);
   }
-  addAuthor(name: string) {
+  add_author(name: string) {
     return this.authors.push(name);
   }
 
-  // deepcopy() {
-  // }
+  pretty_print_authors() {
+    return this.authors.join(" & ");
+  }
+
+  deepcopy() {
+    var authors_copy = Object.create(this.authors)
+    return new Citation(this.id,
+                        this.source,
+                        this.reftype,
+                        authors_copy,
+                        this.title,
+                        this.year,
+                        this.journal,
+                        this.volume,
+                        this.issue,
+                        this.pages)
+  }
 }
 
