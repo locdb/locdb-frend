@@ -4,36 +4,11 @@
   <div class="row" style="margin-top: 10px">
     <div class="col-xs-12 col-sm-6 col-md-4">
       <scan></scan>
-      <!-- <div class="panel panel-default"> -->
-      <!--   <div class="panel-heading"><b>Scan</b></div> -->
-      <!--   <div class="panel-body"> -->
-      <!--     <img src="ex_scan.png" class="img-responsive" alt="Scanned image"> -->
-      <!--     <div align="right"> -->
-      <!--       <button type="button" class="btn btn-primary">Auswählen...</button> -->
-      <!--     </div> -->
-      <!--   </div> -->
-      <!-- </div> -->
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4">
       <div class="panel panel-default">
         <div class="panel-heading"><b>Kandidaten auswählen</b></div>
         <div class="panel-body">
-          <!-- <ul class="list-group"> -->
-          <!--   <li *ngFor="let r of references" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)"> -->
-          <!--     <span class="badge">{{r.source}}</span> -->
-          <!--     <h5 class="list-group-item-heading"><b>{{r.title}}</b></h5> -->
-          <!--     <p class="list-group-item-text">{{r.pretty_print_authors()}}</p> -->
-          <!--     <p class="list-group-item-text">{{r.journal}}, {{r.year}}</p> -->
-          <!--   </li> -->
-          <!--   <li class="list-group-item list-group-item-action list-group-item-warning"> -->
-          <!--     <span class="badge">LOCDB</span> -->
-          <!--     <div align="center"> -->
-          <!--       <h5 class="list-group-item-heading"><b>New Entry</b></h5> -->
-          <!--     </div> -->
-          <!--   </li> -->
-          <!-- </ul> -->
-
-
           <div class="list-group">
             <a href="#" *ngFor="let r of references" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)">
               <span class="badge">{{r.source}}</span>
