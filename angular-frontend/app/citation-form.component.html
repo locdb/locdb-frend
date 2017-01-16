@@ -16,10 +16,10 @@
               <p class="list-group-item-text">{{r.pretty_print_authors()}}</p>
               <p class="list-group-item-text">{{r.journal}}, {{r.year}}</p>
             </a>
-            <a href="#" class="list-group-item list-group-item-action list-group-item-warning">
+            <a href="#" class="list-group-item list-group-item-action list-group-item-warning" (click)="onSelect(null)">
               <span class="badge">LOCDB</span>
               <div align="center">
-                <h5 class="list-group-item-heading"><b>New LOC-DB entry</b></h5>
+                <h5 class="list-group-item-heading"><b>New Entry</b></h5>
               </div>
             </a>
           </div>
