@@ -1,12 +1,6 @@
 {{diagnostic}}
-
-<section class="container-fluid">
-  <div class="row" style="margin-top: 10px">
     <div class="col-xs-12 col-sm-6 col-md-4">
-      <scan></scan>
-    </div>
-    <div class="col-xs-12 col-sm-6 col-md-4">
-      <div class="panel panel-default">
+      <div *ngIf="references" class="panel panel-default">
         <div class="panel-heading"><b>Kandidaten auswählen</b></div>
         <div class="panel-body">
           <div class="list-group">
@@ -27,10 +21,9 @@
       </div>
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4">
-      <div class="panel panel-default">
+      <div *ngIf="!submitted" class="panel panel-default">
         <div class="panel-heading"><b>Auswahl bestätigen</b></div>
         <div class="panel-body">
-          <!-- <form *ngIf="active" (ngSubmit)="onSubmit()" #citationForm="ngForm"> -->
           <form (ngSubmit)="onSubmit()" #citationForm="ngForm">
             <div class="form-group">
               <label for="type">Typ</label>
@@ -127,5 +120,3 @@
         </div>
       </div>
     </div>
-  </div>
-</section>

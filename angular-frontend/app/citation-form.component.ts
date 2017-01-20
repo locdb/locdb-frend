@@ -11,10 +11,12 @@ export class CitationFormComponent {
   @Input()
   references: Citation[] = REFERENCES;
   @Input()
-  model : Citation = this.references[0].deepcopy();
+  model : Citation;
+  // model : Citation = this.references[0].deepcopy();
+
   reftypes = Citation.REFTYPES;
 
-  submitted = false;
+  submitted = true;
   authorCandidate = '';
 
   addAuthorToModel() {
@@ -23,13 +25,18 @@ export class CitationFormComponent {
   }
 
   onSelect(reference : Citation) {
-    this.model = reference.deepcopy()
+    if (reference == null) {
+      this.model = new Citation()
+    } else {
+      this.model = reference.deepcopy()
+    }
+    this.submitted = false;
   }
 
   onSubmit() { this.submitted = true; this.model = null}
 
 
   // TODO: Remove this when we're done
-  get diagnostic() { return JSON.stringify(this.model); }
+  // get diagnostic() { return JSON.stringify(this.model); }
 }
 
