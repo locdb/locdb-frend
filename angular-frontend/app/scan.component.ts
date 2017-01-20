@@ -12,13 +12,15 @@ console.log("Log works.");
 export class ScanComponent {
   src = '';
   references : Citation[][] = [REFERENCES, REFERENCES_ALT];
-  ref_idx: number = 0;
+  ref_idx: number;
   @Output() eventEmitter : EventEmitter<Citation[]> = new EventEmitter();
 
   onChange(event:any) {
     let files = event.srcElement.files;
     this.src = files[0].name;
     console.log("[ScanComponent] onChange(event) called with files:", files);
+    this.ref_idx = 0
+    this.eventEmitter.next(this.references[this.ref_idx])
   }
 
   next(diff:number) {

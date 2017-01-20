@@ -14,6 +14,11 @@ import { Citation } from './citation'
 })
 export class AppComponent {
   title = 'LOC-DB ~ Extrapolate';
-  candidates : [Citation];
+  candidates : Citation[];
+
+  updateCandidates(newCandidates : Citation[]) {
+    this.candidates = newCandidates;
+    console.log("Updated candidates", this.candidates);
+  }
 }
 
