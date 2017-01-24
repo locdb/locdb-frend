@@ -11,7 +11,7 @@ console.log("Log works.");
 
 export class ScanComponent {
   src = '';
-  references : Citation[][] = [REFERENCES, REFERENCES_ALT];
+  references : Citation[][] = [REFERENCES, REFERENCES_ALT, []];
   ref_idx: number;
   @Output() eventEmitter : EventEmitter<Citation[]> = new EventEmitter();
 

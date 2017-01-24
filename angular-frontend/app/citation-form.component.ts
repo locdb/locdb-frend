@@ -26,9 +26,9 @@ export class CitationFormComponent {
 
   onSelect(reference : Citation) {
     if (reference == null) {
-      this.model = new Citation()
+      this.model = new Citation(100,"LOCDB", null, []);
     } else {
-      this.model = reference.deepcopy()
+      this.model = reference.deepcopy();
     }
     this.submitted = false;
   }
