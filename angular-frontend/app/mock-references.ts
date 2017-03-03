@@ -16,10 +16,10 @@ export const REFERENCES_ALT: Citation[] = [
   new Citation(32,
     'GoogleScholar',
     Citation.REFTYPES[0],
-    ['Maddison, Chris J ',' Mnih, Andriy ',' Teh, Yee Whye'],
+    ['Maddison, Chris J ', ' Mnih, Andriy ', ' Teh, Yee Whye'],
     'The Concrete Distribution: A Continuous Relaxation of Discrete Random Variables', 2016,
     'arXiv preprint arXiv:1611.00712')
-  ]
+  ];
 
 
 export const REFERENCES: Citation[] = [

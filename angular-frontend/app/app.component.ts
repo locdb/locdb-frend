@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Citation } from './citation'
+import { Citation } from './citation';
 @Component({
   selector: 'loc-db',
   templateUrl: 'app/app.component.html'
@@ -14,11 +14,11 @@ import { Citation } from './citation'
 })
 export class AppComponent {
   title = 'LOC-DB ~ Extrapolate';
-  candidates : Citation[];
+  candidates: Citation[];
 
-  updateCandidates(newCandidates : Citation[]) {
+  updateCandidates(newCandidates: Citation[]) {
     this.candidates = newCandidates;
-    console.log("Updated candidates", this.candidates);
+    console.log('Updated candidates', this.candidates);
   }
 }
 
