@@ -1,20 +1,34 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { RouterModule } from '@angular/router';
+
+// import { ImageUploadModule } from 'ng2-imageupload';
+// exported to uploader
+
+// ng2-bootstrap
+import { ModalModule } from 'ng2-bootstrap/modal';
+
 
 import { AppComponent } from './app.component';
+import { CitationFormComponent } from './citation-form.component';
+import { ScanComponent } from './scan.component';
+import { TodoComponent } from './todo.component';
+// import { LocdbService } from './locdb.service';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
   imports: [
+    ModalModule.forRoot(),
     BrowserModule,
-    FormsModule,
-    HttpModule
+    FormsModule
+    ],
+  declarations: [
+    AppComponent,
+    CitationFormComponent,
+    ScanComponent,
+    TodoComponent
+    // LocdbService
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }
