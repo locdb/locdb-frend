@@ -8,6 +8,11 @@
 * mockups : Mock-ups for the Front-end
 * README.md : this file
 
+## Helpful links
+
+- [Angular2 Documentation and Tutorial](https://angular.io)
+- [ng2-bootstrap](https://valor-software.com/ng2-bootstrap/index-bs4.html)
+
 ## Associated Distributed Documents
 
 - [LOC-DB Dev Session](https://docs.google.com/document/d/1lrfVX5YUtlzPHuYGfkjbjJ1tK8DW3puLy9Mp_DdRqvE/edit)
