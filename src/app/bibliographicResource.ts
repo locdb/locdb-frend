@@ -43,29 +43,29 @@ export class BibliographicResource {
   ) {  }
 
   remove_author(position: number) {
-    return this.authors.splice(position, 1);
+    // return this.authors.splice(position, 1);
   }
   add_author(name: string) {
-    return this.authors.push(name);
+    // return this.authors.push(name);
   }
 
   pretty_print_authors() {
-    return this.authors.join(' & ');
+    // return this.authors.join(' & ');
   }
 
   deepcopy() {
-    return new Citation(this.id,
-      this.source,
-      this.reftype,
-      Object.create(this.authors),
-      this.title,
-      this.year,
-      this.journal,
-      this.volume,
-      this.issue,
-      this.pages);
+    // return new Citation(this.id,
+    //   this.source,
+    //   this.reftype,
+    //   Object.create(this.authors),
+    //   this.title,
+    //   this.year,
+    //   this.journal,
+    //   this.volume,
+    //   this.issue,
+    //   this.pages);
   }
 }
 
 export type BR = BibliographicResource;
-export interface PossiblyMarkedBR { bibligraphicResource: BR; marked: boolean; };
+export interface MarkedBR { bibligraphicResource: BR; marked: boolean; };
