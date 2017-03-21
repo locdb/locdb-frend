@@ -1,0 +1,21 @@
+<div class="panel panel-default"> 
+    <div class="panel-heading">
+        <b>{{title}}</b>
+    </div>
+    <div class="panel-body">
+        <div class="list-group">
+            <button
+                type="button"
+                *ngFor="let t of todos"
+                class="list-group-item list-group-item-action list-group-item-info justify-content-between"
+                (click)="onSelect(t)"
+                (disabled)="!(t.status === 'OCR_PROCESSED')">
+                {{ t._id }} 
+                <span class="badge badge-default badge-pill">{{ t.status === 'OCR_PROCESSED'}}</span>
+            </button>
+        </div>
+        <div align="right">
+            <button class="btn btn-default"> Upload files </button>
+        </div>
+    </div>
+</div>
