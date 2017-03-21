@@ -8,7 +8,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 // types
-import { Todo } from './todo';
+import { TodoBR } from './todo';
 import { Citation } from './citation';
 
 // dummy data
@@ -19,7 +19,7 @@ import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
 export class LocdbService {
 
   // we could read this from some config file
-  private locdbUrl                      = 'http://velsen.informatik.uni-kiel:80/';
+  private locdbUrl                      = 'http://velsen.informatik.uni-mannheim:80/';
   private locdbTodoEndpoint             = this.locdbUrl + 'getToDo'
   private locdbSaveScan                 = this.locdbUrl + 'saveScan'
   private bibliographicResourceEndpoint = this.locdbUrl + 'bibliographicResources'
@@ -50,8 +50,11 @@ export class LocdbService {
   }
 
   // acquire todo items and scans
-  getTodos(): Observable<Todo[]> {
-    return this.http.get(this.locdbTodoEndpoint).map(this.extractData).catch(this.handleError);
+  getTodos(): Observable<TodoBR[]> {
+    return this.http.get(this.locdbTodoEndpoint)
+                    .map(this.extractData)
+                    // .map(this.flattenTodos)
+                    .catch(this.handleError);
   }
 
   // create scans
@@ -59,17 +62,17 @@ export class LocdbService {
   // related to bibligraphic entries
 
   // related to bibliographic resources
-  getBibliographicResources(forTodo: Todo) {
-    console.log('Querying appropriate BResources for', forTodo);
+  // getBibliographicResources(forTodo: Todo) {
+  //   console.log('Querying appropriate BResources for', forTodo);
 
-    return Promise.resolve(REFERENCES);
-  }
+  //   return Promise.resolve(REFERENCES);
+  // }
 
-  getExternalBibliographicResources(forTodo: Todo) {
-    console.log('Querying external BResources for', forTodo);
+  // getExternalBibliographicResources(forTodo: Todo) {
+  //   console.log('Querying external BResources for', forTodo);
 
-    return Promise.resolve(REFERENCES);
-  }
+  //   return Promise.resolve(REFERENCES);
+  // }
 
 
 }
