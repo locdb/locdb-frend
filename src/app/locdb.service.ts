@@ -12,7 +12,7 @@ import { TodoBR } from './todo';
 import { Citation } from './citation';
 
 // dummy data
-import { TODOS } from './mock-todos';
+import { MOCK_TODOBRS } from './mock-todos';
 import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
 
 @Injectable()
@@ -57,8 +57,12 @@ export class LocdbService {
                     .catch(this.handleError);
   }
 
-  // create scans
-  
+  saveScan(ppn: string, firstPage: number, lastPage: number, scan: any) {
+    this.http.post(this.locdbSaveScan, {ppn, firstPage, lastPage, scan})
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
   // related to bibligraphic entries
 
   // related to bibliographic resources

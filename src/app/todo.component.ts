@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 
-import { Todo, TodoScan } from './todo';
+import { Todo, TodoScan, is_ready } from './todo';
 import { MOCK_TODOBRS } from './mock-todos';
 
 @Component({
