@@ -1,35 +1,36 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 
-import { Todo, TodoScan, is_ready } from './todo';
+
+import { ToDo, ToDoParts, ToDoScans } from './locdb';
 import { MOCK_TODOBRS } from './mock-todos';
 
 @Component({
   selector: 'todolist',
   templateUrl: 'todo.component.html' ,
 })
+
 export class TodoComponent {
   title = 'Select todo item';
-  todos: TodoScan[] = TodoComponent.flattenTodos(MOCK_TODOBRS);
-  selectedTodo: TodoScan;
+  scans: ToDoScans[] = TodoComponent.flattenTodos(MOCK_TODOBRS);
+  selectedTodo: ToDoScans;
   @Output() eventEmitter: EventEmitter<string> = new EventEmitter();
 
-  onSelect(todo: TodoScan): void {
+  onSelect(todo: ToDoScans): void {
     this.selectedTodo = todo;
     console.log('Todo item selected', todo._id);
     this.eventEmitter.next(todo._id);
   }
 
-  private static flattenTodos(nestedTodos): TodoScan[] {
-    let todos = []
-    for (let todobr of nestedTodos) {
-      for (let todopart of todobr.parts) {
+  private static flattenTodos(todos: ToDo[]): ToDoScans[] {
+    let flatScans: ToDoScans[] = []
+    for (let todo of todos) {
+      for (let todopart of todo.parts) {
         for (let todoscan of todopart.scans) {
-          todos = todos.concat(todoscan);
+          flatScans = flatScans.concat(todoscan);
         }
       }
     }
-    // let todos = nestedTodos.map(nested => <Todo[]>nested.parts).map(part => <TodoScan[]>part.scans).concat();
-    console.log(<TodoScan[]>todos)
-    return <TodoScan[]>todos;
+    console.log(flatScans)
+    return flatScans;
   }
 }

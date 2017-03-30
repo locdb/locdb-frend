@@ -20,6 +20,7 @@ export class LocdbService {
 
   // we could read this from some config file
   private locdbUrl                      = 'http://velsen.informatik.uni-mannheim:80/';
+
   private locdbTodoEndpoint             = this.locdbUrl + 'getToDo'
   private locdbSaveScan                 = this.locdbUrl + 'saveScan'
   private bibliographicResourceEndpoint = this.locdbUrl + 'bibliographicResources'
