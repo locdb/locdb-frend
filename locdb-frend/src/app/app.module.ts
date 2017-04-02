@@ -8,7 +8,8 @@ import { RouterModule } from '@angular/router';
 
 // ng2-bootstrap
 import { ModalModule } from 'ng2-bootstrap/modal';
-
+//ng2-fileupload
+import { FileSelectDirective } from 'ng2-file-upload';
 
 import { AppComponent } from './app.component';
 import { CitationFormComponent } from './citation-form.component';
@@ -26,7 +27,8 @@ import { TodoComponent } from './todo.component';
     AppComponent,
     CitationFormComponent,
     ScanComponent,
-    TodoComponent
+    TodoComponent,
+    FileSelectDirective
     // LocdbService
   ],
   bootstrap: [ AppComponent ]
