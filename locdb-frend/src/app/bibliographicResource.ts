@@ -1,26 +1,19 @@
+import { Identifier } from "./identifier" 
+
 export class BibliographicResource {
   constructor(
-    identifiers?: [{
-        literalValue: string,
-        scheme: string
-    }],
-    type_?: string,
+    identifiers?: [Identifier],
+    type?: string,
     title?: string,
     subtitle?: string,
     edition?: string,
-    number_?: number, // e.g. number of an article in journal
+    number?: number, // e.g. number of an article in journal
     contributors?: [{
-        identifiers: [{
-            id: string,
-            type_: string
-        }],
+        identifiers: [Identifier],
         roleType: string,
         heldBy: {
-            identifiers: [{
-                value: string,
-                scheme: string
-            }],
-            namestring: string,
+            identifiers: [Identifier],
+            nameString: string,
             givenName: string,
             familyName: string
         }

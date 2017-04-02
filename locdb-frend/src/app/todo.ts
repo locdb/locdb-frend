@@ -5,12 +5,13 @@ export class TodoScan {
 
 export class Todo {
   _id: string;
-  status?: string; // formally specified but not returned
   scans: [TodoScan];
+  status?: string; // formally specified but not returned
 
-  isReady() {
-    return this.status === "OCR_PROCESSED";
-  }
+}
+
+export function is_ready(todo: Todo | TodoScan) {
+  return todo.status === "OCR_PROCESSED";
 }
 
 export class TodoBR {
