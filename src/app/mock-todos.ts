@@ -1,4 +1,4 @@
-import { Todo, TodoScan, TodoBR } from './todo';
+import { ToDo } from './locdb';
 
 // export const MOCK_TODOSCANS: any[] = [
 //   { _id: "11", name: 'Journal-XY_Page-10' } ,
@@ -13,7 +13,7 @@ import { Todo, TodoScan, TodoBR } from './todo';
 //   { _id: "20", name: 'Journal-XY_Page-300' }
 // ];
 
-export const MOCK_TODOBRS: TodoBR[] = [
+export const MOCK_TODOBRS: ToDo[] = [
   {
     "_id": "58d0f859970e5c3367db7ced",
     "parts": [
