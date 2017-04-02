@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { Citation } from './citation';
+
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
   // template: `
   //     <div class="panel panel-default" style="margin-top: 10px">
   //       <div class="panel-heading"><h1>{{title}}</h1></div>
