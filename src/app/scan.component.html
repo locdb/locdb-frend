@@ -1,13 +1,17 @@
 {{diagnostic}}
-<div class="panel panel-default">
+<div class="panel panel-default" *ngIf="!files">
   <div class="panel-heading"><b>Scan</b></div>
   <div class="panel-body">
-    <div>
-      <input class="form-control" type="file" (change)="onChange($event)">
-    </div>
     <div class="panel panel-default">
+      <div ng-controller="formCtrl" class="panel-body">
+      <input class="simple-form" type="file" 
+      ng2FileSelect [uploader]="uploader" multiple
+      		(change)= "onChange($event)">
+      </div>
+    </div>
+    <div class="panel panel-default" *ngIf="files" > 
       <div class="panel-body">
-        <img [src]="src" [hidden]="!src" class="img-responsive" alt="Specify file to inspect ...">
+        <img [src]="src" [hidden]="!src" style="width: 100%;" alt="Specify file to inspect ...">
       </div>
     </div>
     <div align="right" [hidden]="!src">
@@ -15,4 +19,33 @@
       <button type="button" class="btn btn-default" (click)="next(1)">Weiter</button>
     </div>
   </div>
+</div>
+
+
+<div class="panel panel-default" *ngIf="files" >
+	<div class="panel-heading"><b>Files</b></div>
+	<div class="panel-body">
+		<div class="panel panel-default"> 				
+				<div class="list-group">
+                <a href="#" *ngFor="let file of files"  class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)">
+                    <span class="badge" *ngIf="file.isUploaded && file.isSuccess">Uploaded!</span>
+                    <span class="badge" *ngIf="file.isUploaded && !file.isSuccess">Error</span>
+                    <span class="badge" *ngIf="!file.isUploaded">Ready</span>
+                    <h5 class="list-group-item-heading"><b>{{file.file.name}}</b></h5>
+                    <p class="list-group-item-text">{{getidfromfile(file.file)}}</p>
+                    <p class="list-group-item-text">{{file.file.size/1024/1024 | number:'.2' }} MB, {{file.file.type}}</p>
+                </a>
+            </div>
+		</div>
+		<div>
+        Queue progress:
+        	<div class="progress" style="">
+       			<div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+        	</div>
+        </div>
+        <div align="right">
+				<button type="button" class="btn btn-primary" (click)="onclickclear()">Clear</button>
+				<button type="button" class="btn btn-primary" (click)="onclickupload()">Upload</button>
+		</div>
+	</div>
 </div>
