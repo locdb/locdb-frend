@@ -1,6 +1,6 @@
 // basic angular http client stuff
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, URLSearchParams } from '@angular/http';
 
 // advanced rxjs async handling
 import { Observable } from 'rxjs/Observable';
@@ -11,6 +11,9 @@ import 'rxjs/add/operator/map';
 import { TodoBR } from './todo';
 import { Citation } from './citation';
 
+// new types
+import { ToDo, ToDoScans } from './locdb'
+
 // dummy data
 import { MOCK_TODOBRS } from './mock-todos';
 import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
@@ -19,7 +22,7 @@ import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
 export class LocdbService {
 
   // we could read this from some config file
-  private locdbUrl                      = 'http://velsen.informatik.uni-mannheim:80/';
+  private locdbUrl                      = 'http://velsen.informatik.uni-mannheim.de:80/';
 
   private locdbTodoEndpoint             = this.locdbUrl + 'getToDo'
   private locdbSaveScan                 = this.locdbUrl + 'saveScan'
@@ -51,33 +54,27 @@ export class LocdbService {
   }
 
   // acquire todo items and scans
-  getTodos(): Observable<TodoBR[]> {
-    return this.http.get(this.locdbTodoEndpoint)
+  getToDo(ocr_processed:boolean): Observable<ToDo[]> {
+    let status_: string = ocr_processed ? "OCR_PROCESSED" : "NOT_OCR_PROCESSED";
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('status', status_);
+    return this.http.get(this.locdbTodoEndpoint, { search: params } )
                     .map(this.extractData)
-                    // .map(this.flattenTodos)
+    // .map(this.flattenTodos) // client may do this
                     .catch(this.handleError);
   }
 
   saveScan(ppn: string, firstPage: number, lastPage: number, scan: any) {
-    this.http.post(this.locdbSaveScan, {ppn, firstPage, lastPage, scan})
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('ppn', ppn)
+    params.set('firstpage', firstPage.toString())
+    params.set('lastpage', lastPage.toString())
+    params.set('scan', scan)
+    this.http.post(this.locdbSaveScan, { search: params })
       .map(this.extractData)
       .catch(this.handleError);
   }
 
-  // related to bibligraphic entries
+  // helpers
 
-  // related to bibliographic resources
-  // getBibliographicResources(forTodo: Todo) {
-  //   console.log('Querying appropriate BResources for', forTodo);
-
-  //   return Promise.resolve(REFERENCES);
-  // }
-
-  // getExternalBibliographicResources(forTodo: Todo) {
-  //   console.log('Querying external BResources for', forTodo);
-
-  //   return Promise.resolve(REFERENCES);
-  // }
-
-
-}
+} // LocdbService

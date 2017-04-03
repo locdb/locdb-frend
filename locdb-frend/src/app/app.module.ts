@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { HttpModule } from '@angular/http';
 
 // import { ImageUploadModule } from 'ng2-imageupload';
 // exported to uploader
@@ -21,7 +22,8 @@ import { TodoComponent } from './todo.component';
   imports: [
     ModalModule.forRoot(),
     BrowserModule,
-    FormsModule
+    FormsModule,
+    HttpModule
     ],
   declarations: [
     AppComponent,
