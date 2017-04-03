@@ -12,7 +12,7 @@ import { TodoBR } from './todo';
 import { Citation } from './citation';
 
 // new types
-import { ToDo, ToDoScans } from './locdb'
+import { ToDo, ToDoScans, BibliographicEntry } from './locdb'
 
 // dummy data
 import { MOCK_TODOBRS } from './mock-todos';
@@ -28,6 +28,8 @@ export class LocdbService {
   private locdbSaveScan                 = this.locdbUrl + 'saveScan'
   private bibliographicResourceEndpoint = this.locdbUrl + 'bibliographicResources'
   private bibliographicEntriesEndpoint  = this.locdbUrl + 'getToDoBibliographicEntries'
+  private internalSuggestions           = this.locdbUrl + 'BibliographicEntry/getInternalSuggestions'
+  private externalSuggestions           = this.locdbUrl + 'BibliographicEntry/getExternalSuggestions'
 
   constructor(private http: Http) { }
 
@@ -75,9 +77,20 @@ export class LocdbService {
       .catch(this.handleError);
   }
 
+  suggestions(be: BibliographicEntry, external?: boolean) {
+    if (external) {
+      return this.http.get(this.externalSuggestions, be)
+        .map(this.extractData)
+        .catch(this.handleError);
+    } else {
+      return this.http.get(this.internalSuggestions, be)
+        .map(this.extractData)
+        .catch(this.handleError);
+    }
+  }
+
   getScan(identifier: string) {
     return this.locdbUrl + 'scans/' + identifier;
-
   }
 
   // helpers

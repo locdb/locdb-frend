@@ -12,14 +12,9 @@ import { LocdbService } from './locdb.service';
 
 export class AppComponent {
   title = 'LOC-DB ~ Extrapolite';
-  displayURL: string;
   candidates: Citation[];
 
   constructor ( private locdbService: LocdbService ) {}
-
-  updateDisplay(newTodo: ToDoScans) {
-    this.displayURL = this.locdbService.getScan(newTodo._id);
-  }
 
   updateCandidates(newCandidates: Citation[]) {
     this.candidates = newCandidates;
