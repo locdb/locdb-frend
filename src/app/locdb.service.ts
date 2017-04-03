@@ -30,6 +30,7 @@ export class LocdbService {
   private bibliographicEntriesEndpoint  = this.locdbUrl + 'getToDoBibliographicEntries'
   private internalSuggestions           = this.locdbUrl + 'BibliographicEntry/getInternalSuggestions'
   private externalSuggestions           = this.locdbUrl + 'BibliographicEntry/getExternalSuggestions'
+  private locdbTriggerOcrProcessing     = this.locdbUrl + 'triggerOcrProcessing'
 
   constructor(private http: Http) { }
 
@@ -89,6 +90,17 @@ export class LocdbService {
         .map(this.extractData)
         .catch(this.handleError);
     }
+  }
+
+  triggerOcrProcessing(scanId: string) {
+    this.locdbTriggerOcrProcessing
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('id', scanId.toString())
+    return this.http.get(
+      this.locdbTriggerOcrProcessing,
+      { search: params}
+    ).map(this.extractData).catch(this.handleError);
+
   }
 
   getScan(identifier: string) {
