@@ -13,7 +13,6 @@ import { LocdbService } from '../locdb.service';
 })
 
 export class DisplayComponent implements OnInit {
-  // @Input() src: string;
   displaySource: string;
   displayActive: boolean = false;
   title: string = "Display";
@@ -24,12 +23,12 @@ export class DisplayComponent implements OnInit {
   updateDisplay(newTodo: ToDoScans) {
     console.log(newTodo);
     this.displaySource = this.locdbService.getScan(newTodo._id);
-    console.log(this.displaySource);
     this.displayActive = true;
   }
 
   onSelect(entry: any) {
     // not called
+    // should emit selected scan id
     this.entry.next(entry);
   }
 

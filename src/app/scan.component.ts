@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter} from '@angular/core';
+import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { Citation } from './citation';
 import { REFERENCES, REFERENCES_ALT } from './mock-references';
 import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
@@ -19,11 +19,16 @@ export class ScanComponent {
   event: any;
   files: any;
   src = '';
+  isActive: boolean = false;
   
   references: Citation[][] = [REFERENCES, REFERENCES_ALT, []];
   ref_idx: number;
   fil_idx: number;
   @Output() eventEmitter: EventEmitter<Citation[]> = new EventEmitter();
+
+  toggle() {
+    this.isActive = !this.isActive
+  }
   
   onclickupload(){
     //this.src = 'click'

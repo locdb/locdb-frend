@@ -37,8 +37,10 @@ export class LocdbService {
   // Generic helpers for data extraction and error handling
   
   private extractData(res: Response) {
+    console.log("Response", res);
     let body = res.json();
-    return body.data || { };
+    console.log("Response body", body);
+    return body;
   }
 
   private handleError (error: Response | any) {

@@ -1,7 +1,6 @@
-{{diagnostic}}
 <div class="panel panel-default" *ngIf="!files">
-  <div class="panel-heading"><b>Scan</b></div>
-  <div class="panel-body">
+  <div (click)="toggle()" class="panel-heading"><b>FLUP</b> <b>F</b>i<b>l</b>e <b>Up</b>load</div>
+  <div *ngIf="isActive" class="panel-body">
     <div class="panel panel-default">
       <div ng-controller="formCtrl" class="panel-body">
       <input class="simple-form" type="file" 
