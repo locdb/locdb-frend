@@ -1,0 +1,13 @@
+<scan *ngIf="!displayActive"></scan>
+<todolist *ngIf="!displayActive" (todo)="updateDisplay($event)"></todolist>
+<div *ngIf="displayActive" class="panel panel-default">
+  <div class="panel-heading"><b>{{title}}</b>
+    <div align="right">
+      <button (click)="clear()" class="btn">Clear</button>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <img [src]="displaySource" [hidden]="!displaySource" style="width: 100%;" alt="Display of the scanned bibliographic entries">
+  </div>
+</div>
