@@ -1,21 +1,20 @@
 import { Component } from '@angular/core';
 import { Citation } from './citation';
 
+import { ToDo, ToDoParts, ToDoScans } from './locdb';
+import { LocdbService } from './locdb.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  // template: `
-  //     <div class="panel panel-default" style="margin-top: 10px">
-  //       <div class="panel-heading"><h1>{{title}}</h1></div>
-  //       <div class="panel-body">
-  //         <citation-form></citation-form>
-  //       </div>
-  //     </div>
-  //     `
+  providers: [ LocdbService ]
 })
+
 export class AppComponent {
   title = 'LOC-DB ~ Extrapolite';
   candidates: Citation[];
+
+  constructor ( private locdbService: LocdbService ) {}
 
   updateCandidates(newCandidates: Citation[]) {
     this.candidates = newCandidates;

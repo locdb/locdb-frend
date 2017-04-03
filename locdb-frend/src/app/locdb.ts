@@ -48,7 +48,7 @@ export class ResponsibleAgent {
 }
 export class ToDo {
   _id: string;
-  parts?: ToDoParts[];
+  // parts?: ToDoParts[];
   children?: ToDoParts[];
 }
 export class ToDoParts {

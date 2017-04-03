@@ -4,9 +4,11 @@
     <section class="container-fluid">
     <div class="row" style="margin-top: 10px">
     <div class="col-xs-12 col-sm-6 col-md-4">
-      <scan (eventEmitter)="updateCandidates($event)"></scan>
-      <todolist></todolist>
+      <!-- <scan (eventEmitter)="updateCandidates($event)"></scan> -->
+      <!-- <todolist (todo)="updateDisplay($event)"></todolist> -->
+      <app-display></app-display>
     </div>
+    <!-- citation form is over 2 columns -->
     <citation-form [references]="candidates"></citation-form>
   </div>
     </section>

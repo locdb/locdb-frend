@@ -1,7 +1,10 @@
-{{diagnostic}}
 <div class="panel panel-default" *ngIf="!files">
-  <div class="panel-heading"><b>Scan</b></div>
-  <div class="panel-body">
+  <div (click)="toggle()" class="panel-heading">
+    <b>FLUP</b> <b>F</b>i<b>l</b>e <b>Up</b>load
+    <span *ngIf="!isActive" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    <span *ngIf="isActive" class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+  </div>
+  <div *ngIf="isActive" class="panel-body">
     <div class="panel panel-default">
       <div ng-controller="formCtrl" class="panel-body">
       <input class="simple-form" type="file" 
@@ -48,4 +51,8 @@
 				<button type="button" class="btn btn-primary" (click)="onclickupload()">Upload</button>
 		</div>
 	</div>
+<<<<<<< HEAD
 </div>
+=======
+</div>
+>>>>>>> 36708c7204653d6b24c85aa7f140d5a9702bb165
