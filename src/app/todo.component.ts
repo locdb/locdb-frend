@@ -14,7 +14,7 @@ import { LocdbService } from './locdb.service';
 
 export class TodoComponent implements OnInit {
   title = 'Todo Management';
-  scans: any[] = TodoComponent.extractScans(MOCK_TODOBRS);
+  scans: ToDoScans[];// = TodoComponent.extractScans(MOCK_TODOBRS);
   selectedTodo: ToDoScans;
   @Output() todo: EventEmitter<ToDoScans> = new EventEmitter();
 
@@ -29,7 +29,7 @@ export class TodoComponent implements OnInit {
   ngOnInit() {
     console.log('Retrieving TODOs from backend');
     // this.locdbService.getToDo(false).subscribe( todos => this.scans = TodoComponent.extractScans(todos) );
-    this.locdbService.getToDo(false).subscribe( (todos) => {this.scans = TodoComponent.extractScans(<ToDo[]>todos)});
+    this.locdbService.getToDo(true).subscribe( (todos) => {this.scans = TodoComponent.extractScans(<ToDo[]>todos)});
   }
 
   private static extractScans(todos: ToDo[]): ToDoScans[] {

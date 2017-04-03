@@ -9,7 +9,8 @@ import { LocdbService } from '../locdb.service';
 @Component({
   selector: 'app-display',
   templateUrl: './display.component.html',
-  styleUrls: ['./display.component.css']
+  styleUrls: ['./display.component.css'],
+  providers: [ LocdbService ]
 })
 
 export class DisplayComponent implements OnInit {
