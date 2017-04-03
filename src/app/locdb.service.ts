@@ -75,6 +75,11 @@ export class LocdbService {
       .catch(this.handleError);
   }
 
+  getScan(identifier: string) {
+    return this.locdbUrl + 'scans/' + identifier;
+
+  }
+
   // helpers
 
 } // LocdbService

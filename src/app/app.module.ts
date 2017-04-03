@@ -16,6 +16,7 @@ import { AppComponent } from './app.component';
 import { CitationFormComponent } from './citation-form.component';
 import { ScanComponent } from './scan.component';
 import { TodoComponent } from './todo.component';
+import { DisplayComponent } from './display/display.component';
 // import { LocdbService } from './locdb.service';
 
 @NgModule({
@@ -30,7 +31,8 @@ import { TodoComponent } from './todo.component';
     CitationFormComponent,
     ScanComponent,
     TodoComponent,
-    FileSelectDirective
+    FileSelectDirective,
+    DisplayComponent
     // LocdbService
   ],
   bootstrap: [ AppComponent ]
