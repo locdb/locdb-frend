@@ -1,0 +1,47 @@
+# Agenda LOC-DB 2017-01-24
+
+9:00 Welcome and introduction of the new project team member in Mannheim
+- Introduction of Andreas Dengel
+
+9:10 Review of the agenda
+
+9:20 Review of the project schedule (month 4):
+- Overall concept is almost finished (all)
+    - Iterative process of prototyping
+- Cataloguing processes are being developed (Annette)
+    - Not yet. 
+- Provisional data model exists (Kai/Anne)
+    - Yes. opencitation.
+- Implementation of the backend is prepared (Kai/Anne)
+- Integration of data sources for metadata is started (Kai/Anne)
+- Automated data extraction: separation of items from OCR-texts works, provisional metadata is available (Sheraz/Akansha)
+- Frontend is being implemented (Lukas)
+
+10:30 Further updates from
+ - UB Mannheim
+ - DFKI Kaiserslautern
+ - HdM Stuttgart
+ - ZBW Kiel
+
+11:30 Next steps
+
+12:30 Lunch break :pizza: :tomato:
+
+13:30 LOC-DB Workshop
+
+14:00 Project website and communication
+
+14:30 Presentations and conferences
+
+15:00 Summary and To Dos
+
+15:15 Next meeting time, date, and location
+
+# Next steps for us
+
+- Ask Service for list of PPNs, select one, then show extrapolate
+- First: Display only LOCDB entry with button "External Sources"
+- Second: Show external sources and be able to mark multiple ones.
+- Make things configurable, especially display of candidates.
+- full circle, connection:
+- First workshop in Mannheim, *Maybe* 2nd workshop in Kiel

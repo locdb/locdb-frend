@@ -1,0 +1,11 @@
+digraph E {
+  node [shape=rect];
+  ExtrapolateComponent;
+  {rank=same;
+  ScanComponent;
+  ReferenceMasterComponent;
+  ReferenceDetailComponent;
+  }
+  ExtrapolateComponent -> ScanComponent, ReferenceMasterComponent, ReferenceDetailComponent; 
+  ScanComponent -> ReferenceMasterComponent -> ReferenceDetailComponent;
+}
