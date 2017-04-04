@@ -15,6 +15,7 @@ import { LocdbService } from './locdb.service';
 export class TodoComponent implements OnInit {
   title = 'Todo Management';
   scans: ToDoScans[];// = TodoComponent.extractScans(MOCK_TODOBRS);
+  unprocessed: ToDoScans[];
   selectedTodo: ToDoScans;
   @Output() todo: EventEmitter<ToDoScans> = new EventEmitter();
 
@@ -29,7 +30,32 @@ export class TodoComponent implements OnInit {
   ngOnInit() {
     console.log('Retrieving TODOs from backend');
     // this.locdbService.getToDo(false).subscribe( todos => this.scans = TodoComponent.extractScans(todos) );
+    this.fetchScans();
+  }
+
+  fetchScans() {
     this.locdbService.getToDo(true).subscribe( (todos) => {this.scans = TodoComponent.extractScans(<ToDo[]>todos)});
+    this.locdbService.getToDo(false).subscribe( (todos) => {this.unprocessed = TodoComponent.extractScans(<ToDo[]>todos)});
+  }
+
+  prettyStatus(scan: ToDoScans) {
+    if ( scan.status === "OCR_PROCESSED" )
+      return "Ready to do";
+    if ( scan.status === "NOT_OCR_PROCESSED" )
+      return "Unprocessed";
+    return "Processing..."
+  }
+
+  processScan(scan: ToDoScans) {
+
+    if ( scan.status === "NOT_OCR_PROCESSED" )
+    {
+      scan.status = "OCR_PROCESSING";
+      this.locdbService.triggerOcrProcessing(scan._id).subscribe(
+        (message) => scan.status = "OCR_PROCESSED"
+      ) 
+    }
+    alert("Already processing...")
   }
 
   private static extractScans(todos: ToDo[]): ToDoScans[] {
