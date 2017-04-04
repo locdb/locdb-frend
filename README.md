@@ -1,28 +1,40 @@
-# LOC-DB Frontend Development
+# LOCDB Fr(ont-)end
 
-## Name Selection for frontend
+This repository provides a guided user interface for extrapolation of new data for the [Linked Open Citation Data Base](https://github.com/locdb/loc-db).
+More specific, two views are provided:
 
-- **LOCDB ~ Extrapolite** : because it extrapolates citations
+- `FLUP` - An assistant for file upload of reference lists.
+- `Extrapolite` - An assistant for linking bibliographic resources from these reference lists.
 
-- **LOC-Tap** : Taps bibliographic resources by tapping on the screen.
+## Basic setup
 
-## Directroy structure
+1. Clone this repository and run `npm install` to install dependencies.
+2. Run `ng serve` and access the prototype via `localhost:4200`
 
-* angular-frontend : DEPRECATED
-* locdb-frend : Angular2 project for frontend development
-* graphics : Various graphics, mainly considering the project architecture
-* minutes : Minutes of LOC-DB Meetings
-* mockups : Mock-ups for the Front-end
-* README.md : this file
+## Angular-CLI usage
 
-## Helpful links
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0-rc.1.
 
-- [Angular2 Documentation and Tutorial](https://angular.io)
-- [ng2-bootstrap](https://valor-software.com/ng2-bootstrap/index-bs4.html)
+### Development server
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Associated Distributed Documents
+### Code scaffolding
 
-- [LOC-DB Dev Session](https://docs.google.com/document/d/1lrfVX5YUtlzPHuYGfkjbjJ1tK8DW3puLy9Mp_DdRqvE/edit)
-- [Agenda LOC-DB 2017-01-24](https://hackmd.io/CbBmCYwNgTgWlMAzAQzgFgOwoEZxUlAKxyYCMRRADFAMYAc6Z4OQA===)
-- [LOC-DB Interfaces](https://docs.google.com/document/d/1pwTqXbdbYKUFmYme-hm3h1MS8Tl9Aoo13w_E9tc6010/edit)
-- [Blog](https://locdb.bib.uni-mannheim.de/blog/en/)
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/class/module`.
+
+### Build
+
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+
+### Running unit tests
+
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+### Running end-to-end tests
+
+Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Before running the tests make sure you are serving the app via `ng serve`.
+
+### Further help
+
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
