@@ -1,8 +1,15 @@
 # LOC-DB Frontend Development
 
+## Name Selection for frontend
+
+- **LOCDB ~ Extrapolite** : because it extrapolates citations
+
+- **LOC-Tap** : Taps bibliographic resources by tapping on the screen.
+
 ## Directroy structure
 
-* angular-frontend : Angular2 project for frontend development
+* angular-frontend : DEPRECATED
+* locdb-frend : Angular2 project for frontend development
 * graphics : Various graphics, mainly considering the project architecture
 * minutes : Minutes of LOC-DB Meetings
 * mockups : Mock-ups for the Front-end
