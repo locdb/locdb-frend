@@ -1,19 +1,17 @@
 <div class="panel panel-default"> 
     <div class="panel-heading">
         <b>{{title}}</b>
-        <button type="button" class="btn btn-default" aria-label="Right Align">
-            <span class="glyphicon glyphicon-refresh" aria-hidden="true" (click)="fetchScans"></span>
-        </button>
     </div>
     <div class="panel-body">
-        <div class="btn-group-vertical" role="group" aria-label="...">
-            <button type="button" *ngFor="let s of scans" class="list-group-item list-group-item-action list-group-item-info justify-content-between" (click)="onSelect(s)" >
+        <div class="list-group">
+            <button
+                type="button"
+                *ngFor="let s of scans"
+                class="list-group-item list-group-item-action list-group-item-info justify-content-between"
+                (click)="onSelect(s)"
+                (disabled)="!(s.status === 'OCR_PROCESSED')">
                 {{ s._id }} 
-                <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
-            </button>
-            <button type="button" *ngFor="let s of unprocessed" class="list-group-item list-group-item-action list-group-item-warning justify-content-between" (click)="processScan(s)" >
-                {{ s._id }} 
-                <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
+                <span class="badge badge-default badge-pill">{{ s.status === 'OCR_PROCESSED'}}</span>
             </button>
         </div>
         <!-- <div align="left"> -->
