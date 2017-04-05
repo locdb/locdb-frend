@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Citation } from './citation';
 import { REFERENCES } from './mock-references';
 
@@ -7,11 +7,10 @@ import { REFERENCES } from './mock-references';
   selector: 'citation-form',
   templateUrl: 'citation-form.component.html'
 })
-export class CitationFormComponent {
-  @Input()
-  references: Citation[] = REFERENCES;
-  @Input()
-  model: Citation;
+
+export class CitationFormComponent implements OnInit {
+  @Input() references: Citation[] = REFERENCES;
+  @Input() model: Citation;
 
   reftypes = Citation.REFTYPES;
 
@@ -32,12 +31,22 @@ export class CitationFormComponent {
     return;
   }
   // Behaviour for external bibliographic resources modal END
+  
+  getInternalSuggestions() {
+    // retrieve the internal suggestions based on the inserted text
+
+  }
+
 
   addAuthorToModel() {
       this.model.add_author(this.authorCandidate);
       this.authorCandidate = '';
   }
 
+  ngOnInit() {
+    // retrieve suggestions from locdb
+    // (auto-select the first suggestion)
+  }
 
 
 

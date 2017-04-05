@@ -47,7 +47,6 @@ export class TodoComponent implements OnInit {
   }
 
   processScan(scan: ToDoScans) {
-
     if ( scan.status === "NOT_OCR_PROCESSED" )
     {
       scan.status = "OCR_PROCESSING";
@@ -55,7 +54,10 @@ export class TodoComponent implements OnInit {
         (message) => scan.status = "OCR_PROCESSED"
       ) 
     }
-    alert("Already processing...")
+    else
+    {
+      alert("Already processing...")
+    }
   }
 
   private static extractScans(todos: ToDo[]): ToDoScans[] {
