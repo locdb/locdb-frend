@@ -24,13 +24,14 @@ export class LocdbService {
   // we could read this from some config file
   private locdbUrl                      = 'http://velsen.informatik.uni-mannheim.de:80/';
 
-  private locdbTodoEndpoint             = this.locdbUrl + 'getToDo'
-  private locdbSaveScan                 = this.locdbUrl + 'saveScan'
-  private bibliographicResourceEndpoint = this.locdbUrl + 'bibliographicResources'
-  private bibliographicEntriesEndpoint  = this.locdbUrl + 'getToDoBibliographicEntries'
-  private internalSuggestions           = this.locdbUrl + 'BibliographicEntry/getInternalSuggestions'
-  private externalSuggestions           = this.locdbUrl + 'BibliographicEntry/getExternalSuggestions'
-  private locdbTriggerOcrProcessing     = this.locdbUrl + 'triggerOcrProcessing'
+  private locdbTodoEndpoint             = this.locdbUrl + 'getToDo';
+  private locdbSaveScan                 = this.locdbUrl + 'saveScan';
+  private bibliographicResourceEndpoint = this.locdbUrl + 'bibliographicResources';
+  private locdbTodoEntries              = this.locdbUrl + 'getToDoBibliographicEntries';
+  private internalSuggestions           = this.locdbUrl + 'getInternalSuggestions';
+  private externalSuggestions           = this.locdbUrl + 'getExternalSuggestions';
+  private locdbTriggerOcrProcessing     = this.locdbUrl + 'triggerOcrProcessing';
+  private locdbBibliographicEntries     = this.locdbUrl + 'bibliographicEntries/';
 
   constructor(private http: Http) { }
 
@@ -69,11 +70,11 @@ export class LocdbService {
                     .catch(this.handleError);
   }
 
-  getToDoBibliographicEntries(scan_id: number): Observable<BibliographicEntry[]> {
+  getToDoBibliographicEntries(scan_id: string): Observable<BibliographicEntry[]> {
     // fetches list of entries for a scan id
     let params: URLSearchParams = new URLSearchParams();
     params.set('scanId', scan_id);
-    return this.http.get(this.locdbTodoEndpoint, { search: params } )
+    return this.http.get(this.locdbTodoEntries, { search: params } )
                     .map(this.extractData)
                     .catch(this.handleError);
   }
@@ -114,6 +115,11 @@ export class LocdbService {
 
   getScan(identifier: string) {
     return this.locdbUrl + 'scans/' + identifier;
+  }
+
+  putBibliographicEntry(identifier: string, entry: BibliographicEntry) {
+    let url = this.locdbBibliographicEntries + identifier;
+    return this.http.put(url, entry).map(this.extractData).catch(this.handleError);
   }
 
   // helpers

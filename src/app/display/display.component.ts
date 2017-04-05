@@ -38,8 +38,10 @@ export class DisplayComponent implements OnInit {
   }
 
   next(diff: number) {
-    this.currentIndex = Math.abs((this.currentIndex + diff) % this.entries.length);
-    this.entry.next(entries[this.currentIndex]);
+    this.currentIndex = Math.abs((this.entries.length + this.currentIndex + diff) % this.entries.length);
+    let entry = this.entries[this.currentIndex];
+    console.log("Emission of entry at index " + this.currentIndex, entry)
+    this.entry.next(this.entries[this.currentIndex]);
   }
 
   ngOnInit() {
@@ -49,6 +51,7 @@ export class DisplayComponent implements OnInit {
   clear() {
     this.displaySource = null;
     this.displayActive = false;
+    this.entry.next(null); // reset view
   }
 
 }

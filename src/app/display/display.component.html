@@ -8,10 +8,13 @@
 
   <div class="panel-body">
     <img [src]="displaySource" [hidden]="!displaySource" style="width: 100%;" alt="Display of the scanned bibliographic entries">
+  <div align="right">
+    <b>Current Entry:</b> {{ currentIndex + 1 }}
   </div>
   <div align="right">
-    <button type="button" class="btn btn-default" (click)="next(-1)">Previous</button>
-    <button type="button" class="btn btn-default" (click)="next(1)">Next</button>
+    <button class="btn btn-default" (click)="next(-1)">Previous</button>
+    <button class="btn btn-default" (click)="next(1)">Next</button>
+  </div>
   </div>
 </div>
 <scan></scan>

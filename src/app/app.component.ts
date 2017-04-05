@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Citation } from './citation';
 
-import { ToDo, ToDoParts, ToDoScans } from './locdb';
+import { ToDo, ToDoParts, ToDoScans, BibliographicEntry } from './locdb';
 import { LocdbService } from './locdb.service';
 
 @Component({
@@ -12,13 +12,14 @@ import { LocdbService } from './locdb.service';
 
 export class AppComponent {
   title = 'LOC-DB ~ Extrapolite';
-  candidates: Citation[];
+  entry: BibliographicEntry;
+  // candidates: Citation[];
 
   constructor ( private locdbService: LocdbService ) {}
 
-  updateCandidates(newCandidates: Citation[]) {
-    this.candidates = newCandidates;
-    console.log('Updated candidates', this.candidates);
-  }
+  // updateCandidates(newCandidates: Citation[]) {
+  //   this.candidates = newCandidates;
+  //   console.log('Updated candidates', this.candidates);
+  // }
 }
 
