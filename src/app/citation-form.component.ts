@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Citation } from './citation';
 import { REFERENCES } from './mock-references';
 
+import { BibliographicEntry, BibliographicResource } from './locdb';
+
 @Component({
   moduleId: module.id,
   selector: 'citation-form',
@@ -12,18 +14,30 @@ export class CitationFormComponent implements OnInit {
   @Input() references: Citation[] = REFERENCES;
   @Input() model: Citation;
 
+  @Input() bibliographicEntry: BibliographicEntry;
+
+  internalSuggestions: BibliographicResource[];
+  externalSuggestions: any[];
+
   reftypes = Citation.REFTYPES;
 
   submitted = true;
   authorCandidate = '';
 
+  constructor (locdbService : LocDbService) {};
+
+
+  fetchInternals(be: BibliographicEntry) {
+    console.log("Fetching externals for", be);
+    this.locdbService.suggestions(be, true).subscribe( (sgt) => this.externalSuggestions = sgt );
+  }
+
   // Behaviour for external bibliographic resources modal BEGIN
   selectedExternals: boolean[];
 
-  getExternalBibliographicResources() {
+  fetchExternals(be: BibliographicEntry) {
     // This code should access backend for external bibligraphic Resources
-
-    return REFERENCES;
+    this.locdbService.suggestions(be, true).subscribe( (sgt) => this.externalSuggestions = sgt );
   }
 
   pushSelectedExternals() {
@@ -46,6 +60,7 @@ export class CitationFormComponent implements OnInit {
   ngOnInit() {
     // retrieve suggestions from locdb
     // (auto-select the first suggestion)
+    fetchExternals(this.bibliographicEntry);
   }
 
 

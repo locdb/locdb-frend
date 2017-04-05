@@ -60,3 +60,10 @@ export class ToDoScans {
   _id: string;
   status?: string;
 }
+
+export class ExternalResource {
+  identifiers?: Indentifier[];
+  status?: string;
+  authors: string[];
+  title: string;
+}

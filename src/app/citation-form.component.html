@@ -34,11 +34,11 @@
                         </div>
                         <div class="modal-body">
                             <form>
-                                <div class="checkbox" *ngFor="let r of getExternalBibliographicResources()">
+                                <div class="checkbox" *ngFor="let r of externalSuggestions">
                                     <label>
                                         <input type="checkbox">
-                                        {{ r.title }} by {{r.pretty_print_authors() }} in {{ r.journal }}, {{ r.year }}
-                                        <span class="badge">{{ r.source }}</span>
+                                        {{ r.title }} by {{ ', '.join(r.authors) }}
+                                        <span class="badge">{{ r.identifiers[0].scheme }}</span>
                                     </label>
                                 </div>
                                 <div align="right">

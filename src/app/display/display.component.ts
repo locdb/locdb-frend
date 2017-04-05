@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 
-import { ToDo, ToDoParts, ToDoScans } from '../locdb';
+import { ToDo, ToDoParts, ToDoScans, BibliographicEntry } from '../locdb';
 import { LocdbService } from '../locdb.service';
 
 // Display component consists of file upload, todo item selection and actual
@@ -17,20 +17,29 @@ export class DisplayComponent implements OnInit {
   displaySource: string;
   displayActive: boolean = false;
   title: string = "Display";
-  @Output() entry: EventEmitter<string> = new EventEmitter();
+  currentIndex: number = 0;
+  entries: BibliographicEntry[];
+  @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
 
   constructor( private locdbService: LocdbService) { }
 
   updateDisplay(newTodo: ToDoScans) {
+    // this method is called when a todo item is selected
     console.log(newTodo);
     this.displaySource = this.locdbService.getScan(newTodo._id);
     this.displayActive = true;
+    this.locdbService.getToDoBibliographicEntries(newTodo._id)
+      .subscribe( (res) => this.entries = res) ;
   }
 
   onSelect(entry: any) {
-    // not called
-    // should emit selected scan id
+    // selection of an entry of one todo item
     this.entry.next(entry);
+  }
+
+  next(diff: number) {
+    this.currentIndex = Math.abs((this.currentIndex + diff) % this.entries.length);
+    this.entry.next(entries[this.currentIndex]);
   }
 
   ngOnInit() {

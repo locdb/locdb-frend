@@ -12,7 +12,7 @@ import { TodoBR } from './todo';
 import { Citation } from './citation';
 
 // new types
-import { ToDo, ToDoScans, BibliographicEntry } from './locdb'
+import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource } from './locdb'
 
 // dummy data
 import { MOCK_TODOBRS } from './mock-todos';
@@ -69,6 +69,15 @@ export class LocdbService {
                     .catch(this.handleError);
   }
 
+  getToDoBibliographicEntries(scan_id: number): Observable<BibliographicEntry[]> {
+    // fetches list of entries for a scan id
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('scanId', scan_id);
+    return this.http.get(this.locdbTodoEndpoint, { search: params } )
+                    .map(this.extractData)
+                    .catch(this.handleError);
+  }
+
   saveScan(ppn: string, firstPage: number, lastPage: number, scan: any) {
     let params: URLSearchParams = new URLSearchParams();
     params.set('ppn', ppn)
@@ -80,7 +89,7 @@ export class LocdbService {
       .catch(this.handleError);
   }
 
-  suggestions(be: BibliographicEntry, external?: boolean) {
+  suggestions(be: BibliographicEntry, external?: boolean): Observable<any[]> {
     if (external) {
       return this.http.get(this.externalSuggestions, be)
         .map(this.extractData)

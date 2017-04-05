@@ -1,4 +1,6 @@
 function! g:Deswag() abort range
+	" Translate Swagger model pseudo-code into proper Typescript
+	
         " Question mark optionals
         silent! %s/\(\i\+\)\(\s*(.\{-}\),\soptional/\1?\2/
         " Exract types
