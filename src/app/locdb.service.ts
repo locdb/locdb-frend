@@ -1,6 +1,6 @@
 // basic angular http client stuff
 import { Injectable } from '@angular/core';
-import { Http, Response, URLSearchParams } from '@angular/http';
+import { Http, Response, URLSearchParams, RequestOptions} from '@angular/http';
 
 // advanced rxjs async handling
 import { Observable } from 'rxjs/Observable';
@@ -41,7 +41,6 @@ export class LocdbService {
   private extractData(res: Response) {
     console.log("Response", res);
     let body = res.json();
-    console.log("Response body", body);
     return body;
   }
 

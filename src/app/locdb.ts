@@ -22,6 +22,7 @@ export class AgentRole {
   heldBy?: ResponsibleAgent;
 }
 export class BibliographicEntry {
+  _id: string;
   bibliographicEntryText?: string;
   references?: string;
   coordinates?: string;
@@ -62,7 +63,7 @@ export class ToDoScans {
 }
 
 export class ExternalResource {
-  identifiers?: Indentifier[];
+  identifiers?: Identifier[];
   status?: string;
   authors: string[];
   title: string;

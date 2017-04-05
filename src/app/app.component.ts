@@ -17,6 +17,11 @@ export class AppComponent {
 
   constructor ( private locdbService: LocdbService ) {}
 
+  updateEntry (entry : BibliographicEntry) {
+    console.log("Updating with new entry", entry);
+    this.entry = entry;
+  }
+
   // updateCandidates(newCandidates: Citation[]) {
   //   this.candidates = newCandidates;
   //   console.log('Updated candidates', this.candidates);

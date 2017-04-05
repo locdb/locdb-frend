@@ -40,10 +40,10 @@ export class TodoComponent implements OnInit {
 
   prettyStatus(scan: ToDoScans) {
     if ( scan.status === "OCR_PROCESSED" )
-      return "Ready to do";
-    if ( scan.status === "NOT_OCR_PROCESSED" )
+      return "Ready";
+    if ( scan.status === "Not Ready" )
       return "Unprocessed";
-    return "Processing..."
+    return "OCR"
   }
 
   processScan(scan: ToDoScans) {

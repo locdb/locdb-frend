@@ -31,11 +31,8 @@ export class CitationFormComponent implements OnChanges {
 
   fetchInternals(be: BibliographicEntry) {
     console.log("Fetching internal suggestions for", be);
-    this.locdbService.suggestions(be, true).subscribe( (sgt) => this.internalSuggestions = sgt );
+    this.locdbService.suggestions(be, false).subscribe( (sgt) => this.internalSuggestions = sgt );
   }
-
-  // Behaviour for external bibliographic resources modal BEGIN
-  selectedExternals: boolean[];
 
   fetchExternals(be: BibliographicEntry) {
     console.log("Fetching external suggestions for", be);
@@ -55,18 +52,17 @@ export class CitationFormComponent implements OnChanges {
     this.authorCandidate = '';
   }
 
-
-  ngOnChanges() {
+  fetch() {
     this.fetchInternals(this.entry);
     this.fetchExternals(this.entry);
-    this.submitted = false;
   }
 
-  ngOnInit() {
-    // retrieve suggestions from locdb
-    // (auto-select the first suggestion)
+
+  ngOnChanges(changes: any) {
+    console.log("onChanges called");
     // this.fetchInternals(this.entry);
     // this.fetchExternals(this.entry);
+    // this.submitted = false;
   }
 
   onSelect (resource: BibliographicResource)
@@ -108,5 +104,5 @@ export class CitationFormComponent implements OnChanges {
 
 
   //  TODO: Remove this when we're done
-  get diagnostic() { return JSON.stringify(this.entry); }
+  // get diagnostic() { return JSON.stringify(this.entry); }
 }
