@@ -37,6 +37,10 @@ export class DisplayComponent implements OnInit {
     this.entry.next(entry);
   }
 
+  newCustomEntry() {
+    this.entry.next(new BibliographicEntry());
+  }
+
   next(diff: number) {
     this.currentIndex = Math.abs((this.entries.length + this.currentIndex + diff) % this.entries.length);
     let entry = this.entries[this.currentIndex];

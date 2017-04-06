@@ -20,10 +20,10 @@ export class CitationFormComponent implements OnChanges {
 
   internalSuggestions: BibliographicResource[];
   externalSuggestions: any[];
+  // submitted = true;
 
   reftypes = Citation.REFTYPES;
 
-  submitted = true;
   authorCandidate = '';
 
   constructor (private locdbService: LocdbService) {}
@@ -67,11 +67,6 @@ export class CitationFormComponent implements OnChanges {
 
   onSelect (resource: BibliographicResource)
   {
-    if (!this.entry)
-    { 
-     // make sure we always have some entry to edit
-     this.entry = new BibliographicResource();
-    }
     if (!resource) return;
     this.entry.title = resource.title;
 
@@ -80,7 +75,7 @@ export class CitationFormComponent implements OnChanges {
       // if (agent.roleType === "author")
       this.entry.authors.push(agent.heldBy.nameString);
     }
-    this.submitted = false;
+    // this.submitted = false;
   }
 
   // onSelect(reference: Citation) {
@@ -95,7 +90,8 @@ export class CitationFormComponent implements OnChanges {
 
   onSubmit() {
     // this.locdbService.putBibliographicEntry(this.entry._id, this.entry);
-    this.submitted = true;
+    // this.submitted = true;
+    this.entry = null;
   }
 
   removeAuthorAt(position:number) {
