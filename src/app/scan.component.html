@@ -1,15 +1,13 @@
 <div class="panel panel-default" *ngIf="!files">
   <div (click)="toggle()" class="panel-heading">
-    <!-- <b>FLUP</b> <b>F</b>i<b>l</b>e <b>Up</b>load -->
-    <b>File Upload</b>
+    <b>FLUP</b> <b>F</b>i<b>l</b>e <b>Up</b>load
     <span *ngIf="!isActive" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
     <span *ngIf="isActive" class="glyphicon glyphicon-minus" aria-hidden="true"></span>
   </div>
   <div *ngIf="isActive" class="panel-body">
     <div class="panel panel-default">
       <div ng-controller="formCtrl" class="panel-body">
-      <input class="simple-form" type="file" 
-      ng2FileSelect [uploader]="uploader" multiple
+      <input class="simple-form" type="file" multiple
       		(change)= "onChange($event)">
       </div>
     </div>
@@ -31,15 +29,34 @@
 	<div class="panel-body">
 		<div class="panel panel-default"> 				
 				<div class="list-group">
-                <a href="#" *ngFor="let file of files"  class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)">
-                    <span class="badge" *ngIf="file.isUploaded && file.isSuccess">Uploaded!</span>
-                    <span class="badge" *ngIf="file.isUploaded && !file.isSuccess">Error</span>
-                    <span class="badge" *ngIf="!file.isUploaded">Ready</span>
-                    <h5 class="list-group-item-heading"><b>{{file.file.name}}</b></h5>
-                    <p class="list-group-item-text">{{getidfromfile(file.file)}}</p>
-                    <p class="list-group-item-text">{{file.file.size/1024/1024 | number:'.2' }} MB, {{file.file.type}}</p>
+                <a href="#" *ngFor="let file of files; let i = index"  class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectFile(i)">
+                    <!-- span class="badge" *ngIf="file.isUploaded && file.isSuccess">Uploaded!</span>
+                    <span class="badge" *ngIf="file.isUploaded && !file.isSuccess">Error</span-->
+                    <span class="badge" *ngIf="listoffiles[i].allset">Ready</span>
+                    <span class="badge" *ngIf="!listoffiles[i].allset">Enter information</span>
+                    <h5 class="list-group-item-heading"><b>{{file.name}}</b></h5>
+                    <p class="list-group-item-text">{{file.size/1024/1024 | number:'.2' }} MB, {{file.type}}</p>
                 </a>
             </div>
+		</div>
+		<div *ngIf="fileIsActive">
+			<form>
+				<div class="form-group">
+					<label>PPN</label><br>
+					<input type="text" name="ppn" [(ngModel)]="ppn"><br>
+				</div>
+				<div class="form-group">
+					<label>First page</label><br> 
+					<input type="text" name="firstpage" [(ngModel)]="firstpage"><br>
+				</div>
+				<div class="form-group">
+					<label>Last page</label><br>
+					<input type="text" name="firstlastpage" [(ngModel)]="lastpage">
+				</div>
+				<div align="right">
+					<button type="button" class="btn btn-primary" (click)="onclicksaveentries()">Save</button><br>
+				</div>
+			</form>
 		</div>
 		<div>
         Queue progress:
