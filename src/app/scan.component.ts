@@ -11,19 +11,18 @@ const URL ='/api/'; //Same Origin Policy
   templateUrl: './scan.component.html'
 })
 
-
-
 export class ScanComponent {
-  public uploader:FileUploader = new FileUploader({url: URL});
+  public uploader: FileUploader = new FileUploader({url: URL});
   event: any;
   files: any;
   selected: number;
   
-  ppn = 'test';
-  firstpage = '2';
-  lastpage = '12';
+  ppn = '1234567';
+  firstpage = 2;
+  lastpage = 12;
   
-  listoffiles = [];
+  listoffiles: metadata[] = [];
+  listoffilescontents = [];
   
   active: number;
   fileIsActive: boolean = false;
@@ -38,7 +37,7 @@ export class ScanComponent {
     this.isActive = !this.isActive
   }
   
-  onclickupload(){
+  onclickupload(){ // check if content is set
     let ready = true;
     if(this.listoffiles != []){ // or !== ?
       let file
@@ -51,8 +50,9 @@ export class ScanComponent {
     if(ready){
       //this.src = 'click'
       console.log("start upload..");
-      this.uploader.uploadAll();
-      console.log("Is uploading: ", this.uploader.isUploading);
+      
+      this.listoffiles.map((elem) => this.writefilecontent(elem));
+      
     }
   }
 
@@ -70,36 +70,24 @@ export class ScanComponent {
   onChange(event: any) { // file input
     this.files = '';
     this.files = event.target.files;//this.uploader.queue;
+    console.log("event target results: " + (<IDBOpenDBRequest>event.target).result);
     console.log(this.files);
     console.log(this.files[0]);
-    let file
+    let file: any;
+    let filenumber = 0;
     for(file of this.files){
       console.log(file);
       let ppnt = this.getidfromstring(file.name);
-      let filebyte: any;
-      if (file) {
-      var r = new FileReader();
-      r.onload = function(e) { 
-        var contents = (<IDBOpenDBRequest>e.target).result;
-        console.log( "Got the file.n" 
-              +"name: " + file.name + "\n"
-              +"type: " + file.type + "\n"
-              +"size: " + file.size + " bytes \n"
-              + "starts with: " + contents.substr(1, contents.indexOf("\n"))
-        );  
-        filebyte = contents;
-      }
-      r.readAsText(file);
-    } else { 
-      console.log("Failed to load file");
-    }
-      console.log(file.valueOf());
-    if(ppnt === "")
-        this.listoffiles.push({ ppn: null, fistpage: null, lastpage: null, file: file, filecontent : filebyte, ppnsucc: false, allset: false})
+      
+      if(ppnt === "")
+        this.listoffiles.push({ ppn: null, firstpage: null, lastpage: null, file: file, filecontent : null, ppnsucc: false, allset: false});
       else 
-        this.listoffiles.push({ ppn: ppnt, fistpage: null, lastpage: null, file: file, filecontent : filebyte, ppnsucc: true, allset: false})
+        this.listoffiles.push({ ppn: ppnt, firstpage: null, lastpage: null, file: file, filecontent : null, ppnsucc: true, allset: false});
     
-    
+      console.log(this.listoffiles);
+     
+      filenumber+=1;
+      
     console.log(this.listoffiles[this.listoffiles.length-1].filecontent);
     }
     //this.uploader.queue[0].file
@@ -168,7 +156,7 @@ export class ScanComponent {
     this.eventEmitter.next(this.references[this.ref_idx]);
     
     this.fil_idx = Math.abs((this.fil_idx + diff) % this.event.target.files.length);
-    console.log('New current file index', this.fil_idx);  
+    console.log('New current file index', this.fil_idx);
     this.readURL(this.event.target, this.fil_idx);
       
   }
@@ -188,5 +176,38 @@ export class ScanComponent {
           console.log('files out of bounds');
         }
     }
+    
+  writefilecontent(listelement: metadata){
   
+  if (listelement.file) {
+      console.log("Trying to Read");
+        var r = new FileReader();
+        
+        r.onload = (e) => this.readFileContent(e, listelement);
+        r.readAsBinaryString(listelement.file);
+      } else {
+        console.log("Failed to load file");
+      }
+  }
+  
+  readFileContent(e, listelement: metadata){
+        var contents = (<IDBOpenDBRequest>e.target).result;
+        
+        listelement.filecontent = contents;
+        //console.log("listoffiles: " + this.listoffiles);
+        console.log("Pushe: ", listelement);
+        
+        // rufe scan auf
+        
+  }
+ }
+  
+class metadata{
+ppn: string;
+firstpage: number;
+lastpage: number;
+file: File;
+filecontent: any;
+ppnsucc: boolean;
+allset: boolean;
 }
