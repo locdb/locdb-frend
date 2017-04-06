@@ -1,6 +1,5 @@
 {{ diagnostics }}
 <div class="col-xs-12 col-sm-6 col-md-4">
-    <!-- <div *ngIf="references" class="panel panel-default"> -->
     <div *ngIf="entry" class="panel panel-default">
         <div class="panel-heading">
             <b>Suggestions</b>
@@ -11,16 +10,13 @@
         <div class="panel-body">
             <div class="list-group">
                 <a href="#" *ngFor="let r of internalSuggestions" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)">
-                    <span class="badge">{{r.source}}</span>
+                    <span class="badge">LOC-DB</span>
                     <h5 class="list-group-item-heading"><b>{{r.title}}</b></h5>
-                    <p class="list-group-item-text">{{r.authors}}</p>
-                    <!-- <p class="list-group-item-text">{{r.journal}}, {{r.year}}</p> -->
-                </a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-warning" (click)="onSelect()">
-                    <span class="badge">LOCDB</span>
-                    <div align="center">
-                        <h5 class="list-group-item-heading"><b>New Entry</b></h5>
-                    </div>
+                    <h6 class="list-group-item-heading"><b>{{r.subtitle}}</b></h6>
+                    <p class="list-group-item-text">{{extractAuthors(r.contributors)}}</p>
+                    <p class="list-group-item-text">{{r.partOf}} {{ r.number }}</p>
+                    <p class="list-group-item-text">{{extractPublishers(r.contributors)}}</p>
+                    <p class="list-group-item-text">{{r.publicationYear}}</p>
                 </a>
             </div>
 
@@ -65,7 +61,7 @@
     <div *ngIf="entry" class="panel panel-default">
         <div class="panel-heading"><b>Confirm</b></div>
         <div class="panel-body">
-            <form (ngSubmit)="onSubmit()" #citationForm="ngForm">
+            <form (ngSubmit)="onSubmit()" #citationForm="ngForm" disabled>
                 <!-- <div class="form-group"> -->
                 <!--     <label for="type">Typ</label> -->
                 <!--     <select class="form-control"  id="reftype" -->
@@ -85,15 +81,20 @@
                 <div [hidden]="title.valid || title.pristine" class="alert alert-danger">
                     Title is required
                 </div>
-
                 <div class="form-group">
-                    <label for="author">Autoren</label>
+                    <label for="title">Subtitle</label>
+                    <input type="text" class="form-control" id="subtitle"
+                                                            [(ngModel)]="entry.subtitle" name="subtitle">
+                </div>
+
+               <div class="form-group">
+                    <label for="author">Authors</label>
                     <div class="row" *ngFor="let author of entry.authors; let i=index">
                         <div class="col-xs-6">
                             {{ author }}
                         </div>
                         <div class="col-xs-6">
-                            <button class="btn btn-default" (click)="removeAuthorAt(i)">Entfernen</button>
+                            <button class="btn btn-default" (click)="removeAuthorAt(i)">Remove</button>
                         </div>
                     </div>
                     <div class="row">
@@ -109,9 +110,9 @@
                 <div class="row">
                     <div class="col-xs-4">
                         <div class="form-group">
-                            <label for="year">Jahr</label>
+                            <label for="year">Year</label>
                             <input type="number"  class="form-control" id="year" required
-                                                                       [(ngModel)]="entry.date" name="year" #year="ngModel">
+                                                                       [(ngModel)]="entry.publicationYear" name="year" #year="ngModel">
                         </div>
                         <div [hidden]="year.valid || year.pristine" class="alert alert-danger">
                             Year is required
@@ -120,40 +121,42 @@
 
                     <div class="col-xs-8">
                         <div class="form-group">
-                            <label for="journal">Journal</label>
-                            <input type="text"  class="form-control" id="journal"
-                                                                     [(ngModel)]="entry.journal" name="journal">
+                            <label for="publisher">Published</label>
+                            <input type="text"  class="form-control" id="publisher"
+                                                                       [(ngModel)]="entry.publisher" name="publisher">
                         </div>
                     </div>
+
                 </div>
 
 
                 <div class="row">
-                    <div class="col-xs-4">
+                    <div class="col-xs-8">
                         <div class="form-group">
-                            <label for="volume">Band</label>
-                            <input type="number"  class="form-control" id="volume"
-                                                                       [(ngModel)]="entry.volume" name="volume">
-                        </div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="form-group">
-                            <label for="issue">Heft</label>
-                            <input type="number"  class="form-control" id="issue"
-                                                                       [(ngModel)]="entry.issue" name="issue">
+                            <label for="partOf">In</label>
+                            <input type="text"  class="form-control" id="partOf"
+                                                                     [(ngModel)]="entry.partOf" name="partOf">
                         </div>
                     </div>
 
                     <div class="col-xs-4">
-                        <div class="form-group"> <label for="pages">Seite(n)</label>
-                            <input type="text"  class="form-control" id="pages"
-                                                                     [(ngModel)]="entry.pages" name="pages">
+                        <div class="form-group">
+                            <label for="number">Number</label>
+                            <input type="number"  class="form-control" id="number"
+                                                                       [(ngModel)]="entry.number" name="number">
                         </div>
                     </div>
+
+                    <!-- <div class="col-xs-4"> -->
+                    <!--     <div class="form-group"> <label for="pages">Seite(n)</label> -->
+                    <!--         <input type="text"  class="form-control" id="pages" -->
+                    <!--                                                  [(ngModel)]="entry.pages" name="pages"> -->
+                    <!--     </div> -->
+                    <!-- </div> -->
 
                 </div>
                 <div align="right">
-                    <button type="submit" class="btn btn-primary" [disabled]="!citationForm.form.valid">Bestätigen</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="!citationForm.form.valid">Confirm</button>
                 </div>
             </form>
         </div>

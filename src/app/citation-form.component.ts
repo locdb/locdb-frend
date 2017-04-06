@@ -1,9 +1,10 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { Citation } from './citation';
-import { REFERENCES } from './mock-references';
+import { MOCK_INTERNAL } from './mock-bresources';
 
 import { LocdbService } from './locdb.service';
 import { BibliographicEntry, BibliographicResource } from './locdb';
+import { AgentRole } from './locdb';
 
 @Component({
   moduleId: module.id,
@@ -18,7 +19,7 @@ export class CitationFormComponent implements OnChanges {
 
   @Input() entry: BibliographicEntry;
 
-  internalSuggestions: BibliographicResource[];
+  internalSuggestions: BibliographicResource[] = MOCK_INTERNAL;
   externalSuggestions: any[];
   // submitted = true;
 
@@ -59,7 +60,7 @@ export class CitationFormComponent implements OnChanges {
 
 
   ngOnChanges(changes: any) {
-    console.log("onChanges called");
+    // console.log("onChanges called");
     // this.fetchInternals(this.entry);
     // this.fetchExternals(this.entry);
     // this.submitted = false;
@@ -67,14 +68,12 @@ export class CitationFormComponent implements OnChanges {
 
   onSelect (resource: BibliographicResource)
   {
+    console.log("onSelect called with", resource);
     if (!resource) return;
-    this.entry.title = resource.title;
-
-    let authors: string[] = []
-    for (let agent of resource.contributors) {
-      // if (agent.roleType === "author")
-      this.entry.authors.push(agent.heldBy.nameString);
-    }
+    this.entry = resource;
+    this.entry.authors = this.extractAuthors(resource.contributors)
+    this.entry.publisher = this.extractPublishers(resource.contributors)[0]
+    // this.entry.number = resource.number;
     // this.submitted = false;
   }
 
@@ -89,6 +88,9 @@ export class CitationFormComponent implements OnChanges {
   // }
 
   onSubmit() {
+    // prepare for submission
+    // reverse-enginer publisher as role
+    
     // this.locdbService.putBibliographicEntry(this.entry._id, this.entry);
     // this.submitted = true;
     this.entry = null;
@@ -96,6 +98,24 @@ export class CitationFormComponent implements OnChanges {
 
   removeAuthorAt(position:number) {
     this.entry.authors.splice(position, 1);
+  }
+
+  extractAuthors(contributors: AgentRole[]): string[] {
+    return this.extractRole(contributors, 'author');
+  }
+
+  extractPublishers(contributors: AgentRole[]): string[] {
+    return this.extractRole(contributors, 'publisher');
+  }
+
+  extractRole(contributors: AgentRole[], role): string[] {
+    let names: string[] = []
+    for (let agent of contributors) {
+      if (agent.roleType === role) {
+         names.push(agent.heldBy.nameString);
+      }
+    }
+    return names;
   }
 
 

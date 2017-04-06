@@ -29,7 +29,13 @@ export class DisplayComponent implements OnInit {
     this.displaySource = this.locdbService.getScan(newTodo._id);
     this.displayActive = true;
     this.locdbService.getToDoBibliographicEntries(newTodo._id)
-      .subscribe( (res) => this.entries = res) ;
+      .subscribe( (res) => this.entriesArrived(res) ) ;
+  }
+
+  entriesArrived(entries) {
+    this.entries = entries;
+    this.currentIndex = 0;
+    this.entry.next(entries[0]);
   }
 
   onSelect(entry: any) {

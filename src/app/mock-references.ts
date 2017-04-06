@@ -8,13 +8,13 @@ export const REFERENCES: Citation[] = [
     'Learned helplessness in hu-mans: Critique and reformula',
     1978, 'Journal of Abnormal Psychology', null, 87, '49-74'),
 
-  new Citation(44, 'LOCDB', Citation.REFTYPES[0], ['Adorno, T.W.'],
+  new Citation(45, 'LOCDB', Citation.REFTYPES[0], ['Adorno, T.W.'],
     'Studien zum autoritären Charakter', 1973,
     'Suhrkamp (Frankfurt)'),
 ];
 
 export const REFERENCES_ALT: Citation[] = [
-  new Citation(44, 'LOCDB', Citation.REFTYPES[0], ['Adorno, T.W.'],
+  new Citation(46, 'LOCDB', Citation.REFTYPES[0], ['Adorno, T.W.'],
     'Studien zum autoritären Charakter', 1973,
     'Suhrkamp (Frankfurt)')
 ];

@@ -21,8 +21,7 @@ export class AgentRole {
   roleType: string;
   heldBy?: ResponsibleAgent;
 }
-export class BibliographicEntry {
-  _id: string;
+export class BibliographicEntry extends BibliographicResource {
   bibliographicEntryText?: string;
   references?: string;
   coordinates?: string;
@@ -32,6 +31,9 @@ export class BibliographicEntry {
   title?: string;
   date?: string;
   marker?: string;
+  // added
+  publisher?: string;
+  // _id: string;
 }
 export class ResourceEmbodiment {
   typeMongo?: string;
