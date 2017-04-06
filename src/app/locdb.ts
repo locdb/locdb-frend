@@ -69,4 +69,8 @@ export class ExternalResource {
   status?: string;
   authors: string[];
   title: string;
+  // added
+  publisher:string;
+  year:number;
+  number?: number;
 }

@@ -39,8 +39,9 @@
                                 <div class="checkbox" *ngFor="let r of externalSuggestions">
                                     <label>
                                         <input type="checkbox">
-                                        {{ r.title }} by {{ r.authors }}
-                                        <span class="badge">{{ r.identifiers[0].scheme }}</span>
+                                      <span class="badge">{{ r.identifiers[0].scheme }}</span>
+                                      <b>{{ r.title }}</b> by {{ r.authors }}.
+                                      <b>Published:</b> {{r.publisher}} {{r.number}} ({{r.year}})
                                     </label>
                                 </div>
                                 <div align="right">

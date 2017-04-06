@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { Citation } from './citation';
-import { MOCK_INTERNAL } from './mock-bresources';
+import { MOCK_INTERNAL, MOCK_EXTERNAL } from './mock-bresources';
 
 import { LocdbService } from './locdb.service';
 import { BibliographicEntry, BibliographicResource } from './locdb';
@@ -20,7 +20,7 @@ export class CitationFormComponent implements OnChanges {
   @Input() entry: BibliographicEntry;
 
   internalSuggestions: BibliographicResource[] = MOCK_INTERNAL;
-  externalSuggestions: any[];
+  externalSuggestions: any[] = MOCK_EXTERNAL;
   // submitted = true;
 
   reftypes = Citation.REFTYPES;
