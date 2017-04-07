@@ -17,6 +17,7 @@ import { CitationFormComponent } from './citation-form.component';
 import { ScanComponent } from './scan.component';
 import { TodoComponent } from './todo.component';
 import { DisplayComponent } from './display/display.component';
+import { EntryFormComponent } from './entry-form/entry-form.component';
 // import { LocdbService } from './locdb.service';
 
 @NgModule({

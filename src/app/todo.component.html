@@ -11,7 +11,7 @@
                 {{ s._id }} 
                 <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
             </button>
-            <button type="button" *ngFor="let s of unprocessed" class="list-group-item list-group-item-action list-group-item-warning justify-content-between" (click)="onSelect(s)" >
+            <button type="button" *ngFor="let s of unprocessed" class="list-group-item list-group-item-action list-group-item-warning justify-content-between" (click)="processScan(s)" >
                 {{ s._id }} 
                 <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
             </button>
