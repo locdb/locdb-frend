@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 
@@ -18,6 +19,7 @@ import { ScanComponent } from './scan.component';
 import { TodoComponent } from './todo.component';
 import { DisplayComponent } from './display/display.component';
 import { EntryFormComponent } from './entry-form/entry-form.component';
+import { LocdbService } from './locdb.service';
 // import { LocdbService } from './locdb.service';
 
 @NgModule({
@@ -25,7 +27,8 @@ import { EntryFormComponent } from './entry-form/entry-form.component';
     ModalModule.forRoot(),
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    ReactiveFormsModule
     ],
   declarations: [
     AppComponent,
@@ -33,9 +36,11 @@ import { EntryFormComponent } from './entry-form/entry-form.component';
     ScanComponent,
     TodoComponent,
     FileSelectDirective,
-    DisplayComponent
+    DisplayComponent,
+    EntryFormComponent,
     // LocdbService
   ],
+  providers: [ LocdbService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

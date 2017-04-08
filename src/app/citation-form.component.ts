@@ -27,7 +27,8 @@ export class CitationFormComponent implements OnChanges {
 
   authorCandidate = '';
 
-  constructor (private locdbService: LocdbService) {}
+  constructor (private locdbService: LocdbService) {
+  }
 
 
   fetchInternals(be: BibliographicEntry) {
