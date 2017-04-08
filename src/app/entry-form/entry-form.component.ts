@@ -53,7 +53,7 @@ export class EntryFormComponent implements OnChanges {
   };
 
   addAuthor(){
-    this.authors.push(this.fb.group(new String()));
+    this.authors.push(this.fb.control(""));
   }
 
 
