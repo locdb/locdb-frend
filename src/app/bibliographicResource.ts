@@ -1,4 +1,4 @@
-import { Identifier } from "./identifier" 
+import { Identifier } from './identifier' 
 
 export class BibliographicResource {
   constructor(

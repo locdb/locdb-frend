@@ -3,34 +3,34 @@ import { BibliographicResource, ExternalResource } from './locdb'
 
 export const MOCK_INTERNAL: BibliographicResource[] = [
   { 
-    _id: "42",
-    title: "Learned helplessness in humans: Critique and reformula",
-    type: "journal",
-    partOf: "Journal of Abnormal Psychology",
+    _id: '42',
+    title: 'Learned helplessness in humans: Critique and reformula',
+    type: 'journal',
+    partOf: 'Journal of Abnormal Psychology',
     number: 87,
     publicationYear: 1989,
     embodiedAs: [{
-      format: "print",
+      format: 'print',
       firstPage: 49,
       lastPage: 74,
     }],
     contributors: [
-      {roleType: "author", heldBy: {nameString: "Abramson, L.Y."}},
-      {roleType: "author", heldBy: {nameString: "Seligman, M.E.P"}},
-      {roleType: "author", heldBy: {nameString: "Teasdale, J.D."}},
+      {roleType: 'author', heldBy: {nameString: 'Abramson, L.Y.'}},
+      {roleType: 'author', heldBy: {nameString: 'Seligman, M.E.P'}},
+      {roleType: 'author', heldBy: {nameString: 'Teasdale, J.D.'}},
     ]
   },
   { 
-    _id: "43",
-    title: "Studien zum autoritären Charakter",
-    type: "Article",
+    _id: '43',
+    title: 'Studien zum autoritären Charakter',
+    type: 'Article',
     publicationYear: 1973,
     embodiedAs: [{
-      format: "print",
+      format: 'print',
     }],
     contributors: [
-      {roleType: "author", heldBy: {nameString: "Adorno, T.W."}},
-      {roleType: "publisher", heldBy: {nameString: "Suhrkamp (Frankfurt)"}},
+      {roleType: 'author', heldBy: {nameString: 'Adorno, T.W.'}},
+      {roleType: 'publisher', heldBy: {nameString: 'Suhrkamp (Frankfurt)'}},
     ]
   }
 ];

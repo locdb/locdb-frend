@@ -39,29 +39,29 @@ export class TodoComponent implements OnInit {
   }
 
   prettyStatus(scan: ToDoScans) {
-    if ( scan.status === "OCR_PROCESSED" )
-      return "OCR";
-    if ( scan.status === "NOT_OCR_PROCESSED" )
-      return "not OCR";
-    return "Processing"
+    if ( scan.status === 'OCR_PROCESSED' )
+      return 'OCR';
+    if ( scan.status === 'NOT_OCR_PROCESSED' )
+      return 'not OCR';
+    return 'Processing'
   }
 
   processScan(scan: ToDoScans) {
-    if ( scan.status === "NOT_OCR_PROCESSED" )
+    if ( scan.status === 'NOT_OCR_PROCESSED' )
     {
-      scan.status = "OCR_PROCESSING";
+      scan.status = 'OCR_PROCESSING';
       this.locdbService.triggerOcrProcessing(scan._id).subscribe(
-        (message) => scan.status = "OCR_PROCESSED"
+        (message) => scan.status = 'OCR_PROCESSED'
       ) 
     }
     else
     {
-      alert("Already processing...")
+      alert('Already processing...')
     }
   }
 
   private static extractScans(todos: ToDo[]): ToDoScans[] {
-    console.log("Input to extractScans", todos);
+    console.log('Input to extractScans', todos);
     // if (!todos) return [];
     // let flat_scans: ToDoScans[] = [];
     // // Ugly loop //
@@ -82,7 +82,7 @@ export class TodoComponent implements OnInit {
     ).reduce(
       (acc,val) => acc.concat(val)
     )
-    console.log("Extracted flat list of scans", flat_scans);
+    console.log('Extracted flat list of scans', flat_scans);
     return flat_scans;
   }
 }

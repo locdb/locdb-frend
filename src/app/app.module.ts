@@ -9,7 +9,7 @@ import { HttpModule } from '@angular/http';
 
 // ng2-bootstrap
 import { ModalModule } from 'ng2-bootstrap/modal';
-//ng2-fileupload
+// ng2-fileupload
 import { FileSelectDirective } from 'ng2-file-upload';
 
 import { AppComponent } from './app.component';
