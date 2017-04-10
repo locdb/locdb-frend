@@ -1,6 +1,6 @@
 // basic angular http client stuff
 import { Injectable } from '@angular/core';
-import { Http, Response, URLSearchParams, RequestOptions} from '@angular/http';
+import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angular/http';
 
 // advanced rxjs async handling
 import { Observable } from 'rxjs/Observable';
@@ -90,12 +90,15 @@ export class LocdbService {
   }
 
   suggestions(be: BibliographicEntry, external?: boolean): Observable<any[]> {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+
     if (external) {
-      return this.http.get(this.externalSuggestions, be)
+      return this.http.post(this.externalSuggestions, be, options)
         .map(this.extractData)
         .catch(this.handleError);
     } else {
-      return this.http.get(this.internalSuggestions, be)
+      return this.http.post(this.internalSuggestions, be, options)
         .map(this.extractData)
         .catch(this.handleError);
     }

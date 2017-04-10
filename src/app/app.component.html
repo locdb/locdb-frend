@@ -2,15 +2,35 @@
   <div class="panel-heading"><h1>{{title}}</h1></div>
   <div class="panel-body">
     <section class="container-fluid">
-    <div class="row" style="margin-top: 10px">
-    <div class="col-xs-12 col-sm-6 col-md-4">
-      <!-- <scan (eventEmitter)="updateCandidates($event)"></scan> -->
-      <!-- <todolist (todo)="updateDisplay($event)"></todolist> -->
-      <app-display (entry)="updateEntry($event)"></app-display>
-    </div>
-    <!-- citation form is over 2 columns -->
-    <citation-form [entry]="entry"></citation-form>
-  </div>
+      <div class="row" style="margin-top: 10px">
+        <div class="col-xs-12 col-sm-6 col-md-4">
+          <!-- <scan (eventEmitter)="updateCandidates($event)"></scan> -->
+          <!-- <todolist (todo)="updateDisplay($event)"></todolist> -->
+          <app-display (entry)="updateEntry($event)"></app-display>
+        </div>
+        <!-- citation form is over 2 columns -->
+        <!-- <citation-form [entry]="entry"></citation-form> -->
+        <div class="col-xs-12 col-sm-6 col-md-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <b>Bibliographic entry</b>
+            </div>
+            <div class="panel-body">
+              <app-entry-form [entry]="entry" (state)="updateForSuggestion($event)"></app-entry-form>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <b>Suggestions</b>
+            </div>
+            <div class="panel-body">
+              <app-suggestion [entry]="entryForSuggestion" (suggestion)="updateFromSuggestion($event)"></app-suggestion>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   </div>
-</div>
+

@@ -2,6 +2,8 @@
   <div style="margin-bottom: 1em">
     <button type="submit"
             [disabled]="entryForm.pristine" class="btn btn-success">Save</button> &nbsp;
+    <button type="suggest" (click)="output()"
+            [disabled]="entryForm.pristine" class="btn btn-info">Suggest</button>
     <button type="reset" (click)="revert()"
             [disabled]="entryForm.pristine" class="btn btn-danger">Revert</button>
   </div>
@@ -26,6 +28,9 @@
           <label class="center-block"> Name:
             <!-- <input class="form-control" formControlName="author"> -->
             <input class="form-control" [formControlName]="i">
+            <button (click)="removeAuthor(i)" type="button" class="btn btn-default" aria-label="Remove Author">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </button>
           </label>
         </div>
         <!-- <div class="form-group"> -->
@@ -55,6 +60,11 @@
       <!-- End of the repeated author template -->
     </div>
     <button (click)="addAuthor()" type="button">Add author</button>
+  </div>
+  <div class="form-group">
+      <label class="center-block">Year:
+        <input class="form-control" formControlName="date">
+      </label>
   </div>
   <div class="form-group">
       <label class="center-block">References:
