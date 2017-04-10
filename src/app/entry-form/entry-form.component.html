@@ -1,14 +1,7 @@
-<div *ngIf="entry">
 <div style="margin-bottom: 1em" align="right">
 <button type="suggest" (click)="output()" [disabled]="entryForm.pristine" class="btn btn-info">Suggest</button> &nbsp;
 </div>
 <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" novalidate>
-  <div style="margin-bottom: 1em">
-    <button type="submit"
-            [disabled]="entryForm.pristine" class="btn btn-success">Save</button> &nbsp;
-    <button type="reset" (click)="revert()"
-            [disabled]="entryForm.pristine" class="btn btn-danger">Revert</button>
-  </div>
   <!-- Hero Detail Controls -->
   <div class="form-group">
       <label class="center-block">Raw text:
@@ -74,6 +67,12 @@
       </label>
   </div>
 
+  <div style="margin-top: 1em" align="right">
+    <button type="reset" (click)="revert()"
+            [disabled]="entryForm.pristine" class="btn btn-danger">Revert</button>
+    <button type="submit"
+            [disabled]="entryForm.pristine" class="btn btn-success">Save</button> &nbsp;
+  </div>
 
   <!-- <div class="form-group radio"> -->
   <!--   <h4>Super power:</h4> -->
@@ -87,4 +86,3 @@
   <!--   </label> -->
   <!-- </div> -->
 </form>
-</div>
