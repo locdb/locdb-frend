@@ -1,3 +1,4 @@
+<div *ngIf="entry">
 <a href="#" *ngFor="let r of internalSuggestions" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)">
   <span class="badge">LOC-DB</span>
   <h5 class="list-group-item-heading"><b>{{r.title}}</b></h5>
@@ -38,3 +39,4 @@
     </div>
   </div>
 </div>
+</div> 

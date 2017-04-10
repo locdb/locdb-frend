@@ -1,9 +1,11 @@
+<div *ngIf="entry">
+<div style="margin-bottom: 1em" align="right">
+<button type="suggest" (click)="output()" [disabled]="entryForm.pristine" class="btn btn-info">Suggest</button> &nbsp;
+</div>
 <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" novalidate>
   <div style="margin-bottom: 1em">
     <button type="submit"
             [disabled]="entryForm.pristine" class="btn btn-success">Save</button> &nbsp;
-    <button type="suggest" (click)="output()"
-            [disabled]="entryForm.pristine" class="btn btn-info">Suggest</button> &nbsp;
     <button type="reset" (click)="revert()"
             [disabled]="entryForm.pristine" class="btn btn-danger">Revert</button>
   </div>
@@ -85,5 +87,4 @@
   <!--   </label> -->
   <!-- </div> -->
 </form>
-<p>entry value: {{ entry | json }} </p>
-<p>entryForm value: {{ entryForm.value | json}}</p>
+</div>

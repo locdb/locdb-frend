@@ -68,6 +68,7 @@ export class EntryFormComponent implements OnChanges {
 
   onSubmit() {
     this.entry = this.prepareSaveEntry();
+    console.log("Submitting entry", this.entry);
 
     this.locdbService.putBibliographicEntry(this.entry._id, this.entry).subscribe(
       (result) => console.log("Error while submitting entry", result)
