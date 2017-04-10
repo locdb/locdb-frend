@@ -31,12 +31,12 @@ export class CitationFormComponent implements OnChanges {
 
 
   fetchInternals(be: BibliographicEntry) {
-    console.log("Fetching internal suggestions for", be);
+    console.log('Fetching internal suggestions for', be);
     this.locdbService.suggestions(be, false).subscribe( (sgt) => this.internalSuggestions = sgt );
   }
 
   fetchExternals(be: BibliographicEntry) {
-    console.log("Fetching external suggestions for", be);
+    console.log('Fetching external suggestions for', be);
     this.locdbService.suggestions(be, true).subscribe( (sgt) => this.externalSuggestions = sgt );
   }
 
@@ -68,7 +68,7 @@ export class CitationFormComponent implements OnChanges {
 
   onSelect (resource: BibliographicResource)
   {
-    console.log("onSelect called with", resource);
+    console.log('onSelect called with', resource);
     if (!resource) return;
     this.entry = resource;
     this.entry.authors = this.extractAuthors(resource.contributors)

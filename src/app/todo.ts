@@ -11,7 +11,7 @@ export class Todo {
 }
 
 export function is_ready(todo: Todo | TodoScan) {
-  return todo.status === "OCR_PROCESSED";
+  return todo.status === 'OCR_PROCESSED';
 }
 
 export class TodoBR {

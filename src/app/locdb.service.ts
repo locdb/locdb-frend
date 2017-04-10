@@ -39,7 +39,7 @@ export class LocdbService {
   // Generic helpers for data extraction and error handling
   
   private extractData(res: Response) {
-    console.log("Response", res);
+    console.log('Response', res);
     let body = res.json();
     return body;
   }
@@ -60,7 +60,7 @@ export class LocdbService {
 
   // acquire todo items and scans
   getToDo(ocr_processed:boolean): Observable<ToDo[]> {
-    let status_: string = ocr_processed ? "OCR_PROCESSED" : "NOT_OCR_PROCESSED";
+    let status_: string = ocr_processed ? 'OCR_PROCESSED' : 'NOT_OCR_PROCESSED';
     let params: URLSearchParams = new URLSearchParams();
     params.set('status', status_);
     return this.http.get(this.locdbTodoEndpoint, { search: params } )

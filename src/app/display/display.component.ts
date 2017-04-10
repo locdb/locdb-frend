@@ -16,7 +16,7 @@ import { LocdbService } from '../locdb.service';
 export class DisplayComponent implements OnInit {
   displaySource: string;
   displayActive: boolean = false;
-  title: string = "Display";
+  title: string = 'Display';
   currentIndex: number = 0;
   entries: BibliographicEntry[];
   @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
@@ -50,7 +50,7 @@ export class DisplayComponent implements OnInit {
   next(diff: number) {
     this.currentIndex = Math.abs((this.entries.length + this.currentIndex + diff) % this.entries.length);
     let entry = this.entries[this.currentIndex];
-    console.log("Emission of entry at index " + this.currentIndex, entry);
+    console.log('Emission of entry at index ' + this.currentIndex, entry);
     this.entry.next(this.entries[this.currentIndex]);
   }
 
@@ -61,7 +61,7 @@ export class DisplayComponent implements OnInit {
   clear() {
     this.displaySource = null;
     this.displayActive = false;
-    console.log("Emission of null to clear");
+    console.log('Emission of null to clear');
     this.entry.next(null); // reset view
   }
 
