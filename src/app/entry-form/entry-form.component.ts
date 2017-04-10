@@ -1,6 +1,6 @@
 import { Component, OnChanges, Input, Output, EventEmitter} from '@angular/core';
 import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
-import { BibliographicEntry } from '../locdb';
+import { BibliographicEntry, Identifier} from '../locdb';
 import { LocdbService } from '../locdb.service';
 
 @Component({
@@ -81,7 +81,8 @@ export class EntryFormComponent implements OnChanges {
     // const authorsDeepCopy: string[] = formModel.authors.map(
     //   (author: string) => Object.assign({}, author)
     // );
-    const authorsDeepCopy = Object.create(formModel.authors);
+    // const authorsDeepCopy = Object.create(formModel.authors);
+    const authorsDeepCopy = this.copyArray<string>(formModel.authors);
     // return new `BibliographicEntry` object containing a combination of original entry value(s)
     // and deep copies of changed form model values
     const saveEntry: BibliographicEntry = {
@@ -96,25 +97,34 @@ export class EntryFormComponent implements OnChanges {
     return saveEntry;
   }
 
+  copyArray<T>(array: T[]): T[] {
+    let copy = []
+    for (let elem of array) {
+      copy.push(elem);
+    }
+    return copy;
+  }
+
   revert() { this.ngOnChanges(); }
 
   output() {
     const formModel = this.entryForm.value;
-    const authorsDeepCopy = Object.create(formModel.authors);
+    let authorsDeepCopy = this.copyArray<string>(formModel.authors);
     // copy from original entry
-    let origEntry = this.entry;
-    let current : BibliographicEntry = {
+    const current : BibliographicEntry = {
       _id: this.entry._id,
       coordinates: this.entry.coordinates,
       scanId: this.entry.scanId,
       status: this.entry.status,
       marker: this.entry.marker,
+      identifiers: this.entry.identifiers as Identifier[],
       bibliographicEntryText: formModel.bibliographicEntryText as string,
       references: formModel.references as string,
       title: formModel.title as string,
       date: formModel.date as string,
-      authors: authorsDeepCopy
+      authors: authorsDeepCopy as string[]
     };
+    console.log("output", current);
     this.state.next(current);
   }
 
