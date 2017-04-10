@@ -42,10 +42,12 @@ export class AppComponent {
     //   authors: authors,
     //   references: references
     // };
+    console.log("Updating from suggestion");
     this.entry.title = title;
     this.entry.date = date;
     this.entry.authors = authors;
     this.entry.references = references;
+    this.entry = this.entry; // trigger ngOnChanges in subcomponent
   }
 
   // updateCandidates(newCandidates: Citation[]) {

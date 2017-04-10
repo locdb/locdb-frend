@@ -93,7 +93,8 @@ export class EntryFormComponent implements OnChanges {
       references: formModel.references as string,
       title: formModel.title as string,
       date: formModel.date as string,
-      authors: authorsDeepCopy
+      authors: authorsDeepCopy,
+      status: "VALID" // validated
     };
     return saveEntry;
   }
