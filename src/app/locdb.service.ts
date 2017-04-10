@@ -79,12 +79,12 @@ export class LocdbService {
   }
 
   saveScan(ppn: string, firstPage: number, lastPage: number, scan: any) {
-    let params: URLSearchParams = new URLSearchParams();
-    params.set('ppn', ppn)
-    params.set('firstpage', firstPage.toString())
-    params.set('lastpage', lastPage.toString())
-    params.set('scan', scan)
-    this.http.post(this.locdbSaveScan, { search: params })
+    let formData: FormData = new FormData();
+    formData.append('ppn', ppn);
+    formData.append('firstPage', firstPage);
+    formData.append('lastPage', lastPage);
+    formData.append('scan', scan);
+    this.http.post(this.locdbSaveScan, formData)
       .map(this.extractData)
       .catch(this.handleError);
   }

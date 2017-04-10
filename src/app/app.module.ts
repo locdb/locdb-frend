@@ -21,7 +21,6 @@ import { DisplayComponent } from './display/display.component';
 import { EntryFormComponent } from './entry-form/entry-form.component';
 import { LocdbService } from './locdb.service';
 import { SuggestionComponent } from './suggestion/suggestion.component';
-// import { LocdbService } from './locdb.service';
 
 @NgModule({
   imports: [
