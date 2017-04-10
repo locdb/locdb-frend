@@ -41,7 +41,8 @@ export class SuggestionComponent implements OnChanges {
   }
 
 
-  onSelect(entryItem) : void {
+  onSelect(entryItem: BibliographicEntry) : void {
+    console.log("Suggestion emitted", entryItem);
     this.suggest.next(<BibliographicEntry>entryItem);
   }
 
