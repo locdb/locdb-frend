@@ -1,8 +1,8 @@
 <div class="panel panel-default"> 
     <div class="panel-heading">
         <b>{{title}}</b>
-        <button type="button" class="btn btn-default" aria-label="Right Align">
-            <span class="glyphicon glyphicon-refresh" aria-hidden="true" (click)="fetchScans"></span>
+        <button (click)="fetchScans()" type="button" class="btn btn-default" aria-label="Refresh">
+            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
         </button>
     </div>
     <div class="panel-body">

@@ -3,15 +3,19 @@ import { Citation } from './citation';
 import { REFERENCES, REFERENCES_ALT } from './mock-references';
 import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
 
+import { LocdbService } from './locdb.service';
+
 const URL ='/api/'; //Same Origin Policy
 
 @Component({
   moduleId: module.id,
   selector: 'scan',
-  templateUrl: './scan.component.html'
+  templateUrl: './scan.component.html',
+  providers: [ LocdbService ]
 })
 
 export class ScanComponent {
+  constructor ( private locdbService : LocdbService ) { }
   public uploader: FileUploader = new FileUploader({url: URL});
   event: any;
   files: any;
@@ -178,29 +182,31 @@ export class ScanComponent {
     }
     
   writefilecontent(listelement: metadata){
-  
-  if (listelement.file) {
+
+    if (listelement.file) {
       console.log("Trying to Read");
-        var r = new FileReader();
-        
-        r.onload = (e) => this.readFileContent(e, listelement);
-        r.readAsBinaryString(listelement.file);
-      } else {
-        console.log("Failed to load file");
-      }
+      var r = new FileReader();
+
+      r.onload = (e) => this.readFileContent(e, listelement);
+      r.readAsBinaryString(listelement.file);
+    } else {
+      console.log("Failed to load file");
+    }
   }
   
   readFileContent(e, listelement: metadata){
-        var contents = (<IDBOpenDBRequest>e.target).result;
-        
-        listelement.filecontent = contents;
-        //console.log("listoffiles: " + this.listoffiles);
-        console.log("Pushe: ", listelement);
-        
-        // rufe scan auf
-        
-  }
- }
+    var contents = (<IDBOpenDBRequest>e.target).result;
+
+    listelement.filecontent = contents;
+    //console.log("listoffiles: " + this.listoffiles);
+    console.log("Pushe: ", listelement);
+
+    // rufe scan auf
+    this.locdbService.saveScan(listelement.ppn,
+      listelement.firstpage.toString(), listelement.lastpage.toString(),
+      listelement.filecontent, listelement.file).subscribe((result) =>
+        console.log(result)) }
+}
   
 class metadata{
 ppn: string;

@@ -78,13 +78,16 @@ export class LocdbService {
                     .catch(this.handleError);
   }
 
-  saveScan(ppn: string, firstPage: number, lastPage: number, scan: any) {
+  saveScan(ppn: string, firstPage: string, lastPage: string, scan: any, file: File): Observable<any> {
     let formData: FormData = new FormData();
+    console.log(ppn, firstPage, lastPage);
+    console.log(file);
     formData.append('ppn', ppn);
     formData.append('firstPage', firstPage);
     formData.append('lastPage', lastPage);
-    formData.append('scan', scan);
-    this.http.post(this.locdbSaveScan, formData)
+    formData.append('scan', file, file.name);
+    console.log('saveScan(...) formData', formData);
+    return this.http.post(this.locdbSaveScan, formData)
       .map(this.extractData)
       .catch(this.handleError);
   }
