@@ -43,11 +43,20 @@ export class AppComponent {
     //   references: references
     // };
     console.log("Updating from suggestion");
-    this.entry.title = title;
-    this.entry.date = date;
-    this.entry.authors = authors;
-    this.entry.references = references;
-    this.entry = this.entry; // trigger ngOnChanges in subcomponent
+
+    let updatedEntry : BibliographicEntry = {
+      _id: this.entry._id,
+      scanId: this.entry.scanId,
+      status: this.entry.status,
+      coordinates: this.entry.coordinates,
+      marker: this.entry.marker,
+      bibliographicEntryText: this.entry.bibliographicEntryText,
+      title: title,
+      date: date,
+      authors: authors,
+      references: references
+    }
+    this.entry = updatedEntry;
   }
 
   // updateCandidates(newCandidates: Citation[]) {
