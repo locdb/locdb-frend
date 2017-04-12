@@ -1,9 +1,18 @@
-sudo: false
+sudo: required
 dist: trusty
 language: node_js
 
 node_js:
-- '7.8.0'
+- '7.8'
+
+addons:
+
+apt:
+  sources:
+    - google-chrome
+  packages:
+    - google-chrome-stable
+    - google-chrome-beta
 
 before_install:
   - export CHROME_BIN=chromium-browser
@@ -11,8 +20,9 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 
 before_script:
-- npm install -g typescript@2.0
+- npm install -g angular-cli
+- npm install -g karma
+- npm install
 - ng build
 
-script:
-- karma start karma.conf.js --single-run
+script: karma start karma.conf.js --single-run

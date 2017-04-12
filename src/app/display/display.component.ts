@@ -7,6 +7,7 @@ import { LocdbService } from '../locdb.service';
 // display of the scan
 
 @Component({
+  moduleId: module.id,
   selector: 'app-display',
   templateUrl: './display.component.html',
   styleUrls: ['./display.component.css'],
