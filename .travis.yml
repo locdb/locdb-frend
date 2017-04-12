@@ -12,6 +12,7 @@ before_install:
 
 before_script:
 - npm install -g typescript@2.0
+- ng build
 
 script:
 - karma start karma.conf.js --single-run
