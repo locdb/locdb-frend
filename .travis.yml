@@ -20,4 +20,4 @@ before_script:
 - npm install -g typescript@2.0
 
 script:
-- npm test
+- karma start karma.conf.js --single-run
