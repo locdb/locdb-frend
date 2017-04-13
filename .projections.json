@@ -1,5 +1,6 @@
 {
   "src/app/*.ts": {"alternate": "src/app/{}.html", "type": "ts"},
   "src/app/*.html": {"alternate": "src/app/{}.ts", "type": "html"},
-  "*": {"dispatch" : "karma start karma.conf.js --single-run"}
+  "src/app/*.spec" : { "type" : "spec" },
+  "*": {"dispatch" : "karma start karma.conf.js --single-run", "start": "npm start", "make": "npm build"}
 } 
