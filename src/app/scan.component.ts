@@ -23,7 +23,7 @@ export class ScanComponent {
   firstpage = 2;
   lastpage = 12;
 
-  listoffiles: Metadata[] = [];
+  listoffiles: metadata[] = [];
   listoffilescontents = [];
 
   active: number;
@@ -188,16 +188,16 @@ export class ScanComponent {
   //preview...
   
 
-  next(diff: number) {
-    this.ref_idx = Math.abs((this.ref_idx + diff) % this.references.length);
-    console.log('New current reference index', this.ref_idx);
-    this.eventEmitter.next(this.references[this.ref_idx]);
+  // next(diff: number) {
+  //   this.ref_idx = Math.abs((this.ref_idx + diff) % this.references.length);
+  //   console.log('New current reference index', this.ref_idx);
+  //   this.eventEmitter.next(this.references[this.ref_idx]);
     
-    this.fil_idx = Math.abs((this.fil_idx + diff) % this.event.target.files.length);
-    console.log('New current file index', this.fil_idx);
-    this.readURL(this.event.target, this.fil_idx);
+  //   this.fil_idx = Math.abs((this.fil_idx + diff) % this.event.target.files.length);
+  //   console.log('New current file index', this.fil_idx);
+  //   this.readURL(this.event.target, this.fil_idx);
       
-  }
+  // }
   
   readURL(input, i) {
         if (input.files && input.files[i]) {
@@ -242,7 +242,7 @@ export class ScanComponent {
         console.log(result)) }
 }
   
-class Metadata{
+class metadata{
 ppn: string;
 firstpage: number;
 lastpage: number;
