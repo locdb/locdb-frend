@@ -1,0 +1,42 @@
+<a href="#" *ngFor="let r of internalSuggestions" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)">
+  <span class="badge">LOC-DB</span>
+  <h5 class="list-group-item-heading"><b>{{r.title}}</b></h5>
+  <h6 class="list-group-item-heading">{{r.authors}}</h6>
+  <p class="list-group-item-text">{{r.date}}</p>
+  <p class="list-group-item-text">{{r.references}}</p>
+</a>
+
+<div align="right" style="margin-top: 1em">
+  <button class="btn btn-primary" (click)="lgModal.show()">External Bibliographic Resources</button>
+</div>
+
+<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">External Bibliographic Resources</h4>
+        <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="checkbox" *ngFor="let r of externalSuggestions">
+            <label>
+              <input type="checkbox">
+              <span class="badge">{{ r.identifiers[0].scheme }}</span>
+              {{r.authors}}: <b>{{ r.title }}</b>.
+              <p *ngFor="let identifier of identifiers">
+                {{ identifier.scheme }} : {{ identifier.literalValue }}
+              </p>
+            </label>
+          </div>
+          <div align="right">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

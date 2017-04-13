@@ -27,7 +27,8 @@ export class CitationFormComponent implements OnChanges {
 
   authorCandidate = '';
 
-  constructor (private locdbService: LocdbService) {}
+  constructor (private locdbService: LocdbService) {
+  }
 
 
   fetchInternals(be: BibliographicEntry) {
@@ -72,7 +73,6 @@ export class CitationFormComponent implements OnChanges {
     if (!resource) return;
     this.entry = resource;
     this.entry.authors = this.extractAuthors(resource.contributors)
-    this.entry.publisher = this.extractPublishers(resource.contributors)[0]
     // this.entry.number = resource.number;
     // this.submitted = false;
   }

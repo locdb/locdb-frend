@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 
@@ -17,23 +18,29 @@ import { CitationFormComponent } from './citation-form.component';
 import { ScanComponent } from './scan.component';
 import { TodoComponent } from './todo.component';
 import { DisplayComponent } from './display/display.component';
-// import { EntryFormComponent } from './entry-form/entry-form.component';
-// import { LocdbService } from './locdb.service';
+import { EntryFormComponent } from './entry-form/entry-form.component';
+import { LocdbService } from './locdb.service';
+import { SuggestionComponent } from './suggestion/suggestion.component';
 
 @NgModule({
   imports: [
     ModalModule.forRoot(),
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    ReactiveFormsModule
     ],
   declarations: [
     AppComponent,
     CitationFormComponent,
     ScanComponent,
     TodoComponent,
-    DisplayComponent
+    DisplayComponent,
+    EntryFormComponent,
+    SuggestionComponent,
+    // LocdbService
   ],
+  providers: [ LocdbService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

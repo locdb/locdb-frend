@@ -1,6 +1,6 @@
 // basic angular http client stuff
 import { Injectable } from '@angular/core';
-import { Http, Response, URLSearchParams, RequestOptions} from '@angular/http';
+import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angular/http';
 
 // advanced rxjs async handling
 import { Observable } from 'rxjs/Observable';
@@ -78,24 +78,30 @@ export class LocdbService {
                     .catch(this.handleError);
   }
 
-  saveScan(ppn: string, firstPage: number, lastPage: number, scan: any) {
+  saveScan(ppn: string, firstPage: string, lastPage: string, scan: any, file: File): Observable<any> {
     let formData: FormData = new FormData();
+    console.log(ppn, firstPage, lastPage);
+    console.log(file);
     formData.append('ppn', ppn);
     formData.append('firstPage', firstPage);
     formData.append('lastPage', lastPage);
-    formData.append('scan', scan);
-    this.http.post(this.locdbSaveScan, formData)
+    formData.append('scan', file, file.name);
+    console.log('saveScan(...) formData', formData);
+    return this.http.post(this.locdbSaveScan, formData)
       .map(this.extractData)
       .catch(this.handleError);
   }
 
   suggestions(be: BibliographicEntry, external?: boolean): Observable<any[]> {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+
     if (external) {
-      return this.http.get(this.externalSuggestions, be)
+      return this.http.post(this.externalSuggestions, be, options)
         .map(this.extractData)
         .catch(this.handleError);
     } else {
-      return this.http.get(this.internalSuggestions, be)
+      return this.http.post(this.internalSuggestions, be, options)
         .map(this.extractData)
         .catch(this.handleError);
     }

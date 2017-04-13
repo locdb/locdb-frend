@@ -1,5 +1,14 @@
 {{ diagnostics }}
 <div class="col-xs-12 col-sm-6 col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <b>Bibliographic entry form</b>
+        </div>
+        <div class="panel-body">
+            <app-entry-form [entry]="entry"></app-entry-form>
+        </div>
+    </div>
+
     <div *ngIf="entry" class="panel panel-default">
         <div class="panel-heading">
             <b>Suggestions</b>

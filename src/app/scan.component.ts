@@ -3,15 +3,20 @@ import { Citation } from './citation';
 import { REFERENCES, REFERENCES_ALT } from './mock-references';
 // import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
 
-const URL = '/api/'; // Same Origin Policy
+import { LocdbService } from './locdb.service';
+
+const URL ='/api/'; //Same Origin Policy
 
 @Component({
   moduleId: module.id,
   selector: 'scan',
-  templateUrl: './scan.component.html'
+  templateUrl: './scan.component.html',
+  providers: [ LocdbService ]
 })
 
 export class ScanComponent {
+  constructor ( private locdbService : LocdbService ) { }
+  event: any;
   files: any;
 
   ppn = '1234567';
@@ -119,6 +124,7 @@ export class ScanComponent {
       console.log('FLUP: Invalid PPN or no firstpage or no lastpage set'); // throw error
     }
   }
+<<<<<<< HEAD
 
   writefilecontent(listelement: Metadata) {
 
@@ -146,6 +152,69 @@ export class ScanComponent {
  }
 
 class Metadata {
+=======
+  
+  
+  
+  //preview...
+  
+
+  next(diff: number) {
+    this.ref_idx = Math.abs((this.ref_idx + diff) % this.references.length);
+    console.log('New current reference index', this.ref_idx);
+    this.eventEmitter.next(this.references[this.ref_idx]);
+    
+    this.fil_idx = Math.abs((this.fil_idx + diff) % this.event.target.files.length);
+    console.log('New current file index', this.fil_idx);
+    this.readURL(this.event.target, this.fil_idx);
+      
+  }
+  
+  readURL(input, i) {
+        if (input.files && input.files[i]) {
+            var reader = new FileReader();
+            
+            reader.onload = (e) => {
+                console.log((<IDBOpenDBRequest>e.target).result);
+                //this.src = (<IDBOpenDBRequest>e.target).result;
+            }
+            
+            reader.readAsDataURL(input.files[i]);
+        }
+        else{
+          console.log('files out of bounds');
+        }
+    }
+    
+  writefilecontent(listelement: metadata){
+
+    if (listelement.file) {
+      console.log("Trying to Read");
+      var r = new FileReader();
+
+      r.onload = (e) => this.readFileContent(e, listelement);
+      r.readAsBinaryString(listelement.file);
+    } else {
+      console.log("Failed to load file");
+    }
+  }
+  
+  readFileContent(e, listelement: metadata){
+    var contents = (<IDBOpenDBRequest>e.target).result;
+
+    listelement.filecontent = contents;
+    //console.log("listoffiles: " + this.listoffiles);
+    console.log("Pushe: ", listelement);
+
+    // rufe scan auf
+    this.locdbService.saveScan(listelement.ppn,
+      listelement.firstpage.toString(), listelement.lastpage.toString(),
+      listelement.filecontent, listelement.file).subscribe((result) =>
+        console.log(result)) }
+}
+  
+class metadata{
+>>>>>>> entry-form
 ppn: string;
 firstpage: number;
 lastpage: number;
