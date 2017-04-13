@@ -88,12 +88,11 @@ export class EntryFormComponent implements OnChanges {
     // and deep copies of changed form model values
     const saveEntry: BibliographicEntry = {
       _id: this.entry._id,
-      bibliographicEntryText: formModel.bibliographicEntryText as string,
-      // addresses: formModel.secretLairs // <-- bad!
-      references: formModel.references as string,
-      title: formModel.title as string,
-      date: formModel.date as string,
-      authors: authorsDeepCopy,
+      bibliographicEntryText: formModel.bibliographicEntryText as string || "",
+      references: formModel.references as string || "",
+      title: formModel.title as string || "",
+      date: formModel.date as string || "",
+      authors: authorsDeepCopy || [],
       status: "VALID" // validated
     };
     return saveEntry;
@@ -114,17 +113,17 @@ export class EntryFormComponent implements OnChanges {
     let authorsDeepCopy = this.copyArray<string>(formModel.authors);
     // copy from original entry
     const current : BibliographicEntry = {
-      _id: this.entry._id,
-      coordinates: this.entry.coordinates,
-      scanId: this.entry.scanId,
-      status: this.entry.status,
-      marker: this.entry.marker,
-      identifiers: this.entry.identifiers as Identifier[],
-      bibliographicEntryText: formModel.bibliographicEntryText as string,
-      references: formModel.references as string,
-      title: formModel.title as string,
-      date: formModel.date as string,
-      authors: authorsDeepCopy as string[]
+      _id: this.entry._id || "",
+      coordinates: this.entry.coordinates || "",
+      scanId: this.entry.scanId || "",
+      status: this.entry.status || "",
+      marker: this.entry.marker || "",
+      identifiers: this.entry.identifiers as Identifier[] || [],
+      bibliographicEntryText: formModel.bibliographicEntryText as string || "",
+      references: formModel.references as string || "",
+      title: formModel.title as string || "",
+      date: formModel.date as string || "",
+      authors: authorsDeepCopy as string[] || []
     };
     console.log("output", current);
     this.state.next(current);

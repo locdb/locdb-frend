@@ -5,7 +5,7 @@ import { REFERENCES, REFERENCES_ALT } from './mock-references';
 
 import { LocdbService } from './locdb.service';
 
-const URL ='/api/'; //Same Origin Policy
+const URL = '/api/'; // Same Origin Policy
 
 @Component({
   moduleId: module.id,
@@ -153,22 +153,51 @@ export class ScanComponent {
 
 // class Metadata {
 // =======
+// <<<<<<< HEAD
+
+//   writefilecontent(listelement: Metadata) {
+
+//   if (listelement.file) {
+//       console.log('FLUP: Trying to Read..');
+//         const r = new FileReader();
+
+//         r.onload = (e) => this.readFileContent(e, listelement);
+//         r.readAsBinaryString(listelement.file);
+//         console.log('FLUP: Done.');
+//       } else {
+//         console.log('FLUP: Failed to load file ' , listelement);
+//       }
+//   }
+
+//   readFileContent(e, listelement: Metadata) {
+//         const contents = (<IDBOpenDBRequest>e.target).result;
+
+//         listelement.filecontent = contents;
+//         console.log('FLUP: Starte upload..');
+
+//         // rufe scan auf
+
+//   }
+//  }
+
+// class Metadata {
+// =======
   
   
   
   //preview...
   
 
-  next(diff: number) {
-    this.ref_idx = Math.abs((this.ref_idx + diff) % this.references.length);
-    console.log('New current reference index', this.ref_idx);
-    this.eventEmitter.next(this.references[this.ref_idx]);
+  // next(diff: number) {
+  //   this.ref_idx = Math.abs((this.ref_idx + diff) % this.references.length);
+  //   console.log('New current reference index', this.ref_idx);
+  //   this.eventEmitter.next(this.references[this.ref_idx]);
     
-    this.fil_idx = Math.abs((this.fil_idx + diff) % this.event.target.files.length);
-    console.log('New current file index', this.fil_idx);
-    this.readURL(this.event.target, this.fil_idx);
+  //   this.fil_idx = Math.abs((this.fil_idx + diff) % this.event.target.files.length);
+  //   console.log('New current file index', this.fil_idx);
+  //   this.readURL(this.event.target, this.fil_idx);
       
-  }
+  // }
   
   readURL(input, i) {
         if (input.files && input.files[i]) {
