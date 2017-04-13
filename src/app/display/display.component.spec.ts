@@ -17,7 +17,7 @@ describe('DisplayComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [ DisplayComponent, ScanComponent, TodoComponent ],
-      provider: [ LocdbService ]
+      providers: [ LocdbService ]
     })
     .compileComponents();
   }));
