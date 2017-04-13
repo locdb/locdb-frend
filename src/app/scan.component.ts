@@ -23,7 +23,7 @@ export class ScanComponent {
   firstpage = 2;
   lastpage = 12;
 
-  listoffiles: Metadata[] = [];
+  listoffiles: metadata[] = [];
   listoffilescontents = [];
 
   active: number;
