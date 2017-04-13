@@ -1,5 +1,6 @@
 # LOCDB Fr(ont-)end
 
+[![Travis badge](https://travis-ci.org/locdb/locdb-frend.svg?branch=master)](https://travis-ci.org/)
 [![Greenkeeper badge](https://badges.greenkeeper.io/locdb/locdb-frend.svg)](https://greenkeeper.io/)
 
 This repository provides a guided user interface for extrapolation of new data for the [Linked Open Citation Data Base](https://github.com/locdb/loc-db).

@@ -1,17 +1,22 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { Citation } from './citation';
 import { REFERENCES, REFERENCES_ALT } from './mock-references';
-import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
+// import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
+
+import { LocdbService } from './locdb.service';
 
 const URL = '/api/'; // Same Origin Policy
 
 @Component({
   moduleId: module.id,
   selector: 'scan',
-  templateUrl: './scan.component.html'
+  templateUrl: './scan.component.html',
+  providers: [ LocdbService ]
 })
 
 export class ScanComponent {
+  constructor ( private locdbService : LocdbService ) { }
+  event: any;
   files: any;
 
   ppn = '1234567';
@@ -119,33 +124,125 @@ export class ScanComponent {
       console.log('FLUP: Invalid PPN or no firstpage or no lastpage set'); // throw error
     }
   }
+// <<<<<<< HEAD
 
-  writefilecontent(listelement: Metadata) {
+//   writefilecontent(listelement: Metadata) {
 
-  if (listelement.file) {
-      console.log('FLUP: Trying to Read..');
-        const r = new FileReader();
+//   if (listelement.file) {
+//       console.log('FLUP: Trying to Read..');
+//         const r = new FileReader();
 
-        r.onload = (e) => this.readFileContent(e, listelement);
-        r.readAsBinaryString(listelement.file);
-        console.log('FLUP: Done.');
-      } else {
-        console.log('FLUP: Failed to load file ' , listelement);
-      }
+//         r.onload = (e) => this.readFileContent(e, listelement);
+//         r.readAsBinaryString(listelement.file);
+//         console.log('FLUP: Done.');
+//       } else {
+//         console.log('FLUP: Failed to load file ' , listelement);
+//       }
+//   }
+
+//   readFileContent(e, listelement: Metadata) {
+//         const contents = (<IDBOpenDBRequest>e.target).result;
+
+//         listelement.filecontent = contents;
+//         console.log('FLUP: Starte upload..');
+
+//         // rufe scan auf
+
+//   }
+//  }
+
+// class Metadata {
+// =======
+// <<<<<<< HEAD
+
+//   writefilecontent(listelement: Metadata) {
+
+//   if (listelement.file) {
+//       console.log('FLUP: Trying to Read..');
+//         const r = new FileReader();
+
+//         r.onload = (e) => this.readFileContent(e, listelement);
+//         r.readAsBinaryString(listelement.file);
+//         console.log('FLUP: Done.');
+//       } else {
+//         console.log('FLUP: Failed to load file ' , listelement);
+//       }
+//   }
+
+//   readFileContent(e, listelement: Metadata) {
+//         const contents = (<IDBOpenDBRequest>e.target).result;
+
+//         listelement.filecontent = contents;
+//         console.log('FLUP: Starte upload..');
+
+//         // rufe scan auf
+
+//   }
+//  }
+
+// class Metadata {
+// =======
+  
+  
+  
+  //preview...
+  
+
+  next(diff: number) {
+    this.ref_idx = Math.abs((this.ref_idx + diff) % this.references.length);
+    console.log('New current reference index', this.ref_idx);
+    this.eventEmitter.next(this.references[this.ref_idx]);
+    
+    this.fil_idx = Math.abs((this.fil_idx + diff) % this.event.target.files.length);
+    console.log('New current file index', this.fil_idx);
+    this.readURL(this.event.target, this.fil_idx);
+      
   }
+  
+  readURL(input, i) {
+        if (input.files && input.files[i]) {
+            var reader = new FileReader();
+            
+            reader.onload = (e) => {
+                console.log((<IDBOpenDBRequest>e.target).result);
+                //this.src = (<IDBOpenDBRequest>e.target).result;
+            }
+            
+            reader.readAsDataURL(input.files[i]);
+        }
+        else{
+          console.log('files out of bounds');
+        }
+    }
+    
+  writefilecontent(listelement: metadata){
 
-  readFileContent(e, listelement: Metadata) {
-        const contents = (<IDBOpenDBRequest>e.target).result;
+    if (listelement.file) {
+      console.log("Trying to Read");
+      var r = new FileReader();
 
-        listelement.filecontent = contents;
-        console.log('FLUP: Starte upload..');
-
-        // rufe scan auf
-
+      r.onload = (e) => this.readFileContent(e, listelement);
+      r.readAsBinaryString(listelement.file);
+    } else {
+      console.log("Failed to load file");
+    }
   }
- }
+  
+  readFileContent(e, listelement: metadata){
+    var contents = (<IDBOpenDBRequest>e.target).result;
 
-class Metadata {
+    listelement.filecontent = contents;
+    //console.log("listoffiles: " + this.listoffiles);
+    console.log("Pushe: ", listelement);
+
+    // rufe scan auf
+    this.locdbService.saveScan(listelement.ppn,
+      listelement.firstpage.toString(), listelement.lastpage.toString(),
+      listelement.filecontent, listelement.file).subscribe((result) =>
+        console.log(result)) }
+}
+  
+class Metadata{
 ppn: string;
 firstpage: number;
 lastpage: number;

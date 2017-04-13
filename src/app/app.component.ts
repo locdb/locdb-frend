@@ -13,6 +13,7 @@ import { LocdbService } from './locdb.service';
 export class AppComponent {
   title = 'LOC-DB ~ Extrapolite';
   entry: BibliographicEntry;
+  entryForSuggestion: BibliographicEntry;
   // candidates: Citation[];
 
   constructor ( private locdbService: LocdbService ) {}
@@ -20,6 +21,42 @@ export class AppComponent {
   updateEntry (entry: BibliographicEntry) {
     console.log('Updating with new entry', entry);
     this.entry = entry;
+    this.entryForSuggestion = entry;
+  }
+
+  updateForSuggestion(currentFormEntry){
+    console.log("Updating entry for suggestions", currentFormEntry);
+    this.entryForSuggestion = currentFormEntry;
+  }
+
+  updateFromSuggestion (
+    {title, date, authors, references} : {title: string, date: string, authors:
+      string[], references: string }
+  ): void
+  {
+    // let oldEntry = this.entry;
+    // let newEntry = {
+    //   ...oldEntry, // all values from old entry
+    //   title: title,
+    //   date: date,
+    //   authors: authors,
+    //   references: references
+    // };
+    console.log("Updating from suggestion");
+
+    let updatedEntry : BibliographicEntry = {
+      _id: this.entry._id,
+      scanId: this.entry.scanId,
+      status: this.entry.status,
+      coordinates: this.entry.coordinates,
+      marker: this.entry.marker,
+      bibliographicEntryText: this.entry.bibliographicEntryText,
+      title: title,
+      date: date,
+      authors: authors,
+      references: references
+    }
+    this.entry = updatedEntry;
   }
 
   // updateCandidates(newCandidates: Citation[]) {
