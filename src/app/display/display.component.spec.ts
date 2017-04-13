@@ -8,7 +8,7 @@ describe('DisplayComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DisplayComponent ]
+      declarations: [ DisplayComponent, ScanComponent, TodoComponent ]
     })
     .compileComponents();
   }));
