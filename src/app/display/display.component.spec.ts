@@ -6,6 +6,8 @@ import { DisplayComponent } from './display.component';
 import { ScanComponent } from '../scan.component';
 import { TodoComponent } from '../todo.component';
 
+import { LocdbService } from '../locdb.service'
+
 
 describe('DisplayComponent', () => {
   let component: DisplayComponent;
@@ -14,7 +16,8 @@ describe('DisplayComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
-      declarations: [ DisplayComponent, ScanComponent, TodoComponent ]
+      declarations: [ DisplayComponent, ScanComponent, TodoComponent ],
+      provider: [ LocdbService ]
     })
     .compileComponents();
   }));
