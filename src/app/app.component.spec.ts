@@ -5,6 +5,10 @@ import { TestBed }      from '@angular/core/testing';
 
 import { By }           from '@angular/platform-browser';
 
+import { CitationFormComponent } from './citation-form.component'
+import { DisplayComponent } from './display/display.component'
+import { TodoComponent } from './todo.component'
+
 ////////  SPECS  /////////////
 
 /// Delete this
@@ -16,7 +20,7 @@ describe('Smoke test', () => {
 
 describe('AppComponent with TCB', function () {
   beforeEach(() => {
-    TestBed.configureTestingModule({declarations: [AppComponent]});
+    TestBed.configureTestingModule({declarations: [AppComponent, CitationFormComponent, DisplayComponent, TodoComponent]});
   });
 
   it('should instantiate component', () => {

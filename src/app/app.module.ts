@@ -8,9 +8,9 @@ import { HttpModule } from '@angular/http';
 // exported to uploader
 
 // ng2-bootstrap
-import { ModalModule } from 'ng2-bootstrap/modal';
+import { ModalModule } from 'ngx-bootstrap/modal';
 // ng2-fileupload
-import { FileSelectDirective } from 'ng2-file-upload';
+// import { FileSelectDirective } from 'ng2-file-upload';
 
 import { AppComponent } from './app.component';
 import { CitationFormComponent } from './citation-form.component';
@@ -32,9 +32,7 @@ import { DisplayComponent } from './display/display.component';
     CitationFormComponent,
     ScanComponent,
     TodoComponent,
-    FileSelectDirective,
     DisplayComponent
-    // LocdbService
   ],
   bootstrap: [ AppComponent ]
 })
