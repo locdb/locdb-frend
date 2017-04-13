@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+
 import { DisplayComponent } from './display.component';
+import { ScanComponent } from '../scan.component';
+import { TodoComponent } from '../todo.component';
+
 
 describe('DisplayComponent', () => {
   let component: DisplayComponent;
