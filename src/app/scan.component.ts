@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { Citation } from './citation';
 import { REFERENCES, REFERENCES_ALT } from './mock-references';
-import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
+// import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
 
 const URL = '/api/'; // Same Origin Policy
 
