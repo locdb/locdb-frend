@@ -5,9 +5,27 @@ import { TestBed }      from '@angular/core/testing';
 
 import { By }           from '@angular/platform-browser';
 
-import { CitationFormComponent } from './citation-form.component'
-import { DisplayComponent } from './display/display.component'
-import { TodoComponent } from './todo.component'
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { HttpModule } from '@angular/http';
+
+// import { ImageUploadModule } from 'ng2-imageupload';
+// exported to uploader
+
+// ng2-bootstrap
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { CitationFormComponent } from './citation-form.component';
+import { ScanComponent } from './scan.component';
+import { TodoComponent } from './todo.component';
+import { DisplayComponent } from './display/display.component';
+import { EntryFormComponent } from './entry-form/entry-form.component';
+import { LocdbService } from './locdb.service';
+import { SuggestionComponent } from './suggestion/suggestion.component';
+
+
 
 ////////  SPECS  /////////////
 
@@ -20,7 +38,8 @@ describe('Smoke test', () => {
 
 describe('AppComponent with TCB', function () {
   beforeEach(() => {
-    TestBed.configureTestingModule({declarations: [AppComponent, CitationFormComponent, DisplayComponent, TodoComponent]});
+    TestBed.configureTestingModule({declarations: [AppComponent, CitationFormComponent, DisplayComponent, TodoComponent, SuggestionComponent, EntryFormComponent, ScanComponent],
+      imports: [ModalModule.forRoot(), BrowserModule, FormsModule, HttpModule, ReactiveFormsModule]});
   });
 
   it('should instantiate component', () => {
