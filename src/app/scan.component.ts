@@ -124,35 +124,35 @@ export class ScanComponent {
       console.log('FLUP: Invalid PPN or no firstpage or no lastpage set'); // throw error
     }
   }
-<<<<<<< HEAD
+// <<<<<<< HEAD
 
-  writefilecontent(listelement: Metadata) {
+//   writefilecontent(listelement: Metadata) {
 
-  if (listelement.file) {
-      console.log('FLUP: Trying to Read..');
-        const r = new FileReader();
+//   if (listelement.file) {
+//       console.log('FLUP: Trying to Read..');
+//         const r = new FileReader();
 
-        r.onload = (e) => this.readFileContent(e, listelement);
-        r.readAsBinaryString(listelement.file);
-        console.log('FLUP: Done.');
-      } else {
-        console.log('FLUP: Failed to load file ' , listelement);
-      }
-  }
+//         r.onload = (e) => this.readFileContent(e, listelement);
+//         r.readAsBinaryString(listelement.file);
+//         console.log('FLUP: Done.');
+//       } else {
+//         console.log('FLUP: Failed to load file ' , listelement);
+//       }
+//   }
 
-  readFileContent(e, listelement: Metadata) {
-        const contents = (<IDBOpenDBRequest>e.target).result;
+//   readFileContent(e, listelement: Metadata) {
+//         const contents = (<IDBOpenDBRequest>e.target).result;
 
-        listelement.filecontent = contents;
-        console.log('FLUP: Starte upload..');
+//         listelement.filecontent = contents;
+//         console.log('FLUP: Starte upload..');
 
-        // rufe scan auf
+//         // rufe scan auf
 
-  }
- }
+//   }
+//  }
 
-class Metadata {
-=======
+// class Metadata {
+// =======
   
   
   
@@ -214,7 +214,6 @@ class Metadata {
 }
   
 class metadata{
->>>>>>> entry-form
 ppn: string;
 firstpage: number;
 lastpage: number;
