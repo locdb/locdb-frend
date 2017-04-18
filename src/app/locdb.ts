@@ -29,10 +29,12 @@ export class BibliographicEntry {
   coordinates?: string;
   scanId?: string;
   status?: string;
+  // DEPRECATED
   authors?: string[];
   title?: string;
   date?: string;
   marker?: string;
+  // DEPRECATED
   // added
   identifiers?: Identifier[];
   // _id: string;
