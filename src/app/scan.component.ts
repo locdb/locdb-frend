@@ -14,9 +14,9 @@ const URL = '/api/'; // Same Origin Policy
 export class ScanComponent {
   files: any;
 
-  ppn = '1234567';
-  firstpage = 2;
-  lastpage = 12;
+  ppn: string;
+  firstpage: number;
+  lastpage: number;
 
   listoffiles: Metadata[] = [];
   listoffilescontents = [];
@@ -35,8 +35,11 @@ export class ScanComponent {
   }
 
   onclickupload() { // check if content is set
-    let ready = true;
-    if (this.listoffiles !== []) { // or !== ?
+   if (this.fileIsActive) {
+     this.saveentries();
+    }
+   let ready = true;
+   if (this.listoffiles !== []) {
       for (const file of this.listoffiles){
         if (!file.allset) {
           ready = false;
@@ -46,7 +49,8 @@ export class ScanComponent {
     if (ready) {
       console.log('FLUP: Ready for upload..');
       this.listoffiles.map((elem) => this.writefilecontent(elem));
-
+      // clear after upload
+      this.onclickclear();
     } else {
         console.log('FLUP: Files not ready!');
         }
@@ -77,6 +81,11 @@ export class ScanComponent {
   }
 
   onSelectFile(i: number) {
+    if (this.fileIsActive) {
+    this.saveentries();
+    this.fileIsActive = true;
+    }
+
     if (i === this.active || !this.fileIsActive) {
       this.togglefile();
       }
@@ -106,8 +115,9 @@ export class ScanComponent {
     return id;
   }
 
-  onclicksaveentries() {
-    if (!(this.getidfromstring(this.ppn) === '') && this.firstpage && this.lastpage) {  // check if number
+  // nicht mehr als onclick genutzt
+  saveentries() {
+    // if (!(this.getidfromstring(this.ppn) === '') && this.firstpage && this.lastpage) {  // check if number
       this.fileIsActive = false;
       this.listoffiles[this.active].ppn = this.ppn ;
       this.listoffiles[this.active].firstpage = this.firstpage;
@@ -115,9 +125,9 @@ export class ScanComponent {
       if (this.listoffiles[this.active].ppn && this.listoffiles[this.active].firstpage && this.listoffiles[this.active].lastpage) {
          this.listoffiles[this.active].allset = true;
       }
-    } else {
-      console.log('FLUP: Invalid PPN or no firstpage or no lastpage set'); // throw error
-    }
+    // } else {
+      // console.log('FLUP: Invalid PPN or no firstpage or no lastpage set'); // throw error
+    // }
   }
 
   writefilecontent(listelement: Metadata) {
