@@ -21,6 +21,7 @@ import { DisplayComponent } from './display/display.component';
 import { EntryFormComponent } from './entry-form/entry-form.component';
 import { LocdbService } from './locdb.service';
 import { SuggestionComponent } from './suggestion/suggestion.component';
+import { ResourceFormComponent } from './resource-form/resource-form.component';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { SuggestionComponent } from './suggestion/suggestion.component';
     DisplayComponent,
     EntryFormComponent,
     SuggestionComponent,
+    ResourceFormComponent,
     // LocdbService
   ],
   providers: [ LocdbService ],
