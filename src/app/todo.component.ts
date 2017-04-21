@@ -84,7 +84,7 @@ export class TodoComponent implements OnInit {
     // ).reduce(
     //   (acc,val) => acc.concat(val)
     // )
-    console.log("Extracted flat list of scans", flat_scans);
+    console.log('Extracted flat list of scans', flat_scans);
     return flat_scans;
   }
 }

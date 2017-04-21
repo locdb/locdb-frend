@@ -1,3 +1,62 @@
-<p>
-  resource-form works!
-</p>
+<div style="margin-bottom: 1em" align="right">
+	<button class="btn btn-info">Suggest</button>
+</div>
+<form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
+  <!-- 
+  _id: string;
+  identifiers?: Identifier[];
+  type?: string;
+  title?: string;
+  subtitle?: string;
+  edition?: string;
+  number?: number;
+  contributors?: AgentRole[];
+  publicationYear?: number;
+  parts?: BibliographicEntry[];
+  partOf?: string;
+  embodiedAs?: ResourceEmbodiment[];-->
+  <div class="form-group">
+  	<label>Title</label>
+  	<input class="form-control" formControlName="title">
+  </div>
+  <div class="form-group">
+  	<label>Subtitle</label>
+  	<input class="form-control" formControlName="subtitle">
+  </div>
+  <div class="form-group">
+  	<label>Type</label>
+  	<input class="form-control" formControlName="resourcetype">
+  </div>
+  <div class="form-group">
+  	<label>Edition</label>
+  	<input class="form-control" formControlName="edition">
+  </div>
+  <div class="form-group">
+  	<label>Number</label>
+  	<input class="form-control" formControlName="resourcenumber">
+  </div>
+  <!-- ngfor roleout -->
+  <div formArrayName="contributors" class="well well-lg">
+  	<div *ngFor="let contributor of contributors.controls; let i=index">
+	  	<label>{{contributor.toString()}}</label>
+	  	<input class="form-control" [formControlName]="i"><!-- mehrere möglichkeiten-->
+  	</div>
+  </div>
+  <!-- add + remove button -->
+  <div class="form-group">
+  	<label>Publication Year</label>
+  	<input class="form-control" formControlName="publicationyear">
+  </div>
+  <div class="form-group">
+  	<label>Parts</label>
+  	<input class="form-control" formControlName="parts">
+  </div>
+  <div class="form-group">
+  	<label>PartOf</label>
+  	<input class="form-control" formControlName="partof"> <!-- mehrere möglichkeiten -->
+  </div>
+  <div class="form-group">
+  	<label>embodied as</label>
+  	<input class="form-control" formControlName="embodiedas"> <!-- mehrere möglichkeiten -->
+  </div>
+</form>

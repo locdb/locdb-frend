@@ -28,6 +28,7 @@ export class LocdbService {
   private locdbSaveScan                 = this.locdbUrl + 'saveScan';
   private bibliographicResourceEndpoint = this.locdbUrl + 'bibliographicResources';
   private locdbTodoEntries              = this.locdbUrl + 'getToDoBibliographicEntries';
+  private locdbTodoResources             = this.locdbUrl + 'bibliographicResources'; // <- right URL?
   private internalSuggestions           = this.locdbUrl + 'getInternalSuggestions';
   private externalSuggestions           = this.locdbUrl + 'getExternalSuggestions';
   private locdbTriggerOcrProcessing     = this.locdbUrl + 'triggerOcrProcessing';
@@ -73,9 +74,22 @@ export class LocdbService {
     // fetches list of entries for a scan id
     let params: URLSearchParams = new URLSearchParams();
     params.set('scanId', scan_id);
+    console.log('locdb todo entries url: ', this.locdbTodoEntries);
     return this.http.get(this.locdbTodoEntries, { search: params } )
                     .map(this.extractData)
                     .catch(this.handleError);
+  }
+  
+  getToDoBibliographicResources(scan_id: string): Observable<BibliographicResource[]> {
+    // fetches list of entries for a scan id
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('scanId', scan_id);
+    console.log('');
+    let res =  this.http.get(this.locdbTodoResources, { search: params } )
+                    .map(this.extractData)
+                    .catch(this.handleError);
+    console.log('resources: ', res);
+    return res;
   }
 
   saveScan(ppn: string, firstPage: string, lastPage: string, scan: any, file: File): Observable<any> {

@@ -42,7 +42,7 @@ export class EntryFormComponent implements OnChanges {
       date: this.entry.date,
       bibliographicEntryText: this.entry.bibliographicEntryText,
     });
-    this.setAuthors(this.entry.authors)
+    this.setAuthors(this.entry.authors);
   }
 
   setAuthors(authors: string[]) {
