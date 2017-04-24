@@ -13,6 +13,8 @@ export class ResourceFormComponent implements OnChanges {
   @Input() resource: BibliographicResource;
 
   resourceForm: FormGroup;
+  contributorsForms: FormGroup[] = [];
+  
 
   constructor(
     private fb: FormBuilder,
@@ -25,7 +27,6 @@ export class ResourceFormComponent implements OnChanges {
       subtitle: '',
       edition: '',
       resourcenumber: '',
-      contributors: this.fb.array([]),
       publicationyear: '',
       parts: '',
       partof: '',
@@ -34,21 +35,6 @@ export class ResourceFormComponent implements OnChanges {
     }
     )
   }
-
-  setContributers(contributors: AgentRole[]) {
-    const contributorFGs = contributors.map(contributor => this.fb.control(contributor));
-    const contributorFormArray = this.fb.array(contributorFGs);
-    // const authorFormArray = this.fb.array(authors);
-    console.log('contributors: ', contributors);
-    console.log('contributorsFGs: ', contributorFGs);
-    console.log('contributorsFromArray: ', contributorFormArray);
-    this.resourceForm.setControl('contributors', contributorFormArray);
-    console.log('Done.');
-  }
-  
-   get contributors(): FormArray {
-    return this.resourceForm.get('contributors') as FormArray;
-  };
   
   ngOnChanges() {
     if (!this.resourceForm || !this.resource) {
@@ -59,8 +45,34 @@ export class ResourceFormComponent implements OnChanges {
       title: this.resource.title
     // ...
       });
-    this.setContributers(this.resource.contributors);
-
+      console.log("Resource.contributors: ", this.resource.contributors);
+      if (!this.contributorsForms || !this.resource) {
+      return;
+    }
+     for (let con of this.resource.contributors){
+        console.log("Con: ", con);
+        let conForm: FormGroup =  this.fb.group({
+            role: con.roleType,
+            name: con.heldBy.nameString,
+        })
+        this.contributorsForms.push(conForm);
+        // conForm.reset({
+        // title: this.resource.title
+        // ...
+//        });
+     }
   }
-
+  
+  addContributorField(){
+  let conForm: FormGroup =  this.fb.group({
+            role: '',
+            name: '',
+        })
+        this.contributorsForms.push(conForm);
+  }
+  
+  delContributorField(pos: number){
+  // other delete, maybe numbers not updated...
+    this.contributorsForms.splice(pos, pos);
+  }
 }
