@@ -46,7 +46,7 @@ export class ResourceFormComponent implements OnChanges {
     console.log('Done.');
   }
   
-   get contributors(): FormArray {
+  get contributors(): FormArray {
     return this.resourceForm.get('contributors') as FormArray;
   };
   
