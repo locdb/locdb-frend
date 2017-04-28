@@ -24,4 +24,4 @@ The `dev` branch contains nightly builds.
 ## Deployment on remote web server
 
 1. Run `ng build --base-href=<base-url>` to deploy files into dist
-2. WITH CARE: Copy the files to the remote webserver `scp dist/* <web-server-url>:~/public_html/`
+2. **with care**: Copy the files to the remote webserver `scp dist/* <web-server-url>:~/public_html/`
