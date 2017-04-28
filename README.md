@@ -16,7 +16,12 @@ The `master` branch contains the most recent stable version of the front-end.
 The `dev` branch contains nightly builds.
 
 
-## Basic setup
+## Basic setup as local service
 
 1. Clone this repository and run `npm install` to install dependencies.
 2. Run `ng serve` and access the prototype via `localhost:4200`
+
+## Deployment on remote web server
+
+1. Run `ng build --base-href=<base-url>` to deploy files into dist
+2. WITH CARE: Copy the files to the remote webserver `scp dist/* <web-server-url>:~/public_html/`
