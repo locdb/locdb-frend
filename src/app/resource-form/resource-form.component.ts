@@ -13,8 +13,7 @@ export class ResourceFormComponent implements OnChanges {
   @Input() resource: BibliographicResource;
 
   resourceForm: FormGroup;
-  contributorsForms: FormGroup[] = [];
-  
+  contributorsForms: FormGroup[] = [];  
 
   constructor(
     private fb: FormBuilder,
@@ -32,8 +31,7 @@ export class ResourceFormComponent implements OnChanges {
       partof: '',
       embodiedas: '',
       //authors: this.fb.array([]),
-    }
-    )
+    });
   }
   
   ngOnChanges() {
@@ -64,15 +62,28 @@ export class ResourceFormComponent implements OnChanges {
   }
   
   addContributorField(){
-  let conForm: FormGroup =  this.fb.group({
+        let  conForm: FormGroup =  this.fb.group({
             role: '',
             name: '',
-        })
+        });
+        
         this.contributorsForms.push(conForm);
   }
   
   delContributorField(pos: number){
   // other delete, maybe numbers not updated...
-    this.contributorsForms.splice(pos, pos);
+  console.log("delete pos: "+ pos);
+     this.contributorsForms.splice(pos,1);
+     console.log("this.contributorsForms", this.contributorsForms)
   }
+  onSubmit(){
+  console.log("Submit");
+  }
+  
+  // Array Remove - By John Resig (MIT Licensed)
+    removeFromArray(arr: FormGroup[], from: number) {
+        var rest = arr.slice(from + 1 || arr.length);
+        arr.length = from < 0 ? arr.length + from : from;
+        return arr.push.apply(arr, rest);
+    };
 }

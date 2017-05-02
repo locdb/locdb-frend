@@ -41,15 +41,15 @@
   	<form class="form-inline" [formGroup]="contributorForm" (ngSubmit)="onSubmit()" novalidate>
 	  	<label>Role</label>
 	  	<input class="form-control" formControlName="role"><!-- Dropdownmenu, List of Roles -->
+	  	<!--dropdown placeholder="Colour..." list="colours" selected="colour" property="name"></dropdown-->
 	  	<br>
 	  	<label>Name</label>
 	  	<input class="form-control" formControlName="name">
-	  	<!--input class="form-control" [formControlName]="i"><!-- mehrere möglichkeiten-->
-	  	<button class="btn btn-warning" (click)="delContributorField(i)">Delete</button>
+	  	<button type="button" class="btn btn-warning" (click)="delContributorField(i)">Delete</button>
 	  	</form>
 	  	
   	</div>
-  	<button class="btn btn-success" (click)="addContributorField()">New</button>
+  	<button  type="button" class="btn btn-success" (click)="addContributorField()">New</button>
   </div>
   <!-- add + remove button -->
   <div class="form-group">
