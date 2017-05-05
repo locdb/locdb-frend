@@ -37,14 +37,27 @@
   </div>
   <!-- ngfor roleout -->
   <div class="form-group">
+  <label>Contributors:</label>
   	<div class="form-group" *ngFor="let contributorForm of contributorsForms; let i=index">
-  	<form class="form-inline" [formGroup]="contributorForm" (ngSubmit)="onSubmit()" novalidate>
-	  	<label>Role</label>
-	  	<input class="form-control" formControlName="role"><!-- Dropdownmenu, List of Roles -->
-	  	<!--dropdown placeholder="Colour..." list="colours" selected="colour" property="name"></dropdown-->
-	  	<br>
+  	<form class="form-group" [formGroup]="contributorForm" (ngSubmit)="onSubmit()" novalidate>
+                
 	  	<label>Name</label>
 	  	<input class="form-control" formControlName="name">
+	  	
+	  	<label>Role</label>
+	  	<!--input class="form-control" formControlName="role"--><!-- Dropdownmenu, List of Roles -->
+	  	<!--dropdown placeholder="Colour..." list="roles" selected="role" property="name"></dropdown-->
+	  	
+                 <div class="btn-group" dropdown>
+                    <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
+                        <span *ngIf="!contributorForm.value.role == ''">{{contributorForm.value.role}}</span>
+                        <span *ngIf="contributorForm.value.role == ''">Please select a Role</span><span class="caret"></span>
+                    </button>
+                    <ul *dropdownMenu class="dropdown-menu" role="menu">
+                        <li *ngFor="let item of roles" role="menuitem"><a class="dropdown-item" (click)="dropboxitemselected(contributorForm, item)">{{item}}</a></li>
+                    </ul>
+                </div>
+                
 	  	<button type="button" class="btn btn-warning" (click)="delContributorField(i)">Delete</button>
 	  	</form>
 	  	
@@ -56,16 +69,47 @@
   	<label>Publication Year</label>
   	<input class="form-control" formControlName="publicationyear">
   </div>
-  <div class="form-group">
-  	<label>Parts</label>
-  	<input class="form-control" formControlName="parts">
+  <div class="form-group"  *ngIf="parts.length>0" >
+  	<label>Parts:</label>
+  	<div class="form-group" *ngFor="let part of parts; let i=index">
+  	<form class="form-group" [formGroup]="part" (ngSubmit)="onSubmit()" novalidate>
+                <label>ID</label>
+	  	<input class="form-control" formControlName="id">
+	  	<label>bibliographicEntryText</label>
+	  	<input class="form-control" formControlName="bibliographicEntryText">
+	  	<label>references</label>
+	  	<input class="form-control" formControlName="references">
+	  	<label>coordinates</label>
+	  	<input class="form-control" formControlName="coordinates">
+	  	<label>scanId</label>
+	  	<input class="form-control" formControlName="scanId">
+	  	<label>status</label>
+	  	<input class="form-control" formControlName="status">
+        </form>
+	  	
+  	</div>
   </div>
   <div class="form-group">
   	<label>PartOf</label>
   	<input class="form-control" formControlName="partof"> <!-- mehrere möglichkeiten -->
   </div>
-  <div class="form-group">
-  	<label>embodied as</label>
-  	<input class="form-control" formControlName="embodiedas"> <!-- mehrere möglichkeiten -->
+  <div class="form-group" *ngIf="embodiments.length>0" >
+  	<label>Embodiments:</label>
+  	<div class="form-group" *ngFor="let embodiment of embodiments; let i=index">
+  	<form class="form-group" [formGroup]="embodiment" (ngSubmit)="onSubmit()" novalidate>
+                <label>typeMongo</label>
+	  	<input class="form-control" formControlName="typeMongo">
+	  	<label>Format</label>
+	  	<input class="form-control" formControlName="format">
+	  	<label>firstPage</label>
+	  	<input class="form-control" formControlName="firstPage">
+	  	<label>lastPage</label>
+	  	<input class="form-control" formControlName="firstPage">
+	  	<label>url</label>
+	  	<input class="form-control" formControlName="url">
+        </form>
+	  	
+  	</div>
   </div>
+  <button class="btn btn-success">submit</button>
 </form>
