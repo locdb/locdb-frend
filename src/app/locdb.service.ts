@@ -18,27 +18,21 @@ import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource } from './lo
 import { MOCK_TODOBRS } from './mock-todos';
 import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
 
-
 @Injectable()
 export class LocdbService {
 
   // we could read this from some config file
-  private locdbUrl                      = 'http://velsen.informatik.uni-mannheim.de:80';
-  // does not work yet
-  // private locdbUrl = environment.locdbUrl;
+  private locdbUrl                      = 'http://velsen.informatik.uni-mannheim.de:80/';
 
-
-  private locdbTodoEndpoint             = this.locdbUrl + '/getToDo';
-  private locdbSaveScan                 = this.locdbUrl + '/saveScan';
-  private bibliographicResourceEndpoint = this.locdbUrl + '/bibliographicResources';
-  private locdbTodoEntries              = this.locdbUrl + '/getToDoBibliographicEntries';
-  // This url just does not exist yet
-  private locdbTodoResources            = this.locdbUrl + '/getToDoBibliographicResources';
-
-  private internalSuggestions           = this.locdbUrl + '/getInternalSuggestions';
-  private externalSuggestions           = this.locdbUrl + '/getExternalSuggestions';
-  private locdbTriggerOcrProcessing     = this.locdbUrl + '/triggerOcrProcessing';
-  private locdbBibliographicEntries     = this.locdbUrl + '/bibliographicEntries/';
+  private locdbTodoEndpoint             = this.locdbUrl + 'getToDo';
+  private locdbSaveScan                 = this.locdbUrl + 'saveScan';
+  private bibliographicResourceEndpoint = this.locdbUrl + 'bibliographicResources';
+  private locdbTodoEntries              = this.locdbUrl + 'getToDoBibliographicEntries';
+  private locdbTodoResources             = this.locdbUrl + 'bibliographicResources'; // <- right URL?
+  private internalSuggestions           = this.locdbUrl + 'getInternalSuggestions';
+  private externalSuggestions           = this.locdbUrl + 'getExternalSuggestions';
+  private locdbTriggerOcrProcessing     = this.locdbUrl + 'triggerOcrProcessing';
+  private locdbBibliographicEntries     = this.locdbUrl + 'bibliographicEntries/';
 
   constructor(private http: Http) { }
 

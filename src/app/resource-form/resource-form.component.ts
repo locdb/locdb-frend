@@ -34,10 +34,6 @@ export class ResourceFormComponent implements OnChanges {
     });
   }
   
-  get contributors(): FormArray {
-    return this.resourceForm.get('contributors') as FormArray;
-  };
-  
   ngOnChanges() {
     if (!this.resourceForm || !this.resource) {
       return;
