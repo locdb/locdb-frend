@@ -58,6 +58,7 @@ ngOnChanges() {
     if (!this.contributorsForms || !this.resource) {
     return;
     }
+    this.contributorsForms = [];
     //set Contributors
     for (let con of this.resource.contributors){
         //console.log("Con: ", con);
@@ -79,6 +80,7 @@ ngOnChanges() {
         // ...
 //        });
     }
+    this.embodiments = []
     //set Embodiments
     for (let emb of this.resource.embodiedAs){
         console.log("Emb: ", emb);
@@ -97,7 +99,7 @@ ngOnChanges() {
         // ...
 //        });
     }
-    
+    this.parts = [];
     //set parts
     for (let part of this.resource.parts){
         console.log("part: ", part);
@@ -139,8 +141,14 @@ onSubmit(){
     console.log("Send somewere ", this.resource);
 }
 
+resetEntries(){
+    this.ngOnChanges()
+}
+
 saveEntries(){
     this.oldresource = JSON.parse(JSON.stringify(this.resource));
+    
+    // correctness check eg. all Roles set
     
     if(this.resourceForm.value.title)
         this.resource.title = this.resourceForm.value.title;
@@ -194,6 +202,9 @@ saveEntries(){
     console.log("Input Resource: ", this.oldresource);
     console.log(""+(this.resource == this.oldresource)); // AgentRole Objects have ids, that are not defined in class and can not be restored
     // resource ready to send, closing form on send?
+    
+    // parts and embodiments are displayed, but not saved yet.
+    // what of them schould be displayed and be editable? schould it be possible to make new entries?
 }
 
 
