@@ -21,9 +21,14 @@ import { DisplayComponent } from './display/display.component';
 import { EntryFormComponent } from './entry-form/entry-form.component';
 import { LocdbService } from './locdb.service';
 import { SuggestionComponent } from './suggestion/suggestion.component';
+import { ResourceFormComponent } from './resource-form/resource-form.component';
+
+
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 @NgModule({
   imports: [
+    BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
     BrowserModule,
     FormsModule,
@@ -38,6 +43,7 @@ import { SuggestionComponent } from './suggestion/suggestion.component';
     DisplayComponent,
     EntryFormComponent,
     SuggestionComponent,
+    ResourceFormComponent,
     // LocdbService
   ],
   providers: [ LocdbService ],

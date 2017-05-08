@@ -6,17 +6,18 @@
         <div class="col-xs-12 col-sm-6 col-md-4">
           <!-- <scan (eventEmitter)="updateCandidates($event)"></scan> -->
           <!-- <todolist (todo)="updateDisplay($event)"></todolist> -->
-          <app-display (entry)="updateEntry($event)"></app-display>
+          <app-display (resource)="updateResource($event)"></app-display>
         </div>
         <!-- citation form is over 2 columns -->
         <!-- <citation-form [entry]="entry"></citation-form> -->
         <div class="col-xs-12 col-sm-6 col-md-4">
-          <div *ngIf="entry" class="panel panel-default">
+          <div *ngIf="resource" class="panel panel-default">
             <div class="panel-heading">
               <b>Bibliographic entry</b>
             </div>
             <div class="panel-body">
-              <app-entry-form [entry]="entry" (state)="updateForSuggestion($event)"></app-entry-form>
+              <!--<app-resource-form [entry]="entry" (state)="updateForSuggestion($event)"></app-resource-form>-->
+              <app-resource-form [resource]="resource"></app-resource-form>
             </div>
           </div>
         </div>

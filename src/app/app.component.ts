@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Citation } from './citation';
 
-import { ToDo, ToDoParts, ToDoScans, BibliographicEntry } from './locdb';
+import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, BibliographicResource } from './locdb';
 import { LocdbService } from './locdb.service';
 
 @Component({
@@ -13,6 +13,7 @@ import { LocdbService } from './locdb.service';
 export class AppComponent {
   title = 'LOC-DB ~ Extrapolite';
   entry: BibliographicEntry;
+  resource: BibliographicResource;
   entryForSuggestion: BibliographicEntry;
   // candidates: Citation[];
 
@@ -22,6 +23,12 @@ export class AppComponent {
     console.log('Updating with new entry', entry);
     this.entry = entry;
     this.entryForSuggestion = entry;
+  }
+
+  updateResource (resource: BibliographicResource) {
+    console.log('Updating with new resource', resource);
+    this.resource = resource;
+    //this.entryForSuggestion = resource;
   }
 
   updateForSuggestion(currentFormEntry){

@@ -24,6 +24,7 @@ import { DisplayComponent } from './display/display.component';
 import { EntryFormComponent } from './entry-form/entry-form.component';
 import { LocdbService } from './locdb.service';
 import { SuggestionComponent } from './suggestion/suggestion.component';
+import { ResourceFormComponent } from './resource-form/resource-form.component';
 
 
 
@@ -38,7 +39,7 @@ describe('Smoke test', () => {
 
 describe('AppComponent with TCB', function () {
   beforeEach(() => {
-    TestBed.configureTestingModule({declarations: [AppComponent, CitationFormComponent, DisplayComponent, TodoComponent, SuggestionComponent, EntryFormComponent, ScanComponent],
+    TestBed.configureTestingModule({declarations: [AppComponent, CitationFormComponent, DisplayComponent, TodoComponent, SuggestionComponent, EntryFormComponent, ScanComponent, ResourceFormComponent],
       imports: [ModalModule.forRoot(), BrowserModule, FormsModule, HttpModule, ReactiveFormsModule]});
   });
 
