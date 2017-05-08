@@ -12,15 +12,19 @@ export class BibliographicResource {
   partOf?: string;
   embodiedAs?: ResourceEmbodiment[];
 }
+
 export class Identifier {
   literalValue: string;
   scheme: string;
 }
+
 export class AgentRole {
+  _id?: string;
   identifiers?: Identifier[];
   roleType: string;
   heldBy?: ResponsibleAgent;
 }
+
 // export class BibliographicEntry extends BibliographicResource {
 export class BibliographicEntry {
   _id?: string;

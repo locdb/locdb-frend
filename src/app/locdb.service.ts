@@ -37,6 +37,9 @@ export class LocdbService {
   private locdbTriggerOcrProcessing     = this.locdbUrl + 'triggerOcrProcessing';
   private locdbBibliographicEntries     = this.locdbUrl + 'bibliographicEntries/';
 
+  // just a guess
+  private locdbBibliographicResources     = this.locdbUrl + 'bibliographicResources/';
+
   constructor(private http: Http) { }
 
 
@@ -141,6 +144,13 @@ export class LocdbService {
 
   putBibliographicEntry(identifier: string, entry: BibliographicEntry) {
     let url = this.locdbBibliographicEntries + identifier;
+    return this.http.put(url, entry).map(this.extractData).catch(this.handleError);
+  }
+
+  // we might also need post, to store completely new resources
+  putBibliographicResource(identifier: string, resource: BibliographicResource) {
+    console.log("Put BR", identifier);
+    let url = this.locdbBibliographicResources + identifier;
     return this.http.put(url, entry).map(this.extractData).catch(this.handleError);
   }
 
