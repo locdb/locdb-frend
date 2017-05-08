@@ -16,9 +16,9 @@ import { LocdbService } from '../locdb.service';
 
 export class DisplayComponent implements OnInit {
   displaySource: string;
-  displayActive: boolean = false;
-  title: string = 'Display';
-  currentIndex: number = 0;
+  displayActive = false;
+  title = 'Display';
+  currentIndex = 0;
   resourceses: BibliographicResource[];
   @Output() resource: EventEmitter<BibliographicResource> = new EventEmitter();
 
@@ -26,7 +26,7 @@ export class DisplayComponent implements OnInit {
 
   updateDisplay(newTodo: ToDoScans) {
     // this method is called when a todo item is selected
-    console.log("newTodo: ", newTodo);
+    console.log('newTodo: ', newTodo);
     this.displaySource = this.locdbService.getScan(newTodo._id);
     this.displayActive = true;
     this.locdbService.getToDoBibliographicResources(newTodo._id)
