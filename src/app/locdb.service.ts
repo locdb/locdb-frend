@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angular/http';
 
 // advanced rxjs async handling
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Rx';
+// import 'rxjs/add/operator/catch';
+// import 'rxjs/add/operator/map';
 
 // types
 import { TodoBR } from './todo';
@@ -18,11 +18,14 @@ import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource } from './lo
 import { MOCK_TODOBRS } from './mock-todos';
 import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
 
+import { environment } from 'environments/environment';
+
 @Injectable()
 export class LocdbService {
 
   // we could read this from some config file
-  private locdbUrl                      = 'http://velsen.informatik.uni-mannheim.de:80/';
+  // private locdbUrl                      = 'http://velsen.informatik.uni-mannheim.de:80/';
+  private locdbUrl                      = environment.locdbUrl;
 
   private locdbTodoEndpoint             = this.locdbUrl + 'getToDo';
   private locdbSaveScan                 = this.locdbUrl + 'saveScan';
