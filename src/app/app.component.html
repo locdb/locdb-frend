@@ -3,13 +3,6 @@
   <div class="panel-body">
     <section class="container-fluid">
       <div class="row" style="margin-top: 10px">
-        <svg viewBox="0 0 300 100">
-          <svg:circle cx="25" cy="50" r="20" stroke="black" fill="lightblue" />
-            <svg:circle cx="275" cy="50" r="20" stroke="black" fill="lightblue"/>
-              <line x1="45" y1="50" x2="255" y2="50" style="stroke:lightgreen;stroke-width:3" />
-            </svg>
-      </div>
-      <div class="row" style="margin-top: 10px">
         <div class="col-xs-12 col-sm-6 col-md-4">
           <!-- <scan (eventEmitter)="updateCandidates($event)"></scan> -->
           <!-- <todolist (todo)="updateDisplay($event)"></todolist> -->
@@ -17,6 +10,17 @@
         </div>
         <!-- citation form is over 2 columns -->
         <!-- <citation-form [entry]="entry"></citation-form> -->
+        <div class="col-xs-12 col-sm-6 col-md-4">
+          <div *ngIf="resource" class="panel panel-default">
+            <div class="panel-heading">
+              <b>Bibliographic entry</b>
+            </div>
+            <div class="panel-body">
+              <!--<app-resource-form [entry]="entry" (state)="updateForSuggestion($event)"></app-resource-form>-->
+              <app-resource-form [resource]="resource"></app-resource-form>
+            </div>
+          </div>
+        </div>
         <div class="col-xs-12 col-sm-6 col-md-4">
           <div *ngIf="entryForSuggestion" class="panel panel-default">
             <div class="panel-heading">
@@ -27,18 +31,7 @@
             </div>
           </div>
         </div>
-        <div class="col-xs-12 col-sm-6 col-md-4">
-          <div *ngIf="resource" class="panel panel-default">
-            <div class="panel-heading">
-              <b>Bibliographic resource</b>
-            </div>
-            <div class="panel-body">
-              <!--<app-resource-form [entry]="entry" (state)="updateForSuggestion($event)"></app-resource-form>-->
-              <app-resource-form [resource]="resource"></app-resource-form>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   </div>
-</div>
+
