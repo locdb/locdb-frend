@@ -3,9 +3,10 @@ import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angular/http';
 
 // advanced rxjs async handling
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
+import {Observable} from 'rxjs/Rx';
+// import { Observable } from 'rxjs/Observable';
+// import 'rxjs/add/operator/catch';
+// import 'rxjs/add/operator/map';
 
 // types
 import { TodoBR } from './todo';
@@ -18,14 +19,15 @@ import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource } from './lo
 import { MOCK_TODOBRS } from './mock-todos';
 import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
 
+import { environment } from 'environments/environment';
 
 @Injectable()
 export class LocdbService {
 
   // we could read this from some config file
-  private locdbUrl                      = 'http://velsen.informatik.uni-mannheim.de:80';
+  // private locdbUrl                      = 'http://velsen.informatik.uni-mannheim.de:80';
   // does not work yet
-  // private locdbUrl = environment.locdbUrl;
+  private locdbUrl = environment.locdbUrl;
 
 
   private locdbTodoEndpoint             = this.locdbUrl + '/getToDo';
@@ -39,6 +41,8 @@ export class LocdbService {
   private externalSuggestions           = this.locdbUrl + '/getExternalSuggestions';
   private locdbTriggerOcrProcessing     = this.locdbUrl + '/triggerOcrProcessing';
   private locdbBibliographicEntries     = this.locdbUrl + '/bibliographicEntries/';
+  // just a guess
+  private locdbBibliographicResources   = this.locdbUrl + '/bibliographicResources/';
 
   constructor(private http: Http) { }
 
@@ -145,6 +149,13 @@ export class LocdbService {
   putBibliographicEntry(identifier: string, entry: BibliographicEntry) {
     let url = this.locdbBibliographicEntries + identifier;
     return this.http.put(url, entry).map(this.extractData).catch(this.handleError);
+  }
+
+  // we might also need post, to store completely new resources
+  putBibliographicResource(identifier: string, resource: BibliographicResource) {
+    console.log("Put BR", identifier);
+    let url = this.locdbBibliographicResources + identifier;
+    return this.http.put(url, resource).map(this.extractData).catch(this.handleError);
   }
 
   // helpers
