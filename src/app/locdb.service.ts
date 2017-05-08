@@ -151,7 +151,7 @@ export class LocdbService {
   putBibliographicResource(identifier: string, resource: BibliographicResource) {
     console.log("Put BR", identifier);
     let url = this.locdbBibliographicResources + identifier;
-    return this.http.put(url, entry).map(this.extractData).catch(this.handleError);
+    return this.http.put(url, resource).map(this.extractData).catch(this.handleError);
   }
 
   // helpers
