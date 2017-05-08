@@ -16,14 +16,14 @@ providers: [ LocdbService ]
 
 export class DisplayComponent implements OnInit {
 displaySource: string;
-displayActive: boolean = false;
-title: string = 'Display';
-currentIndex: number = 0;
+displayActive = false;
+title = 'Display';
+currentIndex = 0;
 resourceses: BibliographicResource[];
 
 rects: rect[] = [];
-imgX: number = 500;    // get imagesize from image, coordinates relative to imagesize?
-imgY: number = 500;
+imgX = 500;    // get imagesize from image, coordinates relative to imagesize?
+imgY = 500;
 
 @Output() resource: EventEmitter<BibliographicResource> = new EventEmitter();
 
@@ -31,7 +31,7 @@ constructor( private locdbService: LocdbService) { }
 
 updateDisplay(newTodo: ToDoScans) {
     // this method is called when a todo item is selected
-    console.log("newTodo: ", newTodo);
+    console.log('newTodo: ', newTodo);
     this.displaySource = this.locdbService.getScan(newTodo._id);
     this.displayActive = true;
     this.locdbService.getToDoBibliographicResources(newTodo._id)
