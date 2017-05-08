@@ -39,7 +39,7 @@ describe('Smoke test', () => {
 
 describe('AppComponent with TCB', function () {
   beforeEach(() => {
-    TestBed.configureTestingModule({declarations: [AppComponent, CitationFormComponent, DisplayComponent, TodoComponent, SuggestionComponent, EntryFormComponent, ScanComponent],
+    TestBed.configureTestingModule({declarations: [AppComponent, CitationFormComponent, DisplayComponent, TodoComponent, SuggestionComponent, EntryFormComponent, ScanComponent, ResourceFormComponent],
       imports: [ModalModule.forRoot(), BrowserModule, FormsModule, HttpModule, ReactiveFormsModule]});
   });
 
