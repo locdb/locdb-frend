@@ -41,7 +41,9 @@ embodiedAs?: ResourceEmbodiment[];-->
         <div class="form-group" *ngFor="let contributorForm of contributorsForms; let i=index">
         <form class="form-horizontal" [formGroup]="contributorForm" (ngSubmit)="onSubmit()" novalidate>
                 <div class="form-group">
-                <div class="col-md-1"></div>
+                <div class="col-md-1">
+                <label> {{i+1}}. </label>
+                </div>
                 <div class="col-md-2">
                     <label>Name</label>
                     </div>
