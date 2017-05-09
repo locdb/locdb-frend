@@ -35,8 +35,8 @@ export class TodoComponent implements OnInit {
 
   fetchScans() {
     console.log("Fetching todo scans from backend");
-    this.locdbService.getToDo(true).subscribe( (todos) => {this.scans = TodoComponent.extractScans(<ToDo[]>todos)});
-    this.locdbService.getToDo(false).subscribe( (todos) => {this.unprocessed = TodoComponent.extractScans(<ToDo[]>todos)});
+    this.locdbService.getToDo(true).subscribe( (todos) => {this.scans = TodoComponent.extractScans(<ToDo[]>todos)} );
+    this.locdbService.getToDo(false).subscribe( (todos) => {this.unprocessed = TodoComponent.extractScans(<ToDo[]>todos)} );
   }
 
   prettyStatus(scan: ToDoScans) {
