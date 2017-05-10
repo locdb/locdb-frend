@@ -10,6 +10,7 @@
     <!--img [src]="displaySource" [hidden]="!displaySource" style="width: 100%;" alt="Display of the scanned bibliographic entries"-->
 
     <!--image [attr.src]="displaySource" style="width: 100%;height: 100%"/-->
+    <figure>
     <svg xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + imgX + ' ' + imgY">
         <image [attr.xlink:href]="displaySource" [attr.height]="imgY + 'px'" [attr.width]="imgX + 'px'"/>
         <rect *ngFor="let rect of rects; let i=index" [attr.x]="rect.x" [attr.y]="rect.y" [attr.height]="rect.height" [attr.width]="rect.width"
@@ -19,6 +20,7 @@
             <!-- image xlink:href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Anectropis_fumigata.jpg/220px-Anectropis_fumigata.jpg" height="50px" width="100px"/ -->
 
     </svg>
+    </figure>
     <!--text>{{displaySource}}</text-->
     <!--circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" /-->
     

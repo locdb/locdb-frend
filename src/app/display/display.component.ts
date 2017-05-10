@@ -61,7 +61,7 @@ next(diff: number) {
 }
 
 ngOnInit() {
-this.generatedummyrects();
+    this.generatedummyrects();
 }
 
 clear() {
@@ -72,12 +72,11 @@ clear() {
 }
 
 rectLink(i: number){
-console.log("Display: Clicked Rect " + i);
-this.currentIndex = i
-let resource = this.resourceses[this.currentIndex];
-console.log('Emission of entry at index ' + this.currentIndex, resource);
-this.resource.next(this.resourceses[this.currentIndex]);
-    
+    console.log("Display: Clicked Rect " + i);
+    this.currentIndex = i
+    let resource = this.resourceses[this.currentIndex];
+    console.log('Emission of entry at index ' + this.currentIndex, resource);
+    this.resource.next(this.resourceses[this.currentIndex]);
 }
 
 generatedummyrects(){
