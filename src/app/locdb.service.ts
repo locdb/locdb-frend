@@ -143,7 +143,7 @@ export class LocdbService {
   }
 
   getScan(identifier: string) {
-    return this.locdbUrl + 'scans/' + identifier;
+    return this.locdbUrl + '/scans/' + identifier;
   }
 
   putBibliographicEntry(identifier: string, entry: BibliographicEntry) {
