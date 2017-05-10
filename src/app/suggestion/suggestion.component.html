@@ -5,6 +5,10 @@
   <p class="list-group-item-text">{{r.date}}</p>
   <p class="list-group-item-text">{{r.references}}</p>
 </a>
+<a href="#" class="list-group-item list-group-item-action list-group-item-warning" (click)="onSelect()">
+  <span class="badge">LOC-DB</span>
+  <h5 class="list-group-item-heading"><b>New Bibliographic Resource</b></h5>
+</a>
 
 <div align="right" style="margin-top: 1em">
   <button class="btn btn-primary" (click)="lgModal.show()">External Bibliographic Resources</button>

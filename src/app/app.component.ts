@@ -39,35 +39,42 @@ export class AppComponent {
     this.entryForSuggestion = currentFormEntry;
   }
 
-  updateFromSuggestion (
-    {title, date, authors, references} : {title: string, date: string, authors:
-      string[], references: string }
-  ): void
+  updateFromSuggestion (br : BibliographicResource): void
   {
-    // let oldEntry = this.entry;
-    // let newEntry = {
-    //   ...oldEntry, // all values from old entry
-    //   title: title,
-    //   date: date,
-    //   authors: authors,
-    //   references: references
-    // };
-    console.log("Updating from suggestion");
-
-    let updatedEntry : BibliographicEntry = {
-      _id: this.entry._id,
-      scanId: this.entry.scanId,
-      status: this.entry.status,
-      coordinates: this.entry.coordinates,
-      marker: this.entry.marker,
-      bibliographicEntryText: this.entry.bibliographicEntryText,
-      title: title,
-      date: date,
-      authors: authors,
-      references: references
-    }
-    this.entry = updatedEntry;
+    this.resource = br;
   }
+
+  // DEPRECATED VARIANT FOR ENTRY FORM
+  //
+  // updateFromSuggestion (
+  //   {title, date, authors, references} : {title: string, date: string, authors:
+  //     string[], references: string }
+  // ): void
+  // {
+  //   // let oldEntry = this.entry;
+  //   // let newEntry = {
+  //   //   ...oldEntry, // all values from old entry
+  //   //   title: title,
+  //   //   date: date,
+  //   //   authors: authors,
+  //   //   references: references
+  //   // };
+
+  //   let updatedEntry : BibliographicResource = {
+  //     _id: this.entry._id, // actually we may not copy the id from the entry
+  //     scanId: this.entry.scanId,
+  //     status: this.entry.status,
+  //     coordinates: this.entry.coordinates,
+  //     marker: this.entry.marker,
+  //     bibliographicEntryText: this.entry.bibliographicEntryText,
+  //     title: title,
+  //     date: date,
+  //     authors: authors,
+  //     references: references
+  //   }
+  //   console.log("Updating from suggestion", updatedEntry);
+  //   this.resource = updatedEntry;
+  // }
 
   // updateCandidates(newCandidates: Citation[]) {
   //   this.candidates = newCandidates;

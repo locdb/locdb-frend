@@ -41,27 +41,27 @@ createForm() {
 
 ngOnChanges() {
     if (!this.resourceForm || !this.resource) {
-    return;
+        return;
     }
     console.log( 'Resource: ', this.resource);
     this.resourceForm.reset({
-    title: this.resource.title,    
-    resourcetype: this.resource.type,
-    subtitle: this.resource.subtitle,
-    edition: this.resource.edition,
-    resourcenumber: this.resource.number,
-    publicationyear: this.resource.publicationYear,
-    partof: this.resource.partOf,
-    // ...
+        title: this.resource.title,    
+        resourcetype: this.resource.type,
+        subtitle: this.resource.subtitle,
+        edition: this.resource.edition,
+        resourcenumber: this.resource.number,
+        publicationyear: this.resource.publicationYear,
+        partof: this.resource.partOf,
+        // ...
     });
     console.log("Resource.contributors: ", this.resource.contributors);
     if (!this.contributorsForms || !this.resource) {
-    return;
+        return;
     }
     this.contributorsForms = [];
     //set Contributors
     for (let con of this.resource.contributors){
-        //console.log("Con: ", con);
+        console.log("Con: ", con);
         let conForm: FormGroup =  this.fb.group({
             role: con.roleType,
             name: con.heldBy.nameString,
