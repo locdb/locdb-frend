@@ -23,6 +23,9 @@ export class AppComponent {
     console.log('Updating with new entry', entry);
     this.entry = entry;
     this.entryForSuggestion = entry;
+
+    // now extracted the RESOURCE referenced by the ENTRY
+    console.log("Extracting resource");
   }
 
   updateResource (resource: BibliographicResource) {
