@@ -91,13 +91,13 @@ ngOnChanges() {
             lastPage: emb.lastPage,
             url: emb.url,
             // scans?: ToDoParts[];
-    })
+        })
         console.log(embForm.value.firstPage);
         this.embodiments.push(embForm);
         // conForm.reset({
         // title: this.resource.title
         // ...
-//        });
+        //        });
     }
     this.parts = [];
     //set parts
@@ -113,7 +113,7 @@ ngOnChanges() {
             // added
             // identifiers: part.identifiers; // <-- Array
         })
-        }
+    }
 }
 
 addContributorField(){

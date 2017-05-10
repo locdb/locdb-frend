@@ -9,18 +9,27 @@
               <line x1="45" y1="50" x2="255" y2="50" style="stroke:lightgreen;stroke-width:3" />
             </svg>
       </div>
+      <!-- diagnostics -->
+      <p>
+      <b> Entry: </b> {{ entry | json }}
+      </p>
+      <p>
+      <b> Resource: </b> {{ resource | json }}
+      </p>
 
       <div class="row" style="margin-top: 10px">
         <div class="col-xs-12 col-sm-6 col-md-4">
+          <!-- display component OUTPUT: entry to use --> 
           <app-display (entry)="updateEntry($event)"></app-display>
         </div>
         <div class="col-xs-12 col-sm-6 col-md-4">
-          <div *ngIf="entryForSuggestion" class="panel panel-default">
+          <div *ngIf="entry" class="panel panel-default">
             <div class="panel-heading">
               <b>Suggestions</b>
             </div>
             <div class="panel-body">
-              <app-suggestion [entry]="entryForSuggestion" (suggest)="updateFromSuggestion($event)"></app-suggestion>
+              <!-- suggestion component INPUT: entry, OUTPUT: resource -->
+              <app-suggestion [entry]="entry" (suggest)="updateResource($event)"></app-suggestion>
             </div>
           </div>
         </div>
@@ -31,6 +40,7 @@
             </div>
             <div class="panel-body">
               <!--<app-resource-form [entry]="entry" (state)="updateForSuggestion($event)"></app-resource-form>-->
+              <!-- resource form component INPUT: resource, OUTPUT: submit event with new resource? -->
               <app-resource-form [resource]="resource"></app-resource-form>
             </div>
           </div>

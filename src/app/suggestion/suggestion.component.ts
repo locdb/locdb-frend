@@ -12,7 +12,7 @@ import { LocdbService } from '../locdb.service';
 export class SuggestionComponent implements OnChanges {
 
   @Input() entry: BibliographicEntry;
-  @Output() suggest: EventEmitter<BibliographicEntry | BibliographicResource> = new EventEmitter();
+  @Output() suggest: EventEmitter<BibliographicResource> = new EventEmitter();
 
   internalSuggestions : BibliographicEntry[] | BibliographicResource[];
 
@@ -27,6 +27,9 @@ export class SuggestionComponent implements OnChanges {
     if (this.entry){
       this.fetchInternalSuggestions();
       this.fetchExternalSuggestions();
+    } else {
+      this.internalSuggestions = [];
+      this.externalSuggestions = [];
     }
   }
 
@@ -67,6 +70,7 @@ export class SuggestionComponent implements OnChanges {
       title: entry.title,
       publicationYear: +entry.date, // unary + operator makes it a number
       contributors: this.authors2contributors(entry.authors),
+      embodiedAs: [],
     }
 
     return br;

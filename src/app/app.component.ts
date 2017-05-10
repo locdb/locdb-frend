@@ -22,27 +22,25 @@ export class AppComponent {
   updateEntry (entry: BibliographicEntry) {
     console.log('Updating with new entry', entry);
     this.entry = entry;
-    this.entryForSuggestion = entry;
-
-    // now extracted the RESOURCE referenced by the ENTRY
-    console.log("Extracting resource");
+    // reset resource, since we selected a different entry
+    this.resource = null;
   }
 
   updateResource (resource: BibliographicResource) {
     console.log('Updating with new resource', resource);
     this.resource = resource;
-    //this.entryForSuggestion = resource;
   }
 
-  updateForSuggestion(currentFormEntry){
-    console.log("Updating entry for suggestions", currentFormEntry);
-    this.entryForSuggestion = currentFormEntry;
-  }
+  // we dont need this here, could be incorporated in suggestions.component.ts
+  // updateForSuggestion(currentFormEntry){
+  //   console.log("Updating entry for suggestions", currentFormEntry);
+  //   this.entryForSuggestion = currentFormEntry;
+  // }
 
-  updateFromSuggestion (br : BibliographicResource): void
-  {
-    this.resource = br;
-  }
+  // updateFromSuggestion (br : BibliographicResource): void
+  // {
+  //   this.resource = br;
+  // }
 
   // DEPRECATED VARIANT FOR ENTRY FORM
   //
