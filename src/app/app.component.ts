@@ -22,49 +22,57 @@ export class AppComponent {
   updateEntry (entry: BibliographicEntry) {
     console.log('Updating with new entry', entry);
     this.entry = entry;
-    this.entryForSuggestion = entry;
+    // reset resource, since we selected a different entry
+    this.resource = null;
   }
 
   updateResource (resource: BibliographicResource) {
     console.log('Updating with new resource', resource);
     this.resource = resource;
-    //this.entryForSuggestion = resource;
   }
 
-  updateForSuggestion(currentFormEntry){
-    console.log("Updating entry for suggestions", currentFormEntry);
-    this.entryForSuggestion = currentFormEntry;
-  }
+  // we dont need this here, could be incorporated in suggestions.component.ts
+  // updateForSuggestion(currentFormEntry){
+  //   console.log("Updating entry for suggestions", currentFormEntry);
+  //   this.entryForSuggestion = currentFormEntry;
+  // }
 
-  updateFromSuggestion (
-    {title, date, authors, references} : {title: string, date: string, authors:
-      string[], references: string }
-  ): void
-  {
-    // let oldEntry = this.entry;
-    // let newEntry = {
-    //   ...oldEntry, // all values from old entry
-    //   title: title,
-    //   date: date,
-    //   authors: authors,
-    //   references: references
-    // };
-    console.log("Updating from suggestion");
+  // updateFromSuggestion (br : BibliographicResource): void
+  // {
+  //   this.resource = br;
+  // }
 
-    let updatedEntry : BibliographicEntry = {
-      _id: this.entry._id,
-      scanId: this.entry.scanId,
-      status: this.entry.status,
-      coordinates: this.entry.coordinates,
-      marker: this.entry.marker,
-      bibliographicEntryText: this.entry.bibliographicEntryText,
-      title: title,
-      date: date,
-      authors: authors,
-      references: references
-    }
-    this.entry = updatedEntry;
-  }
+  // DEPRECATED VARIANT FOR ENTRY FORM
+  //
+  // updateFromSuggestion (
+  //   {title, date, authors, references} : {title: string, date: string, authors:
+  //     string[], references: string }
+  // ): void
+  // {
+  //   // let oldEntry = this.entry;
+  //   // let newEntry = {
+  //   //   ...oldEntry, // all values from old entry
+  //   //   title: title,
+  //   //   date: date,
+  //   //   authors: authors,
+  //   //   references: references
+  //   // };
+
+  //   let updatedEntry : BibliographicResource = {
+  //     _id: this.entry._id, // actually we may not copy the id from the entry
+  //     scanId: this.entry.scanId,
+  //     status: this.entry.status,
+  //     coordinates: this.entry.coordinates,
+  //     marker: this.entry.marker,
+  //     bibliographicEntryText: this.entry.bibliographicEntryText,
+  //     title: title,
+  //     date: date,
+  //     authors: authors,
+  //     references: references
+  //   }
+  //   console.log("Updating from suggestion", updatedEntry);
+  //   this.resource = updatedEntry;
+  // }
 
   // updateCandidates(newCandidates: Citation[]) {
   //   this.candidates = newCandidates;

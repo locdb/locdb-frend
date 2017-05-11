@@ -41,27 +41,27 @@ createForm() {
 
 ngOnChanges() {
     if (!this.resourceForm || !this.resource) {
-    return;
+        return;
     }
     console.log( 'Resource: ', this.resource);
     this.resourceForm.reset({
-    title: this.resource.title,    
-    resourcetype: this.resource.type,
-    subtitle: this.resource.subtitle,
-    edition: this.resource.edition,
-    resourcenumber: this.resource.number,
-    publicationyear: this.resource.publicationYear,
-    partof: this.resource.partOf,
-    // ...
+        title: this.resource.title,    
+        resourcetype: this.resource.type,
+        subtitle: this.resource.subtitle,
+        edition: this.resource.edition,
+        resourcenumber: this.resource.number,
+        publicationyear: this.resource.publicationYear,
+        partof: this.resource.partOf,
+        // ...
     });
     console.log("Resource.contributors: ", this.resource.contributors);
     if (!this.contributorsForms || !this.resource) {
-    return;
+        return;
     }
     this.contributorsForms = [];
     //set Contributors
     for (let con of this.resource.contributors){
-        //console.log("Con: ", con);
+        console.log("Con: ", con);
         let conForm: FormGroup =  this.fb.group({
             role: con.roleType,
             name: con.heldBy.nameString,
@@ -91,13 +91,13 @@ ngOnChanges() {
             lastPage: emb.lastPage,
             url: emb.url,
             // scans?: ToDoParts[];
-    })
+        })
         console.log(embForm.value.firstPage);
         this.embodiments.push(embForm);
         // conForm.reset({
         // title: this.resource.title
         // ...
-//        });
+        //        });
     }
     this.parts = [];
     //set parts
@@ -113,7 +113,7 @@ ngOnChanges() {
             // added
             // identifiers: part.identifiers; // <-- Array
         })
-        }
+    }
 }
 
 addContributorField(){
@@ -131,11 +131,13 @@ console.log("delete pos: "+ pos);
     this.contributorsForms.splice(pos,1);
     console.log("this.contributorsForms", this.contributorsForms)
 }
+
 dropboxitemselected(conForm: FormGroup, s: string){
     // console.log("Role:", s);
     // console.log("conForm:", conForm);
     conForm.value.role = s;
 }
+
 onSubmit(){
     this.saveEntries();
     console.log("Send somewere ", this.resource);

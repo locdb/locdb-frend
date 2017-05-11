@@ -1,5 +1,5 @@
 export class BibliographicResource {
-  _id: string;
+  _id?: string;
   identifiers?: Identifier[];
   type?: string;
   title?: string;
