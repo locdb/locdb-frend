@@ -10,13 +10,16 @@ import { LocdbService } from './locdb.service';
   providers: [ LocdbService ]
 })
 
-export class AppComponent {
+export class AppComponent { 
   title = 'LOC-DB ~ Extrapolite';
   entry: BibliographicEntry;
   resource: BibliographicResource;
   entryForSuggestion: BibliographicEntry;
   // candidates: Citation[];
 
+  header = { width: 300, height: 20, rp:0.35, citationCircleVisibility:"hidden", lineVisibility:"hidden", colorStart:"Red", colorCitation:"Blue"}; 
+  
+  
   constructor ( private locdbService: LocdbService ) {}
 
   updateEntry (entry: BibliographicEntry) {
@@ -64,6 +67,28 @@ export class AppComponent {
       references: references
     }
     this.entry = updatedEntry;
+  }
+  
+  roundUp(num, precision) {
+    return Math.ceil(num * precision) / precision
+  }
+  
+  onclickcitation(){
+  console.log("Clicked Citation Circle");
+    this.header.lineVisibility="hidden"
+    this.header.citationCircleVisibility="hidden"
+    this.header.colorStart="Red"
+    this.header.colorCitation="Blue"
+      
+}
+  
+  
+  onclickstart() {
+    console.log("clicked Start Circle");
+    this.header.lineVisibility="visible"
+    this.header.citationCircleVisibility="visible"
+    this.header.colorStart="Blue"
+    this.header.colorCitation="Red"
   }
 
   // updateCandidates(newCandidates: Citation[]) {
