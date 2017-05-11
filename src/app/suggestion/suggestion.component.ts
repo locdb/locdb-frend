@@ -71,6 +71,7 @@ export class SuggestionComponent implements OnChanges {
       publicationYear: +entry.date, // unary + operator makes it a number
       contributors: this.authors2contributors(entry.authors),
       embodiedAs: [],
+      parts: [],
     }
 
     return br;

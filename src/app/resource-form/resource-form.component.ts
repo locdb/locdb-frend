@@ -131,11 +131,13 @@ console.log("delete pos: "+ pos);
     this.contributorsForms.splice(pos,1);
     console.log("this.contributorsForms", this.contributorsForms)
 }
+
 dropboxitemselected(conForm: FormGroup, s: string){
     // console.log("Role:", s);
     // console.log("conForm:", conForm);
     conForm.value.role = s;
 }
+
 onSubmit(){
     this.saveEntries();
     console.log("Send somewere ", this.resource);
