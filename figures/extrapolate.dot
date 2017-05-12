@@ -1,0 +1,24 @@
+digraph E {
+  node [shape=rect];
+
+
+  {rank=same;
+  ScanComponent;
+  TodoComponent;
+  }
+
+  {rank=same;
+  DisplayComponent;
+  SuggestionComponent;
+  ResourceFormComponent;
+  }
+
+  DisplayComponent -> ScanComponent, TodoComponent;
+
+  DisplayComponent -> SuggestionComponent [label="entry"];
+  SuggestionComponent -> ResourceFormComponent [label="resource"];
+
+  AppComponent;
+  AppComponent -> DisplayComponent, ResourceFormComponent, SuggestionComponent;
+
+}
