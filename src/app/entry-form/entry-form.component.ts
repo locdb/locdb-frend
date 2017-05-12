@@ -37,12 +37,12 @@ export class EntryFormComponent implements OnChanges {
     if (!this.entryForm || !this.entry) 
       return;
     this.entryForm.reset({
-      title: this.entry.title,
+      title: this.entry.ocrData.title,
       references: this.entry.references,
-      date: this.entry.date,
+      date: this.entry.ocrData.date,
       bibliographicEntryText: this.entry.bibliographicEntryText,
     });
-    this.setAuthors(this.entry.authors);
+    this.setAuthors(this.entry.ocrData.authors);
   }
 
   setAuthors(authors: string[]) {
@@ -90,9 +90,11 @@ export class EntryFormComponent implements OnChanges {
       _id: this.entry._id,
       bibliographicEntryText: formModel.bibliographicEntryText as string || "",
       references: formModel.references as string || "",
-      title: formModel.title as string || "",
-      date: formModel.date as string || "",
-      authors: authorsDeepCopy || [],
+      ocrData: {
+        title: formModel.title as string || "",
+        date: formModel.date as string || "",
+        authors: authorsDeepCopy || [],
+        },
       status: "VALID" // validated
     };
     return saveEntry;
@@ -114,16 +116,18 @@ export class EntryFormComponent implements OnChanges {
     // copy from original entry
     const current : BibliographicEntry = {
       _id: this.entry._id || "",
-      coordinates: this.entry.coordinates || "",
       scanId: this.entry.scanId || "",
       status: this.entry.status || "",
-      marker: this.entry.marker || "",
-      identifiers: this.entry.identifiers as Identifier[] || [],
       bibliographicEntryText: formModel.bibliographicEntryText as string || "",
       references: formModel.references as string || "",
-      title: formModel.title as string || "",
-      date: formModel.date as string || "",
-      authors: authorsDeepCopy as string[] || []
+      ocrData: {
+        coordinates: this.entry.ocrData.coordinates || "",
+        title: formModel.title as string || "",
+        date: formModel.date as string || "",
+        // might be also a form variable
+        marker: this.entry.ocrData.marker || "",
+        authors: authorsDeepCopy as string[] || []
+      }
     };
     console.log("output", current);
     this.state.next(current);
