@@ -3,11 +3,49 @@
   <div class="panel-body">
     <section class="container-fluid">
       <div class="row" style="margin-top: 10px">
-        <svg viewBox="0 0 300 100">
-          <svg:circle cx="25" cy="50" r="20" stroke="black" fill="lightblue" />
-            <svg:circle cx="275" cy="50" r="20" stroke="black" fill="lightblue"/>
-              <line x1="45" y1="50" x2="255" y2="50" style="stroke:lightgreen;stroke-width:3" />
-            </svg>
+        <svg [attr.viewBox]="'0 0 '+header.width+' '+header.height">
+          <line [attr.x1]="header.height/2" 
+                [attr.y1]="header.height*0.55" 
+                [attr.x2]="header.width-header.height/2" 
+                [attr.y2]="header.height*0.55" 
+                [attr.visibility]="header.lineVisibility"
+                stroke="black" 
+                stroke-width="1"
+                stroke-linecap="square"
+                fill="lightgreen"/>
+        <line [attr.x1]="header.height/2" 
+                [attr.y1]="header.height*0.55" 
+                [attr.x2]="header.width-header.height/2" 
+                [attr.y2]="header.height*0.55" 
+                [attr.visibility]="header.lineVisibility"
+                stroke="lightgreen" 
+                stroke-width="0.75"
+                stroke-linecap="square"/>
+          <svg:circle [attr.cx]="header.height/2" 
+                      [attr.cy]="header.height*0.55" 
+                      [attr.r]="header.height*header.rp" 
+                      stroke="black" 
+                      stroke-width="0.25"
+                      [attr.fill]="header.colorStart" 
+                      (click)="onclickstart()"/>
+          <text [attr.x]="header.height/2" 
+                [attr.y]="header.height*0.16" 
+                style="fill: #000000; stroke: none; font-size: 4px;"
+                text-anchor="middle">Start</text>
+          <svg:circle [attr.cx]="header.width-header.height/2" 
+                      [attr.cy]="header.height*0.55" 
+                      [attr.r]="header.height*header.rp" 
+                      stroke="black" 
+                      stroke-width="0.25"
+                      [attr.fill]="header.colorCitation"
+                      (click)="onclickcitation()"
+                      [attr.visibility]="header.citationCircleVisibility"/>
+          <text [attr.x]="header.width-header.height/2" 
+                [attr.y]="header.height*0.16" 
+                style="fill: #000000; stroke: none; font-size: 4px;"
+                [attr.visibility]="header.citationCircleVisibility"
+                text-anchor="middle">Citation</text>
+        </svg>
       </div>
       <!-- diagnostics -->
       <p>
