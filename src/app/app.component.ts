@@ -37,6 +37,7 @@ export class AppComponent {
   constructor ( private locdbService: LocdbService ) {}
 
   updateEntry (entry: BibliographicEntry) {
+    this.showCitation()
     console.log('Updating with new entry', entry);
     this.entry = entry;
     // reset resource, since we selected a different entry
@@ -44,6 +45,7 @@ export class AppComponent {
   }
 
   updateResource (resource: BibliographicResource) {
+    this.enableCitation();
     console.log('Updating with new resource', resource);
     this.resource = resource;
   }
@@ -113,6 +115,15 @@ export class AppComponent {
     this.header.colorStart="Blue"
     this.header.colorCitation="Red"
   }
+  showCitation(){
+    this.header.lineVisibility="visible"
+    this.header.citationCircleVisibility="visible"
+    this.header.colorStart="Blue"
+}
+
+  enableCitation(){
+    this.header.colorCitation="Red"
+}
 
   // updateCandidates(newCandidates: Citation[]) {
   //   this.candidates = newCandidates;
