@@ -20,7 +20,7 @@ contributorsForms: FormGroup[] = [];
 embodiments: FormGroup[] = [];
 parts: FormGroup[] = [];
 
-roles: string[] = ['CORPORATE','PUBLISHER', 'AUTHOR']; // <-- to Locdb.ts as class?
+roles: string[] = ['CORPORATE','PUBLISHER', 'author']; // <-- to Locdb.ts as class?
 
 constructor(
     private fb: FormBuilder,
@@ -135,6 +135,7 @@ console.log("delete pos: "+ pos);
 dropboxitemselected(conForm: FormGroup, s: string){
     // console.log("Role:", s);
     // console.log("conForm:", conForm);
+    console.log("Role "+ s + " selected.");
     conForm.value.role = s;
 }
 
