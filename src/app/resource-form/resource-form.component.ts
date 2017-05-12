@@ -20,7 +20,7 @@ contributorsForms: FormGroup[] = [];
 embodiments: FormGroup[] = [];
 parts: FormGroup[] = [];
 
-roles: string[] = ['CORPORATE','PUBLISHER']; // <-- to Locdb.ts as class?
+roles: string[] = ['CORPORATE','PUBLISHER', 'AUTHOR']; // <-- to Locdb.ts as class?
 
 constructor(
     private fb: FormBuilder,
