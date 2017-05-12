@@ -15,7 +15,6 @@ export class AppComponent {
   entry: BibliographicEntry;
   resource: BibliographicResource;
   entryForSuggestion: BibliographicEntry;
-  // candidates: Citation[];
 
   header = { width: 300, height: 20, rp:0.35, citationCircleVisibility:"hidden", lineVisibility:"hidden", colorStart:"Red", colorCitation:"Blue"}; 
   
@@ -50,49 +49,6 @@ export class AppComponent {
     this.resource = resource;
   }
 
-  // we dont need this here, could be incorporated in suggestions.component.ts
-  // updateForSuggestion(currentFormEntry){
-  //   console.log("Updating entry for suggestions", currentFormEntry);
-  //   this.entryForSuggestion = currentFormEntry;
-  // }
-
-  // updateFromSuggestion (br : BibliographicResource): void
-  // {
-  //   this.resource = br;
-  // }
-
-  // DEPRECATED VARIANT FOR ENTRY FORM
-  //
-  // updateFromSuggestion (
-  //   {title, date, authors, references} : {title: string, date: string, authors:
-  //     string[], references: string }
-  // ): void
-  // {
-  //   // let oldEntry = this.entry;
-  //   // let newEntry = {
-  //   //   ...oldEntry, // all values from old entry
-  //   //   title: title,
-  //   //   date: date,
-  //   //   authors: authors,
-  //   //   references: references
-  //   // };
-
-// <<<<<<< HEAD
-  //   let updatedEntry : BibliographicResource = {
-  //     _id: this.entry._id, // actually we may not copy the id from the entry
-  //     scanId: this.entry.scanId,
-  //     status: this.entry.status,
-  //     coordinates: this.entry.coordinates,
-  //     marker: this.entry.marker,
-  //     bibliographicEntryText: this.entry.bibliographicEntryText,
-  //     title: title,
-  //     date: date,
-  //     authors: authors,
-  //     references: references
-  //   }
-  //   console.log("Updating from suggestion", updatedEntry);
-  //   this.resource = updatedEntry;
-  // }
   
   roundUp(num, precision) {
     return Math.ceil(num * precision) / precision;
@@ -125,9 +81,5 @@ export class AppComponent {
     this.header.colorCitation="Red"
 }
 
-  // updateCandidates(newCandidates: Citation[]) {
-  //   this.candidates = newCandidates;
-  //   console.log('Updated candidates', this.candidates);
-  // }
 }
 
