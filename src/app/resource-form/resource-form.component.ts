@@ -107,7 +107,7 @@ ngOnChanges() {
             id: part._id,
             bibliographicEntryText: part.bibliographicEntryText,
             references: part.references,
-            coordinates: part.coordinates,
+            // coordinates: part.coordinates, << removed for now, is part of ocrData
             scanId: part.scanId,
             status: part.status,
             // added

@@ -25,24 +25,23 @@ export class AgentRole {
   heldBy?: ResponsibleAgent;
 }
 
-// export class BibliographicEntry extends BibliographicResource {
 export class BibliographicEntry {
   _id?: string;
   bibliographicEntryText?: string;
   references?: string;
-  coordinates?: string;
   scanId?: string;
   status?: string;
-  // DEPRECATED
+  ocrData?: OCRData;
+}
+export class OCRData {
+  coordinates?: string;
   authors?: string[];
   title?: string;
   date?: string;
   marker?: string;
-  // DEPRECATED
-  // added
-  identifiers?: Identifier[];
-  // _id: string;
+  comments?: string;
 }
+
 export class ResourceEmbodiment {
   typeMongo?: string;
   format?: string;
@@ -59,7 +58,6 @@ export class ResponsibleAgent {
 }
 export class ToDo {
   _id: string;
-  // parts?: ToDoParts[];
   children?: ToDoParts[];
 }
 export class ToDoParts {
