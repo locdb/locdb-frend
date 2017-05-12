@@ -24,6 +24,7 @@ export class TodoComponent implements OnInit {
   onSelect(todo: ToDoScans): void {
     this.selectedTodo = todo;
     console.log('Todo item selected', todo._id);
+    
     this.todo.next(todo);
   }
 
