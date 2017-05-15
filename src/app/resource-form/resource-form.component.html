@@ -57,10 +57,15 @@ embodiedAs?: ResourceEmbodiment[];-->
                     <div class="col-md-2">
                         <label>Role</label>
                     </div>
-                    <div class="col-md-4">
+                     <div class="col-md-4">
+                        <select class="form-control" formControlName="role">
+                            <option *ngIf="contributorForm.value.role =='' " selected="selected" disabled="true">--Please Select --</option>
+                            <option *ngFor="let item of roles" selected="{{contributorForm.value.role == item ? 'selected' : ''}}">{{item}}</option>
+                        </select>
+                    </div> 
+                    <!--<div class="col-md-4">
                         <!--input class="form-control" formControlName="role"--><!-- Dropdownmenu, List of Roles -->
-                        <!--dropdown placeholder="Colour..." list="roles" selected="role" property="name"></dropdown-->
-                    
+                        <!--dropdown placeholder="Colour..." list="roles" selected="role" property="name"></dropdown
                         <div class="btn-group" dropdown>
                             <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
                                 <span *ngIf="!contributorForm.value.role == ''">{{contributorForm.value.role}}</span>
@@ -70,7 +75,7 @@ embodiedAs?: ResourceEmbodiment[];-->
                                 <li *ngFor="let item of roles" role="menuitem"><a class="dropdown-item" (click)="dropboxitemselected(contributorForm, item)">{{item}}</a></li>
                             </ul>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="col-md-4">
                         <button type="button" class="btn btn-warning pull-right" (click)="delContributorField(i)">Delete</button>
                     </div>

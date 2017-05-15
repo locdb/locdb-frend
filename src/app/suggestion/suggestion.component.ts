@@ -65,11 +65,12 @@ export class SuggestionComponent implements OnChanges {
   }
 
   resourceFromEntry(entry: BibliographicEntry) : BibliographicResource {
+    let ocr = entry.ocrData;
     let br : BibliographicResource = {
       _id: entry.references,
-      title: entry.title,
-      publicationYear: +entry.date, // unary + operator makes it a number
-      contributors: this.authors2contributors(entry.authors),
+      title: ocr.title,
+      publicationYear: +ocr.date, // unary + operator makes it a number
+      contributors: this.authors2contributors(ocr.authors),
       embodiedAs: [],
       parts: [],
     }

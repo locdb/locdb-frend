@@ -49,7 +49,7 @@ export class CitationFormComponent implements OnChanges {
   
 
   addAuthorToModel() {
-    this.entry.authors.push(this.authorCandidate);
+    this.entry.ocrData.authors.push(this.authorCandidate);
       // this.model.add_author(this.authorCandidate);
     this.authorCandidate = '';
   }
@@ -72,7 +72,7 @@ export class CitationFormComponent implements OnChanges {
     console.log('onSelect called with', resource);
     if (!resource) return;
     this.entry = resource;
-    this.entry.authors = this.extractAuthors(resource.contributors)
+    this.entry.ocrData.authors = this.extractAuthors(resource.contributors)
     // this.entry.number = resource.number;
     // this.submitted = false;
   }
@@ -97,7 +97,7 @@ export class CitationFormComponent implements OnChanges {
   }
 
   removeAuthorAt(position:number) {
-    this.entry.authors.splice(position, 1);
+    this.entry.ocrData.authors.splice(position, 1);
   }
 
   extractAuthors(contributors: AgentRole[]): string[] {

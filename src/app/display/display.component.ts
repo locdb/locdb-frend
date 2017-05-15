@@ -38,8 +38,10 @@ export class DisplayComponent implements OnInit {
     }
 
     entriesArrived(entries) {
-        console.log(entries);
+        console.log("Entries arrive: ", entries);
         this.entries = entries;
+        this.extractRects(entries);
+        console.log("DisplaySource: ", this.realImgDimension(this.displaySource));
         this.currentIndex = 0;
         this.entry.next(entries[0]);
     }
@@ -61,7 +63,6 @@ export class DisplayComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.generatedummyrects();
     }
 
     clear() {
@@ -78,21 +79,31 @@ export class DisplayComponent implements OnInit {
         console.log('Emission of entry at index ' + this.currentIndex, entry);
         this.entry.next(entry);
     }
-
-    generatedummyrects(){
+    
+    extractRects(entries){
+        for (let e of entries){
+        console.log("Entrie.OCRData.coordinates: ", e.ocrData.coordinates);
+        let rectField = e.ocrData.coordinates.split(" ");
+        let realDim = this.realImgDimension(this.displaySource);
+        this.imgX = realDim.naturalWidth;
+        this.imgY = realDim.naturalHeight;
         this.rects.push({
-            x: 82,
-            y: 100,
-            width: 180,
-            height: 10,
+            x: rectField[0],
+            y: rectField[1],
+            width: rectField[2]-rectField[0],
+            height: rectField[3]-rectField[1],
         });
-        this.rects.push({
-            x: 82,
-            y: 110,
-            width: 180,
-            height: 10,
-        });
-        console.log("Dummys generated.", this.rects);
+        
+        }
+    }
+    
+    realImgDimension(url) {
+    var i = new Image();
+    i.src = url;
+    return {
+        naturalWidth: i.width, 
+        naturalHeight: i.height
+        };
     }
 
 }
