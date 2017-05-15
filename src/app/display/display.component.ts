@@ -22,7 +22,7 @@ export class DisplayComponent implements OnInit {
     entries: BibliographicEntry[];
 
     rects: rect[] = [];
-    imgX = 500;    // get imagesize from image, coordinates relative to imagesize?
+    imgX = 500;    // initvalues no relevance if new picture is set
     imgY = 500;
 
     @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
@@ -40,7 +40,7 @@ export class DisplayComponent implements OnInit {
     entriesArrived(entries) {
         console.log("Entries arrive: ", entries);
         this.entries = entries;
-        this.extractRects(entries);
+        this.extractRects(this.entries);
         console.log("DisplaySource: ", this.realImgDimension(this.displaySource));
         this.currentIndex = 0;
         this.entry.next(entries[0]);
@@ -70,6 +70,7 @@ export class DisplayComponent implements OnInit {
         this.displayActive = false;
         console.log('Emission of null to clear');
         this.entry.next(null); // reset view
+        
     }
 
     rectLink(i: number){
@@ -82,19 +83,19 @@ export class DisplayComponent implements OnInit {
     
     extractRects(entries){
         for (let e of entries){
-        console.log("Entrie.OCRData.coordinates: ", e.ocrData.coordinates);
-        let rectField = e.ocrData.coordinates.split(" ");
+        //console.log("Entrie.OCRData.coordinates: ", e.coordinates);
+        let rectField = e.coordinates.split(" ");
         let realDim = this.realImgDimension(this.displaySource);
         this.imgX = realDim.naturalWidth;
         this.imgY = realDim.naturalHeight;
         this.rects.push({
-            x: rectField[0],
-            y: rectField[1],
-            width: rectField[2]-rectField[0],
-            height: rectField[3]-rectField[1],
+            x: Number(rectField[0]),
+            y: Number(rectField[1]),
+            width: Number(rectField[2])-Number(rectField[0]),
+            height: Number(rectField[3])-Number(rectField[1]),
         });
-        
         }
+        
     }
     
     realImgDimension(url) {

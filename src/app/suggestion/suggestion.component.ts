@@ -65,7 +65,7 @@ export class SuggestionComponent implements OnChanges {
   }
 
   resourceFromEntry(entry: BibliographicEntry) : BibliographicResource {
-    let ocr = entry.ocrData;
+    let ocr = entry.ocrData;    // no ocrData
     let br : BibliographicResource = {
       _id: entry.references,
       title: ocr.title,
