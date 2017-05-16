@@ -1,7 +1,104 @@
-<div style="margin-bottom: 1em" align="right">
-        <button class="btn btn-info">Suggest</button>
+<button class="btn btn-success pull-left" (click)="toggleEdit()">Edit</button>
+<button class="btn btn-info pull-right">Suggest</button>
+<div class="row">
+    <div class="col-md-12">
+    </div>
 </div>
-<form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
+<div *ngIf="!editable">
+    <div *ngIf="resource.title" class="row">
+        <div class="col-md-2">
+            <label>Title:</label> 
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            {{resource.title}}
+        </div>
+    </div>
+    <div *ngIf="resource.subtitle" class="row">
+        <div class="col-md-2">
+            <label>Title:</label> 
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            {{resource.subtitle}}
+        </div>
+    </div>
+    
+    <div *ngIf="resource.type" class="row">
+        <div class="col-md-2">
+            <label>Title:</label> 
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            {{resource.type}}
+        </div>
+    </div>
+    
+    <div *ngIf="resource.edition" class="row">
+        <div class="col-md-2">
+            <label>Title:</label> 
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            {{resource.edition}}
+        </div>
+    </div>
+<!--   contribs   -->
+    <div *ngIf="resource.contributors">
+        <div  class="row">
+        <div class="col-md-4">
+            <label>Contributors:</label> 
+        </div>
+        <div class="col-md-5">
+        Name
+        </div>
+        <div class="col-md-3">
+        Role
+        </div>
+        </div>
+        
+        <div *ngFor="let contrib of resource.contributors" class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-5">
+        {{contrib.heldBy.nameString}}
+        </div>
+        <div class="col-md-3">
+        {{contrib.roleType}}
+        </div>
+        </div>
+        
+    </div>
+    
+    <div *ngIf="resource.publicationYear" class="row">
+        <div class="col-md-2">
+            <label>Publication year:</label> 
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            {{resource.publicationYear}}
+        </div>
+    </div>
+    
+    <div *ngIf="resource.partOf" class="row">
+        <div class="col-md-2">
+            <label>partOf:</label> 
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            {{resource.partOf}}
+        </div>
+    </div>
+</div>
+
+
+<form *ngIf="editable" [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
 <!-- 
 _id: string;
 identifiers?: Identifier[];
