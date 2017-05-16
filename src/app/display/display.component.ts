@@ -84,7 +84,7 @@ export class DisplayComponent implements OnInit {
     extractRects(entries){
         for (let e of entries){
         //console.log("Entrie.OCRData.coordinates: ", e.coordinates);
-        let rectField = e.coordinates.split(" ");
+        let rectField = e.ocrData.coordinates.split(" ");
         let realDim = this.realImgDimension(this.displaySource);
         this.imgX = realDim.naturalWidth;
         this.imgY = realDim.naturalHeight;
