@@ -1,3 +1,5 @@
+<label>Title for search:</label>
+<textarea class="form-control" [value] = "entry.title" rows = "2" style="resize: none;"></textarea>
 <a href="#" *ngFor="let r of internalSuggestions" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)">
   <span class="badge">LOC-DB</span>
   <h5 class="list-group-item-heading"><b>{{r.title}}</b></h5>

@@ -46,7 +46,10 @@ export class AppComponent {
 
   updateEntry (entry: BibliographicEntry) {
     //this.showCitation()
-    this.header.state = 1;
+    if(entry)
+        this.header.state = 1;
+    else
+        this.header.state = 0;        
     console.log('Updating with new entry', entry);
     this.entry = entry;
     // reset resource, since we selected a different entry
@@ -67,18 +70,15 @@ export class AppComponent {
   
   pathStart(){
   console.log("pathStart");
-    this.header.state = 1;
       
 }
   
   
   pathSelectResource() {
     console.log("pathSelectResource");
-    this.header.state = 2;
   }
   pathEditAndSubmit(){
     console.log("pathEditAndSubmit");
-    this.header.state = 0;
 }
 
 }

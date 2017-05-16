@@ -5,9 +5,10 @@ figure {
 }
 
 figure svg {
-  -webkit-transition: all 1.0s;
+  -webkit-transition: all 0.5s;
 }
 
 figure:hover svg {
-  -webkit-transform: scale(1.5);
+  -webkit-transform: scale(3.5) translate(+30%, 0px);
+   z-index: 999;
 }

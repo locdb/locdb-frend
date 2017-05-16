@@ -69,6 +69,7 @@ export class DisplayComponent implements OnInit {
         this.displaySource = null;
         this.displayActive = false;
         console.log('Emission of null to clear');
+        this.rects = [];
         this.entry.next(null); // reset view
         
     }
@@ -84,7 +85,7 @@ export class DisplayComponent implements OnInit {
     extractRects(entries){
         for (let e of entries){
         //console.log("Entrie.OCRData.coordinates: ", e.coordinates);
-        let rectField = e.ocrData.coordinates.split(" ");
+        let rectField = e.coordinates.split(" ");
         let realDim = this.realImgDimension(this.displaySource);
         this.imgX = realDim.naturalWidth;
         this.imgY = realDim.naturalHeight;
