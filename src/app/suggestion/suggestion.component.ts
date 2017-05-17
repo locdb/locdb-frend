@@ -3,6 +3,8 @@ import { Component, OnInit, OnChanges, Input, Output, EventEmitter} from '@angul
 import { BibliographicEntry, BibliographicResource, AgentRole, ResponsibleAgent } from '../locdb';
 import { LocdbService } from '../locdb.service';
 
+import { environment } from 'environments/environment';
+
 
 @Component({
   selector: 'app-suggestion',
@@ -46,6 +48,7 @@ export class SuggestionComponent implements OnChanges {
   // these two functions could go somewhere else e.g. static in locdb.ts
   // BEGIN
   authors2contributors (authors: string[]): AgentRole[] {
+    if (!authors) return [];
     let contributors = [];
     for (let author of authors) {
       const agent: ResponsibleAgent = {
@@ -66,7 +69,10 @@ export class SuggestionComponent implements OnChanges {
 
   resourceFromEntry(entry) : BibliographicResource {
       console.log("resourceFromEntry", entry)
-    let ocr = entry;    // no ocrData
+
+    // When the production backend is used, entry does not have ocr data yet
+    // but when the development backend is used, entry does indeed have ocr data field
+    let ocr = environment.production ? entry : entry.ocrData
     let br : BibliographicResource = {
       //_id: entry.references,
       title: ocr.title,

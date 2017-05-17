@@ -69,7 +69,9 @@ export class TodoComponent implements OnInit {
     let flat_scans: ToDoScans[] = [];
     // Ugly loop //
     for (let todo of todos) {
+      console.log(todo);
       for (let child of todo.children) {
+        console.log(child);
         for (let scan of child.scans) {
           flat_scans.push(scan);
         }

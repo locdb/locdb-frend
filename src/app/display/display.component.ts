@@ -3,6 +3,8 @@ import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, BibliographicResource } from '../locdb';
 import { LocdbService } from '../locdb.service';
 
+import { environment } from 'environments/environment';
+
 // Display component consists of file upload, todo item selection and actual
 // display of the scan
 
@@ -85,7 +87,8 @@ export class DisplayComponent implements OnInit {
     extractRects(entries){
         for (let e of entries){
         //console.log("Entrie.OCRData.coordinates: ", e.coordinates);
-        let rectField = e.coordinates.split(" ");
+        let coords = environment.production ? e.coordinates : e.ocrData.coordinates;
+        let rectField = coords.split(" ");
         let realDim = this.realImgDimension(this.displaySource);
         this.imgX = realDim.naturalWidth;
         this.imgY = realDim.naturalHeight;
