@@ -18,6 +18,8 @@ export class SuggestionComponent implements OnChanges {
 
   // make this visible to template
   environment = environment;
+  
+   suggestfield; //environment.production ? this.entry.title : this.entry.ocrData.title;
 
   internalSuggestions : BibliographicEntry[] | BibliographicResource[];
 
@@ -32,6 +34,7 @@ export class SuggestionComponent implements OnChanges {
     if (this.entry){
       this.fetchInternalSuggestions();
       this.fetchExternalSuggestions();
+      this.suggestfield = this.entry.ocrData.title;
     } else {
       this.internalSuggestions = [];
       this.externalSuggestions = [];
@@ -99,5 +102,32 @@ export class SuggestionComponent implements OnChanges {
       this.suggest.next(br);
     }
   }
+  
+  refreshSuggestions(){
+    console.log("Internal Suggestions: ", this.internalSuggestions);
+    console.log("External Suggestions: ", this.externalSuggestions);
+    console.log("Entry: ", this.entry);
+    
+    let searchentry = JSON.parse(JSON.stringify(this.entry));
+    searchentry.ocrData.title = this.suggestfield;
+    console.log("Searchentry: ", searchentry);
+     console.log("get internal Suggestions");
+//     this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.internalSuggestions = sgt );
+     this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.saveintenal(sgt) );
+     console.log("get external Suggestions");
+//     this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.externalSuggestions = sgt );
+     this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.saveextenal(sgt) );
+    console.log("Done.");
+    this.entry = searchentry;
+}
 
+saveintenal(sgt){
+    this.internalSuggestions = sgt
+    console.log("Recieved Internal: ", this.internalSuggestions);
+}
+
+saveextenal(sgt){
+    this.externalSuggestions = sgt
+    console.log("Recieved External: ", this.externalSuggestions);
+}
 }
