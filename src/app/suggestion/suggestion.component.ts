@@ -16,6 +16,9 @@ export class SuggestionComponent implements OnChanges {
   @Input() entry: BibliographicEntry;
   @Output() suggest: EventEmitter<BibliographicResource> = new EventEmitter();
 
+  // make this visible to template
+  environment = environment;
+
   internalSuggestions : BibliographicEntry[] | BibliographicResource[];
 
   externalSuggestions : any[];
