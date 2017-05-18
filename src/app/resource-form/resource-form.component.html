@@ -1,7 +1,188 @@
-<div style="margin-bottom: 1em" align="right">
-        <button class="btn btn-info">Suggest</button>
+<button class="btn btn-success pull-left" (click)="toggleEdit()">Edit</button>
+<div class="row">
+    <div class="col-md-12">
+    </div>
 </div>
-<form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
+<div *ngIf="!editable">
+    <!--<div *ngIf="resource.title" class="row">
+        <div class="col-md-2">
+            <label>Title:</label> 
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <pre>{{resource.title}}</pre>
+        </div>
+    </div>
+    <div *ngIf="resource.subtitle" class="row">
+        <div class="col-md-2">
+            <label>Subtitle:</label> 
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            {{resource.subtitle}}
+        </div>
+    </div>
+    
+    <div *ngIf="resource.type" class="row">
+        <div class="col-md-2">
+            <label>Type:</label> 
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            {{resource.type}}
+        </div>
+    </div>
+    
+    <div *ngIf="resource.edition" class="row">
+        <div class="col-md-2">
+            <label>Edition:</label> 
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            {{resource.edition}}
+        </div>
+    </div>
+    <div *ngIf="resource.contributors">
+        <div  class="row">
+        <div class="col-md-4">
+            <label>Contributors:</label> 
+        </div>
+        <div class="col-md-5">
+        Name
+        </div>
+        <div class="col-md-3">
+        Role
+        </div>
+        </div>
+        
+        <div *ngFor="let contrib of resource.contributors" class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-5">
+        {{contrib.heldBy.nameString}}
+        </div>
+        <div class="col-md-3">
+        {{contrib.roleType}}
+        </div>
+        </div>
+        
+    </div>
+    
+    <div *ngIf="resource.publicationYear" class="row">
+        <div class="col-md-2">
+            <label>Publication year:</label> 
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            {{resource.publicationYear}}
+        </div>
+    </div>
+    
+    <div *ngIf="resource.partOf" class="row">
+        <div class="col-md-2">
+            <label>Part of:</label> 
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            {{resource.partOf}}
+        </div>
+    </div>-->
+<table class="table table-striped">
+ <tbody>
+    <tr *ngIf="resource.title">
+        <td>
+            <label>Title</label> 
+        </td>
+        <td>
+            {{resource.title}}
+        </td>
+    </tr>
+    
+    <tr *ngIf="resource.subtitle">
+        <td>
+            <label>Subtitle</label> 
+        </td>
+        <td>
+            {{resource.subtitle}}
+        </td>
+    </tr>
+    
+    <tr *ngIf="resource.edition">
+        <td>
+            <label>Edition</label> 
+        </td>
+        <td>
+            {{resource.edition}}
+        </td>
+    </tr>
+    
+    <tr *ngIf="resource.type">
+        <td>
+            <label>Type</label> 
+        </td>
+        <td>
+            {{resource.type}}
+        </td>
+    </tr>
+    <tr *ngIf="resource.number">
+        <td>
+            <label>Number</label> 
+        </td>
+        <td>
+            {{resource.number}}
+        </td>
+    </tr>
+       
+<!--   contribs   -->
+    <tr *ngIf="resource.contributors">
+        <td>
+            <label>Contributors</label> 
+        </td>
+        <td>
+        </td>
+        </tr>
+        
+        <tr *ngFor="let contrib of resource.contributors">
+        <td>
+        {{contrib.roleType}}
+        </td>
+        <td>
+        {{contrib.heldBy.nameString}}
+        </td>
+        </tr>
+        
+    
+    
+    <tr *ngIf="resource.publicationYear">
+        <td>
+            <label>Pub. year</label> 
+        </td>
+        <td>
+            {{resource.publicationYear}}
+        </td>
+    </tr>
+    
+    <tr *ngIf="resource.partOf">
+        <td>
+            <label>Part of</label> 
+        </td>
+        <td>
+            {{resource.partOf}}
+        </td>
+    </tr>
+    </tbody>
+    </table>
+</div>
+
+
+
+<form *ngIf="editable" [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
 <!-- 
 _id: string;
 identifiers?: Identifier[];
@@ -15,6 +196,128 @@ publicationYear?: number;
 parts?: BibliographicEntry[];
 partOf?: string;
 embodiedAs?: ResourceEmbodiment[];-->
+<table class="table table-striped">
+ <tbody>
+    <tr>
+        <td>
+            <label>Title</label> 
+        </td>
+        <td>
+        <textarea class="form-control" formControlName="title" style="resize: none;"></textarea>
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+            <label>Subtitle</label> 
+        </td>
+        <td>
+            <input class="form-control" formControlName="subtitle">
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+            <label>Edition</label> 
+        </td>
+        <td>
+            <input class="form-control" formControlName="edition">
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+            <label>Type</label> 
+        </td>
+        <td>
+            <input class="form-control" formControlName="resourcetype">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label>Number</label> 
+        </td>
+        <td>
+            <input class="form-control" formControlName="resourcenumber">
+         </td>
+    </tr>
+    
+<!--   contribs   -->
+
+    <tr>
+        <td>
+            <label>Contributors</label> 
+        </td>
+        <td>
+        </td>
+        </tr>
+        <tr *ngFor="let contributorForm of contributorsForms; let j = index">
+        <td>
+        <table class="table-condensed">
+        <tbody>
+        <tr>
+        <td>
+        <button type="button" class="btn btn-warning" (click)="delContributorField(j)">Delete</button>
+        </td>
+        </tr>
+        </tbody>
+        </table>
+        </td>
+        <td>
+        <form [formGroup]="contributorForm" (ngSubmit)="onSubmit()" novalidate>
+        <table class="table-condensed">
+        <tbody>
+        <tr>
+        <td>
+        <select class="form-control" formControlName="role">
+                            <option *ngIf="contributorForm.value.role =='' " selected="selected" disabled="true">Please Select</option>
+                            <option *ngFor="let item of roles" selected="{{contributorForm.value.role == item ? 'selected' : ''}}">{{item}}</option>
+        </select>
+        </td>
+        <td>
+        <input class="form-control" formControlName="name">
+        </td>
+        </tr>
+        </tbody>
+        </table>
+        </form>
+        </td>
+    </tr>
+    <tr>
+    <td>
+    </td>
+    <td>
+     <button  type="button" class="btn btn-success" (click)="addContributorField()">New</button>
+     </td>
+     </tr>
+        
+    
+    
+    <tr>
+        <td>
+            <label>Pub. year</label> 
+        </td>
+        <td>
+        <input class="form-control" formControlName="publicationyear">
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+            <label>Part of</label> 
+        </td>
+        <td>
+        <input class="form-control" formControlName="partof">
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<button type="button" class="btn btn-danger" (click)="resetEntries()">Reset</button>
+<button class="btn btn-success pull-right">Submit</button>
+</form>
+
+<!--
 <div class="form-group">
         <label>Title</label>
         <input class="form-control" formControlName="title">
@@ -36,7 +339,7 @@ embodiedAs?: ResourceEmbodiment[];-->
         <input class="form-control" formControlName="resourcenumber">
 </div>
 <!-- ngfor roleout -->
-<div class="form-group">
+<!--<div class="form-group">
 <label>Contributors:</label>
         <div class="form-group" *ngFor="let contributorForm of contributorsForms; let i=index">
         <form class="form-horizontal" [formGroup]="contributorForm" (ngSubmit)="onSubmit()" novalidate>
@@ -63,19 +366,6 @@ embodiedAs?: ResourceEmbodiment[];-->
                             <option *ngFor="let item of roles" selected="{{contributorForm.value.role == item ? 'selected' : ''}}">{{item}}</option>
                         </select>
                     </div> 
-                    <!--<div class="col-md-4">
-                        <!--input class="form-control" formControlName="role"--><!-- Dropdownmenu, List of Roles -->
-                        <!--dropdown placeholder="Colour..." list="roles" selected="role" property="name"></dropdown
-                        <div class="btn-group" dropdown>
-                            <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
-                                <span *ngIf="!contributorForm.value.role == ''">{{contributorForm.value.role}}</span>
-                                <span *ngIf="contributorForm.value.role == ''">Please select a Role</span><span class="caret"></span>
-                            </button>
-                            <ul *dropdownMenu class="dropdown-menu" role="menu">
-                                <li *ngFor="let item of roles" role="menuitem"><a class="dropdown-item" (click)="dropboxitemselected(contributorForm, item)">{{item}}</a></li>
-                            </ul>
-                        </div>
-                    </div>-->
                     <div class="col-md-4">
                         <button type="button" class="btn btn-warning pull-right" (click)="delContributorField(i)">Delete</button>
                     </div>
@@ -94,7 +384,7 @@ embodiedAs?: ResourceEmbodiment[];-->
         </div>
         </form>
 </div>
-<!-- add + remove button -->
+<!-- add + remove button
 <div class="form-group">
         <label>Publication Year</label>
         <input class="form-control" formControlName="publicationyear">
@@ -121,7 +411,7 @@ embodiedAs?: ResourceEmbodiment[];-->
 </div>
 <div class="form-group">
         <label>PartOf</label>
-        <input class="form-control" formControlName="partof"> <!-- mehrere möglichkeiten -->
+        <input class="form-control" formControlName="partof"> <!-- mehrere möglichkeiten
 </div>
 <div class="form-group" *ngIf="embodiments.length>0" >
         <label>Embodiments:</label>
@@ -143,4 +433,4 @@ embodiedAs?: ResourceEmbodiment[];-->
 </div>
 <button type="button" class="btn btn-danger" (click)="resetEntries()">Reset</button>
 <button class="btn btn-success pull-right">Submit</button>
-</form>
+</form>-->

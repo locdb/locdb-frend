@@ -3,6 +3,8 @@ import { Component, OnInit, OnChanges, Input, Output, EventEmitter} from '@angul
 import { BibliographicEntry, BibliographicResource, AgentRole, ResponsibleAgent } from '../locdb';
 import { LocdbService } from '../locdb.service';
 
+import { environment } from 'environments/environment';
+
 
 @Component({
   selector: 'app-suggestion',
@@ -13,6 +15,11 @@ export class SuggestionComponent implements OnChanges {
 
   @Input() entry: BibliographicEntry;
   @Output() suggest: EventEmitter<BibliographicResource> = new EventEmitter();
+
+  // make this visible to template
+  environment = environment;
+  
+   suggestfield; //environment.production ? this.entry.title : this.entry.ocrData.title;
 
   internalSuggestions : BibliographicEntry[] | BibliographicResource[];
 
@@ -27,6 +34,7 @@ export class SuggestionComponent implements OnChanges {
     if (this.entry){
       this.fetchInternalSuggestions();
       this.fetchExternalSuggestions();
+      this.suggestfield = this.entry.ocrData.title;
     } else {
       this.internalSuggestions = [];
       this.externalSuggestions = [];
@@ -46,6 +54,7 @@ export class SuggestionComponent implements OnChanges {
   // these two functions could go somewhere else e.g. static in locdb.ts
   // BEGIN
   authors2contributors (authors: string[]): AgentRole[] {
+    if (!authors) return [];
     let contributors = [];
     for (let author of authors) {
       const agent: ResponsibleAgent = {
@@ -64,10 +73,14 @@ export class SuggestionComponent implements OnChanges {
     return contributors;
   }
 
-  resourceFromEntry(entry: BibliographicEntry) : BibliographicResource {
-    let ocr = entry.ocrData;
+  resourceFromEntry(entry) : BibliographicResource {
+      console.log("resourceFromEntry", entry)
+
+    // When the production backend is used, entry does not have ocr data yet
+    // but when the development backend is used, entry does indeed have ocr data field
+    let ocr = environment.production ? entry : entry.ocrData
     let br : BibliographicResource = {
-      _id: entry.references,
+      //_id: entry.references,
       title: ocr.title,
       publicationYear: +ocr.date, // unary + operator makes it a number
       contributors: this.authors2contributors(ocr.authors),
@@ -89,5 +102,32 @@ export class SuggestionComponent implements OnChanges {
       this.suggest.next(br);
     }
   }
+  
+  refreshSuggestions(){
+    console.log("Internal Suggestions: ", this.internalSuggestions);
+    console.log("External Suggestions: ", this.externalSuggestions);
+    console.log("Entry: ", this.entry);
+    
+    let searchentry = JSON.parse(JSON.stringify(this.entry));
+    searchentry.ocrData.title = this.suggestfield;
+    console.log("Searchentry: ", searchentry);
+     console.log("get internal Suggestions");
+//     this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.internalSuggestions = sgt );
+     this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.saveintenal(sgt) );
+     console.log("get external Suggestions");
+//     this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.externalSuggestions = sgt );
+     this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.saveextenal(sgt) );
+    console.log("Done.");
+    this.entry = searchentry;
+}
 
+saveintenal(sgt){
+    this.internalSuggestions = sgt
+    console.log("Recieved Internal: ", this.internalSuggestions);
+}
+
+saveextenal(sgt){
+    this.externalSuggestions = sgt
+    console.log("Recieved External: ", this.externalSuggestions);
+}
 }

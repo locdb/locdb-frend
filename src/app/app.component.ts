@@ -16,7 +16,16 @@ export class AppComponent {
   resource: BibliographicResource;
   entryForSuggestion: BibliographicEntry;
 
-  header = { width: 300, height: 20, rp:0.35, citationCircleVisibility:"hidden", lineVisibility:"hidden", colorStart:"Red", colorCitation:"Blue"}; 
+  header = { width: 300, height: 20, rp:0.15, 
+      state:0, //0-2 
+      caktiv: 'black',
+      cinaktiv: 'white',
+      cline: 'white',
+      nameStart: 'Start',
+      nameMid: 'Suggestion',
+      nameEnd: 'Citation'
+      
+}; 
   
   /*
     updatedEntry : BibliographicEntry = {
@@ -36,7 +45,11 @@ export class AppComponent {
   constructor ( private locdbService: LocdbService ) {}
 
   updateEntry (entry: BibliographicEntry) {
-    this.showCitation()
+    //this.showCitation()
+    if(entry)
+        this.header.state = 1;
+    else
+        this.header.state = 0;        
     console.log('Updating with new entry', entry);
     this.entry = entry;
     // reset resource, since we selected a different entry
@@ -44,7 +57,8 @@ export class AppComponent {
   }
 
   updateResource (resource: BibliographicResource) {
-    this.enableCitation();
+    //this.enableCitation();
+    this.header.state = 2;
     console.log('Updating with new resource', resource);
     this.resource = resource;
   }
@@ -54,31 +68,17 @@ export class AppComponent {
     return Math.ceil(num * precision) / precision;
   }
   
-  onclickcitation(){
-  console.log("Clicked Citation Circle");
-    this.header.lineVisibility="hidden"
-    this.header.citationCircleVisibility="hidden"
-    this.header.colorStart="Red"
-    this.header.colorCitation="Blue"
+  pathStart(){
+  console.log("pathStart");
       
 }
   
   
-  onclickstart() {
-    console.log("clicked Start Circle");
-    this.header.lineVisibility="visible"
-    this.header.citationCircleVisibility="visible"
-    this.header.colorStart="Blue"
-    this.header.colorCitation="Red"
+  pathSelectResource() {
+    console.log("pathSelectResource");
   }
-  showCitation(){
-    this.header.lineVisibility="visible"
-    this.header.citationCircleVisibility="visible"
-    this.header.colorStart="Blue"
-}
-
-  enableCitation(){
-    this.header.colorCitation="Red"
+  pathEditAndSubmit(){
+    console.log("pathEditAndSubmit");
 }
 
 }

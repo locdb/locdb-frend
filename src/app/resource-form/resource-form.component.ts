@@ -18,6 +18,7 @@ oldresource: BibliographicResource;
 resourceForm: FormGroup;
 contributorsForms: FormGroup[] = [];  
 embodiments: FormGroup[] = [];
+editable = false;
 parts: FormGroup[] = [];
 
 roles: string[] = ['CORPORATE','PUBLISHER', 'author']; // <-- to Locdb.ts as class?
@@ -208,6 +209,14 @@ saveEntries(){
     
     // parts and embodiments are displayed, but not saved yet.
     // what of them schould be displayed and be editable? schould it be possible to make new entries?
+    this.toggleEdit();
+}
+toggleEdit(){
+    console.log("toggleEdit");
+    if(this.editable)
+        this.editable=false;
+    else
+        this.editable=true;    
 }
 
 
