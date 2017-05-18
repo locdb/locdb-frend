@@ -6,10 +6,10 @@ figure {
 
 figure svg {
   -webkit-transition: all 0.5s;
+  position: relative;
+   z-index: 999;
 }
 
 figure:hover svg {
   -webkit-transform: scale(3.5) translate(+30%, 0px);
-  position: relative;
-   z-index: 999;
 }
