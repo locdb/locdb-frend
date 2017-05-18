@@ -1,24 +1,42 @@
-<label>Title for search:</label>
-<button class="btn btn-success pull-right" (click)="refreshSuggestions()">Search</button>
-<textarea class="form-control" [(ngModel)] = "suggestfield" rows = "2" style="resize: none;"></textarea>
-<a href="#" *ngFor="let r of internalSuggestions" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)">
-  <span class="badge">LOC-DB</span>
-  <h5 class="list-group-item-heading"><b>{{r.title}}</b></h5>
-  <h6 class="list-group-item-heading">{{r.authors}}</h6>
-  <p class="list-group-item-text">{{r.date}}</p>
-  <p class="list-group-item-text">{{r.references}}</p>
-</a>
-<a href="#" class="list-group-item list-group-item-action list-group-item-warning" (click)="onSelect()">
-  <span class="badge">LOC-DB</span>
-  <h5 class="list-group-item-heading"><div align="center"><b>
-        New Bibliographic Resource
-      </b></div></h5>
-</a>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="row justify-content-between">
+    <div class="col-xs-9 text-left">
+      <textarea class="form-control" [(ngModel)]="suggestfield" rows="3" style="resize: none;"></textarea>
+    </div>
+    <div class="col-xs-3 text-right">
+      <button class="btn btn-info" (click)="refreshSuggestions()">Search</button>
+    </div>
+    </div>
+  </div>
 
-<div align="right" style="margin-top: 1em">
-  <button class="btn btn-primary" (click)="lgModal.show()">External Bibliographic Resources</button>
+  <div class="panel-body">
+    <a href="#" *ngFor="let r of internalSuggestions" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)">
+      <span class="badge">LOC-DB</span>
+      <h5 class="list-group-item-heading"><b>{{r.title}}</b></h5>
+      <h6 class="list-group-item-heading">{{r.authors}}</h6>
+      <p class="list-group-item-text">{{r.date}}</p>
+      <p class="list-group-item-text">{{r.references}}</p>
+    </a>
+    <a href="#" class="list-group-item list-group-item-action list-group-item-warning" (click)="onSelect()">
+      <span class="badge">LOC-DB</span>
+      <h5 class="list-group-item-heading"><div align="center"><b>
+            New Bibliographic Resource
+          </b></div></h5>
+    </a>
+  </div>
+
+  <div class="panel-footer">
+    <div class="row justify-content-between">
+    <div class="col-xs-6 text-left">
+      <button class="btn btn-info" (click)="lgModal.show()">External Bibliographic Resources</button>
+    </div>
+    <div class="col-xs-6 text-right">
+      <button class="btn btn-primary">Commit Link</button>
+    </div>
+    </div>
+  </div>
 </div>
-
 <div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -48,4 +66,3 @@
     </div>
   </div>
 </div>
-
