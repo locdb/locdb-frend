@@ -5,7 +5,7 @@ figure {
 }
 
 figure svg {
-  -webkit-transition: all 0.5s;
+  -webkit-transition: all 5s;
   position: relative;
    z-index: 999;
 }
