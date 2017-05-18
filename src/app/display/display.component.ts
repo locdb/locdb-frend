@@ -89,9 +89,6 @@ export class DisplayComponent implements OnInit {
         //console.log("Entrie.OCRData.coordinates: ", e.coordinates);
         let coords = environment.production ? e.coordinates : e.ocrData.coordinates;
         let rectField = coords.split(" ");
-        let realDim = this.realImgDimension(this.displaySource);
-        this.imgX = realDim.naturalWidth;
-        this.imgY = realDim.naturalHeight;
         this.rects.push({
             x: Number(rectField[0]),
             y: Number(rectField[1]),
@@ -99,7 +96,6 @@ export class DisplayComponent implements OnInit {
             height: Number(rectField[3])-Number(rectField[1]),
         });
         }
-        
     }
     
     realImgDimension(url) {
@@ -109,6 +105,16 @@ export class DisplayComponent implements OnInit {
         naturalWidth: i.width, 
         naturalHeight: i.height
         };
+    }
+    
+    imageOnload(){
+        console.log("Image Loaded, Dimensions: ", this.realImgDimension(this.displaySource));
+    
+        let realDim = this.realImgDimension(this.displaySource);
+        this.imgX = realDim.naturalWidth;
+        this.imgY = realDim.naturalHeight;
+        if((this.imgX + this.imgY) <= 0)
+            console.log("Image size = 0", realDim);
     }
 
 }
