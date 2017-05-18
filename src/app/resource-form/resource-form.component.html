@@ -251,25 +251,31 @@ embodiedAs?: ResourceEmbodiment[];-->
         <td>
         </td>
         </tr>
-        <tr *ngFor="let contributorForm of contributorsForms">
+        <tr *ngFor="let contributorForm of contributorsForms; let j = index">
         <td>
+        <table class="table-condensed">
+        <tbody>
+        <tr>
+        <td>
+        <button type="button" class="btn btn-warning" (click)="delContributorField(j)">Delete</button>
+        </td>
+        </tr>
+        </tbody>
+        </table>
         </td>
         <td>
         <form [formGroup]="contributorForm" (ngSubmit)="onSubmit()" novalidate>
-        <table>
+        <table class="table-condensed">
         <tbody>
         <tr>
         <td>
         <select class="form-control" formControlName="role">
-                            <option *ngIf="contributorForm.value.role =='' " selected="selected" disabled="true">--Please Select --</option>
+                            <option *ngIf="contributorForm.value.role =='' " selected="selected" disabled="true">Please Select</option>
                             <option *ngFor="let item of roles" selected="{{contributorForm.value.role == item ? 'selected' : ''}}">{{item}}</option>
         </select>
         </td>
         <td>
         <input class="form-control" formControlName="name">
-        </td>
-        <td>
-        <button type="button" class="btn btn-warning pull-right" (click)="delContributorField(i)">Delete</button>
         </td>
         </tr>
         </tbody>
