@@ -1,12 +1,16 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <div class="row justify-content-between">
-    <div class="col-xs-9 text-left">
-      <textarea class="form-control" [(ngModel)]="suggestfield" rows="3" style="resize: none;"></textarea>
-    </div>
-    <div class="col-xs-3 text-right">
-      <button class="btn btn-info" (click)="refreshSuggestions()">Search</button>
-    </div>
+      <div class="col-xs-10 text-left">
+        <textarea class="form-control" [(ngModel)]="suggestfield" rows="3" style="resize: none;"></textarea>
+      </div>
+      <div class="col-xs-2 text-right">
+        <div class="bottom-column">
+          <button type="button" class="btn btn-success" aria-label="Search" (click)="refreshSuggestions()">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -28,12 +32,16 @@
 
   <div class="panel-footer">
     <div class="row justify-content-between">
-    <div class="col-xs-6 text-left">
-      <button class="btn btn-info" (click)="lgModal.show()">External Bibliographic Resources</button>
-    </div>
-    <div class="col-xs-6 text-right">
-      <button class="btn btn-primary">Commit Link</button>
-    </div>
+      <div class="col-xs-6 text-left">
+        <button type="button" class="btn btn-info" aria-label="Search" (click)="lgModal.show()">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="col-xs-6 text-right">
+        <button type="button" class="btn btn-primary">
+            <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Commit Link
+        </button>
+      </div>
     </div>
   </div>
 </div>

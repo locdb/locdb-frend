@@ -100,17 +100,10 @@
               <!-- suggestion component INPUT: entry, OUTPUT: resource -->
               <app-suggestion [entry]="entry" (suggest)="updateResource($event)"></app-suggestion>
         </div>
-        <div class="col-xs-12 col-sm-6 col-md-4">
-          <div *ngIf="resource" class="panel panel-default">
-            <div class="panel-heading">
-              <b>Bibliographic Resource</b>
-            </div>
-            <div class="panel-body">
+        <div *ngIf="resource" class="col-xs-12 col-sm-6 col-md-4">
               <!--<app-resource-form [entry]="entry" (state)="updateForSuggestion($event)"></app-resource-form>-->
               <!-- resource form component INPUT: resource, OUTPUT: submit event with new resource? -->
               <app-resource-form [resource]="resource"></app-resource-form>
-            </div>
-          </div>
         </div>
       </div>
     </section>
