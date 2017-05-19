@@ -18,12 +18,12 @@ export class AppComponent {
 
   header = { width: 300, height: 20, rp:0.15, 
       state:0, //0-2 
-      caktiv: 'black',
-      cinaktiv: 'white',
-      cline: 'white',
-      nameStart: 'Start',
-      nameMid: 'Suggestion',
-      nameEnd: 'Citation'
+      caktiv: 'lightblue',
+      cinaktiv: 'lightgrey',
+      cline: 'lightgreen',
+      nameStart: 'Resource',
+      nameMid: 'Citation',
+      nameEnd: 'Resource'
       
 }; 
   

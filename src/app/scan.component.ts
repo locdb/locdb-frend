@@ -52,12 +52,12 @@ export class ScanComponent {
       }
     }
     if (ready) {
-      console.log('FLUP: Ready for upload..');
+      console.log('Ready for upload..');
       this.listoffiles.map((elem) => this.writefilecontent(elem));
       // clear after upload
       this.onclickclear();
     } else {
-        console.log('FLUP: Files not ready!');
+        console.log('Files not ready!');
         }
   }
 
@@ -253,11 +253,11 @@ export class ScanComponent {
 }
   
 class metadata{
-ppn: string;
-firstpage: number;
-lastpage: number;
-file: File;
-filecontent: any;
-ppnsucc: boolean;
-allset: boolean;
+  ppn: string;
+  firstpage: number;
+  lastpage: number;
+  file: File;
+  filecontent: any;
+  ppnsucc: boolean;
+  allset: boolean;
 }
