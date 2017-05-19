@@ -209,7 +209,7 @@ saveEntries(){
     
     // parts and embodiments are displayed, but not saved yet.
     // what of them schould be displayed and be editable? schould it be possible to make new entries?
-    this.toggleEdit();
+    // this.toggleEdit();
 }
 toggleEdit(){
     console.log("toggleEdit");
