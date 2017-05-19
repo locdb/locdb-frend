@@ -60,10 +60,12 @@
             <label>
               <input type="checkbox">
               <span class="badge">{{ r.identifiers[0].scheme }}</span>
-              {{r.authors}}: <b>{{ r.title }}</b>.
-              <p *ngFor="let identifier of identifiers">
-                {{ identifier.scheme }} : {{ identifier.literalValue }}
-              </p>
+              <b>{{r.ocrData.authors}}</b> <em>{{ r.ocrData.title }}</em>.
+              <ul>
+              <li *ngFor="let identifier of r.identifiers">
+                <span class="badge">{{ identifier.scheme }}</span> {{ identifier.literalValue }}
+              </li>
+              </ul>
             </label>
           </div>
           <div align="right">
