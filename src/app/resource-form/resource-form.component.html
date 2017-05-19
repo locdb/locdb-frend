@@ -1,4 +1,18 @@
-<button class="btn btn-success pull-left" (click)="toggleEdit()">Edit</button>
+<div *ngIf="resource" class="panel panel-default">
+<div class="panel-heading">
+<div class="row justify-content-between">
+    <div class="col-xs-8 text-left">
+        <h4>Bibliographic Resource</h4>
+    </div>
+    <div class="col-xs-4 text-right">
+          <button type="button" class="btn btn-warning" aria-label="Edit" (click)="toggleEdit()">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+          </button>
+    </div>
+</div>
+</div>
+<div class="panel-body">
+<!-- <button class="btn btn-success pull-left" (click)="toggleEdit()">Edit</button> -->
 <div class="row">
     <div class="col-md-12">
     </div>
@@ -257,7 +271,11 @@ embodiedAs?: ResourceEmbodiment[];-->
         <tbody>
         <tr>
         <td>
-        <button type="button" class="btn btn-warning" (click)="delContributorField(j)">Delete</button>
+        <!-- <button type="button" class="btn btn-warning" (click)="delContributorField(j)">Delete</button> -->
+          <button type="button" class="btn btn-danger" aria-label="Remove Contributor" (click)="delContributorField(j)">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          </button>
+
         </td>
         </tr>
         </tbody>
@@ -287,7 +305,9 @@ embodiedAs?: ResourceEmbodiment[];-->
     <td>
     </td>
     <td>
-     <button  type="button" class="btn btn-success" (click)="addContributorField()">New</button>
+          <button type="button" class="btn btn-success" aria-label="Add Contributor" (click)="addContributorField()">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          </button>
      </td>
      </tr>
         
@@ -313,11 +333,23 @@ embodiedAs?: ResourceEmbodiment[];-->
     </tbody>
 </table>
 
-<button type="button" class="btn btn-danger" (click)="resetEntries()">Reset</button>
-<button class="btn btn-success pull-right">Submit</button>
+<!-- this button might be not necessary, user can also just reset by pressing toggle again-->
+<!-- <button class="btn btn-success pull-right">Submit</button> -->
+<div class="row justify-content-between">
+    <div class="col-xs-6 text-left">
+<button type="button" class="btn btn-danger" (click)="resetEntries()">
+    <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset
+</button>
+    </div>
+    <div class="col-xs-6 text-right">
+<button type="button" class="btn btn-primary">
+    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Submit
+</button>
+    </div>
+</div>
 </form>
 
-<!--
+<!-- what is this below? :D
 <div class="form-group">
         <label>Title</label>
         <input class="form-control" formControlName="title">
@@ -434,3 +466,5 @@ embodiedAs?: ResourceEmbodiment[];-->
 <button type="button" class="btn btn-danger" (click)="resetEntries()">Reset</button>
 <button class="btn btn-success pull-right">Submit</button>
 </form>-->
+</div>
+</div>
