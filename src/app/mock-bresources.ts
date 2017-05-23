@@ -1,4 +1,3 @@
-import { Citation } from './citation';
 import { BibliographicResource, ExternalResource } from './locdb'
 
 export const MOCK_INTERNAL: BibliographicResource[] = [

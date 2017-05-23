@@ -1,4 +1,5 @@
 <div class="panel panel-default">
+  <!-- Panel heading including search bar -->
   <div class="panel-heading">
     <div class="row justify-content-between">
       <div class="col-xs-10 text-left">
@@ -14,22 +15,16 @@
     </div>
   </div>
 
+  <!-- Panel body providing suggestions -->
   <div class="panel-body">
+    <div class="list-group">
     <a href="#" *ngFor="let r of internalSuggestions" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)">
-      <span class="badge">LOC-DB</span>
-      <h5 class="list-group-item-heading"><b>{{r.title}}</b></h5>
-      <h6 class="list-group-item-heading">{{r.authors}}</h6>
-      <p class="list-group-item-text">{{r.date}}</p>
-      <p class="list-group-item-text">{{r.references}}</p>
+      <app-resource-form [resource]="r"></app-resource-form>
     </a>
-    <a href="#" class="list-group-item list-group-item-action list-group-item-warning" (click)="onSelect()">
-      <span class="badge">LOC-DB</span>
-      <h5 class="list-group-item-heading"><div align="center"><b>
-            New Bibliographic Resource
-          </b></div></h5>
-    </a>
+    </div>
   </div>
 
+  <!-- Panel footer allowing actions -->
   <div class="panel-footer">
     <div class="row justify-content-between">
       <div class="col-xs-6 text-left">
@@ -39,7 +34,7 @@
       </div>
       <div class="col-xs-6 text-right">
         <button type="button" class="btn btn-primary">
-            <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Commit Link
+          <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Commit Link
         </button>
       </div>
     </div>
@@ -62,9 +57,9 @@
               <span class="badge">{{ r.identifiers[0].scheme }}</span>
               <b>{{r.ocrData.authors}}</b> <em>{{ r.ocrData.title }}</em>.
               <ul>
-              <li *ngFor="let identifier of r.identifiers">
-                <span class="badge">{{ identifier.scheme }}</span> {{ identifier.literalValue }}
-              </li>
+                <li *ngFor="let identifier of r.identifiers">
+                  <span class="badge">{{ identifier.scheme }}</span> {{ identifier.literalValue }}
+                </li>
               </ul>
             </label>
           </div>

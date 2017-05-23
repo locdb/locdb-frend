@@ -18,7 +18,11 @@ export class TodoComponent implements OnInit {
   scans: scanentries[];
   //unprocessed: ToDoScans[];
   unprocessed: scanentries[];
+  
   selectedTodo: ToDoScans;
+  todolist : ToDo[] = [];
+  //unprocessed: ToDo[] = [];
+
   @Output() todo: EventEmitter<ToDoScans> = new EventEmitter();
   
   
@@ -30,16 +34,25 @@ export class TodoComponent implements OnInit {
 
   constructor ( private locdbService: LocdbService ) {}
 
-  onSelect(todo: ToDoScans): void {
-    this.selectedTodo = todo;
-    console.log('Todo item selected', todo._id);
-    
-    this.todo.next(todo);
+  onSelect(scan: ToDoScans): void {
+    if ( scan.status === 'NOT_OCR_PROCESSED' )
+    {
+      console.log("Starting processing");
+      scan.status = "OCR_PROCESSING";
+      this.locdbService.triggerOcrProcessing(scan._id).subscribe(
+        (message) => scan.status = 'OCR_PROCESSED'
+      ) 
+    }
+    else
+    {
+      this.selectedTodo = scan;
+      console.log('Todo item selected', scan._id);
+      this.todo.next(scan);
+    }
   }
 
   ngOnInit() {
     console.log('Retrieving TODOs from backend');
-    // this.locdbService.getToDo(false).subscribe( todos => this.scans = TodoComponent.extractScans(todos) );
     this.fetchScans();
   }
 
@@ -49,13 +62,20 @@ export class TodoComponent implements OnInit {
         console.log("fetch scans", todos);
     } );
     this.locdbService.getToDo(false).subscribe( (todos) => {this.unprocessed = TodoComponent.extractScans(<ToDo[]>todos)} );
+//     this.locdbService.getToDo(true).subscribe( (todos) => {this.todolist = <ToDo[]>todos} );
+//     this.locdbService.getToDo(false).subscribe( (todos) => {this.unprocessed = <ToDo[]>todos} );
   }
+
+  all_todos() {
+    return this.todolist.concat(this.unprocessed);
+  }
+
 
   prettyStatus(scan: ToDoScans) {
     if ( scan.status === 'OCR_PROCESSED' )
-      return 'OCR';
+      return 'OCR processed';
     if ( scan.status === 'NOT_OCR_PROCESSED' )
-      return 'not OCR';
+      return 'not OCR processed';
     return 'Processing'
   }
 
@@ -75,6 +95,8 @@ export class TodoComponent implements OnInit {
   }
 
   private static extractScans(todos: ToDo[]): scanentries[] {
+  //private static extractScans(todos: ToDo[]): ToDoScans[] {
+    console.log('DEPRECATION WARNING');
     console.log('Input to extractScans', todos);
     // if (!todos) return [];
     //let flat_scans: ToDoScans[] = [];

@@ -1,28 +1,43 @@
-
-
-
 <!--<button class="btn btn-success pull-left" (click)="toggleEdit()">Edit</button>-->
 
 <div *ngIf="resource" class="panel panel-default">
-<div class="panel-heading">
-<div class="row justify-content-between">
-    <div class="col-xs-8 text-left">
-        <h4>Bibliographic Resource</h4>
-    </div>
+  <div class="panel-heading">
+    <div *ngIf="folded">
+      <button type="button" class="btn btn-info" aria-label="Toggle folding" (click)="toggleFolding()">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      </button>
+      <em>{{resource.title}}</em> ({{resource.publicationYear}})
+    </div><!--
+<<<<<<< HEAD
     <div class="col-xs-4 text-right">
           <button *ngIf="!editable" type="button" class="btn btn-warning" aria-label="Edit" (click)="toggleEdit()" (click)="lgModal.show()">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
           </button>
+=======-->
+    <div class="row justify-content-between" *ngIf="!folded">
+      <div class="col-xs-8 text-left">
+        <button type="button" class="btn btn-info" aria-label="Toggle folding" (click)="toggleFolding()">
+          <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+        </button>
+        <b>Bibliographic Resource</b>
+      </div>
+      <div class="col-xs-4 text-right">
+        <button type="button" class="btn btn-warning" aria-label="Edit" (click)="lgModal.show()">
+          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+        </button>
+      </div>
     </div>
-</div>
-</div>
-<div class="panel-body">
+  </div>
+
+<div *ngIf="!folded" class="panel-body">
 <!-- <button class="btn btn-success pull-left" (click)="toggleEdit()">Edit</button> -->
 <div class="row">
     <div class="col-md-12">
     </div>
 </div>
 <div>
+
+<div *ngIf="!editable">
 <table class="table table-striped">
  <tbody>
     <tr *ngIf="resource.title">
@@ -70,22 +85,22 @@
     </tr>
        
 <!--   contribs   -->
-    <tr *ngIf="resource.contributors">
-        <td>
-            <label>Contributors</label> 
-        </td>
-        <td>
-        </td>
-        </tr>
-        
-        <tr *ngFor="let contrib of resource.contributors">
-        <td>
-        {{contrib.roleType}}
-        </td>
-        <td>
-        {{contrib.heldBy.nameString}}
-        </td>
-        </tr>
+<!-- <tr *ngIf="resource.contributors"> -->
+<!--   <td> -->
+<!--     <label>Contributors</label> --> 
+<!--   </td> -->
+<!--   <td> -->
+<!--   </td> -->
+<!-- </tr> -->
+
+<tr *ngFor="let contrib of resource.contributors">
+  <td>
+    {{contrib.roleType}}
+  </td>
+  <td>
+    {{contrib.heldBy.nameString}}
+  </td>
+</tr>
         
     
     
@@ -109,6 +124,7 @@
     </tbody>
     </table>
 </div>
+</div>
 
  
 <div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -122,11 +138,9 @@
       </div>
       <div class="modal-body">
 
-<!--  -->
 
 
-<!--
-<form *ngIf="editable" [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>-->
+<!-- <form *ngIf="editable" [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>-->
 
 <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
 <!-- 

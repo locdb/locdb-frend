@@ -2,7 +2,7 @@
   <div class="panel-heading">
     <div class="row justify-content-between">
       <div class="col-xs-6 text-left">
-        <h4>{{title}}</h4>
+        <h4><b>{{title}}</b></h4>
       </div>
       <div class="col-xs-6 text-right">
         <button (click)="fetchScans()" type="button" class="btn btn-info" aria-label="Refresh">
@@ -12,8 +12,6 @@
     </div>
   </div>
   <div class="panel-body">
-
-
 
    <!-- <div class="btn-group-vertical" role="group" aria-label="...">-->
     
@@ -51,7 +49,36 @@
       </div>
     </div>
       
-    </div>
+    </div><!--
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let t of all_todos()">
+        <div class="list-group-item-heading">
+          <!-- <b>{{t.title}}</b> 
+          <app-resource-form [resource]="t" [folded]="true"></app-resource-form>
+        </div>
+        <div class="list-group-item-body">
+            <div class="list-group" *ngFor="let c of t.children">
+              <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of c.scans" (click)="onSelect(s)">
+                Scan on pp. {{s.firstPage}}-{{s.lastPage}}
+                <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
+              </a>
+            </div>
+        </div>
+      </li>
+    </ul>-->
+    
+    
+    <!-- <div class="btn-group-vertical" role="group" aria-label="..."> -->
+    <!--   <button type="button" *ngFor="let s of scans" class="list-group-item list-group-item-action list-group-item-info justify-content-between" (click)="onSelect(s)" > -->
+    <!--     {{ s._id }} --> 
+    <!--     <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span> -->
+    <!--   </button> -->
+    <!--   <button type="button" *ngFor="let s of unprocessed" class="list-group-item list-group-item-action list-group-item-warning justify-content-between" (click)="processScan(s)" > -->
+    <!--     {{ s._id }} --> 
+    <!--     <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span> -->
+    <!--   </button> -->
+    <!-- </div> -->
+    
     <!-- <div align="left"> -->
     <!--     <button class="btn btn-default"> Upload files </button> -->
     <!-- </div> -->

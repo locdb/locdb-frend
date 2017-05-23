@@ -12,6 +12,7 @@ styleUrls: ['./resource-form.component.css']
 export class ResourceFormComponent implements OnChanges {
 
 @Input() resource: BibliographicResource;
+@Input() folded = false;
 
 oldresource: BibliographicResource;
 
@@ -27,6 +28,7 @@ constructor(
     private fb: FormBuilder,
     private locdbService: LocdbService) { this.createForm(); }
 
+
 createForm() {
     this.resourceForm = this.fb.group({
     title: '',
@@ -38,6 +40,10 @@ createForm() {
     partof: '',
     });
     console.log('roles:', this.roles);
+}
+
+toggleFolding() {
+    this.folded = !this.folded;
 }
 
 ngOnChanges() {
@@ -83,37 +89,41 @@ ngOnChanges() {
     }
     this.embodiments = []
     //set Embodiments
-    for (let emb of this.resource.embodiedAs){
-        console.log("Emb: ", emb);
-        let embForm: FormGroup =  this.fb.group({
-            typeMongo: emb.typeMongo,
-            format: emb.format,
-            firstPage: emb.firstPage,
-            lastPage: emb.lastPage,
-            url: emb.url,
-            // scans?: ToDoParts[];
-        })
-        console.log(embForm.value.firstPage);
-        this.embodiments.push(embForm);
-        // conForm.reset({
-        // title: this.resource.title
-        // ...
-        //        });
+    if (this.resource.embodiedAs) {
+        for (let emb of this.resource.embodiedAs){
+            console.log("Emb: ", emb);
+            let embForm: FormGroup =  this.fb.group({
+                typeMongo: emb.typeMongo,
+                format: emb.format,
+                firstPage: emb.firstPage,
+                lastPage: emb.lastPage,
+                url: emb.url,
+                // scans?: ToDoParts[];
+            })
+            console.log(embForm.value.firstPage);
+            this.embodiments.push(embForm);
+            // conForm.reset({
+            // title: this.resource.title
+            // ...
+            //        });
+        }
     }
     this.parts = [];
     //set parts
-    for (let part of this.resource.parts){
-        console.log("part: ", part);
-        let partForm: FormGroup =  this.fb.group({
-            id: part._id,
-            bibliographicEntryText: part.bibliographicEntryText,
-            references: part.references,
-            // coordinates: part.coordinates, << removed for now, is part of ocrData
-            scanId: part.scanId,
-            status: part.status,
-            // added
-            // identifiers: part.identifiers; // <-- Array
-        })
+    if (this.resource.parts) {
+        for (let part of this.resource.parts){
+            console.log("part: ", part);
+            let partForm: FormGroup =  this.fb.group({
+                id: part._id,
+                bibliographicEntryText: part.bibliographicEntryText,
+                references: part.references,
+                // coordinates: part.coordinates, << removed for now, is part of ocrData
+                scanId: part.scanId,
+                status: part.status,
+                // added
+                // identifiers: part.identifiers; // <-- Array
+            })
+        }
     }
 }
 
@@ -142,7 +152,7 @@ dropboxitemselected(conForm: FormGroup, s: string){
 
 onSubmit(){
     this.saveEntries();
-    this.toggleEdit();
+    this.toggleEdit("123");
     console.log("Send somewere ", this.resource);
 }
 
@@ -212,7 +222,7 @@ saveEntries(){
     // what of them schould be displayed and be editable? schould it be possible to make new entries?
     // this.toggleEdit();
 }
-toggleEdit(){
+toggleEdit(event:any){
     console.log("toggleEdit");
     if(this.editable)
         this.editable=false;
