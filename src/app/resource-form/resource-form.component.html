@@ -10,7 +10,7 @@
         <h4>Bibliographic Resource</h4>
     </div>
     <div class="col-xs-4 text-right">
-          <button type="button" class="btn btn-warning" aria-label="Edit" (click)="lgModal.show()">
+          <button *ngIf="!editable" type="button" class="btn btn-warning" aria-label="Edit" (click)="toggleEdit()" (click)="lgModal.show()">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
           </button>
     </div>
@@ -22,7 +22,7 @@
     <div class="col-md-12">
     </div>
 </div>
-<div *ngIf="!editable">
+<div>
 <table class="table table-striped">
  <tbody>
     <tr *ngIf="resource.title">
@@ -116,7 +116,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Edit Resource</h4>
-        <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close">
+        <button type="button" class="close pull-right" (click)="toggleEdit()" (click)="lgModal.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>

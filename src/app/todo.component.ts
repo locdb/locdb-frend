@@ -14,10 +14,19 @@ import { LocdbService } from './locdb.service';
 
 export class TodoComponent implements OnInit {
   title = 'Todo Management';
-  scans: ToDoScans[];// = TodoComponent.extractScans(MOCK_TODOBRS);
-  unprocessed: ToDoScans[];
+  //scans: ToDoScans[];// = TodoComponent.extractScans(MOCK_TODOBRS);
+  scans: scanentries[];
+  //unprocessed: ToDoScans[];
+  unprocessed: scanentries[];
   selectedTodo: ToDoScans;
   @Output() todo: EventEmitter<ToDoScans> = new EventEmitter();
+  
+  
+  onclickheading(){
+  console.log("asd");
+      
+}
+
 
   constructor ( private locdbService: LocdbService ) {}
 
@@ -36,7 +45,9 @@ export class TodoComponent implements OnInit {
 
   fetchScans() {
     console.log("Fetching todo scans from backend");
-    this.locdbService.getToDo(true).subscribe( (todos) => {this.scans = TodoComponent.extractScans(<ToDo[]>todos)} );
+    this.locdbService.getToDo(true).subscribe( (todos) => {this.scans = TodoComponent.extractScans(<ToDo[]>todos);
+        console.log("fetch scans", todos);
+    } );
     this.locdbService.getToDo(false).subscribe( (todos) => {this.unprocessed = TodoComponent.extractScans(<ToDo[]>todos)} );
   }
 
@@ -63,19 +74,23 @@ export class TodoComponent implements OnInit {
     }
   }
 
-  private static extractScans(todos: ToDo[]): ToDoScans[] {
+  private static extractScans(todos: ToDo[]): scanentries[] {
     console.log('Input to extractScans', todos);
     // if (!todos) return [];
-    let flat_scans: ToDoScans[] = [];
+    //let flat_scans: ToDoScans[] = [];
+    let flat_scans: scanentries[] = [];
     // Ugly loop //
     for (let todo of todos) {
       console.log(todo);
+      console.log(todo._id);
+      let scanentry = new scanentries(todo._id)
       for (let child of todo.children) {
         console.log(child);
         for (let scan of child.scans) {
-          flat_scans.push(scan);
+          scanentry.scans.push(scan);
         }
       }
+      flat_scans.push(scanentry);
     }
     //    Fancy function //
     // let flat_scans: ToDoScans[] = todos.map(
@@ -90,4 +105,18 @@ export class TodoComponent implements OnInit {
     console.log('Extracted flat list of scans', flat_scans);
     return flat_scans;
   }
+  
+  printit(a: any){
+      console.log("----------------------------------------");
+      console.log(a);
+  }
+}
+
+  class scanentries {
+  scans: ToDoScans[] = [];
+  rootresourceid: string;
+  isCollapsed = true;
+  constructor(r: string){
+    this.rootresourceid = r;      
+}
 }

@@ -142,6 +142,7 @@ dropboxitemselected(conForm: FormGroup, s: string){
 
 onSubmit(){
     this.saveEntries();
+    this.toggleEdit();
     console.log("Send somewere ", this.resource);
 }
 
