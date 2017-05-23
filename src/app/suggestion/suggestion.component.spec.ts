@@ -11,7 +11,7 @@ describe('SuggestionComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         ModalModule.forRoot(),
-      ]
+      ],
       declarations: [ SuggestionComponent ]
     })
     .compileComponents();

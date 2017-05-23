@@ -14,41 +14,15 @@ import { LocdbService } from './locdb.service';
 
 export class TodoComponent implements OnInit {
   title = 'Todo Management';
-  scans: ToDoScans[];// = TodoComponent.extractScans(MOCK_TODOBRS);
-  unprocessed: ToDoScans[];
   selectedTodo: ToDoScans;
+  todolist : ToDo[] = [];
+  unprocessed: ToDo[] = [];
+
   @Output() todo: EventEmitter<ToDoScans> = new EventEmitter();
 
   constructor ( private locdbService: LocdbService ) {}
 
-  onSelect(todo: ToDoScans): void {
-    this.selectedTodo = todo;
-    console.log('Todo item selected', todo._id);
-    
-    this.todo.next(todo);
-  }
-
-  ngOnInit() {
-    console.log('Retrieving TODOs from backend');
-    // this.locdbService.getToDo(false).subscribe( todos => this.scans = TodoComponent.extractScans(todos) );
-    this.fetchScans();
-  }
-
-  fetchScans() {
-    console.log("Fetching todo scans from backend");
-    this.locdbService.getToDo(true).subscribe( (todos) => {this.scans = TodoComponent.extractScans(<ToDo[]>todos)} );
-    this.locdbService.getToDo(false).subscribe( (todos) => {this.unprocessed = TodoComponent.extractScans(<ToDo[]>todos)} );
-  }
-
-  prettyStatus(scan: ToDoScans) {
-    if ( scan.status === 'OCR_PROCESSED' )
-      return 'OCR';
-    if ( scan.status === 'NOT_OCR_PROCESSED' )
-      return 'not OCR';
-    return 'Processing'
-  }
-
-  processScan(scan: ToDoScans) {
+  onSelect(scan: ToDoScans): void {
     if ( scan.status === 'NOT_OCR_PROCESSED' )
     {
       console.log("Starting processing");
@@ -59,11 +33,38 @@ export class TodoComponent implements OnInit {
     }
     else
     {
-      alert('Already processing...')
+      this.selectedTodo = scan;
+      console.log('Todo item selected', scan._id);
+      this.todo.next(scan);
     }
   }
 
+  ngOnInit() {
+    console.log('Retrieving TODOs from backend');
+    this.fetchScans();
+  }
+
+  fetchScans() {
+    console.log("Fetching todo scans from backend");
+    this.locdbService.getToDo(true).subscribe( (todos) => {this.todolist = <ToDo[]>todos} );
+    this.locdbService.getToDo(false).subscribe( (todos) => {this.unprocessed = <ToDo[]>todos} );
+  }
+
+  all_todos() {
+    return this.todolist.concat(this.unprocessed);
+  }
+
+
+  prettyStatus(scan: ToDoScans) {
+    if ( scan.status === 'OCR_PROCESSED' )
+      return 'OCR processed';
+    if ( scan.status === 'NOT_OCR_PROCESSED' )
+      return 'not OCR processed';
+    return 'Processing'
+  }
+
   private static extractScans(todos: ToDo[]): ToDoScans[] {
+    console.log('DEPRECATION WARNING');
     console.log('Input to extractScans', todos);
     // if (!todos) return [];
     let flat_scans: ToDoScans[] = [];
