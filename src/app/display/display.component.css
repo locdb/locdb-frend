@@ -11,5 +11,5 @@ figure svg {
 }
 
 figure:hover svg {
-  -webkit-transform: scale(3.0) translate(+30%, 0px);
+  -webkit-transform: scale(1.5) translate(+25%, 0px);
 }

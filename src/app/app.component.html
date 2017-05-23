@@ -93,14 +93,8 @@
               <!-- suggestion component INPUT: entry, OUTPUT: resource -->
               <app-suggestion [entry]="entry" (suggest)="updateResource($event)"></app-suggestion>
         </div>
-        <!-- <div *ngIf="resource" class="col-xs-12 col-sm-6 col-md-4"> -->
-        <!--       <!--<app-resource-form [entry]="entry" (state)="updateForSuggestion($event)"></app-resource-form>--> -->
-        <!--       <1!-- resource form component INPUT: resource, OUTPUT: submit event with new resource? --1> -->
-        <!--       <app-resource-form [resource]="resource"></app-resource-form> -->
-        <!-- </div> -->
       </div>
     </section>
-      <!-- diagnostics -->
       <p>
       <b> Entry: </b> {{ entry | json }}
       </p>
