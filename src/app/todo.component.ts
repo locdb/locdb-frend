@@ -13,7 +13,7 @@ import { LocdbService } from './locdb.service';
 })
 
 export class TodoComponent implements OnInit {
-  title = 'Todo Management';
+  title = 'Todo List';
   selectedTodo: ToDoScans;
   todolist : ToDo[] = [];
   unprocessed: ToDo[] = [];

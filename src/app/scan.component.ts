@@ -16,6 +16,7 @@ const URL = '/api/'; // Same Origin Policy
 
 export class ScanComponent {
   constructor ( private locdbService : LocdbService ) { }
+  title = "File Upload";
   event: any;
   files: any;
 
