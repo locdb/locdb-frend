@@ -91,6 +91,8 @@ export class LocdbService {
   }
   
   getToDoBibliographicResources(scan_id: string): Observable<BibliographicResource[]> {
+    // UNUSED //
+    //
     // fetches list of entries for a scan id
     let params: URLSearchParams = new URLSearchParams();
     params.set('scanId', scan_id);

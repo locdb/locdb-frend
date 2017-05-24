@@ -19,7 +19,7 @@ import { environment } from 'environments/environment';
 export class DisplayComponent implements OnInit {
     displaySource: string;
     displayActive = false;
-    title = 'Display';
+    title = 'Scan Display';
     currentIndex = 0;
     entries: BibliographicEntry[];
 

@@ -3,6 +3,8 @@ import { Component, OnInit, OnChanges, Input, Output, EventEmitter} from '@angul
 import { BibliographicEntry, BibliographicResource, AgentRole, ResponsibleAgent } from '../locdb';
 import { LocdbService } from '../locdb.service';
 
+import { MOCK_INTERNAL } from '../mock-bresources'
+
 import { environment } from 'environments/environment';
 
 
@@ -43,12 +45,12 @@ export class SuggestionComponent implements OnChanges {
 
   fetchInternalSuggestions() : void {
     console.log("Fetching internal suggestions for", this.entry);
-    this.locdbService.suggestions(this.entry, false).subscribe( (sgt) => this.internalSuggestions = sgt );
+    this.locdbService.suggestions(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
   }
 
   fetchExternalSuggestions() : void {
     console.log("Fetching external suggestions for", this.entry);
-    this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.externalSuggestions = sgt );
+    this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
   }
 
   // these two functions could go somewhere else e.g. static in locdb.ts
@@ -113,20 +115,25 @@ export class SuggestionComponent implements OnChanges {
     console.log("Searchentry: ", searchentry);
      console.log("get internal Suggestions");
 //     this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.internalSuggestions = sgt );
-     this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.saveintenal(sgt) );
+     this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.saveInternal(sgt) );
      console.log("get external Suggestions");
 //     this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.externalSuggestions = sgt );
-     this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.saveextenal(sgt) );
+     this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
     console.log("Done.");
     this.entry = searchentry;
 }
 
-saveintenal(sgt){
+saveInternal(sgt){
+  if (sgt.length == 0) {
+    this.internalSuggestions = MOCK_INTERNAL;
+  } 
+  else {
     this.internalSuggestions = sgt
     console.log("Recieved Internal: ", this.internalSuggestions);
+  }
 }
 
-saveextenal(sgt){
+saveExternal(sgt){
     this.externalSuggestions = sgt
     console.log("Recieved External: ", this.externalSuggestions);
 }

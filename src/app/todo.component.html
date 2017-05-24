@@ -2,7 +2,7 @@
   <div class="panel-heading">
     <div class="row justify-content-between">
       <div class="col-xs-6 text-left">
-        <h4>{{title}}</h4>
+        <h4><b>{{title}}</b></h4>
       </div>
       <div class="col-xs-6 text-right">
         <button (click)="fetchScans()" type="button" class="btn btn-info" aria-label="Refresh">
@@ -11,19 +11,59 @@
       </div>
     </div>
   </div>
+
+  <!-- Panel body to display todo items -->
   <div class="panel-body">
-    <div class="btn-group-vertical" role="group" aria-label="...">
-      <button type="button" *ngFor="let s of scans" class="list-group-item list-group-item-action list-group-item-info justify-content-between" (click)="onSelect(s)" >
-        {{ s._id }} 
-        <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
-      </button>
-      <button type="button" *ngFor="let s of unprocessed" class="list-group-item list-group-item-action list-group-item-warning justify-content-between" (click)="processScan(s)" >
-        {{ s._id }} 
-        <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
-      </button>
-    </div>
-    <!-- <div align="left"> -->
-    <!--     <button class="btn btn-default"> Upload files </button> -->
+    <!-- <div class="btn-group-vertical" role="group" aria-label="...">-->
+    <!-- <div *ngFor="let rootres of scans"  class="panel panel-default"> -->
+    <!--   <div class="panel-heading" (click)="rootres.isCollapsed = !rootres.isCollapsed"> -->
+    <!--     <span *ngIf="rootres.isCollapsed" class="glyphicon glyphicon-chevron-down"></span> --> 
+    <!--     <span *ngIf="!rootres.isCollapsed" class="glyphicon glyphicon-chevron-up"></span> --> 
+    <!--     {{ rootres.rootresourceid }} -->
+    <!--   </div> -->
+    <!--   <div class="panel-body" -->
+    <!--        [collapse]="rootres.isCollapsed" -->
+    <!--        class="card card-block card-header"> -->
+    <!--     <button type="button" *ngFor="let s of rootres.scans" class="list-group-item list-group-item-action list-group-item-info justify-content-between" (click)="onSelect(s)"> -->
+    <!--       {{ s._id }} --> 
+    <!--       {{ printit(s) }} -->
+    <!--       <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span> -->
+    <!--     </button> -->
+    <!--   </div> -->
     <!-- </div> -->
-  </div>
+
+    <!-- <div *ngFor="let rootres of unprocessed"  class="panel panel-default"> -->
+    <!--   <div class="panel-heading" (click)="rootres.isCollapsed = !rootres.isCollapsed"> -->
+    <!--     <span *ngIf="rootres.isCollapsed" class="glyphicon glyphicon-chevron-down"></span> --> 
+    <!--     <span *ngIf="!rootres.isCollapsed" class="glyphicon glyphicon-chevron-up"></span> --> 
+    <!--     {{ rootres.rootresourceid }} -->
+    <!--   </div> -->
+    <!--   <div class="panel-body" -->
+    <!--        [collapse]="rootres.isCollapsed" -->
+    <!--        class="card card-block card-header"> -->
+    <!--     <button type="button" *ngFor="let s of rootres.scans" class="list-group-item list-group-item-action list-group-item-warning justify-content-between" (click)="processScan(s)"> -->
+    <!--       {{ s._id }} --> 
+    <!--       <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span> -->
+    <!--     </button> -->
+    <!--   </div> -->
+    <!-- </div> -->
+
+
+      <div class="panel-group">
+        <div class="panel panel-default" *ngFor="let t of all_todos()">
+          <div class="panel-heading">
+            <app-resource-form [resource]="t" [folded]="true"></app-resource-form>
+          </div>
+          <div class="panel-body">
+            <div class="list-group" *ngFor="let c of t.children">
+              <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of c.scans" (click)="onSelect(s)">
+                Scan on pp. {{s.firstPage}}-{{s.lastPage}}
+                <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
 </div>

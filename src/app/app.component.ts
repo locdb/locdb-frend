@@ -11,19 +11,19 @@ import { LocdbService } from './locdb.service';
 })
 
 export class AppComponent { 
-  title = 'LOC-DB ~ Extrapolite';
+  title = 'LOC-DB Extrapolite';
   entry: BibliographicEntry;
   resource: BibliographicResource;
   entryForSuggestion: BibliographicEntry;
 
   header = { width: 300, height: 20, rp:0.15, 
       state:0, //0-2 
-      caktiv: 'black',
-      cinaktiv: 'white',
-      cline: 'white',
-      nameStart: 'Start',
-      nameMid: 'Suggestion',
-      nameEnd: 'Citation'
+      caktiv: 'lightblue',
+      cinaktiv: 'lightgrey',
+      cline: 'lightgreen',
+      nameStart: 'Resource',
+      nameMid: 'Citation',
+      nameEnd: 'Resource'
       
 }; 
   

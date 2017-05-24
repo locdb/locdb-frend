@@ -1,16 +1,10 @@
 <todolist *ngIf="!displayActive" (todo)="updateDisplay($event)"></todolist>
 <div *ngIf="displayActive" class="panel panel-default">
   <div class="panel-heading">
-    <!-- <div class="row"> -->
-    <!-- <div class="col-xs-6"> -->
     <button type="button" class="btn btn-danger" aria-label="Back" (click)="clear()">
       <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+      Back
     </button>
-    <!-- </div> -->
-    <!-- <div class="col-xs-6"> -->
-    <!-- <h4>{{title}}</h4> -->
-    <!-- </div> -->
-    <!-- </div> -->
   </div>
 
   <div class="panel-body">

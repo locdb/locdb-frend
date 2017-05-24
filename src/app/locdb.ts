@@ -56,10 +56,24 @@ export class ResponsibleAgent {
   givenName?: string;
   familyName?: string;
 }
-export class ToDo {
-  _id: string;
+
+export class ToDo extends BibliographicResource {
   children?: ToDoParts[];
 }
+
+// export class ToDo {
+//   _id: string;
+//   identifiers?: Identifier[];
+//   type?: string;
+//   title?: string;
+//   subtitle?: string;
+//   edition?: string;
+//   number?: number;
+//   contributors?: AgentRole[];
+//   publicationYear?: number;
+//   children?: ToDoParts[];
+// }
+
 export class ToDoParts {
   _id: string;
   status?: string;

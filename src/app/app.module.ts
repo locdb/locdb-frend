@@ -25,11 +25,13 @@ import { ResourceFormComponent } from './resource-form/resource-form.component';
 
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 
 @NgModule({
   imports: [
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
+    CollapseModule.forRoot(),
     BrowserModule,
     FormsModule,
     HttpModule,
