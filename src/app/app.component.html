@@ -75,7 +75,7 @@
        [attr.r]="header.height*header.rp" 
        stroke="black" 
        stroke-width="0.25"
-       [attr.fill]="(header.state==2) ? header.caktiv : header.cinvaktiv"
+       [attr.fill]="(header.state==2) ? header.caktiv : header.cinaktiv"
        (click)="pathEditAndSubmit()"
        [attr.visibility]="header.state>=2 ? 'visible' : 'hidden'"/>
        <text [attr.x]="header.width-header.height/2" 
