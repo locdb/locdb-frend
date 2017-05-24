@@ -11,7 +11,7 @@ import { LocdbService } from './locdb.service';
 })
 
 export class AppComponent { 
-  title = 'LOC-DB ~ Extrapolite';
+  title = 'LOC-DB Extrapolite';
   entry: BibliographicEntry;
   resource: BibliographicResource;
   entryForSuggestion: BibliographicEntry;
