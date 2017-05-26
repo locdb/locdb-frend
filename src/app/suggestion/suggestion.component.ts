@@ -21,9 +21,9 @@ export class SuggestionComponent implements OnChanges {
   // make this visible to template
   environment = environment;
   
-   suggestfield; //environment.production ? this.entry.title : this.entry.ocrData.title;
+  suggestfield; //environment.production ? this.entry.title : this.entry.ocrData.title;
 
-  internalSuggestions : BibliographicEntry[] | BibliographicResource[];
+  internalSuggestions : BibliographicResource[];
 
   externalSuggestions : any[];
 
@@ -130,17 +130,17 @@ export class SuggestionComponent implements OnChanges {
 }
 
 saveInternal(sgt){
-  if (sgt.length == 0) {
-    this.internalSuggestions = MOCK_INTERNAL;
-  } 
-  else {
+  // if (sgt.length == 0) {
+  //   this.internalSuggestions = MOCK_INTERNAL;
+  // } 
+  // else {
     this.internalSuggestions = sgt
-    console.log("Recieved Internal: ", this.internalSuggestions);
-  }
+  console.log("Recieved Internal: ", this.internalSuggestions);
+  // }
 }
 
 saveExternal(sgt){
-    this.externalSuggestions = sgt
-    console.log("Recieved External: ", this.externalSuggestions);
+  this.externalSuggestions = sgt
+  console.log("Recieved External: ", this.externalSuggestions);
 }
 }
