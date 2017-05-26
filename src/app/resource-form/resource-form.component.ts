@@ -22,7 +22,8 @@ embodiments: FormGroup[] = [];
 editable = false;
 parts: FormGroup[] = [];
 
-roles: string[] = ['CORPORATE','PUBLISHER', 'author']; // <-- to Locdb.ts as class?
+// roles: string[] = ['CORPORATE','PUBLISHER', 'author']; // <-- to Locdb.ts as class?
+roles: string[] = AgentRole.ROLES;
 
 constructor( private fb: FormBuilder, private locdbService: LocdbService) { this.createForm(); }
 
