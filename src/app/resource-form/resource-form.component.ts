@@ -153,7 +153,8 @@ dropboxitemselected(conForm: FormGroup, s: string){
 onSubmit(){
     this.saveEntries();
     this.toggleEdit("123");
-    console.log("Send somewere ", this.resource);
+    console.log("Sending resource to backend!", this.resource);
+    this.locdbService.putBibliographicResource(this.resource._id, this.resource).subscribe((rval) => {});
 }
 
 resetEntries(){
