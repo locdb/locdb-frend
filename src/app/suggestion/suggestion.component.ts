@@ -80,7 +80,8 @@ export class SuggestionComponent implements OnChanges {
 
     // When the production backend is used, entry does not have ocr data yet
     // but when the development backend is used, entry does indeed have ocr data field
-    let ocr = environment.production ? entry : entry.ocrData
+    console.log('ENTRY REFERENCES', entry.references);
+    let ocr = entry.ocrData;
     let br : BibliographicResource = {
       //_id: entry.references,
       title: ocr.title,
@@ -93,6 +94,11 @@ export class SuggestionComponent implements OnChanges {
     return br;
   }
   // END
+
+  plusPressed() {
+    let newResource: BibliographicResource = this.resourceFromEntry(this.entry);
+    this.locdbService.pushBibligraphicResource(newResource).subscribe( (br) => this.internalSuggestions.push(br));
+  }
 
 
   onSelect(br?: BibliographicResource) : void {

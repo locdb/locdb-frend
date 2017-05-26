@@ -160,6 +160,12 @@ export class LocdbService {
     return this.http.put(url, resource).map(this.extractData).catch(this.handleError);
   }
 
+  pushBibligraphicResource(resource: BibliographicResource) {
+    console.log("Put BR", resource)
+    let url = this.locdbBibliographicResources
+    return this.http.post(url, resource).map(this.extractData).catch(this.handleError);
+  } 
+
   // helpers
 
 } // LocdbService

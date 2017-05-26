@@ -28,7 +28,7 @@
   <div class="panel-footer">
     <div class="row justify-content-between">
       <div class="col-xs-6 text-left">
-        <button type="button" class="btn btn-info" aria-label="Search" (click)="lgModal.show()">
+        <button type="button" class="btn btn-info" aria-label="Search" (click)="plusPressed()">
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         </button>
       </div>
@@ -40,34 +40,36 @@
     </div>
   </div>
 </div>
-<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title pull-left">External Bibliographic Resources</h4>
-        <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="checkbox" *ngFor="let r of externalSuggestions">
-            <label>
-              <input type="checkbox">
-              <span class="badge">{{ r.identifiers[0].scheme }}</span>
-              <b>{{r.ocrData.authors}}</b> <em>{{ r.ocrData.title }}</em>.
-              <ul>
-                <li *ngFor="let identifier of r.identifiers">
-                  <span class="badge">{{ identifier.scheme }}</span> {{ identifier.literalValue }}
-                </li>
-              </ul>
-            </label>
-          </div>
-          <div align="right">
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- ...(click)="lgModal.show()"> -->
+<!-- Do not delete the following code, it will be useful in the edit form. -->
+<!-- <div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"> -->
+<!--   <div class="modal-dialog modal-lg"> -->
+<!--     <div class="modal-content"> -->
+<!--       <div class="modal-header"> -->
+<!--         <h4 class="modal-title pull-left">External Bibliographic Resources</h4> -->
+<!--         <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close"> -->
+<!--           <span aria-hidden="true">&times;</span> -->
+<!--         </button> -->
+<!--       </div> -->
+<!--       <div class="modal-body"> -->
+<!--         <form> -->
+<!--           <div class="checkbox" *ngFor="let r of externalSuggestions"> -->
+<!--             <label> -->
+<!--               <input type="checkbox"> -->
+<!--               <span class="badge">{{ r.identifiers[0].scheme }}</span> -->
+<!--               <b>{{r.ocrData.authors}}</b> <em>{{ r.ocrData.title }}</em>. -->
+<!--               <ul> -->
+<!--                 <li *ngFor="let identifier of r.identifiers"> -->
+<!--                   <span class="badge">{{ identifier.scheme }}</span> {{ identifier.literalValue }} -->
+<!--                 </li> -->
+<!--               </ul> -->
+<!--             </label> -->
+<!--           </div> -->
+<!--           <div align="right"> -->
+<!--             <button type="submit" class="btn btn-primary">Submit</button> -->
+<!--           </div> -->
+<!--         </form> -->
+<!--       </div> -->
+<!--     </div> -->
+<!--   </div> -->
+<!-- </div> -->
