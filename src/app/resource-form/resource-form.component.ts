@@ -24,20 +24,18 @@ parts: FormGroup[] = [];
 
 roles: string[] = ['CORPORATE','PUBLISHER', 'author']; // <-- to Locdb.ts as class?
 
-constructor(
-    private fb: FormBuilder,
-    private locdbService: LocdbService) { this.createForm(); }
+constructor( private fb: FormBuilder, private locdbService: LocdbService) { this.createForm(); }
 
 
 createForm() {
     this.resourceForm = this.fb.group({
-    title: '',
-    resourcetype: '',
-    subtitle: '',
-    edition: '',
-    resourcenumber: '',
-    publicationyear: '',
-    partof: '',
+        title: '',
+        resourcetype: '',
+        subtitle: '',
+        edition: '',
+        resourcenumber: -1,
+        publicationyear: -1,
+        partof: '',
     });
     console.log('roles:', this.roles);
 }
@@ -62,11 +60,8 @@ ngOnChanges() {
         // ...
     });
     console.log("Resource.contributors: ", this.resource.contributors);
-    if (!this.contributorsForms || !this.resource) {
-        return;
-    }
-    this.contributorsForms = [];
     //set Contributors
+    this.contributorsForms = [];
     for (let con of this.resource.contributors){
         console.log("Con: ", con);
         let conForm: FormGroup =  this.fb.group({
@@ -137,8 +132,8 @@ addContributorField(){
 }
 
 delContributorField(pos: number){
-// other delete, maybe numbers not updated...
-console.log("delete pos: "+ pos);
+    // other delete, maybe numbers not updated...
+    console.log("delete pos: "+ pos);
     this.contributorsForms.splice(pos,1);
     console.log("this.contributorsForms", this.contributorsForms)
 }
@@ -151,14 +146,54 @@ dropboxitemselected(conForm: FormGroup, s: string){
 }
 
 onSubmit(){
-    this.saveEntries();
-    this.toggleEdit("123");
+    // this.saveEntries();
+    this.resource = this.prepareSaveResource();
+    this.toggleEdit();
     console.log("Sending resource to backend!", this.resource);
-    this.locdbService.putBibliographicResource(this.resource._id, this.resource).subscribe((rval) => {});
+    this.locdbService.putBibliographicResource(this.resource).subscribe((rval) => console.log('Yay. submitted', rval));
 }
 
 resetEntries(){
     this.ngOnChanges()
+}
+
+
+prepareSaveResource(): BibliographicResource {
+    /* Saves the form value into the captured resource */
+    /* not sure if rewrite of method below */
+    const formModel = this.resourceForm.value;
+    let contributors: AgentRole[] = []
+    for (let conForm of this.contributorsForms) {
+        let conFormModel = conForm.value;
+        const role: AgentRole = {
+            roleType:  conFormModel.role,
+            identifiers: [],
+            heldBy : <ResponsibleAgent>{
+                identifiers: [],
+                nameString: conFormModel.name,
+                givenName: '',
+                familyName: '',
+            }
+        };
+        contributors.push(role);
+    }
+
+    const resource : BibliographicResource = {
+        _id: this.resource._id,
+        identifiers: this.resource.identifiers,
+        type: formModel.resourcetype as string || '',
+        title: formModel.title as string || '',
+        subtitle: formModel.subtitle as string || '',
+        edition: formModel.edition as string || '',
+        number: formModel.resourcenumber as number || 0,
+        contributors: contributors,
+        publicationYear: formModel.publicationyear as number || 0,
+        partOf: formModel.partof as string || '',
+        // warning: no deep copy (but this ok as long as not editable)
+        embodiedAs: this.resource.embodiedAs,
+        parts: this.resource.parts,
+    }
+    return resource;
 }
 
 saveEntries(){
@@ -191,14 +226,16 @@ saveEntries(){
     let agents: AgentRole[] = [];
     for (let conForm of this.contributorsForms){
         let agent = new AgentRole();
+        agent.identifiers = [];
         let resAgent = new ResponsibleAgent();
+        resAgent.identifiers = [];
         if(conForm.value.name){
-            resAgent.nameString = conForm.value.name
-            resAgent.identifiers = conForm.value.resagentidentifiers
+            resAgent.nameString = conForm.value.name;
+            resAgent.identifiers = conForm.value.resagentidentifiers;
             if(conForm.value.givenName)
-                resAgent.givenName = conForm.value.givenName
+                resAgent.givenName = conForm.value.givenName;
             if(conForm.value.familyName)
-                resAgent.familyName = conForm.value.familyName
+                resAgent.familyName = conForm.value.familyName;
         
         }
         else
@@ -223,12 +260,13 @@ saveEntries(){
     // what of them schould be displayed and be editable? schould it be possible to make new entries?
     // this.toggleEdit();
 }
-toggleEdit(event:any){
+toggleEdit(event?:any){
     console.log("toggleEdit");
-    if(this.editable)
-        this.editable=false;
-    else
-        this.editable=true;    
+    this.editable = !this.editable;
+    // if(this.editable)
+    //     this.editable=false;
+    // else
+    //     this.editable=true;    
 }
 
 

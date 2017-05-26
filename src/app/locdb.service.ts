@@ -154,15 +154,18 @@ export class LocdbService {
   }
 
   // we might also need post, to store completely new resources
-  putBibliographicResource(identifier: string, resource: BibliographicResource) {
-    console.log("Put BR", identifier);
-    let url = this.locdbBibliographicResources + identifier;
-    return this.http.put(url, resource).map(this.extractData).catch(this.handleError);
+  putBibliographicResource(resource: BibliographicResource) {
+    console.log("Put BR for", resource._id);
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    let url = this.locdbBibliographicResources + resource._id;
+    console.log("JUST BEFORE SUBMISSION:", resource);
+    return this.http.put(url, resource, options).map(this.extractData).catch(this.handleError);
   }
 
   pushBibligraphicResource(resource: BibliographicResource) {
-    console.log("Put BR", resource)
-    let url = this.locdbBibliographicResources
+    console.log("Push BR", resource);
+    let url = this.locdbBibliographicResources;
     return this.http.post(url, resource).map(this.extractData).catch(this.handleError);
   } 
 
