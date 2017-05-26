@@ -20,13 +20,14 @@ export class SuggestionComponent implements OnChanges {
 
   // make this visible to template
   environment = environment;
-  
+
   selectedResource: BibliographicResource;
   suggestfield; //environment.production ? this.entry.title : this.entry.ocrData.title;
 
   internalSuggestions : BibliographicResource[];
 
   externalSuggestions : any[];
+  committed = false;
 
   constructor(private locdbService: LocdbService) { }
 
@@ -77,7 +78,7 @@ export class SuggestionComponent implements OnChanges {
   }
 
   resourceFromEntry(entry) : BibliographicResource {
-      console.log("resourceFromEntry", entry)
+    console.log("resourceFromEntry", entry)
 
     // When the production backend is used, entry does not have ocr data yet
     // but when the development backend is used, entry does indeed have ocr data field
@@ -103,50 +104,50 @@ export class SuggestionComponent implements OnChanges {
 
 
   onSelect(br?: BibliographicResource) : void {
-      console.log("Suggestion emitted", br);
-      this.selectedResource = br;
-      this.suggest.next(br);
+    console.log("Suggestion emitted", br);
+    this.selectedResource = br;
+    this.committed = false;
+    this.suggest.next(br);
   }
-  
+
   refreshSuggestions(){
     console.log("Internal Suggestions: ", this.internalSuggestions);
     console.log("External Suggestions: ", this.externalSuggestions);
     console.log("Entry: ", this.entry);
-    
+
     let searchentry = JSON.parse(JSON.stringify(this.entry));
     searchentry.ocrData.title = this.suggestfield;
     console.log("Searchentry: ", searchentry);
-     console.log("get internal Suggestions");
-//     this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.internalSuggestions = sgt );
-     this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.saveInternal(sgt) );
-     console.log("get external Suggestions");
-//     this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.externalSuggestions = sgt );
-     this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
+    console.log("get internal Suggestions");
+    //     this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.internalSuggestions = sgt );
+    this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.saveInternal(sgt) );
+    console.log("get external Suggestions");
+    //     this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.externalSuggestions = sgt );
+    this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
     console.log("Done.");
     this.entry = searchentry;
-}
+  }
 
-saveInternal(sgt){
-  // if (sgt.length == 0) {
-  //   this.internalSuggestions = MOCK_INTERNAL;
-  // } 
-  // else {
+  saveInternal(sgt){
+    // if (sgt.length == 0) {
+    //   this.internalSuggestions = MOCK_INTERNAL;
+    // } 
+    // else {
     this.internalSuggestions = sgt
-  console.log("Recieved Internal: ", this.internalSuggestions);
-  // }
-}
+    console.log("Recieved Internal: ", this.internalSuggestions);
+    // }
+  }
 
-saveExternal(sgt){
-  this.externalSuggestions = sgt
-  console.log("Recieved External: ", this.externalSuggestions);
-}
+  saveExternal(sgt){
+    this.externalSuggestions = sgt
+    console.log("Recieved External: ", this.externalSuggestions);
+  }
 
-commit() {
-  // This the actual linking of entry to resource 
-  this.entry.references = this.selectedResource._id;
-  this.locdbService.putBibliographicEntry(this.entry).subscribe( (result) => console.log("Submitted Entry with result", result)
-  );
-  this.entry = null;
-}
+  commit() {
+    // This the actual linking of entry to resource 
+    this.entry.references = this.selectedResource._id;
+    this.locdbService.putBibliographicEntry(this.entry).subscribe( (result) => console.log("Submitted Entry with result", result));
+    this.committed = true;
+  }
 
 }
