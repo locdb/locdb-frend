@@ -24,6 +24,45 @@ export class AgentRole {
   identifiers?: Identifier[];
   roleType: string;
   heldBy?: ResponsibleAgent;
+
+  // extracted from http://www.sparontologies.net/ontologies/pro/source.html#d4e361
+  // as referenced by OCC metadata model
+  // could be an enum
+  static ROLES = [
+     "archivist",
+     "author",
+     "author's agent",
+     "biographer",
+     "blogger",
+     "commissioning editor",
+     "compiler",
+     "contributor",
+     "copy editor",
+     "copyright owner",
+     "critic",
+     "deputy editor",
+     "distributor",
+     "editor",
+     "editor-in-chief",
+     "executive editor",
+     "ghost writer",
+     "guest editor",
+     "illustrator",
+     "journalist",
+     "librarian",
+     "managing editor",
+     "peer reviewer",
+     "printer",
+     "producer",
+     "production editor",
+     "proof reader",
+     "publisher",
+     "reader",
+     "reviewer",
+     "senior editor",
+     "series editor",
+     "translator",
+  ]
 }
 
 export class BibliographicEntry {
