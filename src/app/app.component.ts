@@ -4,6 +4,8 @@ import { Citation } from './citation';
 import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, BibliographicResource } from './locdb';
 import { LocdbService } from './locdb.service';
 
+import { environment } from 'environments/environment';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,6 +17,7 @@ export class AppComponent {
   entry: BibliographicEntry;
   resource: BibliographicResource;
   entryForSuggestion: BibliographicEntry;
+  environment = environment;
 
   header = { width: 300, height: 20, rp:0.15, 
     state:0, //0-2 

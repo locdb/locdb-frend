@@ -99,9 +99,11 @@
     </div>
   </div>
 </section>
-<p>
-  <b> Entry: </b> {{ entry | json }}
-</p>
-<p>
-  <b> Resource: </b> {{ resource | json }}
-</p>
+<div *ngIf="!environment.production">
+  <p>
+    <b> Entry: </b> {{ entry | json }}
+  </p>
+  <p>
+    <b> Resource: </b> {{ resource | json }}
+  </p>
+</div>

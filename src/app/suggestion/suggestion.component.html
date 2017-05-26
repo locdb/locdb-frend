@@ -17,10 +17,9 @@
 
   <!-- Panel body providing suggestions -->
   <div class="panel-body">
-    {{ internalSuggestions | json }}
     <div class="list-group">
     <a href="#" *ngFor="let r of internalSuggestions" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)">
-      <app-resource-form [resource]="r"></app-resource-form>
+      <app-resource-form [resource]="r" [folded]="true"></app-resource-form>
     </a>
     </div>
   </div>
