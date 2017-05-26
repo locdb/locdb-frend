@@ -19,7 +19,7 @@
   <div class="panel-body">
     <div class="list-group">
     <a href="#" *ngFor="let r of internalSuggestions" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)">
-      <app-resource-form [resource]="r"></app-resource-form>
+      <app-resource-form [resource]="r" [folded]="true"></app-resource-form>
     </a>
     </div>
   </div>
@@ -28,46 +28,51 @@
   <div class="panel-footer">
     <div class="row justify-content-between">
       <div class="col-xs-6 text-left">
-        <button type="button" class="btn btn-info" aria-label="Search" (click)="lgModal.show()">
+        <button type="button" class="btn btn-info" aria-label="Search" (click)="plusPressed()">
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         </button>
       </div>
       <div class="col-xs-6 text-right">
-        <button type="button" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" [disabled]="!selectedResource" (click)="commit()">
           <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Commit Link
         </button>
       </div>
     </div>
   </div>
 </div>
-<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title pull-left">External Bibliographic Resources</h4>
-        <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="checkbox" *ngFor="let r of externalSuggestions">
-            <label>
-              <input type="checkbox">
-              <span class="badge">{{ r.identifiers[0].scheme }}</span>
-              <b>{{r.ocrData.authors}}</b> <em>{{ r.ocrData.title }}</em>.
-              <ul>
-                <li *ngFor="let identifier of r.identifiers">
-                  <span class="badge">{{ identifier.scheme }}</span> {{ identifier.literalValue }}
-                </li>
-              </ul>
-            </label>
-          </div>
-          <div align="right">
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+<div *ngIf="committed" class="alert alert-success" role="alert">
+  <strong>Link committed.</strong>
 </div>
+<!-- ...(click)="lgModal.show()"> -->
+<!-- Do not delete the following code, it will be useful in the edit form. -->
+<!-- <div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"> -->
+<!--   <div class="modal-dialog modal-lg"> -->
+<!--     <div class="modal-content"> -->
+<!--       <div class="modal-header"> -->
+<!--         <h4 class="modal-title pull-left">External Bibliographic Resources</h4> -->
+<!--         <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close"> -->
+<!--           <span aria-hidden="true">&times;</span> -->
+<!--         </button> -->
+<!--       </div> -->
+<!--       <div class="modal-body"> -->
+<!--         <form> -->
+<!--           <div class="checkbox" *ngFor="let r of externalSuggestions"> -->
+<!--             <label> -->
+<!--               <input type="checkbox"> -->
+<!--               <span class="badge">{{ r.identifiers[0].scheme }}</span> -->
+<!--               <b>{{r.ocrData.authors}}</b> <em>{{ r.ocrData.title }}</em>. -->
+<!--               <ul> -->
+<!--                 <li *ngFor="let identifier of r.identifiers"> -->
+<!--                   <span class="badge">{{ identifier.scheme }}</span> {{ identifier.literalValue }} -->
+<!--                 </li> -->
+<!--               </ul> -->
+<!--             </label> -->
+<!--           </div> -->
+<!--           <div align="right"> -->
+<!--             <button type="submit" class="btn btn-primary">Submit</button> -->
+<!--           </div> -->
+<!--         </form> -->
+<!--       </div> -->
+<!--     </div> -->
+<!--   </div> -->
+<!-- </div> -->

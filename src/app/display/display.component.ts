@@ -87,7 +87,7 @@ export class DisplayComponent implements OnInit {
     extractRects(entries){
         for (let e of entries){
         //console.log("Entrie.OCRData.coordinates: ", e.coordinates);
-        let coords = environment.production ? e.coordinates : e.ocrData.coordinates;
+        let coords = e.ocrData.coordinates;
         let rectField = coords.split(" ");
         this.rects.push({
             x: Number(rectField[0]),

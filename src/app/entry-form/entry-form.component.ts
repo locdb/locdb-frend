@@ -70,7 +70,7 @@ export class EntryFormComponent implements OnChanges {
     this.entry = this.prepareSaveEntry();
     console.log("Submitting entry", this.entry);
 
-    this.locdbService.putBibliographicEntry(this.entry._id, this.entry).subscribe(
+    this.locdbService.putBibliographicEntry(this.entry).subscribe(
       (result) => console.log("Submitted Entry with result", result)
     );
     this.ngOnChanges();

@@ -8,6 +8,7 @@ export class BibliographicResource {
   number?: number;
   contributors?: AgentRole[];
   publicationYear?: number;
+  status?: string;
   parts?: BibliographicEntry[];
   partOf?: string;
   embodiedAs?: ResourceEmbodiment[];

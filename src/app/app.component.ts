@@ -4,6 +4,8 @@ import { Citation } from './citation';
 import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, BibliographicResource } from './locdb';
 import { LocdbService } from './locdb.service';
 
+import { environment } from 'environments/environment';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,18 +17,19 @@ export class AppComponent {
   entry: BibliographicEntry;
   resource: BibliographicResource;
   entryForSuggestion: BibliographicEntry;
+  environment = environment;
 
   header = { width: 300, height: 20, rp:0.15, 
-      state:0, //0-2 
-      caktiv: 'lightblue',
-      cinaktiv: 'lightgrey',
-      cline: 'lightgreen',
-      nameStart: 'Resource',
-      nameMid: 'Citation',
-      nameEnd: 'Resource'
-      
-}; 
-  
+    state:0, //0-2 
+    caktiv: 'lightblue',
+    cinaktiv: 'lightgrey',
+    cline: 'lightgreen',
+    nameStart: 'Resource',
+    nameMid: 'Citation',
+    nameEnd: 'Resource'
+
+  }; 
+
   /*
     updatedEntry : BibliographicEntry = {
       _id: this.entry._id,
@@ -41,15 +44,15 @@ export class AppComponent {
       references: references
     };
     this.entry = updatedEntry;
-  */
+   */
   constructor ( private locdbService: LocdbService ) {}
 
   updateEntry (entry: BibliographicEntry) {
     //this.showCitation()
     if(entry)
-        this.header.state = 1;
+      this.header.state = 1;
     else
-        this.header.state = 0;        
+      this.header.state = 0;        
     console.log('Updating with new entry', entry);
     this.entry = entry;
     // reset resource, since we selected a different entry
@@ -63,23 +66,23 @@ export class AppComponent {
     this.resource = resource;
   }
 
-  
+
   roundUp(num, precision) {
     return Math.ceil(num * precision) / precision;
   }
-  
+
   pathStart(){
-  console.log("pathStart");
-      
-}
-  
-  
+    console.log("pathStart");
+
+  }
+
+
   pathSelectResource() {
     console.log("pathSelectResource");
   }
   pathEditAndSubmit(){
     console.log("pathEditAndSubmit");
-}
+  }
 
 }
 
