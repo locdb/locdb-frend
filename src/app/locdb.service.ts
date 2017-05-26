@@ -148,8 +148,8 @@ export class LocdbService {
     return this.locdbUrl + '/scans/' + identifier;
   }
 
-  putBibliographicEntry(identifier: string, entry: BibliographicEntry) {
-    let url = this.locdbBibliographicEntries + identifier;
+  putBibliographicEntry(entry: BibliographicEntry) {
+    let url = this.locdbBibliographicEntries + entry._id;
     return this.http.put(url, entry).map(this.extractData).catch(this.handleError);
   }
 
@@ -164,6 +164,7 @@ export class LocdbService {
   }
 
   pushBibligraphicResource(resource: BibliographicResource) {
+    // we could merge this with the method above, first try put then push.
     console.log("Push BR", resource);
     let url = this.locdbBibliographicResources;
     return this.http.post(url, resource).map(this.extractData).catch(this.handleError);

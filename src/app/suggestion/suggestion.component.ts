@@ -21,6 +21,7 @@ export class SuggestionComponent implements OnChanges {
   // make this visible to template
   environment = environment;
   
+  selectedResource: BibliographicResource;
   suggestfield; //environment.production ? this.entry.title : this.entry.ocrData.title;
 
   internalSuggestions : BibliographicResource[];
@@ -102,13 +103,9 @@ export class SuggestionComponent implements OnChanges {
 
 
   onSelect(br?: BibliographicResource) : void {
-    if (!br) {
-      console.log("New BibResource created")
-      this.suggest.next(this.resourceFromEntry(this.entry));
-    } else {
       console.log("Suggestion emitted", br);
+      this.selectedResource = br;
       this.suggest.next(br);
-    }
   }
   
   refreshSuggestions(){
@@ -143,4 +140,13 @@ saveExternal(sgt){
   this.externalSuggestions = sgt
   console.log("Recieved External: ", this.externalSuggestions);
 }
+
+commit() {
+  // This the actual linking of entry to resource 
+  this.entry.references = this.selectedResource._id;
+  this.locdbService.putBibliographicEntry(this.entry).subscribe( (result) => console.log("Submitted Entry with result", result)
+  );
+  this.entry = null;
+}
+
 }

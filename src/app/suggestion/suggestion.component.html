@@ -33,7 +33,7 @@
         </button>
       </div>
       <div class="col-xs-6 text-right">
-        <button type="button" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" [disabled]="!selectedResource" (click)="commit()">
           <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Commit Link
         </button>
       </div>
