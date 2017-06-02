@@ -32,7 +32,6 @@ export class LocdbService {
 
   private locdbTodoEndpoint             = this.locdbUrl + '/getToDo';
   private locdbSaveScan                 = this.locdbUrl + '/saveScan';
-  private bibliographicResourceEndpoint = this.locdbUrl + '/bibliographicResources';
   private locdbTodoEntries              = this.locdbUrl + '/getToDoBibliographicEntries';
   // This url just does not exist yet
   private locdbTodoResources            = this.locdbUrl + '/getToDoBibliographicResources';
@@ -151,6 +150,11 @@ export class LocdbService {
   putBibliographicEntry(entry: BibliographicEntry) {
     let url = this.locdbBibliographicEntries + entry._id;
     return this.http.put(url, entry).map(this.extractData).catch(this.handleError);
+  }
+
+  bibliographicResource(identifier: string) {
+    let url = this.locdbBibliographicResources + identifier;
+    return this.http.get(url).map(this.extractData).catch(this.handleError);
   }
 
   // we might also need post, to store completely new resources

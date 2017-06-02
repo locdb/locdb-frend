@@ -39,6 +39,9 @@ export class SuggestionComponent implements OnChanges {
       this.fetchInternalSuggestions();
       this.fetchExternalSuggestions();
       this.suggestfield = this.entry.ocrData.title;
+      if (this.entry.references) {
+
+      }
     } else {
       this.internalSuggestions = [];
       this.externalSuggestions = [];

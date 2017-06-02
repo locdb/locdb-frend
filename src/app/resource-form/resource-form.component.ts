@@ -1,4 +1,4 @@
-import { BibliographicResource, BibliographicEntry, AgentRole, ResponsibleAgent } from '../locdb';
+import { BibliographicResource, BibliographicEntry, AgentRole, ResponsibleAgent, ROLES } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
@@ -9,10 +9,13 @@ templateUrl: './resource-form.component.html',
 styleUrls: ['./resource-form.component.css']
 })
 
-export class ResourceFormComponent implements OnChanges {
+export class ResourceFormComponent implements OnInit, OnChanges {
 
+// if this is a string, we can try to dereference it from the back-end
 @Input() resource: BibliographicResource;
 @Input() folded = false;
+
+@Input() resource_id: string = null;
 
 oldresource: BibliographicResource;
 
@@ -23,7 +26,8 @@ editable = false;
 parts: FormGroup[] = [];
 
 // roles: string[] = ['CORPORATE','PUBLISHER', 'author']; // <-- to Locdb.ts as class?
-roles: string[] = AgentRole.ROLES;
+// roles: string[] = AgentRole.ROLES;
+roles: string[] = ROLES;
 
 constructor( private fb: FormBuilder, private locdbService: LocdbService) { this.createForm(); }
 
@@ -43,6 +47,17 @@ createForm() {
 
 toggleFolding() {
     this.folded = !this.folded;
+}
+
+ngOnInit() {
+    if (!this.resource && this.resource_id) {
+        // if resource is not initialised itself but an id is given
+        // try to retrieve resource by id from the back-end
+        console.log("Fetching resource", this.resource_id, "from back-end.");
+        this.locdbService.bibliographicResource(this.resource_id).subscribe(
+            (res) => { this.resource = res }
+        );
+    }
 }
 
 ngOnChanges() {
@@ -186,9 +201,9 @@ prepareSaveResource(): BibliographicResource {
         title: formModel.title as string || '',
         subtitle: formModel.subtitle as string || '',
         edition: formModel.edition as string || '',
-        number: formModel.resourcenumber as number || 0,
+        number: formModel.resourcenumber as number,
         contributors: contributors,
-        publicationYear: formModel.publicationyear as number || 0,
+        publicationYear: formModel.publicationyear as number,
         partOf: formModel.partof as string || '',
         // warning: no deep copy (but this ok as long as not editable)
         embodiedAs: this.resource.embodiedAs,
