@@ -27,6 +27,8 @@ import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 
+import * as d3 from 'd3';
+
 @NgModule({
   imports: [
     BsDropdownModule.forRoot(),
