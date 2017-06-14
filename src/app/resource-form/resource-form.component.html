@@ -273,19 +273,36 @@ embodiedAs?: ResourceEmbodiment[];-->
 </table>
 
 <div class="row justify-content-between">
-    <div class="col-xs-6 text-left">
+    <div class="col-xs-4 text-left">
 <button type="button" class="btn btn-danger" (click)="resetEntries()">
     <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset
 </button>
     </div>
-    <div class="col-xs-6 text-right">
+    <div class="col-xs-4 text-center">
+    <div>
+        <popover-content #myPopover 
+            title="Choose external resources"
+            placement="top"
+            [closeOnClickOutside]="true">
+            <b>Very</b> <span style="color: #C21F39">Dynamic</span> <span style="color: #00b3ee">Reusable</span> 
+            <b><i><span style="color: #ffc520">Popover With</span></i></b> <small>Html support</small>.
+            Click outside of this popover and it will be dismissed automatically.
+            <u (click)="myPopover.hide()">Or click here to close it</u>.
+        </popover-content>
+        
+        <button [popover]="myPopover">click this button to see a popover</button>
+    </div>
+    </div>
+    <div class="col-xs-4 text-right">
 <button type="button" class="btn btn-primary" (click)="lgModal.hide()" (click)="onSubmit()">
     <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Submit
 </button>
     </div>
 </div>
 </form>
-
+        
+        
+        
 
       </div>
     </div>

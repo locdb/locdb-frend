@@ -5,6 +5,7 @@ import { LocdbService } from '../locdb.service';
 
 import { environment } from 'environments/environment';
 import * as d3 from 'd3';
+import { PopoverModule } from "ngx-popover/index";
 
 // Display component consists of file upload, todo item selection and actual
 // display of the scan
@@ -29,6 +30,7 @@ export class DisplayComponent implements OnInit {
     currentIndex = 0;
     entries: BibliographicEntry[];
     clickedRect = false;
+    zoom: any;
     
     rects: rect[] = [];
     imgX = 500;    // initvalues no relevance if new picture is set
@@ -39,18 +41,22 @@ export class DisplayComponent implements OnInit {
     constructor( private locdbService: LocdbService) { }
     
     initSVGZoom() {
-        let svgContainer = d3.select(this.zoomSVG.nativeElement);        
-        svgContainer
-        .attr("width", "100%")
-        .attr("height", "100%")
-        .call(d3.zoom().on("zoom", function () {
+        let zoom = d3.zoom().on("zoom", function () {
             svgContainer.attr("transform", "translate(" + d3.event.transform.x+", "+ d3.event.transform.y + ")scale(" + d3.event.transform.k + ")")
         })
         .scaleExtent([1, 5])
         .translateExtent([[0, 0], [this.imgX, this.imgY]])
-        .duration(250)
-        )
+        .duration(250);
+        
+        let svgContainer = d3.select(this.zoomSVG.nativeElement);        
+        svgContainer
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .call(zoom);
+        this.zoom = zoom;
+        
     }
+    
     
     updateDisplay(newTodo: ToDoScans) {
         // this method is called when a todo item is selected
@@ -85,7 +91,8 @@ export class DisplayComponent implements OnInit {
         this.entry.next(entry);
     }
     
-    ngOnInit() { }
+    ngOnInit() { 
+    }
     
     clear() {
         this.displaySource = null;

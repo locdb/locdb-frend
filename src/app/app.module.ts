@@ -26,6 +26,7 @@ import { ResourceFormComponent } from './resource-form/resource-form.component';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { PopoverModule } from 'ngx-popover';
 
 import * as d3 from 'd3';
 
@@ -37,7 +38,8 @@ import * as d3 from 'd3';
     BrowserModule,
     FormsModule,
     HttpModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PopoverModule
     ],
   declarations: [
     AppComponent,
