@@ -282,15 +282,17 @@ embodiedAs?: ResourceEmbodiment[];-->
     <div>
         <popover-content #myPopover 
             title="Choose external resources"
-            placement="top"
+            placement="auto"
             [closeOnClickOutside]="true">
-            <b>Very</b> <span style="color: #C21F39">Dynamic</span> <span style="color: #00b3ee">Reusable</span> 
-            <b><i><span style="color: #ffc520">Popover With</span></i></b> <small>Html support</small>.
-            Click outside of this popover and it will be dismissed automatically.
-            <u (click)="myPopover.hide()">Or click here to close it</u>.
+            <div class="list-group" style="height:400px; max-height:500px; overflow-y: auto;">
+            <a href="#" *ngFor="let r of exSuggests" class="list-group-item list-group-item-action list-group-item-info" (click)="inMerge()">
+            {{r.ocrData.title}}
+            <span class="badge badge-default badge-pill">123</span>
+            </a>
+            </div>
         </popover-content>
         
-        <button [popover]="myPopover">click this button to see a popover</button>
+        <button [popover]="myPopover">Show external resources</button>
     </div>
     </div>
     <div class="col-xs-4 text-right">

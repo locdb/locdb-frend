@@ -18,9 +18,14 @@
   <!-- Panel body providing suggestions -->
   <div class="panel-body">
     <div class="list-group">
-    <a href="#" *ngFor="let r of internalSuggestions" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)">
-      <app-resource-form [resource]="r" [folded]="true"></app-resource-form>
+   <a href="#" *ngFor="let r of internalSuggestions" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(r)">
+   <app-resource-form [exSuggests]="externalSuggestions" [resource]="r" [folded]="true"></app-resource-form>
+   </a>
+    <!-- for testing purposes -->
+    <a href="#" class="list-group-item list-group-item-action list-group-item-info">
+    <app-resource-form [exSuggests]="externalSuggestions" [resource]="testresource" [folded]="true"></app-resource-form>
     </a>
+    <!--      -->
     </div>
   </div>
 
