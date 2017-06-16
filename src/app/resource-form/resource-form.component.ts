@@ -19,6 +19,7 @@ export class ResourceFormComponent implements OnInit, OnChanges {
     
     @Input() resource_id: string = null;
     
+     @Input() entry: BibliographicEntry;
     oldresource: BibliographicResource;
     
     resourceForm: FormGroup;
@@ -62,7 +63,6 @@ export class ResourceFormComponent implements OnInit, OnChanges {
                 (res) => { this.resource = res }
             );
         }
-        console.log("exSuggests ", this.exSuggests);
     }
     
     ngOnChanges() {
@@ -291,6 +291,79 @@ export class ResourceFormComponent implements OnInit, OnChanges {
         //     this.editable=false;
         // else
         //     this.editable=true;    
+    }
+    saveExternal(sgt){
+        this.exSuggests = sgt
+        console.log("Recieved External: ", this.exSuggests);
+    }
+    loadExtenalSuggestions(){
+        let searchentry = JSON.parse(JSON.stringify(this.entry));
+        searchentry.ocrData.title = this.resourceForm.value.title;
+        this.locdbService.suggestions(searchentry, true).subscribe( (sgt) => this.saveExternal(sgt) );
+    }
+    inMerge(r: any){
+        /* ---------------------*/
+        //BibResource
+        console.log("R: ",r);
+        let title = r.title;
+        let authors = [];
+        for(let contributor of r.contributors){
+            let name = contributor.heldBy.nameString;
+            console.log("name: ", name);
+            let role = contributor.roleType;
+            console.log("role: ", role);
+            authors.push({name: name, role: role});
+        }
+        /* ---------------------*/
+        
+        /* ---------------------*/
+        // ocrData
+        console.log("ocrData",r.ocrData)
+        //let title = r.ocrData.title;
+        //let authors = r.ocrData.authors;
+        //let name: string;
+        //let role = "author"; 
+        console.log("external suggestion: ", r);
+        console.log("inMerge, r: ", r);
+        /* ---------------------*/
+        
+        if(this.resourceForm.value.title == ""){
+            this.resourceForm.patchValue({
+                title: title,
+            });
+        }
+        for(let author of authors){
+            let name = author.name; //author for ocrData.authors
+            let role = author.role; // dummy for ocrData
+            
+            let isListed = false;
+            
+            for (let con of this.contributorsForms){
+                console.log("Con: ", con.value.name);
+                //console.log("r.ocdData ", r.ocrData);
+                if(con.value.name == name){ 
+                    isListed = true;
+                    break;
+                }
+            }
+            if(!isListed){
+                
+                //this.resourceForm.patchValue({});
+                let conForm: FormGroup =  this.fb.group({
+                    role: role,
+                    name: name,
+                    
+                    //                 roleidentifiers: con.identifiers,
+                    //                 resagentidentifiers: con.heldBy.identifiers,
+                    //                 givenName: con.heldBy.givenName,
+                    //                 familyName: con.heldBy.familyName,
+                })
+                //console.log("Role Identifiers: ", con.heldBy.identifiers);
+                this.contributorsForms.push(conForm);
+            }
+        }
+        
+        
     }
     
     

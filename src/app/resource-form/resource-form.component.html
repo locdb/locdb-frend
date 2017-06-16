@@ -285,14 +285,15 @@ embodiedAs?: ResourceEmbodiment[];-->
             placement="auto"
             [closeOnClickOutside]="true">
             <div class="list-group" style="height:400px; max-height:500px; overflow-y: auto;">
-            <a href="#" *ngFor="let r of exSuggests" class="list-group-item list-group-item-action list-group-item-info" (click)="inMerge()">
-            {{r.ocrData.title}}
+            <a href="#" *ngFor="let r of exSuggests" class="list-group-item list-group-item-action list-group-item-info" (click)="inMerge(r)" (click)="myPopover.hide()">
+            {{r.title}}
+            <!--{{r.ocrData.title}}-->
             <span class="badge badge-default badge-pill">123</span>
             </a>
             </div>
         </popover-content>
         
-        <button [popover]="myPopover">Show external resources</button>
+        <button [popover]="myPopover" (click)="loadExtenalSuggestions()">Show external resources</button>
     </div>
     </div>
     <div class="col-xs-4 text-right">

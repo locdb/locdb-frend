@@ -127,7 +127,6 @@ export class SuggestionComponent implements OnChanges {
     refreshSuggestions(){
         console.log("Internal Suggestions: ", this.internalSuggestions);
         console.log("External Suggestions: ", this.externalSuggestions);
-        console.log("Entry: ", this.entry);
         
         let searchentry = JSON.parse(JSON.stringify(this.entry));
         searchentry.ocrData.title = this.suggestfield;
