@@ -32,7 +32,7 @@ export class ResourceFormComponent implements OnInit, OnChanges {
     
     // roles: string[] = ['CORPORATE','PUBLISHER', 'author']; // <-- to Locdb.ts as class?
     // roles: string[] = AgentRole.ROLES;
-    roles: string[] = ROLES;
+    roles: string[] =  ROLES;
     
     constructor( private fb: FormBuilder, private locdbService: LocdbService) { this.createForm(); }
     
@@ -69,7 +69,7 @@ export class ResourceFormComponent implements OnInit, OnChanges {
         if (!this.resourceForm || !this.resource) {
             return;
         }
-        console.log( 'Resource: ', this.resource);
+        console.log("ResourceForm ngOnChanges(): ", this.resource);
         this.resourceForm.reset({
             title: this.resource.title,    
             resourcetype: this.resource.type,
@@ -80,11 +80,9 @@ export class ResourceFormComponent implements OnInit, OnChanges {
                 partof: this.resource.partOf,
                 // ...
         });
-        console.log("Resource.contributors: ", this.resource.contributors);
         //set Contributors
         this.contributorsForms = [];
         for (let con of this.resource.contributors){
-            console.log("Con: ", con);
             let conForm: FormGroup =  this.fb.group({
                 role: con.roleType,
                 name: con.heldBy.nameString,
@@ -94,21 +92,13 @@ export class ResourceFormComponent implements OnInit, OnChanges {
                 givenName: con.heldBy.givenName,
                 familyName: con.heldBy.familyName,
             })
-            console.log("Role Identifiers: ", con.heldBy.identifiers);
-            
-            // console.log("Role Id: ", con._id);
-            //console.log(conForm.value.role);
+            console.log(conForm.value.role);
             this.contributorsForms.push(conForm);
-            // conForm.reset({
-            // title: this.resource.title
-            // ...
-            //        });
         }
         this.embodiments = []
         //set Embodiments
         if (this.resource.embodiedAs) {
             for (let emb of this.resource.embodiedAs){
-                console.log("Emb: ", emb);
                 let embForm: FormGroup =  this.fb.group({
                     typeMongo: emb.typeMongo,
                     format: emb.format,
@@ -117,19 +107,13 @@ export class ResourceFormComponent implements OnInit, OnChanges {
                         url: emb.url,
                         // scans?: ToDoParts[];
                 })
-                console.log(embForm.value.firstPage);
                 this.embodiments.push(embForm);
-                // conForm.reset({
-                // title: this.resource.title
-                // ...
-                //        });
             }
         }
         this.parts = [];
         //set parts
         if (this.resource.parts) {
             for (let part of this.resource.parts){
-                console.log("part: ", part);
                 let partForm: FormGroup =  this.fb.group({
                     id: part._id,
                     bibliographicEntryText: part.bibliographicEntryText,
@@ -148,7 +132,7 @@ export class ResourceFormComponent implements OnInit, OnChanges {
     
     addContributorField(){
         let  conForm: FormGroup =  this.fb.group({
-            role: '',
+            role: 'author',
             name: '',
         });
         
@@ -156,19 +140,17 @@ export class ResourceFormComponent implements OnInit, OnChanges {
     }
     
     delContributorField(pos: number){
-        // other delete, maybe numbers not updated...
-        console.log("delete pos: "+ pos);
         this.contributorsForms.splice(pos,1);
-        console.log("this.contributorsForms", this.contributorsForms)
     }
     
     dropboxitemselected(conForm: FormGroup, s: string){
         // console.log("Role:", s);
         // console.log("conForm:", conForm);
         console.log("Role "+ s + " selected.");
-        conForm.value.role = s;
+        conForm.patchValue({
+            role: s
+        });
     }
-    
     onSubmit(){
         // this.saveEntries();
         this.resource = this.prepareSaveResource();
@@ -297,34 +279,46 @@ export class ResourceFormComponent implements OnInit, OnChanges {
         console.log("Recieved External: ", this.exSuggests);
     }
     loadExtenalSuggestions(){
+        //search for external Suggestions with entry emitted by app-display (current active entry)
+        console.log("[ResourceForm] loadExtenalSuggestions(): ", this.entry);     
         let searchentry = JSON.parse(JSON.stringify(this.entry));
+        //set new title to search with
         searchentry.ocrData.title = this.resourceForm.value.title;
+        console.log("[ResourceForm] loadExtenalSuggestions(): ", this.resourceForm.value.title, "; searchentry.ocrData.title",  searchentry);        
         this.locdbService.suggestions(searchentry, true).subscribe( (sgt) => this.saveExternal(sgt) );
     }
     inMerge(r: any){
+        //empty fields are filled with information from selected external resource if possible
+        console.log("[ResourceForm] inMerge(): ", this.resource, "; Clicked External Entry: ",  r);
         /* ---------------------*/
+        //depending on import type (BibResource/ocrData) two differend imports
         //BibResource
-        console.log("R: ",r);
         let title = r.title;
         let authors = [];
         for(let contributor of r.contributors){
             let name = contributor.heldBy.nameString;
-            console.log("name: ", name);
+//             console.log("name: ", name);
+            //let test: any= [" AUTHOR"];
+//             console.log(test);
             let role = contributor.roleType;
-            console.log("role: ", role);
+            if(ROLES.indexOf(role)>=0)
+                console.log("Role of external Resource found");
+            else
+                role = "author"
+//             console.log("role: ", role);
             authors.push({name: name, role: role});
         }
         /* ---------------------*/
         
         /* ---------------------*/
         // ocrData
-        console.log("ocrData",r.ocrData)
+//         console.log("ocrData",r.ocrData)
         //let title = r.ocrData.title;
         //let authors = r.ocrData.authors;
         //let name: string;
         //let role = "author"; 
-        console.log("external suggestion: ", r);
-        console.log("inMerge, r: ", r);
+//         console.log("external suggestion: ", r);
+//         console.log("inMerge, r: ", r);
         /* ---------------------*/
         
         if(this.resourceForm.value.title == ""){
@@ -332,6 +326,7 @@ export class ResourceFormComponent implements OnInit, OnChanges {
                 title: title,
             });
         }
+        //add authors if not in list already
         for(let author of authors){
             let name = author.name; //author for ocrData.authors
             let role = author.role; // dummy for ocrData
@@ -339,30 +334,25 @@ export class ResourceFormComponent implements OnInit, OnChanges {
             let isListed = false;
             
             for (let con of this.contributorsForms){
-                console.log("Con: ", con.value.name);
-                //console.log("r.ocdData ", r.ocrData);
                 if(con.value.name == name){ 
                     isListed = true;
                     break;
                 }
             }
             if(!isListed){
-                
                 //this.resourceForm.patchValue({});
                 let conForm: FormGroup =  this.fb.group({
                     role: role,
                     name: name,
-                    
-                    //                 roleidentifiers: con.identifiers,
-                    //                 resagentidentifiers: con.heldBy.identifiers,
-                    //                 givenName: con.heldBy.givenName,
-                    //                 familyName: con.heldBy.familyName,
                 })
-                //console.log("Role Identifiers: ", con.heldBy.identifiers);
                 this.contributorsForms.push(conForm);
             }
         }
         
+        
+    }
+    onSelect(){
+        console.log("[ResourceForm] inMerge(): ", "onSelect select");
         
     }
     

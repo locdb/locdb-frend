@@ -118,6 +118,7 @@ export class SuggestionComponent implements OnChanges {
     
     
     onSelect(br?: BibliographicResource) : void {
+        
         console.log("Suggestion emitted", br);
         this.selectedResource = br;
         this.committed = false;

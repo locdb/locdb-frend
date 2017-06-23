@@ -3,3 +3,14 @@
     display: table-cell;
     vertical-align: bottom
 }
+
+.selected{
+    background-color: #3AB1FF !important;
+    color: #607D8B;
+}
+  
+.suggestions a:hover {
+    color: #607D8B;
+    background-color: #DDD;
+}
+
