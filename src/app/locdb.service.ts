@@ -47,10 +47,9 @@ export class LocdbService {
 
 
   // Generic helpers for data extraction and error handling
-  
   private extractData(res: Response) {
     console.log('Response', res);
-    let body = res.json();
+    const body = res.json();
     return body;
   }
 
@@ -69,9 +68,9 @@ export class LocdbService {
   }
 
   // acquire todo items and scans
-  getToDo(ocr_processed:boolean): Observable<ToDo[]> {
-    let status_: string = ocr_processed ? 'OCR_PROCESSED' : 'NOT_OCR_PROCESSED';
-    let params: URLSearchParams = new URLSearchParams();
+  getToDo(ocr_processed: boolean): Observable<ToDo[]> {
+    const status_: string = ocr_processed ? 'OCR_PROCESSED' : 'NOT_OCR_PROCESSED';
+    const params: URLSearchParams = new URLSearchParams();
     params.set('status', status_);
     return this.http.get(this.locdbTodoEndpoint, { search: params } )
                     .map(this.extractData)
@@ -81,22 +80,22 @@ export class LocdbService {
 
   getToDoBibliographicEntries(scan_id: string): Observable<BibliographicEntry[]> {
     // fetches list of entries for a scan id
-    let params: URLSearchParams = new URLSearchParams();
+    const params: URLSearchParams = new URLSearchParams();
     params.set('scanId', scan_id);
     console.log('locdb todo entries url: ', this.locdbTodoEntries);
     return this.http.get(this.locdbTodoEntries, { search: params } )
                     .map(this.extractData)
                     .catch(this.handleError);
   }
-  
+
   getToDoBibliographicResources(scan_id: string): Observable<BibliographicResource[]> {
     // UNUSED //
     //
     // fetches list of entries for a scan id
-    let params: URLSearchParams = new URLSearchParams();
+    const params: URLSearchParams = new URLSearchParams();
     params.set('scanId', scan_id);
     console.log('');
-    let res =  this.http.get(this.locdbTodoResources, { search: params } )
+    const res =  this.http.get(this.locdbTodoResources, { search: params } )
                     .map(this.extractData)
                     .catch(this.handleError);
     console.log('resources: ', res);
@@ -104,7 +103,7 @@ export class LocdbService {
   }
 
   saveScan(ppn: string, firstPage: string, lastPage: string, scan: any, file: File): Observable<any> {
-    let formData: FormData = new FormData();
+    const formData: FormData = new FormData();
     console.log(ppn, firstPage, lastPage);
     console.log(file);
     formData.append('ppn', ppn);
@@ -118,8 +117,8 @@ export class LocdbService {
   }
 
   suggestions(be: BibliographicEntry, external?: boolean): Observable<any[]> {
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let options = new RequestOptions({ headers: headers });
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
 
     if (external) {
       return this.http.post(this.externalSuggestions, be, options)
@@ -133,8 +132,7 @@ export class LocdbService {
   }
 
   triggerOcrProcessing(scanId: string) {
-    this.locdbTriggerOcrProcessing
-    let params: URLSearchParams = new URLSearchParams();
+    const params: URLSearchParams = new URLSearchParams();
     params.set('id', scanId.toString())
     return this.http.get(
       this.locdbTriggerOcrProcessing,
@@ -148,31 +146,31 @@ export class LocdbService {
   }
 
   putBibliographicEntry(entry: BibliographicEntry) {
-    let url = this.locdbBibliographicEntries + entry._id;
+    const url = this.locdbBibliographicEntries + entry._id;
     return this.http.put(url, entry).map(this.extractData).catch(this.handleError);
   }
 
   bibliographicResource(identifier: string) {
-    let url = this.locdbBibliographicResources + identifier;
+    const url = this.locdbBibliographicResources + identifier;
     return this.http.get(url).map(this.extractData).catch(this.handleError);
   }
 
   // we might also need post, to store completely new resources
   putBibliographicResource(resource: BibliographicResource) {
-    console.log("Put BR for", resource._id);
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let options = new RequestOptions({ headers: headers });
-    let url = this.locdbBibliographicResources + resource._id;
-    console.log("JUST BEFORE SUBMISSION:", resource);
+    console.log('Put BR for', resource._id);
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
+    const url = this.locdbBibliographicResources + resource._id;
+    console.log('JUST BEFORE SUBMISSION:', resource);
     return this.http.put(url, resource, options).map(this.extractData).catch(this.handleError);
   }
 
   pushBibligraphicResource(resource: BibliographicResource) {
     // we could merge this with the method above, first try put then push.
-    console.log("Push BR", resource);
-    let url = this.locdbBibliographicResources;
+    console.log('Push BR', resource);
+    const url = this.locdbBibliographicResources;
     return this.http.post(url, resource).map(this.extractData).catch(this.handleError);
-  } 
+  }
 
   // helpers
 
