@@ -1,4 +1,4 @@
-<todolist *ngIf="!displayActive" (todo)="updateDisplay($event)"></todolist>
+<app-todo *ngIf="!displayActive" (todo)="updateDisplay($event)"></app-todo>
 <div *ngIf="displayActive" class="panel panel-default">
 <div class="panel-heading">
     <button type="button" class="btn btn-danger" aria-label="Back" (click)="clear()">
