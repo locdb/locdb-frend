@@ -24,6 +24,8 @@ More specific, two views are provided:
 
 ## Development setup
 
+[Source](https://github.com/angular/angular-cli#updating-angular-cli)
+
 ### update angular-cli to the latest version
 
 $ npm remove -g angular-cli
