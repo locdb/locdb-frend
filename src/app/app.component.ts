@@ -12,24 +12,22 @@ import { environment } from 'environments/environment';
     providers: [ LocdbService ]
 })
 
-export class AppComponent { 
+/** Main App Component for whole LOCDB Frontend */
+export class AppComponent {
     title = 'LOC-DB Extrapolite';
     entry: BibliographicEntry;
     resource: BibliographicResource;
     entryForSuggestion: BibliographicEntry;
     environment = environment;
-    
-    header = { width: 300, height: 20, rp:0.15, 
-        state:0, //0-2 
+    header = { width: 300, height: 20, rp: 0.15,
+        state: 0, // 0-2
         caktiv: 'lightblue',
         cinaktiv: 'lightgrey',
         cline: 'lightgreen',
         nameStart: 'Resource',
         nameMid: 'Citation',
-        nameEnd: 'Resource'
-        
-    }; 
-    
+        nameEnd: 'Resource' };
+
     /*
      *    updatedEntry : BibliographicEntry = {
      *      _id: this.entry._id,
@@ -46,43 +44,41 @@ export class AppComponent {
     this.entry = updatedEntry;
     */
     constructor ( private locdbService: LocdbService ) {}
-    
+
     updateEntry (entry: BibliographicEntry) {
-        //this.showCitation()
-        if(entry)
+        // this.showCitation()
+        if (entry) {
             this.header.state = 1;
-        else
-            this.header.state = 0;        
+        } else {
+            this.header.state = 0;
+        }
         console.log('Updating with new entry', entry);
         this.entry = entry;
         // reset resource, since we selected a different entry
         this.resource = null;
     }
-    
+
     updateResource (resource: BibliographicResource) {
-        //this.enableCitation();
+        // this.enableCitation();
         this.header.state = 2;
         console.log('Updating with new resource', resource);
         this.resource = resource;
     }
-    
-    
+
     roundUp(num, precision) {
         return Math.ceil(num * precision) / precision;
     }
-    
-    pathStart(){
-        console.log("pathStart");
-        
+
+    pathStart() {
+        console.log('pathStart');
     }
-    
-    
+
     pathSelectResource() {
-        console.log("pathSelectResource");
+        console.log('pathSelectResource');
     }
-    pathEditAndSubmit(){
-        console.log("pathEditAndSubmit");
+
+    pathEditAndSubmit() {
+        console.log('pathEditAndSubmit');
     }
-    
 }
 
