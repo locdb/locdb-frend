@@ -12,7 +12,7 @@ import { environment } from 'environments/environment';
   providers: [ LocdbService ]
 })
 
-export class AppComponent { 
+export class AppComponent {
   title = 'LOC-DB Extrapolite';
   entry: BibliographicEntry;
   resource: BibliographicResource;
