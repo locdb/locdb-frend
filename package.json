@@ -31,7 +31,7 @@
     "@angular/compiler-cli": "^4.0.2",
     "@types/core-js": "^0.9.41",
     "@types/jasmine": "2.5.50",
-    "@types/node": "~7.0.12",
+    "@types/node": "~8.0.0",
     "angular-ide": "^0.9.18",
     "codelyzer": "~3.0.0",
     "jasmine-core": "~2.6.1",
