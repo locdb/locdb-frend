@@ -1,4 +1,4 @@
-figure {
+/*figure {
   cursor: pointer;
   border: 5px solid white;
   -webkit-box-shadow: 0 0 22px rgba(0,0,0,.5);
@@ -12,4 +12,4 @@ figure svg {
 
 figure:hover svg {
   -webkit-transform: scale(1.5) translate(+25%, 0px);
-}
+}*/

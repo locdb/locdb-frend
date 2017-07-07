@@ -1,26 +1,23 @@
-<todolist *ngIf="!displayActive" (todo)="updateDisplay($event)"></todolist>
+<app-todo *ngIf="!displayActive" (todo)="updateDisplay($event)"></app-todo>
 <div *ngIf="displayActive" class="panel panel-default">
-  <div class="panel-heading">
+<div class="panel-heading">
     <button type="button" class="btn btn-danger" aria-label="Back" (click)="clear()">
-      <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
-      Back
+    <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+    Back
     </button>
-  </div>
+</div>
 
-  <div class="panel-body">
-    <!--img [src]="displaySource" [hidden]="!displaySource" style="width: 100%;" alt="Display of the scanned bibliographic entries"-->
-
-    <!--image [attr.src]="displaySource" style="width: 100%;height: 100%"/-->
+<div class="panel-body">
     <figure>
-      <svg xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + imgX + ' ' + imgY">
+    <svg  xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + imgX + ' ' + imgY">
+    <svg #zoomSVG  xmlns="http://www.w3.org/2000/svg">
+    <g>
         <image [attr.xlink:href]="displaySource" [attr.height]="imgY + 'px'" [attr.width]="imgX + 'px'" (load)="imageOnload()"/>
         <rect *ngFor="let rect of rects; let i=index" [attr.x]="rect.x" [attr.y]="rect.y" [attr.height]="rect.height" [attr.width]="rect.width"
-           style="stroke: #009900; stroke-width:1; fill-opacity:0.0;" (click)="rectLink(i)"/>
-        <!-- rect *ngFor="let rect of rects" x="85" y = "100" width="175" height = "10"
-          style="stroke: #009900;stroke-width:10; fill-opacity:0.0;" (click)="rectLink(1)"/ -->
-          <!-- image xlink:href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Anectropis_fumigata.jpg/220px-Anectropis_fumigata.jpg" height="50px" width="100px"/ -->
-
-      </svg>
+        style="stroke: #009900; stroke-width:1; fill-opacity:0.0;" (click)="rectLink(i)"/>
+        </g>
+    </svg>
+    </svg>
     </figure>
     <!--text>{{displaySource}}</text-->
     <!--circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" /-->
@@ -33,6 +30,9 @@
     <!--   <button class="btn btn-default" (click)="next(-1)">Previous</button> -->
     <!--   <button class="btn btn-default" (click)="next(1)">Next</button> -->
     <!-- </div> -->
-  </div>
 </div>
+</div>
+
+
+
 <scan></scan>
