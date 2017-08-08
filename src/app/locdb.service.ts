@@ -23,36 +23,27 @@ import { environment } from 'environments/environment';
 
 @Injectable()
 export class LocdbService {
+
+  // we could read this from some config file
+  // private locdbUrl                      = 'http://velsen.informatik.uni-mannheim.de:80';
+  // does not work yet
   private locdbUrl = environment.locdbUrl;
 
-  private locdbTodoEndpoint: string;             // = this.locdbUrl + '/getToDo';
-  private locdbSaveScan: string;                 // = this.locdbUrl + '/saveScan';
-  private locdbTodoEntries: string;              // = this.locdbUrl + '/getToDoBibliographicEntries';
-  private locdbTodoResources: string;            // = this.locdbUrl + '/getToDoBibliographicResources';
-                                           
-  private internalSuggestions: string;           // = this.locdbUrl + '/getInternalSuggestions';
-  private externalSuggestions: string;           // = this.locdbUrl + '/getExternalSuggestions';
-  private locdbTriggerOcrProcessing: string;     // = this.locdbUrl + '/triggerOcrProcessing';
-  private locdbBibliographicEntries: string;     // = this.locdbUrl + '/bibliographicEntries/';
-  private locdbBibliographicResources: string;   // = this.locdbUrl + '/bibliographicResources/';
 
-  constructor(private http: Http) { this.updateUrls() }
+  private locdbTodoEndpoint             = this.locdbUrl + '/getToDo';
+  private locdbSaveScan                 = this.locdbUrl + '/saveScan';
+  private locdbTodoEntries              = this.locdbUrl + '/getToDoBibliographicEntries';
+  // This url just does not exist yet
+  private locdbTodoResources            = this.locdbUrl + '/getToDoBibliographicResources';
 
+  private internalSuggestions           = this.locdbUrl + '/getInternalSuggestions';
+  private externalSuggestions           = this.locdbUrl + '/getExternalSuggestions';
+  private locdbTriggerOcrProcessing     = this.locdbUrl + '/triggerOcrProcessing';
+  private locdbBibliographicEntries     = this.locdbUrl + '/bibliographicEntries/';
+  // just a guess
+  private locdbBibliographicResources   = this.locdbUrl + '/bibliographicResources/';
 
-  private updateUrls() {
-    /* It would be also fine to construct the urls in the respective methods */
-    this.locdbTodoEndpoint             = this.locdbUrl + '/getToDo';
-    this.locdbSaveScan                 = this.locdbUrl + '/saveScan';
-    this.locdbTodoEntries              = this.locdbUrl + '/getToDoBibliographicEntries';
-    // This url just does not exist yet
-    this.locdbTodoResources            = this.locdbUrl + '/getToDoBibliographicResources';
-    this.internalSuggestions           = this.locdbUrl + '/getInternalSuggestions';
-    this.externalSuggestions           = this.locdbUrl + '/getExternalSuggestions';
-    this.locdbTriggerOcrProcessing     = this.locdbUrl + '/triggerOcrProcessing';
-    this.locdbBibliographicEntries     = this.locdbUrl + '/bibliographicEntries/';
-    // just a guess
-    this.locdbBibliographicResources   = this.locdbUrl + '/bibliographicResources/';
-  }
+  constructor(private http: Http) { }
 
 
   // Generic helpers for data extraction and error handling
@@ -181,30 +172,6 @@ export class LocdbService {
     return this.http.post(url, resource).map(this.extractData).catch(this.handleError);
   }
 
-  login(user: string, pass: string) {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
-    const url = this.locdbUrl + '/login'
-    return this.http.post(url, {username: user, password: pass}, options)
-  }
-
-  signup(user: string, pass: string) {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
-    const url = this.locdbUrl + '/signup'
-    return this.http.post(url, {username: user, password: pass}, options)
-  }
-
-  logout() {
-    const url = this.locdbUrl + '/logout'
-    return this.http.get(url);
-  }
-
-  instance(instance?: string) {
-    if (instance) this.locdbUrl = instance;
-    this.updateUrls();
-    return this;
-  }
-
+  // helpers
 
 } // LocdbService
