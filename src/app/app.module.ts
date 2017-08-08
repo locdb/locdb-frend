@@ -29,6 +29,7 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { PopoverModule } from 'ngx-popover';
 
 import * as d3 from 'd3';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import * as d3 from 'd3';
     EntryFormComponent,
     SuggestionComponent,
     ResourceFormComponent,
+    LoginComponent,
     // LocdbService
   ],
   providers: [ LocdbService ],
