@@ -191,13 +191,13 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             title: formModel.title as string || '',
             subtitle: formModel.subtitle as string || '',
             edition: formModel.edition as string || '',
-            number: formModel.resourcenumber as number,
+            number: formModel.resourcenumber as number || -1,
             contributors: contributors,
-            publicationYear: formModel.publicationyear as number,
-                partOf: formModel.partof as string || '',
-                // warning: no deep copy (but this ok as long as not editable)
-                embodiedAs: this.resource.embodiedAs,
-                parts: this.resource.parts,
+            publicationYear: formModel.publicationyear as number || -1,
+            partOf: formModel.partof as string || '',
+            // warning: no deep copy (but this ok as long as not editable)
+            embodiedAs: this.resource.embodiedAs,
+            parts: this.resource.parts,
         }
         return resource;
     }
