@@ -6,10 +6,13 @@
     <button class='btn btn-danger' (click)='onLogout()'>Logout</button>
   </div>
   <div class="panel-body" *ngIf='!currentUser'>
+    <b>Instance</b>
     <select #instance [disabled]='connecting'>
       <option *ngFor='let inst of instances' [value]='inst.url'>{{inst.name}}</option>
     </select>
+    <b>Username</b>
     <input #user [disabled]='connecting' value='name'>
+    <b>Password</b>
     <input #pass [disabled]='connecting' value='pass'>
     <button class='btn btn-default' [disabled]='connecting' (click)='onSignUp(instance.value, user.value, pass.value)'>Sign up</button>
     <button class='btn btn-primary' [disabled]='connecting' (click)='onSignIn(instance.value, user.value, pass.value)'>Sign in</button>

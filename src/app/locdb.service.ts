@@ -29,7 +29,6 @@ export class LocdbService {
   private locdbSaveScan: string;                 // = this.locdbUrl + '/saveScan';
   private locdbTodoEntries: string;              // = this.locdbUrl + '/getToDoBibliographicEntries';
   private locdbTodoResources: string;            // = this.locdbUrl + '/getToDoBibliographicResources';
-                                           
   private internalSuggestions: string;           // = this.locdbUrl + '/getInternalSuggestions';
   private externalSuggestions: string;           // = this.locdbUrl + '/getExternalSuggestions';
   private locdbTriggerOcrProcessing: string;     // = this.locdbUrl + '/triggerOcrProcessing';
@@ -201,7 +200,7 @@ export class LocdbService {
   }
 
   instance(instance?: string) {
-    if (instance) this.locdbUrl = instance;
+    if (instance) { this.locdbUrl = instance } ;
     this.updateUrls();
     return this;
   }
