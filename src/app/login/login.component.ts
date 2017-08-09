@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { LocdbService } from '../locdb.service';
+import {  Response } from '@angular/http';
 
 @Component({
   selector: 'app-login',
@@ -18,16 +19,18 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  validate(instance: string, user: string, msg: any) {
+  validate(instance: string, user: string, msg: Response | any) {
     console.log(msg);
     if (msg.ok) {
       this.currentUser = user;
       this.currentInstance = instance;
     } else {
-      alert("Invalid credentials.");
+      console.log('Message not ok');
+      alert('Invalid credentials.');
     }
     this.connecting = false;
   }
+
 
 
   onSignUp(instance: string, user: string, pass: string) {
@@ -46,7 +49,7 @@ export class LoginComponent implements OnInit {
   }
 
   onLogout() {
-    this.locdbService.logout().subscribe( (msg) => this.validate(null, null, msg)  );
+    this.locdbService.logout().subscribe( (msg) => this.validate(null, null, msg) );
   }
 
 }
