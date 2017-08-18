@@ -30,6 +30,7 @@ import { PopoverModule } from 'ngx-popover';
 
 import * as d3 from 'd3';
 import { LoginComponent } from './login/login.component';
+import { VisualComponent } from './visual/visual.component';
 
 @NgModule({
   imports: [
@@ -52,6 +53,7 @@ import { LoginComponent } from './login/login.component';
     SuggestionComponent,
     ResourceFormComponent,
     LoginComponent,
+    VisualComponent,
     // LocdbService
   ],
   providers: [ LocdbService ],

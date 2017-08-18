@@ -19,14 +19,7 @@ export class AppComponent {
     resource: BibliographicResource;
     entryForSuggestion: BibliographicEntry;
     environment = environment;
-    header = { width: 300, height: 20, rp: 0.15,
-        state: 0, // 0-2
-        caktiv: 'lightblue',
-        cinaktiv: 'lightgrey',
-        cline: 'lightgreen',
-        nameStart: 'Resource',
-        nameMid: 'Citation',
-        nameEnd: 'Resource' };
+    visualState = 0;
 
     /*
      *    updatedEntry : BibliographicEntry = {
@@ -48,9 +41,9 @@ export class AppComponent {
     updateEntry (entry: BibliographicEntry) {
         // this.showCitation()
         if (entry) {
-            this.header.state = 1;
+            this.visualState = 1;
         } else {
-            this.header.state = 0;
+            this.visualState = 0;
         }
         console.log('Updating with new entry', entry);
         this.entry = entry;
@@ -60,7 +53,7 @@ export class AppComponent {
 
     updateResource (resource: BibliographicResource) {
         // this.enableCitation();
-        this.header.state = 2;
+        this.visualState = 2;
         console.log('Updating with new resource', resource);
         this.resource = resource;
     }
