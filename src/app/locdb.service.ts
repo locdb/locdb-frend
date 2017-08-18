@@ -180,23 +180,30 @@ export class LocdbService {
     return this.http.post(url, resource).map(this.extractData).catch(this.handleError);
   }
 
-  login(user: string, pass: string) {
+  /* The following needs to be reconsidered, actually we could store login status here */
+
+  fail(err: any): Observable<any> {
+    // array ok? TODO
+    return Observable.from([{ok: false}]);
+  }
+
+  login(user: string, pass: string): Observable<any> {
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
     const url = this.locdbUrl + '/login'
-    return this.http.post(url, {username: user, password: pass}, options)
+    return this.http.post(url, {username: user, password: pass}, options).catch(this.fail);
   }
 
   signup(user: string, pass: string) {
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
     const url = this.locdbUrl + '/signup'
-    return this.http.post(url, {username: user, password: pass}, options)
+    return this.http.post(url, {username: user, password: pass}, options).catch(this.fail);
   }
 
   logout() {
     const url = this.locdbUrl + '/logout'
-    return this.http.get(url);
+    return this.http.get(url).catch(this.fail);
   }
 
   instance(instance?: string) {
