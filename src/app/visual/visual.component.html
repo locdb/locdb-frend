@@ -1,0 +1,81 @@
+<div class="container">
+    <svg [attr.viewBox]="'0 0 '+width+' '+height">
+      <line [attr.x1]="height/2" 
+       [attr.y1]="height*0.55" 
+       [attr.x2]="width/2-height/2" 
+       [attr.y2]="height*0.55" 
+       [attr.visibility]="(state>=1) ? 'visible' : 'hidden'"
+       stroke="black" 
+       stroke-width="0.5"
+       stroke-linecap="square"/>
+       <line [attr.x1]="height/2" 
+       [attr.y1]="height*0.55" 
+       [attr.x2]="width/2-height/2" 
+       [attr.y2]="height*0.55"
+       [attr.visibility]="(state>=1) ? 'visible' : 'hidden'"
+       [attr.stroke] = cline 
+       stroke-width="0.25"
+       stroke-linecap="square"/>
+
+       <line [attr.x1]="width/2-height/2" 
+       [attr.y1]="height*0.55" 
+       [attr.x2]="width-height/2" 
+       [attr.y2]="height*0.55" 
+       [attr.visibility]="state>=2 ? 'visible' : 'hidden'"
+       stroke="black" 
+       stroke-width="0.5"
+       stroke-linecap="square"/>
+       <line [attr.x1]="width/2-height/2" 
+       [attr.y1]="height*0.55" 
+       [attr.x2]="width-height/2" 
+       [attr.y2]="height*0.55"
+       [attr.visibility]="state>=2 ? 'visible' : 'hidden'"
+       [attr.stroke] = cline 
+       stroke-width="0.25"
+       stroke-linecap="square"/>
+
+       <svg:circle [attr.cx]="height/2" 
+       [attr.cy]="height*0.55" 
+       [attr.r]="height*rp" 
+       stroke="black" 
+       stroke-width="0.25"
+       [attr.fill]="state==0 ? caktiv : cinaktiv"
+       [attr.visibility]="state>=0 ? 'visible' : 'hidden'"
+       (click)="pathStart()"/>
+       <text [attr.x]="height/2" 
+       [attr.y]="height*0.16" 
+       style="fill: #000000; stroke: none; font-size: 4px;"
+       [attr.visibility]="state>=0 ? 'visible' : 'hidden'"
+       text-anchor="middle">{{nameStart}}</text>
+
+
+       <svg:circle [attr.cx]="width/2-height/2" 
+       [attr.cy]="height*0.55" 
+       [attr.r]="height*rp" 
+       stroke="black" 
+       stroke-width="0.25"
+       [attr.fill]="state==1 ? caktiv : cinaktiv"
+       (click)="pathSelectResource()"
+       [attr.visibility]="state>=1 ? 'visible' : 'hidden'"/>
+       <text [attr.x]="width/2-height/2" 
+       [attr.y]="height*0.16" 
+       style="fill: #000000; stroke: none; font-size: 4px;"
+       [attr.visibility]="state>=1 ? 'visible' : 'hidden'"
+       text-anchor="middle">{{nameMid}}</text>
+
+
+       <svg:circle [attr.cx]="width-height/2" 
+       [attr.cy]="height*0.55" 
+       [attr.r]="height*rp" 
+       stroke="black" 
+       stroke-width="0.25"
+       [attr.fill]="(state==2) ? caktiv : cinaktiv"
+       (click)="pathEditAndSubmit()"
+       [attr.visibility]="state>=2 ? 'visible' : 'hidden'"/>
+       <text [attr.x]="width-height/2" 
+       [attr.y]="height*0.16" 
+       style="fill: #000000; stroke: none; font-size: 4px;"
+       [attr.visibility]="state>=2 ? 'visible' : 'hidden'"
+       text-anchor="middle">{{nameEnd}}</text>
+       </svg>
+</div>
