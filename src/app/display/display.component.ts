@@ -19,11 +19,11 @@ import { PopoverModule } from "ngx-popover/index";
 })
 
 export class DisplayComponent implements OnInit {
-    private zoomSVG: any;    
+    private zoomSVG: any;
     @ViewChild('zoomSVG') set content(content: any) {
         this.zoomSVG = content;
     }
-    
+
     displaySource: string;
     displayActive = false;
     title = 'Scan Display';
@@ -31,17 +31,17 @@ export class DisplayComponent implements OnInit {
     entries: BibliographicEntry[];
     clickedRect = false;
     zoom: any;
-    
-    rects: rect[] = [];
+
+    rects: Rect[] = [];
     imgX = 500;    // initvalues no relevance if new picture is set
     imgY = 500;
-    
+
     @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
-    
+
     constructor( private locdbService: LocdbService) { }
-    
+
     initSVGZoom() {
-        let zoom = d3.zoom().on("zoom", function () {
+        const zoom = d3.zoom().on("zoom", function () {
             svgContainer.attr("transform", "translate(" + d3.event.transform.x+", "+ d3.event.transform.y + ")scale(" + d3.event.transform.k + ")")
         })
         .scaleExtent([1, 5])
@@ -65,35 +65,36 @@ export class DisplayComponent implements OnInit {
         this.displayActive = true;
         this.locdbService.getToDoBibliographicEntries(newTodo._id).subscribe( (res) => this.entriesArrived(res) ) ;
     }
-    
+
     entriesArrived(entries) {
-        console.log("Entries arrive: ", entries);
+        console.log('Entries arrive: ', entries);
         this.entries = entries;
         this.extractRects(this.entries);
-        console.log("DisplaySource: ", this.realImgDimension(this.displaySource));
+        console.log('DisplaySource: ', this.realImgDimension(this.displaySource));
         this.currentIndex = 0;
         this.entry.next(entries[0]);
     }
-    
+
     onSelect(entry: any) {
         // selection of an entry of one todo item
         this.entry.next(entry);
     }
-    
+
     newCustomEntry() {
         this.entry.next(new BibliographicEntry());
     }
-    
+
     next(diff: number) {
         this.currentIndex = Math.abs((this.entries.length + this.currentIndex + diff) % this.entries.length);
-        let entry = this.entries[this.currentIndex];
+        const entry = this.entries[this.currentIndex];
         console.log('Emission of entry at index ' + this.currentIndex, entry);
         this.entry.next(entry);
     }
-    
-    ngOnInit() { 
+
+    ngOnInit() {
+
     }
-    
+
     clear() {
         this.displaySource = null;
         this.displayActive = false;
@@ -101,51 +102,52 @@ export class DisplayComponent implements OnInit {
         this.rects = [];
         this.entry.next(null); // reset view
     }
-    
-    rectLink(i: number){
+
+    rectLink(i: number) {
         this.clickedRect = true;
-        console.log("Display: Clicked Rect " + i);
+        console.log('Display: Clicked Rect ' + i);
         this.currentIndex = i
-        let entry = this.entries[this.currentIndex];
+        const entry = this.entries[this.currentIndex];
         console.log('Emission of entry at index ' + this.currentIndex, entry);
         this.entry.next(entry);
     }
-    
-    extractRects(entries){
-        for (let e of entries){
-            //console.log("Entrie.OCRData.coordinates: ", e.coordinates);
-            let coords = e.ocrData.coordinates;
-            let rectField = coords.split(" ");
+
+    extractRects(entries) {
+        for (const e of entries){
+            // console.log("Entrie.OCRData.coordinates: ", e.coordinates);
+            const coords = e.ocrData.coordinates;
+            const rectField = coords.split(' ');
             this.rects.push({
                 x: Number(rectField[0]),
-                            y: Number(rectField[1]),
-                            width: Number(rectField[2])-Number(rectField[0]),
-                            height: Number(rectField[3])-Number(rectField[1]),
+                y: Number(rectField[1]),
+                width: Number(rectField[2]) - Number(rectField[0]),
+                height: Number(rectField[3]) - Number(rectField[1]),
             });
         }
     }
-    
+
     realImgDimension(url) {
-        var i = new Image();
+        const i = new Image();
         i.src = url;
         return {
-            naturalWidth: i.width, 
+            naturalWidth: i.width,
             naturalHeight: i.height
         };
     }
-    
-    imageOnload(){
-        console.log("Image Loaded, Dimensions: ", this.realImgDimension(this.displaySource));
-        let realDim = this.realImgDimension(this.displaySource);
+
+    imageOnload() {
+        console.log('Image Loaded, Dimensions: ', this.realImgDimension(this.displaySource));
+        const realDim = this.realImgDimension(this.displaySource);
         this.imgX = realDim.naturalWidth;
         this.imgY = realDim.naturalHeight;
-        if((this.imgX + this.imgY) <= 0)
-            console.log("Image size = 0", realDim);
+        if ((this.imgX + this.imgY) <= 0) {
+            console.log('Image size = 0', realDim);
+        }
         this.initSVGZoom();
     }
 }
 
-class rect {
+class Rect {
     x: number;
     y: number;
     height: number;

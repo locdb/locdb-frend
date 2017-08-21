@@ -118,14 +118,12 @@ export class ToDo extends BibliographicResource {
 /** A possible child of a ToDo item */
 export class ToDoParts {
   _id: string;
-  status?: string;
   scans?: ToDoScans[];
 }
 
-/** External Resource Placeholder */
+/** Wrapping a Scan image by its identifier that can be accessed by /scans/<identifier> */
 export class ToDoScans {
   _id: string;
-  status?: string;
 }
 
 /** External Resource Placeholder */
