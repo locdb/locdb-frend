@@ -12,50 +12,21 @@
     </div>
   </div>
 
-  <!-- Panel body to display todo items -->
   <div class="panel-body">
-    <!-- <div class="btn-group-vertical" role="group" aria-label="...">-->
-    <!-- <div *ngFor="let rootres of scans"  class="panel panel-default"> -->
-    <!--   <div class="panel-heading" (click)="rootres.isCollapsed = !rootres.isCollapsed"> -->
-    <!--     <span *ngIf="rootres.isCollapsed" class="glyphicon glyphicon-chevron-down"></span> --> 
-    <!--     <span *ngIf="!rootres.isCollapsed" class="glyphicon glyphicon-chevron-up"></span> --> 
-    <!--     {{ rootres.rootresourceid }} -->
-    <!--   </div> -->
-    <!--   <div class="panel-body" -->
-    <!--        [collapse]="rootres.isCollapsed" -->
-    <!--        class="card card-block card-header"> -->
-    <!--     <button type="button" *ngFor="let s of rootres.scans" class="list-group-item list-group-item-action list-group-item-info justify-content-between" (click)="onSelect(s)"> -->
-    <!--       {{ s._id }} --> 
-    <!--       {{ printit(s) }} -->
-    <!--       <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span> -->
-    <!--     </button> -->
-    <!--   </div> -->
-    <!-- </div> -->
-
-    <!-- <div *ngFor="let rootres of unprocessed"  class="panel panel-default"> -->
-    <!--   <div class="panel-heading" (click)="rootres.isCollapsed = !rootres.isCollapsed"> -->
-    <!--     <span *ngIf="rootres.isCollapsed" class="glyphicon glyphicon-chevron-down"></span> --> 
-    <!--     <span *ngIf="!rootres.isCollapsed" class="glyphicon glyphicon-chevron-up"></span> --> 
-    <!--     {{ rootres.rootresourceid }} -->
-    <!--   </div> -->
-    <!--   <div class="panel-body" -->
-    <!--        [collapse]="rootres.isCollapsed" -->
-    <!--        class="card card-block card-header"> -->
-    <!--     <button type="button" *ngFor="let s of rootres.scans" class="list-group-item list-group-item-action list-group-item-warning justify-content-between" (click)="processScan(s)"> -->
-    <!--       {{ s._id }} --> 
-    <!--       <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span> -->
-    <!--     </button> -->
-    <!--   </div> -->
-    <!-- </div> -->
-
-
-      <div class="panel-group">
-        <div class="panel panel-default" *ngFor="let t of all_todos()">
-          <div class="panel-heading">
-            <app-resource-form [resource]="t" [folded]="true"></app-resource-form>
-          </div>
-          <div class="panel-body">
+    <div class="panel-group">
+      <div class="panel panel-default" *ngFor="let t of all_todos()">
+        <div class="panel-heading">
+          <app-resource-form [resource]="t" [folded]="true"></app-resource-form>
+        </div>
+        <div class="panel-body">
+          <div class="list-group">
+            <!-- scans directly attached to the resource -->
+            <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of t.scans" (click)="onSelect(s)"> -->
+            <!--   Scan on pp. {{s.firstPage}}-{{s.lastPage}} -->
+            <!-- </a> -->
+            <!-- <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span> -->
             <div class="list-group" *ngFor="let c of t.children">
+              <!-- scans attached to children of resource -->
               <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of c.scans" (click)="onSelect(s)">
                 Scan on pp. {{s.firstPage}}-{{s.lastPage}}
                 <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
@@ -64,6 +35,7 @@
           </div>
         </div>
       </div>
-
     </div>
+
+  </div>
 </div>

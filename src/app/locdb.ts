@@ -112,6 +112,7 @@ export class ResponsibleAgent {
 /** Apart from the children property, todo items are basically resource */
 export class ToDo extends BibliographicResource {
   children?: ToDoParts[];
+  scans?: ToDoScans[]; // for monographs, scans are directly attached to the BR
 }
 
 /** A possible child of a ToDo item */
