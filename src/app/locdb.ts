@@ -123,6 +123,7 @@ export class ToDoParts {
 
 /** Wrapping a Scan image by its identifier that can be accessed by /scans/<identifier> */
 export class ToDoScans {
+  status: string;
   _id: string;
 }
 
