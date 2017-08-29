@@ -29,6 +29,9 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { PopoverModule } from 'ngx-popover';
 
+import { CredentialsService } from 'angular-with-credentials';
+
+
 import * as d3 from 'd3';
 import { LoginComponent } from './login/login.component';
 import { VisualComponent } from './visual/visual.component';
@@ -58,7 +61,7 @@ import { VisualComponent } from './visual/visual.component';
     VisualComponent,
     // LocdbService
   ],
-  providers: [ LocdbService ],
+  providers: [ LocdbService, CredentialsService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

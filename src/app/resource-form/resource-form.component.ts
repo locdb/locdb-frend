@@ -80,10 +80,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                 partof: this.resource.partOf,
                 // ...
         });
-        //set Contributors
+        //  set Contributors
         this.contributorsForms = [];
-        for (let con of this.resource.contributors) {
-            let conForm: FormGroup =  this.fb.group( {
+        for (const con of this.resource.contributors) {
+            const conForm: FormGroup =  this.fb.group( {
                 role: con.roleType,
                 name: con.heldBy.nameString,
 
@@ -96,10 +96,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             this.contributorsForms.push(conForm);
         }
         this.embodiments = []
-        //set Embodiments
+        // set Embodiments
         if (this.resource.embodiedAs)  {
-            for (let emb of this.resource.embodiedAs) {
-                let embForm: FormGroup =  this.fb.group( {
+            for (const emb of this.resource.embodiedAs) {
+                const embForm: FormGroup =  this.fb.group( {
                     typeMongo: emb.typeMongo,
                     format: emb.format,
                         firstPage: emb.firstPage,
@@ -340,15 +340,15 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                 title: title,
             });
         }
-        //add authors if not in list already
-        for (let author of authors) {
-            const name = author.name; //author for ocrData.authors
+        // add authors if not in list already
+        for (const author of authors) {
+            const name = author.name; // author for ocrData.authors
             const role = author.role; // dummy for ocrData
 
             let isListed = false;
 
-            for (let con of this.contributorsForms) {
-                if (con.value.name == name) {
+            for (const con of this.contributorsForms) {
+                if (con.value.name === name) {
                     isListed = true;
                     break;
                 }

@@ -15,9 +15,13 @@ import { Citation } from './citation';
 // new types
 import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource } from './locdb'
 
+// Local testing with credentials
+import { CredentialsService } from 'angular-with-credentials';
+
 // dummy data
 import { MOCK_TODOBRS } from './mock-todos';
 import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
+
 
 import { environment } from 'environments/environment';
 
@@ -25,17 +29,27 @@ import { environment } from 'environments/environment';
 export class LocdbService {
   private locdbUrl = environment.locdbUrl;
 
-  private locdbTodoEndpoint: string;             // = this.locdbUrl + '/getToDo';
-  private locdbSaveScan: string;                 // = this.locdbUrl + '/saveScan';
-  private locdbTodoEntries: string;              // = this.locdbUrl + '/getToDoBibliographicEntries';
-  private locdbTodoResources: string;            // = this.locdbUrl + '/getToDoBibliographicResources';
-  private internalSuggestions: string;           // = this.locdbUrl + '/getInternalSuggestions';
-  private externalSuggestions: string;           // = this.locdbUrl + '/getExternalSuggestions';
-  private locdbTriggerOcrProcessing: string;     // = this.locdbUrl + '/triggerOcrProcessing';
-  private locdbBibliographicEntries: string;     // = this.locdbUrl + '/bibliographicEntries/';
-  private locdbBibliographicResources: string;   // = this.locdbUrl + '/bibliographicResources/';
+  private locdbTodoEndpoint: string;
+  private locdbSaveScan: string;
+  private locdbTodoEntries: string;
+  private locdbTodoResources: string;
+  private internalSuggestions: string;
+  private externalSuggestions: string;
+  private locdbTriggerOcrProcessing: string;
+  private locdbBibliographicEntries: string;
+  private locdbBibliographicResources: string;
 
-  constructor(private http: Http) { this.updateUrls() }
+  constructor(
+    private http: Http,
+    private credentials: CredentialsService
+  ) {
+    if (this.credentials) { // This is here to help with testing so you can pass in null for CredentialsService
+      this.credentials.augmentXhrBuild((xhr: any) => {
+        xhr.withCredentials = true;
+      });
+    }
+    this.updateUrls();
+  }
 
 
   private updateUrls() {
@@ -80,7 +94,7 @@ export class LocdbService {
     const status_: string = ocr_processed ? 'OCR_PROCESSED' : 'NOT_OCR_PROCESSED';
     const params: URLSearchParams = new URLSearchParams();
     params.set('status', status_);
-    return this.http.get(this.locdbTodoEndpoint, { search: params } )
+    return this.http.get(this.locdbTodoEndpoint, { search: params, withCredentials: true} )
                     .map(this.extractData)
     // .map(this.flattenTodos) // client may do this
                     .catch(this.handleError);
@@ -189,14 +203,14 @@ export class LocdbService {
 
   login(user: string, pass: string): Observable<any> {
     const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
+    const options = new RequestOptions({ headers: headers, withCredentials: true });
     const url = this.locdbUrl + '/login'
     return this.http.post(url, {username: user, password: pass}, options).catch(this.fail);
   }
 
   signup(user: string, pass: string) {
     const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
+    const options = new RequestOptions({ headers: headers, withCredentials: true });
     const url = this.locdbUrl + '/signup'
     return this.http.post(url, {username: user, password: pass}, options).catch(this.fail);
   }

@@ -49,7 +49,10 @@ export class LoginComponent implements OnInit {
   }
 
   onLogout() {
-    this.locdbService.logout().subscribe( (msg) => this.validate(null, null, msg) );
+    this.locdbService.logout().subscribe(
+      (msg) => this.validate(null, null, msg),
+      (err) => { this.currentUser = null }
+    );
   }
 
 }
