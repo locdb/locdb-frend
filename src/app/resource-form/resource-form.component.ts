@@ -43,8 +43,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             resourcetype: '',
             subtitle: '',
             edition: '',
-            resourcenumber: -1,
-            publicationyear: -1,
+            resourcenumber: 0,
+            publicationyear: 0,
                 partof: '',
         });
         console.log('roles:', this.roles);
@@ -191,9 +191,9 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             title: formModel.title as string || '',
             subtitle: formModel.subtitle as string || '',
             edition: formModel.edition as string || '',
-            number: formModel.resourcenumber as number || -1,
+            number: formModel.resourcenumber as number || 0,
             contributors: contributors,
-            publicationYear: formModel.publicationyear as number || -1,
+            publicationYear: formModel.publicationyear as number || 0,
             partOf: formModel.partof as string || '',
             // warning: no deep copy (but this ok as long as not editable)
             embodiedAs: this.resource.embodiedAs,

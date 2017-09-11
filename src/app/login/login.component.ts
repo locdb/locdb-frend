@@ -8,8 +8,8 @@ import {  Response } from '@angular/http';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  @Input() instances = [{name: 'UB Mannheim', url: 'https://locdb.bib.uni-mannheim.de/locdb'},
-    {name: 'LOCDB Dev', url: 'https://locdb.bib.uni-mannheim.de/locdb-dev'}];
+  @Input() instances = [{name: 'LOCDB Dev', url: 'https://locdb.bib.uni-mannheim.de/locdb-dev'},
+    {name: 'UB Mannheim', url: 'https://locdb.bib.uni-mannheim.de/locdb'}];
   currentUser = null;
   currentInstance = null;
   connecting = false;
@@ -31,12 +31,20 @@ export class LoginComponent implements OnInit {
     this.connecting = false;
   }
 
+  fail() {
+    console.log('Failed');
+    this.connecting = false;
+    this.currentUser = null;
+    this.currentInstance = null;
+  }
+
 
 
   onSignUp(instance: string, user: string, pass: string) {
     this.connecting = true;
     this.locdbService.instance(instance).signup(user, pass).subscribe(
-      (message) => this.validate(instance, user, message)
+      (message) => this.validate(instance, user, message),
+      (error) => this.fail
     );
   }
 
@@ -44,14 +52,15 @@ export class LoginComponent implements OnInit {
     this.connecting = true;
     // fancy server interaction
     this.locdbService.instance(instance).login(user, pass).subscribe(
-      (message) => this.validate(instance, user, message)
+      (message) => this.validate(instance, user, message),
+      (error) => this.fail
     );
   }
 
   onLogout() {
     this.locdbService.logout().subscribe(
       (msg) => this.validate(null, null, msg),
-      (err) => { this.currentUser = null }
+      (err) => this.fail
     );
   }
 

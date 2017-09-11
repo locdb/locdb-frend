@@ -20,7 +20,7 @@ export class TodoComponent implements OnInit {
   // unprocessed: ScanEntries[];
 
   selectedTodo: ToDoScans;
-  todolist: ToDo[] = MOCK_TODOBRS;
+  todolist: ToDo[] = [];
   unprocessed: ToDo[] = [];
 
   @Output() todo: EventEmitter<ToDoScans> = new EventEmitter();

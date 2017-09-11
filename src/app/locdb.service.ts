@@ -94,7 +94,7 @@ export class LocdbService {
     const status_: string = ocr_processed ? 'OCR_PROCESSED' : 'NOT_OCR_PROCESSED';
     const params: URLSearchParams = new URLSearchParams();
     params.set('status', status_);
-    return this.http.get(this.locdbTodoEndpoint, { search: params, withCredentials: true} )
+    return this.http.get(this.locdbTodoEndpoint, { search: params} )
                     .map(this.extractData)
     // .map(this.flattenTodos) // client may do this
                     .catch(this.handleError);
@@ -124,7 +124,15 @@ export class LocdbService {
     return res;
   }
 
-  saveScan(ppn: string, firstPage: string, lastPage: string, scan: any, file: File): Observable<any> {
+  saveScan(
+    ppn: string,
+    firstPage: string,
+    lastPage: string,
+    scan: any,
+    file: File,
+    resourceType: string
+  ): Observable<any> {
+    // Take FileWithMetadata object instead
     const formData: FormData = new FormData();
     console.log(ppn, firstPage, lastPage);
     console.log(file);
@@ -132,6 +140,7 @@ export class LocdbService {
     formData.append('firstPage', firstPage);
     formData.append('lastPage', lastPage);
     formData.append('scan', file, file.name);
+    formData.append('resourceType', resourceType);
     console.log('saveScan(...) formData', formData);
     return this.http.post(this.locdbSaveScan, formData)
       .map(this.extractData)
@@ -202,10 +211,12 @@ export class LocdbService {
   }
 
   login(user: string, pass: string): Observable<any> {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers, withCredentials: true });
+    const headers = new Headers({'Content-Type': 'application/json', 'Accept' : 'application/json' });
+    const options = new RequestOptions({ headers: headers, withCredentials: true  });
     const url = this.locdbUrl + '/login'
-    return this.http.post(url, {username: user, password: pass}, options).catch(this.fail);
+    console.log(options)
+    return this.http.post(url, JSON.stringify({username: user, password: pass}), options).catch(this.fail);
+    // return this.http.post(url, {username: user, password: pass}, options).map(this.extractData).catch(this.handleError);
   }
 
   signup(user: string, pass: string) {
