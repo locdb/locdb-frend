@@ -63,10 +63,10 @@ export class DisplayComponent implements OnInit {
     }
 
     entriesArrived(entries) {
-        console.log('Entries arrive: ', entries);
+        console.log('ENTRIES ARRIVED ===');
         this.entries = entries;
         this.extractRects(this.entries);
-        console.log('DisplaySource: ', this.realImgDimension(this.displaySource));
+        console.log(this.rects);
         this.currentIndex = 0;
         this.entry.next(entries[0]);
     }
@@ -100,6 +100,7 @@ export class DisplayComponent implements OnInit {
     }
 
     rectLink(i: number) {
+        this.rects[i].state = 0
         this.clickedRect = true;
         console.log('Display: Clicked Rect ' + i);
         this.currentIndex = i
@@ -109,6 +110,7 @@ export class DisplayComponent implements OnInit {
     }
 
     extractRects(entries) {
+        this.rects = [];
         for (const e of entries){
             // console.log("Entrie.OCRData.coordinates: ", e.coordinates);
             const coords = e.ocrData.coordinates;
@@ -118,6 +120,7 @@ export class DisplayComponent implements OnInit {
                 y: Number(rectField[1]),
                 width: Number(rectField[2]) - Number(rectField[0]),
                 height: Number(rectField[3]) - Number(rectField[1]),
+                state: e.references ? 1 : -1
             });
         }
     }
@@ -148,4 +151,20 @@ class Rect {
     y: number;
     height: number;
     width: number;
+    state = 0;
+    static fromEntry(entry: BibliographicEntry) {
+        const coords = entry.ocrData.coordinates;
+        const rectField = coords.split(' ');
+        return new Rect(Number(rectField[0]), Number(rectField[1]),
+                        Number(rectField[2]) - Number(rectField[0]),
+                        Number(rectField[3]) - Number(rectField[1]),
+                        entry.references ? 1 : -1)
+    }
+    constructor(
+        x: number,
+        y: number,
+        height: number,
+        width: number,
+        state?: number
+    ) {}
 }

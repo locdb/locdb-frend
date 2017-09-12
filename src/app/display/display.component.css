@@ -13,3 +13,28 @@ figure svg {
 figure:hover svg {
   -webkit-transform: scale(1.5) translate(+25%, 0px);
 }*/
+
+rect {
+        stroke: #FFFF00;
+        stroke-width: 3;
+        fill-opacity: 0.1;
+}
+
+.selected {
+        stroke: #000099;
+        /* stroke-width: 1; */
+        /* fill-opacity: 0; */
+}
+
+.todo {
+        stroke: #009900;
+        /* stroke-width: 1; */
+        /* fill-opacity: 0; */
+
+}
+
+.done {
+        stroke: #990000;
+        /* stroke-width: 1; */
+        /* fill-opacity: 0; */
+}

@@ -47,7 +47,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             publicationyear: 0,
                 partof: '',
         });
-        console.log('roles:', this.roles);
     }
 
     toggleFolding()  {
@@ -69,7 +68,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         if (!this.resourceForm || !this.resource)  {
             return;
         }
-        console.log('ResourceForm ngOnChanges(): ', this.resource);
         this.resourceForm.reset( {
             title: this.resource.title,
             resourcetype: this.resource.type,
@@ -92,7 +90,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                 givenName: con.heldBy.givenName,
                 familyName: con.heldBy.familyName,
             })
-            console.log(conForm.value.role);
             this.contributorsForms.push(conForm);
         }
         this.embodiments = []
@@ -127,7 +124,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             }
         }
 
-        console.log('exSuggests ', this.exSuggests);
     }
 
     addContributorField() {
@@ -146,7 +142,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     dropboxitemselected(conForm: FormGroup, s: string) {
         // console.log('Role:', s);
         // console.log('conForm:', conForm);
-        console.log('Role ' + s + ' selected.');
+        // console.log('Role ' + s + ' selected.');
         conForm.patchValue( {
             role: s
         });

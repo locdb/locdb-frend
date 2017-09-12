@@ -1,31 +1,31 @@
 <app-todo *ngIf="!displayActive" (todo)="updateDisplay($event)"></app-todo>
 <div *ngIf="displayActive" class="panel panel-default">
-<div class="panel-heading">
-    <button type="button" class="btn btn-danger" aria-label="Back" (click)="clear()">
-    <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
-    Back
-    </button>
-</div>
+    <div class="panel-heading">
+        <button type="button" class="btn btn-danger" aria-label="Back" (click)="clear()">
+            <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+            Back
+        </button>
+    </div>
 
-<div class="panel-body">
-    <figure>
-    <svg  xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + imgX + ' ' + imgY">
-    <svg #zoomSVG  xmlns="http://www.w3.org/2000/svg">
-    <g>
-        <image [attr.xlink:href]="displaySource" [attr.height]="imgY + 'px'" [attr.width]="imgX + 'px'" (load)="imageOnload()"/>
-        <rect *ngFor="let rect of rects; let i=index" [attr.x]="rect.x" [attr.y]="rect.y" [attr.height]="rect.height" [attr.width]="rect.width"
-        style="stroke: #009900; stroke-width:1; fill-opacity:0.0;" (click)="rectLink(i)"/>
-        </g>
-    </svg>
-    </svg>
+    <div class="panel-body">
+        <figure>
+            <svg  xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + imgX + ' ' + imgY">
+                <svg #zoomSVG  xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                        <image [attr.xlink:href]="displaySource" [attr.height]="imgY + 'px'" [attr.width]="imgX + 'px'" (load)="imageOnload()"/>
+                        <rect *ngFor="let rect of rects; let i=index" [attr.x]="rect.x" [attr.y]="rect.y" [attr.height]="rect.height" [attr.width]="rect.width" [ngClass]="{ 'selected' : i === currentIndex, 'todo' : rect.state < 0, 'done' : rect.state > 0} " (click)="rectLink(i)"/>
+                        <!-- <rect *ngFor="let rect of rects; let i=index" [attr.x]="rect.x" [attr.y]="rect.y" [attr.height]="rect.height" [attr.width]="rect.width" style="stroke: #009900; stroke-width: 1; fill-opacity: 0;" (click)="rectLink(i)"/> -->
+                </g>
+            </svg>
+        </svg>
     </figure>
     <!--text>{{displaySource}}</text-->
-    <!--circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" /-->
+<!--circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" /-->
 
-    <!-- <div align="right"> -->
+<!-- <div align="right"> -->
     <!--   <b>Current Entry:</b> {{ currentIndex + 1 }} -->
     <!-- </div> -->
-    <!-- <div align="right"> -->
+<!-- <div align="right"> -->
     <!--   <button class="btn btn-default" (click)="newCustomEntry()">Custom entry</button> -->
     <!--   <button class="btn btn-default" (click)="next(-1)">Previous</button> -->
     <!--   <button class="btn btn-default" (click)="next(1)">Next</button> -->
