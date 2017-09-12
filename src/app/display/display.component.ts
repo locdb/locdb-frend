@@ -153,6 +153,7 @@ class Rect {
     width: number;
     state = 0;
     static fromEntry(entry: BibliographicEntry) {
+        // unused //
         const coords = entry.ocrData.coordinates;
         const rectField = coords.split(' ');
         return new Rect(Number(rectField[0]), Number(rectField[1]),
