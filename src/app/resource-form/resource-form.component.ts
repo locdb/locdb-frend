@@ -44,8 +44,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             subtitle: '',
             edition: '',
             resourcenumber: 0,
-            publicationyear: 0,
-                partof: '',
+            publicationyear: '',
+            partof: '',
         });
     }
 
@@ -189,7 +189,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             edition: formModel.edition as string || '',
             number: formModel.resourcenumber as number || 0,
             contributors: contributors,
-            publicationYear: formModel.publicationyear as number || 0,
+            publicationYear: formModel.publicationyear as string || '',
             partOf: formModel.partof as string || '',
             // warning: no deep copy (but this ok as long as not editable)
             embodiedAs: this.resource.embodiedAs,
