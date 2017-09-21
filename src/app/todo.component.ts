@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 
 
 import { ToDo, ToDoParts, ToDoScans } from './locdb';
-import { MOCK_TODOBRS } from './mock-todos';
+// import { MOCK_TODOBRS } from './mock-todos';
 
 import { LocdbService } from './locdb.service';
 

@@ -37,7 +37,7 @@ export class SuggestionComponent implements OnChanges {
         let br : BibliographicResource = {
             //_id: entry.references,
             title: "title",
-            publicationYear: 123,
+            publicationYear: '123',
                 contributors: [],
                 embodiedAs: [],
                 parts: [],
@@ -101,7 +101,7 @@ export class SuggestionComponent implements OnChanges {
         let br : BibliographicResource = {
             //_id: entry.references,
             title: ocr.title,
-            publicationYear: +ocr.date, // unary + operator makes it a number
+            publicationYear: ocr.date, // unary + operator makes it a number
                 contributors: this.authors2contributors(ocr.authors),
                 embodiedAs: [],
                 parts: [],
