@@ -27,7 +27,7 @@ import { SuggestionComponent } from './suggestion/suggestion.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { VisualComponent } from './visual/visual.component';
 import { LoginComponent } from './login/login.component';
-
+import { PopoverModule } from 'ngx-popover';
 
 
 ////////  SPECS  /////////////
@@ -54,7 +54,7 @@ describe('AppComponent with TCB', function () {
         VisualComponent,
         LoginComponent
       ],
-      imports: [ModalModule.forRoot(), BrowserModule, FormsModule, HttpModule, ReactiveFormsModule]});
+      imports: [ModalModule.forRoot(), BrowserModule, FormsModule, HttpModule, ReactiveFormsModule, PopoverModule]});
   });
 
   it('should instantiate component', () => {
