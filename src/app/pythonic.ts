@@ -1,8 +1,9 @@
 export function str(obj: any) {
-  if ('__str__' in obj)
+  if ('__str__' in obj) {
     return obj.__str__();
-  else if ('toString' in obj)
+  } else if ('toString' in obj) {
     return obj.toString();
-  else
+  } else {
     return obj as string;
+  }
 }
