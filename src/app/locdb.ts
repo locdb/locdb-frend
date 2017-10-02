@@ -8,7 +8,7 @@ export class BibliographicResource {
   edition?: string;
   number?: number;
   contributors?: AgentRole[];
-  publicationYear?: number;
+  publicationYear?: string;
   status?: string;
   parts?: BibliographicEntry[];
   partOf?: string;
@@ -112,19 +112,19 @@ export class ResponsibleAgent {
 /** Apart from the children property, todo items are basically resource */
 export class ToDo extends BibliographicResource {
   children?: ToDoParts[];
+  scans?: ToDoScans[]; // for monographs, scans are directly attached to the BR
 }
 
 /** A possible child of a ToDo item */
 export class ToDoParts {
   _id: string;
-  status?: string;
   scans?: ToDoScans[];
 }
 
-/** External Resource Placeholder */
+/** Wrapping a Scan image by its identifier that can be accessed by /scans/<identifier> */
 export class ToDoScans {
+  status: string;
   _id: string;
-  status?: string;
 }
 
 /** External Resource Placeholder */

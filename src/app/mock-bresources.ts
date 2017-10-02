@@ -7,7 +7,7 @@ export const MOCK_INTERNAL: BibliographicResource[] = [
     type: 'journal',
     partOf: 'Journal of Abnormal Psychology',
     number: 87,
-    publicationYear: 1989,
+    publicationYear: '1989',
     embodiedAs: [{
       format: 'print',
       firstPage: 49,
@@ -23,7 +23,7 @@ export const MOCK_INTERNAL: BibliographicResource[] = [
     _id: '43',
     title: 'Studien zum autoritären Charakter',
     type: 'Article',
-    publicationYear: 1973,
+    publicationYear: '1973',
     embodiedAs: [{
       format: 'print',
     }],

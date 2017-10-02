@@ -43,11 +43,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             resourcetype: '',
             subtitle: '',
             edition: '',
-            resourcenumber: -1,
-            publicationyear: -1,
-                partof: '',
+            resourcenumber: 0,
+            publicationyear: '',
+            partof: '',
         });
-        console.log('roles:', this.roles);
     }
 
     toggleFolding()  {
@@ -69,7 +68,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         if (!this.resourceForm || !this.resource)  {
             return;
         }
-        console.log('ResourceForm ngOnChanges(): ', this.resource);
         this.resourceForm.reset( {
             title: this.resource.title,
             resourcetype: this.resource.type,
@@ -80,10 +78,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                 partof: this.resource.partOf,
                 // ...
         });
-        //set Contributors
+        //  set Contributors
         this.contributorsForms = [];
-        for (let con of this.resource.contributors) {
-            let conForm: FormGroup =  this.fb.group( {
+        for (const con of this.resource.contributors) {
+            const conForm: FormGroup =  this.fb.group( {
                 role: con.roleType,
                 name: con.heldBy.nameString,
 
@@ -92,14 +90,13 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                 givenName: con.heldBy.givenName,
                 familyName: con.heldBy.familyName,
             })
-            console.log(conForm.value.role);
             this.contributorsForms.push(conForm);
         }
         this.embodiments = []
-        //set Embodiments
+        // set Embodiments
         if (this.resource.embodiedAs)  {
-            for (let emb of this.resource.embodiedAs) {
-                let embForm: FormGroup =  this.fb.group( {
+            for (const emb of this.resource.embodiedAs) {
+                const embForm: FormGroup =  this.fb.group( {
                     typeMongo: emb.typeMongo,
                     format: emb.format,
                         firstPage: emb.firstPage,
@@ -127,7 +124,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             }
         }
 
-        console.log('exSuggests ', this.exSuggests);
     }
 
     addContributorField() {
@@ -146,7 +142,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     dropboxitemselected(conForm: FormGroup, s: string) {
         // console.log('Role:', s);
         // console.log('conForm:', conForm);
-        console.log('Role ' + s + ' selected.');
+        // console.log('Role ' + s + ' selected.');
         conForm.patchValue( {
             role: s
         });
@@ -191,13 +187,13 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             title: formModel.title as string || '',
             subtitle: formModel.subtitle as string || '',
             edition: formModel.edition as string || '',
-            number: formModel.resourcenumber as number,
+            number: formModel.resourcenumber as number || 0,
             contributors: contributors,
-            publicationYear: formModel.publicationyear as number,
-                partOf: formModel.partof as string || '',
-                // warning: no deep copy (but this ok as long as not editable)
-                embodiedAs: this.resource.embodiedAs,
-                parts: this.resource.parts,
+            publicationYear: formModel.publicationyear as string || '',
+            partOf: formModel.partof as string || '',
+            // warning: no deep copy (but this ok as long as not editable)
+            embodiedAs: this.resource.embodiedAs,
+            parts: this.resource.parts,
         }
         return resource;
     }
@@ -340,15 +336,15 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                 title: title,
             });
         }
-        //add authors if not in list already
-        for (let author of authors) {
-            const name = author.name; //author for ocrData.authors
+        // add authors if not in list already
+        for (const author of authors) {
+            const name = author.name; // author for ocrData.authors
             const role = author.role; // dummy for ocrData
 
             let isListed = false;
 
-            for (let con of this.contributorsForms) {
-                if (con.value.name == name) {
+            for (const con of this.contributorsForms) {
+                if (con.value.name === name) {
                     isListed = true;
                     break;
                 }

@@ -15,35 +15,57 @@ import { Citation } from './citation';
 // new types
 import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource } from './locdb'
 
+// Local testing with credentials
+import { CredentialsService } from 'angular-with-credentials';
+
 // dummy data
 import { MOCK_TODOBRS } from './mock-todos';
 import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
+
 
 import { environment } from 'environments/environment';
 
 @Injectable()
 export class LocdbService {
-
-  // we could read this from some config file
-  // private locdbUrl                      = 'http://velsen.informatik.uni-mannheim.de:80';
-  // does not work yet
   private locdbUrl = environment.locdbUrl;
 
+  private locdbTodoEndpoint: string;
+  private locdbSaveScan: string;
+  private locdbTodoEntries: string;
+  private locdbTodoResources: string;
+  private internalSuggestions: string;
+  private externalSuggestions: string;
+  private locdbTriggerOcrProcessing: string;
+  private locdbBibliographicEntries: string;
+  private locdbBibliographicResources: string;
 
-  private locdbTodoEndpoint             = this.locdbUrl + '/getToDo';
-  private locdbSaveScan                 = this.locdbUrl + '/saveScan';
-  private locdbTodoEntries              = this.locdbUrl + '/getToDoBibliographicEntries';
-  // This url just does not exist yet
-  private locdbTodoResources            = this.locdbUrl + '/getToDoBibliographicResources';
+  constructor(
+    private http: Http,
+    private credentials: CredentialsService
+  ) {
+    if (this.credentials) { // This is here to help with testing so you can pass in null for CredentialsService
+      this.credentials.augmentXhrBuild((xhr: any) => {
+        xhr.withCredentials = true;
+      });
+    }
+    this.updateUrls();
+  }
 
-  private internalSuggestions           = this.locdbUrl + '/getInternalSuggestions';
-  private externalSuggestions           = this.locdbUrl + '/getExternalSuggestions';
-  private locdbTriggerOcrProcessing     = this.locdbUrl + '/triggerOcrProcessing';
-  private locdbBibliographicEntries     = this.locdbUrl + '/bibliographicEntries/';
-  // just a guess
-  private locdbBibliographicResources   = this.locdbUrl + '/bibliographicResources/';
 
-  constructor(private http: Http) { }
+  private updateUrls() {
+    /* It would be also fine to construct the urls in the respective methods */
+    this.locdbTodoEndpoint             = this.locdbUrl + '/getToDo';
+    this.locdbSaveScan                 = this.locdbUrl + '/saveScan';
+    this.locdbTodoEntries              = this.locdbUrl + '/getToDoBibliographicEntries';
+    // This url just does not exist yet
+    this.locdbTodoResources            = this.locdbUrl + '/getToDoBibliographicResources';
+    this.internalSuggestions           = this.locdbUrl + '/getInternalSuggestions';
+    this.externalSuggestions           = this.locdbUrl + '/getExternalSuggestions';
+    this.locdbTriggerOcrProcessing     = this.locdbUrl + '/triggerOcrProcessing';
+    this.locdbBibliographicEntries     = this.locdbUrl + '/bibliographicEntries/';
+    // just a guess
+    this.locdbBibliographicResources   = this.locdbUrl + '/bibliographicResources/';
+  }
 
 
   // Generic helpers for data extraction and error handling
@@ -72,7 +94,7 @@ export class LocdbService {
     const status_: string = ocr_processed ? 'OCR_PROCESSED' : 'NOT_OCR_PROCESSED';
     const params: URLSearchParams = new URLSearchParams();
     params.set('status', status_);
-    return this.http.get(this.locdbTodoEndpoint, { search: params } )
+    return this.http.get(this.locdbTodoEndpoint, { search: params} )
                     .map(this.extractData)
     // .map(this.flattenTodos) // client may do this
                     .catch(this.handleError);
@@ -102,7 +124,15 @@ export class LocdbService {
     return res;
   }
 
-  saveScan(ppn: string, firstPage: string, lastPage: string, scan: any, file: File): Observable<any> {
+  saveScan(
+    ppn: string,
+    firstPage: string,
+    lastPage: string,
+    scan: any,
+    file: File,
+    resourceType: string
+  ): Observable<any> {
+    // Take FileWithMetadata object instead
     const formData: FormData = new FormData();
     console.log(ppn, firstPage, lastPage);
     console.log(file);
@@ -110,6 +140,7 @@ export class LocdbService {
     formData.append('firstPage', firstPage);
     formData.append('lastPage', lastPage);
     formData.append('scan', file, file.name);
+    formData.append('resourceType', resourceType);
     console.log('saveScan(...) formData', formData);
     return this.http.post(this.locdbSaveScan, formData)
       .map(this.extractData)
@@ -172,6 +203,39 @@ export class LocdbService {
     return this.http.post(url, resource).map(this.extractData).catch(this.handleError);
   }
 
-  // helpers
+  /* The following needs to be reconsidered, actually we could store login status here */
+
+  fail(err: any): Observable<any> {
+    // array ok? TODO
+    return Observable.from([{ok: false}]);
+  }
+
+  login(user: string, pass: string): Observable<any> {
+    const headers = new Headers({'Content-Type': 'application/json', 'Accept' : 'application/json' });
+    const options = new RequestOptions({ headers: headers, withCredentials: true  });
+    const url = this.locdbUrl + '/login'
+    console.log(options)
+    return this.http.post(url, JSON.stringify({username: user, password: pass}), options).catch(this.fail);
+    // return this.http.post(url, {username: user, password: pass}, options).map(this.extractData).catch(this.handleError);
+  }
+
+  signup(user: string, pass: string) {
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers, withCredentials: true });
+    const url = this.locdbUrl + '/signup'
+    return this.http.post(url, {username: user, password: pass}, options).catch(this.fail);
+  }
+
+  logout() {
+    const url = this.locdbUrl + '/logout'
+    return this.http.get(url).catch(this.fail);
+  }
+
+  instance(instance?: string) {
+    if (instance) { this.locdbUrl = instance } ;
+    this.updateUrls();
+    return this;
+  }
+
 
 } // LocdbService
