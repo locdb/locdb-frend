@@ -19,21 +19,25 @@ More specific, two views are provided:
 
 ## Deployment on remote web server
 
-1. Run `ng build --base-href=<base-url>` to deploy files into dist
-1. **with care**: Copy the files to the remote web server `scp dist/* <web-server-url>:~/public_html/`
+1. Run `ng build --base-href=<base-url>/PATH/TO/SITE/` to deploy files into dist
+1. **with care**: Copy the files to the remote web server `scp dist/* <base-url>:/PATH/TO/SITE/`
 
 ## Development setup
 
 [Source](https://github.com/angular/angular-cli#updating-angular-cli)
 
-### update angular-cli to the latest version
+### Update angular-cli to the latest version
 
-$ npm remove -g angular-cli
-$ npm install -g @angular/cli@latest
+```sh
+npm remove -g angular-cli
+npm install -g @angular/cli@latest
+```
 
-### update the project dependencies
+### Install dependencies
 
-$ rm -rf node_modules dist
-$ npm install --save-dev @angular/cli@latest
-$ npm install
+```sh
+rm -rf node_modules dist
+npm install -g typescript
+npm install
+```
 
