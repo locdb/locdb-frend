@@ -15,6 +15,8 @@ import { Citation } from './citation';
 // new types
 import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource } from './locdb'
 
+import { synCites } from './locdb'
+
 // Local testing with credentials
 import { CredentialsService } from 'angular-with-credentials';
 
@@ -89,8 +91,8 @@ export class LocdbService {
     return Observable.throw(errMsg);
   }
 
-  // acquire todo items and scans
   getToDo(ocr_processed: boolean): Observable<ToDo[]> {
+    // acquire todo items and scans
     const status_: string = ocr_processed ? 'OCR_PROCESSED' : 'NOT_OCR_PROCESSED';
     const params: URLSearchParams = new URLSearchParams();
     params.set('status', status_);
@@ -186,12 +188,13 @@ export class LocdbService {
     return this.http.get(url).map(this.extractData).catch(this.handleError);
   }
 
-  // we might also need post, to store completely new resources
   putBibliographicResource(resource: BibliographicResource) {
+    // we might also need post, to store completely new resources
     console.log('Put BR for', resource._id);
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
     const url = this.locdbBibliographicResources + resource._id;
+    synCites(resource)
     console.log('JUST BEFORE SUBMISSION:', resource);
     return this.http.put(url, resource, options).map(this.extractData).catch(this.handleError);
   }
@@ -206,9 +209,11 @@ export class LocdbService {
   /* The following needs to be reconsidered, actually we could store login status here */
 
   fail(err: any): Observable<any> {
-    // array ok? TODO
+    // array ok? TODO FIXME
     return Observable.from([{ok: false}]);
   }
+
+  /** User and Instance Management */
 
   login(user: string, pass: string): Observable<any> {
     const headers = new Headers({'Content-Type': 'application/json', 'Accept' : 'application/json' });

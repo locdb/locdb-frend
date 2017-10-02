@@ -13,6 +13,8 @@ export class BibliographicResource {
   parts?: BibliographicEntry[];
   partOf?: string;
   embodiedAs?: ResourceEmbodiment[];
+  /* should be aggregate of parts.references */
+  cites?: string[];  
 }
 
 
@@ -134,7 +136,12 @@ export class ExternalResource {
   authors: string[];
   title: string;
   // added
-  publisher: string;
-  year: number;
+  publisher?: string;
+  year?: number;
   number?: number;
+}
+
+export function synthesizeCites_(br: BibliographicResource) {
+  let citations:string[] = br.parts.map(x => x.references);
+  br.cites = citations;
 }
