@@ -15,7 +15,7 @@ import { Citation } from './citation';
 // new types
 import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource } from './locdb'
 
-import { synCites } from './locdb'
+import { synCites_ } from './locdb'
 
 // Local testing with credentials
 import { CredentialsService } from 'angular-with-credentials';

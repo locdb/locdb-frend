@@ -141,7 +141,7 @@ export class ExternalResource {
   number?: number;
 }
 
-export function synthesizeCites_(br: BibliographicResource) {
+export function synCites_(br: BibliographicResource) {
   let citations:string[] = br.parts.map(x => x.references);
   br.cites = citations;
 }
