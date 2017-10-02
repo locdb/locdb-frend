@@ -2,104 +2,27 @@
 <!--   <div class="panel-heading"><h1>{{title}}</h1></div> -->
 <!--   <div class="panel-body"> -->
 
-<div class="container">
-  <div class="jumbotron text-center">
-          <h1>{{title}}</h1> 
-    <svg [attr.viewBox]="'0 0 '+header.width+' '+header.height">
-      <line [attr.x1]="header.height/2" 
-       [attr.y1]="header.height*0.55" 
-       [attr.x2]="header.width/2-header.height/2" 
-       [attr.y2]="header.height*0.55" 
-       [attr.visibility]="(header.state>=1) ? 'visible' : 'hidden'"
-       stroke="black" 
-       stroke-width="0.5"
-       stroke-linecap="square"/>
-       <line [attr.x1]="header.height/2" 
-       [attr.y1]="header.height*0.55" 
-       [attr.x2]="header.width/2-header.height/2" 
-       [attr.y2]="header.height*0.55"
-       [attr.visibility]="(header.state>=1) ? 'visible' : 'hidden'"
-       [attr.stroke] = header.cline 
-       stroke-width="0.25"
-       stroke-linecap="square"/>
 
-       <line [attr.x1]="header.width/2-header.height/2" 
-       [attr.y1]="header.height*0.55" 
-       [attr.x2]="header.width-header.height/2" 
-       [attr.y2]="header.height*0.55" 
-       [attr.visibility]="header.state>=2 ? 'visible' : 'hidden'"
-       stroke="black" 
-       stroke-width="0.5"
-       stroke-linecap="square"/>
-       <line [attr.x1]="header.width/2-header.height/2" 
-       [attr.y1]="header.height*0.55" 
-       [attr.x2]="header.width-header.height/2" 
-       [attr.y2]="header.height*0.55"
-       [attr.visibility]="header.state>=2 ? 'visible' : 'hidden'"
-       [attr.stroke] = header.cline 
-       stroke-width="0.25"
-       stroke-linecap="square"/>
+<h1><b>{{title}}</b></h1> 
 
-       <svg:circle [attr.cx]="header.height/2" 
-       [attr.cy]="header.height*0.55" 
-       [attr.r]="header.height*header.rp" 
-       stroke="black" 
-       stroke-width="0.25"
-       [attr.fill]="header.state==0 ? header.caktiv : header.cinaktiv"
-       [attr.visibility]="header.state>=0 ? 'visible' : 'hidden'"
-       (click)="pathStart()"/>
-       <text [attr.x]="header.height/2" 
-       [attr.y]="header.height*0.16" 
-       style="fill: #000000; stroke: none; font-size: 4px;"
-       [attr.visibility]="header.state>=0 ? 'visible' : 'hidden'"
-       text-anchor="middle">{{header.nameStart}}</text>
-
-
-       <svg:circle [attr.cx]="header.width/2-header.height/2" 
-       [attr.cy]="header.height*0.55" 
-       [attr.r]="header.height*header.rp" 
-       stroke="black" 
-       stroke-width="0.25"
-       [attr.fill]="header.state==1 ? header.caktiv : header.cinaktiv"
-       (click)="pathSelectResource()"
-       [attr.visibility]="header.state>=1 ? 'visible' : 'hidden'"/>
-       <text [attr.x]="header.width/2-header.height/2" 
-       [attr.y]="header.height*0.16" 
-       style="fill: #000000; stroke: none; font-size: 4px;"
-       [attr.visibility]="header.state>=1 ? 'visible' : 'hidden'"
-       text-anchor="middle">{{header.nameMid}}</text>
-
-
-       <svg:circle [attr.cx]="header.width-header.height/2" 
-       [attr.cy]="header.height*0.55" 
-       [attr.r]="header.height*header.rp" 
-       stroke="black" 
-       stroke-width="0.25"
-       [attr.fill]="(header.state==2) ? header.caktiv : header.cinaktiv"
-       (click)="pathEditAndSubmit()"
-       [attr.visibility]="header.state>=2 ? 'visible' : 'hidden'"/>
-       <text [attr.x]="header.width-header.height/2" 
-       [attr.y]="header.height*0.16" 
-       style="fill: #000000; stroke: none; font-size: 4px;"
-       [attr.visibility]="header.state>=2 ? 'visible' : 'hidden'"
-       text-anchor="middle">{{header.nameEnd}}</text>
-       </svg>
-  </div>
-</div>
+<app-visual [state]="visualState"></app-visual>
 
 <section class="container-fluid">
-  <div class="row" style="margin-top: 10px">
-    <div class="col-xs-12 col-sm-6 col-md-6">
+  <div class="row">
+    <app-login></app-login>
+  </div>
+  <div class='row' style='margin-top: 10px'>
+    <div class='col-xs-12 col-sm-6 col-md-6'>
       <!-- display component OUTPUT: entry to use --> 
-      <app-display (entry)="updateEntry($event)"></app-display>
+      <app-display (entry)='updateEntry($event)'></app-display>
     </div>
     <div *ngIf="entry" class="col-xs-12 col-sm-6 col-md-6">
       <!-- suggestion component INPUT: entry, OUTPUT: resource -->
-      <app-suggestion [entry]="entry" (suggest)="updateResource($event)"></app-suggestion>
+      <app-suggestion [entry]='entry' (suggest)='updateResource($event)'></app-suggestion>
     </div>
   </div>
 </section>
-<div *ngIf="!environment.production">
+<div *ngIf='!environment.production'>
   <p>
     <b> Entry: </b> {{ entry | json }}
   </p>
