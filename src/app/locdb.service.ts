@@ -194,7 +194,7 @@ export class LocdbService {
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
     const url = this.locdbBibliographicResources + resource._id;
-    synCites(resource)
+    synCites_(resource)
     console.log('JUST BEFORE SUBMISSION:', resource);
     return this.http.put(url, resource, options).map(this.extractData).catch(this.handleError);
   }
