@@ -51,7 +51,8 @@ describe('AppComponent with TCB', function () {
         EntryFormComponent,
         ScanComponent,
         ResourceFormComponent,
-        VisualComponent
+        VisualComponent,
+        LoginComponent
       ],
       imports: [ModalModule.forRoot(), BrowserModule, FormsModule, HttpModule, ReactiveFormsModule]});
   });
