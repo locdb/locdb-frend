@@ -39,6 +39,13 @@ export class AppComponent {
     */
     constructor ( private locdbService: LocdbService ) {}
 
+    updateSource (br: BibliographicResource) {
+        // this.enableCitation();
+        this.visualState = 2;
+        console.log('Updating source', br);
+        this.target = br;
+    }
+
     updateEntry (entry: BibliographicEntry) {
         // this.showCitation()
         if (entry) {
@@ -52,30 +59,30 @@ export class AppComponent {
         this.target = null;
     }
 
-    updateResource (resource: BibliographicResource) {
+    updateTarget (br: BibliographicResource) {
         // this.enableCitation();
         this.visualState = 2;
-        console.log('Updating with new resource', resource);
-        this.target = resource;
+        console.log('Updating target', br);
+        this.target = br;
     }
 
 
     /* Are the functions below used? */
 
-    roundUp(num, precision) {
-        return Math.ceil(num * precision) / precision;
-    }
+    // roundUp(num, precision) {
+    //     return Math.ceil(num * precision) / precision;
+    // }
 
-    pathStart() {
-        console.log('pathStart');
-    }
+    // pathStart() {
+    //     console.log('pathStart');
+    // }
 
-    pathSelectResource() {
-        console.log('pathSelectResource');
-    }
+    // pathSelectResource() {
+    //     console.log('pathSelectResource');
+    // }
 
-    pathEditAndSubmit() {
-        console.log('pathEditAndSubmit');
-    }
+    // pathEditAndSubmit() {
+    //     console.log('pathEditAndSubmit');
+    // }
 }
 
