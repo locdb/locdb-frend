@@ -43,7 +43,7 @@ export class TodoComponent implements OnInit {
 
   ngOnInit() {
     // console.log('Retrieving TODOs from backend');
-    // this.fetchScans();
+    this.fetchScans();
   }
 
   fetchScans() {
