@@ -22,7 +22,7 @@ export class ScanComponent {
   ppn: string;
   firstpage: number;
   lastpage: number;
-  resourceType: string;
+  resourceType: string = "MONOGRAPH"; // needs to be value of select block
 
   listoffiles: MetaData[] = [];
   listoffilescontents = [];

@@ -39,24 +39,28 @@
 	  </a>
 	  <div *ngIf="active == i && fileIsActive">
 	    <form>
-	      <div class="form-group">
-		<label>PPN</label><br>
+	      <div class="form-control">
+		<label>PPN</label>
 		<input type="text" name="ppn" [(ngModel)]="ppn"><br>
 	      </div>
-	      <div class="form-group">
-		<label>First page</label><br> 
-		<input type="number" name="firstpage" [(ngModel)]="firstpage"><br>
-	      </div>
-	      <div class="form-group">
-		<label>Last page</label><br>
+	      <div class="form-control">
+		<label>First page</label>
+		<input type="number" name="firstpage" [(ngModel)]="firstpage">
+		<label>Last page</label>
 		<input type="number" name="firstlastpage" [(ngModel)]="lastpage"><br>
 	      </div>
-	      <div class="form-group">
-		<label>Resource Type</label><br>
+	      <div class="form-control">
+		<label>Resource Type</label>
 		<select name="select" [(ngModel)]="resourceType">
-		  <option value="MONOGRAPH">Monograph</option>
-		  <option value="JOURNAL">InJournal</option>
-		  <option value="COLLECTION">InCollection</option>
+		  <option value="MONOGRAPH">
+		    Monograph
+		  </option>
+		  <option value="JOURNAL">
+		    Journal Article
+		  </option>
+		  <option value="COLLECTION">
+		    In Collection
+		  </option>
 		</select>
 	      </div>
 	    </form>
