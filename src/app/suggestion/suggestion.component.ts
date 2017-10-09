@@ -148,18 +148,19 @@ export class SuggestionComponent implements OnChanges {
         // } 
         // else {
         this.internalSuggestions = sgt
-        console.log("Recieved Internal: ", this.internalSuggestions);
+        console.log("Received Internal Suggestions: ", this.internalSuggestions);
         // }
     }
     
     saveExternal(sgt){
         this.externalSuggestions = sgt
-        console.log("Recieved External: ", this.externalSuggestions);
+        console.log("Received External Suggestions: ", this.externalSuggestions);
     }
     
     commit() {
         // This the actual linking of entry to resource 
         this.entry.references = this.selectedResource._id;
+        // TODO FIXME this should update the whole Bibliographic Resource
         this.locdbService.putBibliographicEntry(this.entry).subscribe( (result) => console.log("Submitted Entry with result", result));
         this.committed = true;
     }

@@ -15,8 +15,9 @@ import { environment } from 'environments/environment';
 /** Main App Component for whole LOCDB Frontend */
 export class AppComponent {
     title = 'LOC-DB Extrapolite';
+    source: BibliographicResource;
     entry: BibliographicEntry;
-    resource: BibliographicResource;
+    target: BibliographicResource;
     entryForSuggestion: BibliographicEntry;
     environment = environment;
     visualState = 0;
@@ -48,15 +49,18 @@ export class AppComponent {
         console.log('Updating with new entry', entry);
         this.entry = entry;
         // reset resource, since we selected a different entry
-        this.resource = null;
+        this.target = null;
     }
 
     updateResource (resource: BibliographicResource) {
         // this.enableCitation();
         this.visualState = 2;
         console.log('Updating with new resource', resource);
-        this.resource = resource;
+        this.target = resource;
     }
+
+
+    /* Are the functions below used? */
 
     roundUp(num, precision) {
         return Math.ceil(num * precision) / precision;

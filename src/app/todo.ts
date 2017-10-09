@@ -1,4 +1,5 @@
 /* IS THIS USED ?*/
+// UNUSED, PLEASE REMOVE. moved to locdb.ts instead
 export class TodoScan {
   _id: string;
   status: string;

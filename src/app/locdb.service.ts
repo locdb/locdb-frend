@@ -9,7 +9,6 @@ import {Observable} from 'rxjs/Rx';
 // import 'rxjs/add/operator/map';
 
 // types
-import { TodoBR } from './todo';
 import { Citation } from './citation';
 
 // new types
