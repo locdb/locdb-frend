@@ -14,7 +14,7 @@
     <div class="panel panel-default">
       <div ng-controller="formCtrl" class="panel-body">
 	<input class="simple-form" type="file" multiple
-			    (change)= "onChange($event)">
+	(change)= "onChange($event)">
       </div>
     </div>
     <div class="panel panel-default" *ngIf="files" > 
@@ -32,12 +32,10 @@
       <div class="list-group">
 	<div *ngFor="let file of files; let i = index">
 	  <a href="#"  class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectFile(i)">
-	    <!-- span class="badge" *ngIf="file.isUploaded && file.isSuccess">Uploaded!</span>
-       <span class="badge" *ngIf="file.isUploaded && !file.isSuccess">Error</span-->
-	 <span class="badge" *ngIf="listoffiles[i].allset">Ready</span>
-	 <span class="badge" *ngIf="!listoffiles[i].allset">Enter information</span>
-	 <h5 class="list-group-item-heading"><b>{{file.name}}</b></h5>
-	 <p class="list-group-item-text">{{file.size/1024/1024 | number:'.2' }} MB, {{file.type}}</p>
+	    <span class="badge" *ngIf="listoffiles[i].allset">Ready</span>
+	    <span class="badge" *ngIf="!listoffiles[i].allset">Enter information</span>
+	    <h5 class="list-group-item-heading"><b>{{file.name}}</b></h5>
+	    <p class="list-group-item-text">{{file.size/1024/1024 | number:'.2' }} MB, {{file.type}}</p>
 	  </a>
 	  <div *ngIf="active == i && fileIsActive">
 	    <form>
@@ -55,25 +53,20 @@
 	      </div>
 	      <div class="form-group">
 		<label>Resource Type</label><br>
-		  <input type="text" name="resourceType" [(ngModel)]="resourceType">
+		<select, name="select" [(ngModel)]="resourceType">
+		  <option value="MONOGRAPH">Monograph</option>
+		  <option value="JOURNAL">InJournal</option>
+		  <option value="COLLECTION">InCollection</option>
+		</select>
 	      </div>
-	      <!-- div align="right">
-	 <button type="button" class="btn btn-primary" (click)="onclicksaveentries()">Save</button><br>
-	 </div-->
 	    </form>
 	  </div>
 	</div>
       </div>
     </div>
-    <!-- div>
-      Queue progress:
-      <div class="progress" style="">
-      <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': 0 + '%' }"></div>
-      </div>
-      </div-->
-      <div align="right">
-	<button type="button" class="btn btn-primary" (click)="onclickclear()">Clear</button>
-	<button type="button" class="btn btn-primary" (click)="onclickupload()">Upload</button>
-      </div>
+    <div align="right">
+      <button type="button" class="btn btn-default" (click)="onclickclear()">Clear</button>
+      <button type="button" class="btn btn-primary" (click)="onclickupload()">Upload</button>
+    </div>
   </div>
 </div>
