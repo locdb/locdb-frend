@@ -14,7 +14,7 @@ export class BibliographicResource {
   partOf?: string;
   embodiedAs?: ResourceEmbodiment[];
   /* should be aggregate of parts.references */
-  cites?: string[];  
+  cites?: string[];
 }
 
 
@@ -142,6 +142,8 @@ export class ExternalResource {
 }
 
 export function synCites_(br: BibliographicResource) {
-  let citations:string[] = br.parts.map(x => x.references);
-  br.cites = citations;
+  if (br.parts) {
+    const citations: string[] = br.parts.map(x => x.references);
+    br.cites = citations;
+  }
 }
