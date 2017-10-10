@@ -15,18 +15,12 @@ import { environment } from 'environments/environment';
 /** Main App Component for whole LOCDB Frontend */
 export class AppComponent {
     title = 'LOC-DB Extrapolite';
+    source: BibliographicResource;
     entry: BibliographicEntry;
-    resource: BibliographicResource;
+    target: BibliographicResource;
     entryForSuggestion: BibliographicEntry;
     environment = environment;
-    header = { width: 300, height: 20, rp: 0.15,
-        state: 0, // 0-2
-        caktiv: 'lightblue',
-        cinaktiv: 'lightgrey',
-        cline: 'lightgreen',
-        nameStart: 'Resource',
-        nameMid: 'Citation',
-        nameEnd: 'Resource' };
+    visualState = 0;
 
     /*
      *    updatedEntry : BibliographicEntry = {
@@ -45,40 +39,50 @@ export class AppComponent {
     */
     constructor ( private locdbService: LocdbService ) {}
 
+    updateSource (br: BibliographicResource) {
+        // this.enableCitation();
+        this.visualState = 2;
+        console.log('Updating source', br);
+        this.target = br;
+    }
+
     updateEntry (entry: BibliographicEntry) {
         // this.showCitation()
         if (entry) {
-            this.header.state = 1;
+            this.visualState = 1;
         } else {
-            this.header.state = 0;
+            this.visualState = 0;
         }
         console.log('Updating with new entry', entry);
         this.entry = entry;
         // reset resource, since we selected a different entry
-        this.resource = null;
+        this.target = null;
     }
 
-    updateResource (resource: BibliographicResource) {
+    updateTarget (br: BibliographicResource) {
         // this.enableCitation();
-        this.header.state = 2;
-        console.log('Updating with new resource', resource);
-        this.resource = resource;
+        this.visualState = 2;
+        console.log('Updating target', br);
+        this.target = br;
     }
 
-    roundUp(num, precision) {
-        return Math.ceil(num * precision) / precision;
-    }
 
-    pathStart() {
-        console.log('pathStart');
-    }
+    /* Are the functions below used? */
 
-    pathSelectResource() {
-        console.log('pathSelectResource');
-    }
+    // roundUp(num, precision) {
+    //     return Math.ceil(num * precision) / precision;
+    // }
 
-    pathEditAndSubmit() {
-        console.log('pathEditAndSubmit');
-    }
+    // pathStart() {
+    //     console.log('pathStart');
+    // }
+
+    // pathSelectResource() {
+    //     console.log('pathSelectResource');
+    // }
+
+    // pathEditAndSubmit() {
+    //     console.log('pathEditAndSubmit');
+    // }
 }
 

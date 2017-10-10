@@ -25,7 +25,9 @@ import { EntryFormComponent } from './entry-form/entry-form.component';
 import { LocdbService } from './locdb.service';
 import { SuggestionComponent } from './suggestion/suggestion.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
-
+import { VisualComponent } from './visual/visual.component';
+import { LoginComponent } from './login/login.component';
+import { PopoverModule } from 'ngx-popover';
 
 
 ////////  SPECS  /////////////
@@ -39,8 +41,20 @@ describe('Smoke test', () => {
 
 describe('AppComponent with TCB', function () {
   beforeEach(() => {
-    TestBed.configureTestingModule({declarations: [AppComponent, CitationFormComponent, DisplayComponent, TodoComponent, SuggestionComponent, EntryFormComponent, ScanComponent, ResourceFormComponent],
-      imports: [ModalModule.forRoot(), BrowserModule, FormsModule, HttpModule, ReactiveFormsModule]});
+    TestBed.configureTestingModule(
+      {declarations: [
+        AppComponent,
+        CitationFormComponent,
+        DisplayComponent,
+        TodoComponent,
+        SuggestionComponent,
+        EntryFormComponent,
+        ScanComponent,
+        ResourceFormComponent,
+        VisualComponent,
+        LoginComponent
+      ],
+      imports: [ModalModule.forRoot(), BrowserModule, FormsModule, HttpModule, ReactiveFormsModule, PopoverModule]});
   });
 
   it('should instantiate component', () => {
@@ -54,7 +68,7 @@ describe('AppComponent with TCB', function () {
 
     let h1 = fixture.debugElement.query(el => el.name === 'h1').nativeElement;  // it works
 
-        h1 = fixture.debugElement.query(By.css('h1')).nativeElement;            // preferred
+    h1 = fixture.debugElement.query(By.css('h1')).nativeElement;            // preferred
 
     expect(h1.innerText).toMatch(/extrapolite/i, '<h1> should say something about "Extrapolite"');
   });

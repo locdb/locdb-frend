@@ -8,11 +8,13 @@ export class BibliographicResource {
   edition?: string;
   number?: number;
   contributors?: AgentRole[];
-  publicationYear?: number;
+  publicationYear?: string;
   status?: string;
   parts?: BibliographicEntry[];
   partOf?: string;
   embodiedAs?: ResourceEmbodiment[];
+  /* should be aggregate of parts.references */
+  cites?: string[];  
 }
 
 
@@ -112,19 +114,19 @@ export class ResponsibleAgent {
 /** Apart from the children property, todo items are basically resource */
 export class ToDo extends BibliographicResource {
   children?: ToDoParts[];
+  scans?: ToDoScans[]; // for monographs, scans are directly attached to the BR
 }
 
 /** A possible child of a ToDo item */
 export class ToDoParts {
   _id: string;
-  status?: string;
   scans?: ToDoScans[];
 }
 
-/** External Resource Placeholder */
+/** Wrapping a Scan image by its identifier that can be accessed by /scans/<identifier> */
 export class ToDoScans {
+  status: string;
   _id: string;
-  status?: string;
 }
 
 /** External Resource Placeholder */
@@ -134,7 +136,12 @@ export class ExternalResource {
   authors: string[];
   title: string;
   // added
-  publisher: string;
-  year: number;
+  publisher?: string;
+  year?: number;
   number?: number;
+}
+
+export function synCites_(br: BibliographicResource) {
+  let citations:string[] = br.parts.map(x => x.references);
+  br.cites = citations;
 }

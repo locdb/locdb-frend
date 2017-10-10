@@ -26,12 +26,19 @@ import { ResourceFormComponent } from './resource-form/resource-form.component';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { PopoverModule } from 'ngx-popover';
 
+import { CredentialsService } from 'angular-with-credentials';
+
+
 import * as d3 from 'd3';
+import { LoginComponent } from './login/login.component';
+import { VisualComponent } from './visual/visual.component';
 
 @NgModule({
   imports: [
+    AccordionModule.forRoot(),
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
     CollapseModule.forRoot(),
@@ -50,9 +57,11 @@ import * as d3 from 'd3';
     EntryFormComponent,
     SuggestionComponent,
     ResourceFormComponent,
+    LoginComponent,
+    VisualComponent,
     // LocdbService
   ],
-  providers: [ LocdbService ],
+  providers: [ LocdbService, CredentialsService ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })

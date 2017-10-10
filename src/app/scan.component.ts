@@ -9,28 +9,30 @@ const URL = '/api/'; // Same Origin Policy
 
 @Component({
   moduleId: module.id,
-  selector: 'scan',
+  selector: 'app-scan',
   templateUrl: './scan.component.html',
   providers: [ LocdbService ]
 })
 
 export class ScanComponent {
-  constructor ( private locdbService : LocdbService ) { }
-  title = "File Upload";
+  title = 'File Upload';
   event: any;
   files: any;
 
   ppn: string;
   firstpage: number;
   lastpage: number;
+  resourceType: string = "MONOGRAPH"; // needs to be value of select block
 
-  listoffiles: metadata[] = [];
+  listoffiles: MetaData[] = [];
   listoffilescontents = [];
 
   active: number;
   fileIsActive = false;
   isActive = false;
   activefile = 0;
+
+  constructor ( private locdbService: LocdbService ) { }
 
   toggle() {
     this.isActive = !this.isActive;
@@ -65,7 +67,6 @@ export class ScanComponent {
   onclickclear() {
     this.files = '';
     this.listoffiles = [];
-
   }
 
   onChange(event: any) { // file input
@@ -76,9 +77,15 @@ export class ScanComponent {
     for (file of this.files){
       const ppnt = this.getidfromstring(file.name);
       if (ppnt === '') {
-        this.listoffiles.push({ ppn: null, firstpage: null, lastpage: null, file: file, filecontent : null, ppnsucc: false, allset: false});
+        this.listoffiles.push(
+          { ppn: null, firstpage: null, lastpage: null, file: file, filecontent
+            : null, ppnsucc: false, allset: false, resourceType: null}
+        );
       } else {
-        this.listoffiles.push({ ppn: ppnt, firstpage: null, lastpage: null, file: file, filecontent : null, ppnsucc: true, allset: false});
+        this.listoffiles.push(
+          { ppn: ppnt, firstpage: null, lastpage: null, file: file, filecontent
+            : null, ppnsucc: true, allset: false, resourceType: null}
+        );
       }
 
       filenumber += 1;
@@ -88,13 +95,13 @@ export class ScanComponent {
 
   onSelectFile(i: number) {
     if (this.fileIsActive) {
-    this.saveentries();
-    this.fileIsActive = true;
+      this.saveentries();
+      this.fileIsActive = true;
     }
 
     if (i === this.active || !this.fileIsActive) {
       this.togglefile();
-      }
+    }
 
     this.active = i;
 
@@ -102,8 +109,8 @@ export class ScanComponent {
       this.ppn = this.listoffiles[i].ppn;
       this.firstpage = this.listoffiles[i].firstpage;
       this.lastpage = this.listoffiles[i].lastpage;
-        }
-      }
+    }
+  }
 
 
   getidfromstring(name: any) {
@@ -124,141 +131,70 @@ export class ScanComponent {
   // nicht mehr als onclick genutzt
   saveentries() {
     // if (!(this.getidfromstring(this.ppn) === '') && this.firstpage && this.lastpage) {  // check if number
-      this.fileIsActive = false;
-      this.listoffiles[this.active].ppn = this.ppn ;
-      this.listoffiles[this.active].firstpage = this.firstpage;
-      this.listoffiles[this.active].lastpage = this.lastpage;
-      if (this.listoffiles[this.active].ppn && this.listoffiles[this.active].firstpage && this.listoffiles[this.active].lastpage) {
-         this.listoffiles[this.active].allset = true;
-      }
+    this.fileIsActive = false;
+    this.listoffiles[this.active].ppn = this.ppn ;
+    this.listoffiles[this.active].firstpage = this.firstpage;
+    this.listoffiles[this.active].lastpage = this.lastpage;
+    this.listoffiles[this.active].resourceType = this.resourceType;
+    if (
+      this.listoffiles[this.active].ppn && this.listoffiles[this.active].firstpage &&
+    this.listoffiles[this.active].lastpage && this.listoffiles[this.active].resourceType
+    ) {
+      this.listoffiles[this.active].allset = true;
+    }
     // } else {
-      // console.log('FLUP: Invalid PPN or no firstpage or no lastpage set'); // throw error
+    // console.log('FLUP: Invalid PPN or no firstpage or no lastpage set'); // throw error
     // }
   }
-// <<<<<<< HEAD
 
-//   writefilecontent(listelement: Metadata) {
-
-//   if (listelement.file) {
-//       console.log('FLUP: Trying to Read..');
-//         const r = new FileReader();
-
-//         r.onload = (e) => this.readFileContent(e, listelement);
-//         r.readAsBinaryString(listelement.file);
-//         console.log('FLUP: Done.');
-//       } else {
-//         console.log('FLUP: Failed to load file ' , listelement);
-//       }
-//   }
-
-//   readFileContent(e, listelement: Metadata) {
-//         const contents = (<IDBOpenDBRequest>e.target).result;
-
-//         listelement.filecontent = contents;
-//         console.log('FLUP: Starte upload..');
-
-//         // rufe scan auf
-
-//   }
-//  }
-
-// class Metadata {
-// =======
-// <<<<<<< HEAD
-
-//   writefilecontent(listelement: Metadata) {
-
-//   if (listelement.file) {
-//       console.log('FLUP: Trying to Read..');
-//         const r = new FileReader();
-
-//         r.onload = (e) => this.readFileContent(e, listelement);
-//         r.readAsBinaryString(listelement.file);
-//         console.log('FLUP: Done.');
-//       } else {
-//         console.log('FLUP: Failed to load file ' , listelement);
-//       }
-//   }
-
-//   readFileContent(e, listelement: Metadata) {
-//         const contents = (<IDBOpenDBRequest>e.target).result;
-
-//         listelement.filecontent = contents;
-//         console.log('FLUP: Starte upload..');
-
-//         // rufe scan auf
-
-//   }
-//  }
-
-// class Metadata {
-// =======
-  
-  
-  
-  //preview...
-  
-
-  // next(diff: number) {
-  //   this.ref_idx = Math.abs((this.ref_idx + diff) % this.references.length);
-  //   console.log('New current reference index', this.ref_idx);
-  //   this.eventEmitter.next(this.references[this.ref_idx]);
-    
-  //   this.fil_idx = Math.abs((this.fil_idx + diff) % this.event.target.files.length);
-  //   console.log('New current file index', this.fil_idx);
-  //   this.readURL(this.event.target, this.fil_idx);
-      
-  // }
-  
   readURL(input, i) {
-        if (input.files && input.files[i]) {
-            var reader = new FileReader();
-            
-            reader.onload = (e) => {
-                console.log((<IDBOpenDBRequest>e.target).result);
-                //this.src = (<IDBOpenDBRequest>e.target).result;
-            }
-            
-            reader.readAsDataURL(input.files[i]);
-        }
-        else{
-          console.log('files out of bounds');
-        }
+    if (input.files && input.files[i]) {
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        console.log((<IDBOpenDBRequest>e.target).result);
+        // this.src = (<IDBOpenDBRequest>e.target).result;
+      }
+
+      reader.readAsDataURL(input.files[i]);
+    } else {
+      console.log('files out of bounds');
     }
-    
-  writefilecontent(listelement: metadata){
+  }
+
+  writefilecontent(listelement: MetaData) {
 
     if (listelement.file) {
-      console.log("Trying to Read");
-      var r = new FileReader();
+      console.log('Trying to Read');
+      const r = new FileReader();
 
       r.onload = (e) => this.readFileContent(e, listelement);
       r.readAsBinaryString(listelement.file);
     } else {
-      console.log("Failed to load file");
+      console.log('Failed to load file');
     }
   }
-  
-  readFileContent(e, listelement: metadata){
-    var contents = (<IDBOpenDBRequest>e.target).result;
+
+  readFileContent(e, listelement: MetaData) {
+    const contents = (<IDBOpenDBRequest>e.target).result;
 
     listelement.filecontent = contents;
-    //console.log("listoffiles: " + this.listoffiles);
-    console.log("Pushe: ", listelement);
+    console.log('Pushing: ', listelement);
 
     // rufe scan auf
     this.locdbService.saveScan(listelement.ppn,
       listelement.firstpage.toString(), listelement.lastpage.toString(),
-      listelement.filecontent, listelement.file).subscribe((result) =>
+      listelement.filecontent, listelement.file, listelement.resourceType).subscribe((result) =>
         console.log(result)) }
 }
-  
-class metadata{
+
+class MetaData {
   ppn: string;
   firstpage: number;
   lastpage: number;
   file: File;
   filecontent: any;
+  resourceType: string;
   ppnsucc: boolean;
   allset: boolean;
 }
