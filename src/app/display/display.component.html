@@ -10,13 +10,11 @@
     <div class="panel-body">
         <figure>
             <svg  xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + imgX + ' ' + imgY">
-                <svg #zoomSVG  xmlns="http://www.w3.org/2000/svg">
-                    <g>
+                    <g #zoomSVG>
                         <image [attr.xlink:href]="displaySource" [attr.height]="imgY + 'px'" [attr.width]="imgX + 'px'" (load)="imageOnload()"/>
                         <rect *ngFor="let rect of rects; let i=index" [attr.x]="rect.x" [attr.y]="rect.y" [attr.height]="rect.height" [attr.width]="rect.width" [ngClass]="{ 'selected' : i === currentIndex, 'todo' : rect.state < 0, 'done' : rect.state > 0} " (click)="rectLink(i)"/>
                         <!-- <rect *ngFor="let rect of rects; let i=index" [attr.x]="rect.x" [attr.y]="rect.y" [attr.height]="rect.height" [attr.width]="rect.width" style="stroke: #009900; stroke-width: 1; fill-opacity: 0;" (click)="rectLink(i)"/> -->
                 </g>
-            </svg>
         </svg>
     </figure>
     <!--text>{{displaySource}}</text-->
