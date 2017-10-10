@@ -44,7 +44,7 @@ describe('AppComponent with TCB', function () {
   });
 
   it('should instantiate component', () => {
-    let fixture = TestBed.createComponent(AppComponent);
+    const fixture = TestBed.createComponent(AppComponent);
     expect(fixture.componentInstance instanceof AppComponent).toBe(true, 'should create AppComponent');
   });
 
