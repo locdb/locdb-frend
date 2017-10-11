@@ -32,7 +32,8 @@ export class TodoComponent implements OnInit {
       console.log('Starting processing');
       scan.status = 'OCR_PROCESSING';
       this.locdbService.triggerOcrProcessing(scan._id).subscribe(
-        (message) => scan.status = 'OCR_PROCESSED'
+        (success) => scan.status = 'OCR_PROCESSED',
+        (err) => console.log(err)
       )
     } else {
       this.selectedTodo = scan;
@@ -43,10 +44,10 @@ export class TodoComponent implements OnInit {
 
   ngOnInit() {
     // console.log('Retrieving TODOs from backend');
-    this.fetchScans();
+    this.fetchTodos();
   }
 
-  fetchScans() {
+  fetchTodos() {
     console.log('Fetching todo scans from backend');
     this.locdbService.getToDo(true).subscribe( (todos) => {this.todolist = <ToDo[]>todos} );
     this.locdbService.getToDo(false).subscribe( (todos) => {this.unprocessed = <ToDo[]>todos} );
