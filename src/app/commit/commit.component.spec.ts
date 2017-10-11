@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LocdbService } from './locdb.service';
+import { LocdbService } from '../locdb.service';
 import { CommitComponent } from './commit.component';
 
 describe('CommitComponent', () => {
