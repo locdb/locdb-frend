@@ -166,9 +166,13 @@ export class LocdbService {
   triggerOcrProcessing(scanId: string) {
     const params: URLSearchParams = new URLSearchParams();
     params.set('id', scanId.toString())
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions(
+      { headers: headers, withCredentials: true, search: params }
+    );
     return this.http.get(
       this.locdbTriggerOcrProcessing,
-      { search: params}
+      options
     ).map(this.extractData).catch(this.handleError);
 
   }
