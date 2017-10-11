@@ -27,6 +27,7 @@ import { SuggestionComponent } from './suggestion/suggestion.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { VisualComponent } from './visual/visual.component';
 import { LoginComponent } from './login/login.component';
+import { CommitComponent} from './commit/commit.component';
 import { PopoverModule } from 'ngx-popover';
 
 import { CredentialsService } from 'angular-with-credentials';
@@ -46,18 +47,19 @@ describe('AppComponent with TCB', function () {
       {
         providers: [ LocdbService, CredentialsService ],
         declarations: [
-        AppComponent,
-        CitationFormComponent,
-        DisplayComponent,
-        TodoComponent,
-        SuggestionComponent,
-        EntryFormComponent,
-        ScanComponent,
-        ResourceFormComponent,
-        VisualComponent,
-        LoginComponent
-      ],
-      imports: [ModalModule.forRoot(), BrowserModule, FormsModule, HttpModule, ReactiveFormsModule, PopoverModule]});
+          AppComponent,
+          CitationFormComponent,
+          DisplayComponent,
+          TodoComponent,
+          SuggestionComponent,
+          EntryFormComponent,
+          ScanComponent,
+          ResourceFormComponent,
+          VisualComponent,
+          LoginComponent,
+          CommitComponent
+        ],
+        imports: [ModalModule.forRoot(), BrowserModule, FormsModule, HttpModule, ReactiveFormsModule, PopoverModule]});
   });
 
   it('should instantiate component', () => {
