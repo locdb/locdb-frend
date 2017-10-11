@@ -70,17 +70,9 @@
               {{resource.number}}
             </td>
           </tr>
-          <!--   contribs   -->
-          <!-- <tr *ngIf="resource.contributors"> -->
-            <!--   <td> -->
-              <!--     <label>Contributors</label> --> 
-              <!--   </td> -->
-            <!--   <td> -->
-              <!--   </td> -->
-            <!-- </tr> -->
           <tr *ngFor="let contrib of resource.contributors">
             <td>
-              {{contrib.roleType}}
+              <label>{{contrib.roleType}}</label>
             </td>
             <td>
               {{contrib.heldBy.nameString}}
@@ -247,8 +239,11 @@
               </table>
               <div class="row justify-content-between">
                 <div class="col-xs-4 text-left">
-                  <button type="button" class="btn btn-danger" (click)="resetEntries()">
+                  <button type="button" class="btn btn-warning" (click)="resetEntries()">
                     <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset
+                  </button>
+                  <button type="button" class="btn btn-danger" (click)="deleteResource()">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
                   </button>
                 </div>
                 <div class="col-xs-4 text-center">

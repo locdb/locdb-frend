@@ -208,6 +208,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
 
     saveEntries() {
+        // UNUSED See :code:`prepareSaveResource` instead
         this.oldresource = JSON.parse(JSON.stringify(this.resource));
 
         // correctness check eg. all Roles set
@@ -372,6 +373,14 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
     onSelect()  {
         console.log('[ResourceForm] inMerge(): ', 'onSelect select');
+
+    }
+
+    deleteResource() {
+        if (confirm('Are you sure to delete resource ' + this.resource._id)) {
+            this.locdbService.deleteBibliographicResource(this.resource).subscribe((res) => console.log('Deleted'));
+            this.resource = null;
+        }
 
     }
 

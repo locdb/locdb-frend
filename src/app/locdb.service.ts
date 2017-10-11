@@ -209,6 +209,12 @@ export class LocdbService {
     return this.http.post(url, resource).map(this.extractData).catch(this.handleError);
   }
 
+  deleteBibliographicResource(resource: BibliographicResource) {
+    const url = this.locdbBibliographicResources + resource._id;
+    console.log('Deleting', resource);
+    return this.http.delete(url).map(this.extractData).catch(this.handleError);
+  }
+
   /* The following needs to be reconsidered, actually we could store login status here */
 
   fail(err: any): Observable<any> {
