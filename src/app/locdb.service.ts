@@ -148,17 +148,17 @@ export class LocdbService {
       .catch(this.handleError);
   }
 
-  suggestions(be: BibliographicEntry, external?: boolean): Observable<any[]> {
+  suggestions(be: BibliographicEntry, external?: boolean): Observable<BibliographicResource[]> {
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
 
     if (external) {
       return this.http.post(this.externalSuggestions, be, options)
-        .map(this.extractData)
+        .map(response => response.json() as BibliographicResource[])
         .catch(this.handleError);
     } else {
       return this.http.post(this.internalSuggestions, be, options)
-        .map(this.extractData)
+        .map(response => response.json() as BibliographicResource[])
         .catch(this.handleError);
     }
   }
@@ -174,7 +174,6 @@ export class LocdbService {
       this.locdbTriggerOcrProcessing,
       { search: params }
     ).map(this.extractData).catch(this.handleError);
-
   }
 
   getScan(identifier: string) {
