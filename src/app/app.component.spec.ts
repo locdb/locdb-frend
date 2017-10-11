@@ -1,9 +1,9 @@
 /* tslint:disable:no-unused-variable */
 import { AppComponent } from './app.component';
 
-import { TestBed }      from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { By }           from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -29,6 +29,7 @@ import { VisualComponent } from './visual/visual.component';
 import { LoginComponent } from './login/login.component';
 import { PopoverModule } from 'ngx-popover';
 
+import { CredentialsService } from 'angular-with-credentials';
 
 ////////  SPECS  /////////////
 
@@ -42,7 +43,9 @@ describe('Smoke test', () => {
 describe('AppComponent with TCB', function () {
   beforeEach(() => {
     TestBed.configureTestingModule(
-      {declarations: [
+      {
+        providers: [ LocdbService, CredentialsService ],
+        declarations: [
         AppComponent,
         CitationFormComponent,
         DisplayComponent,

@@ -193,7 +193,7 @@ export class LocdbService {
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
     const url = this.locdbBibliographicResources + resource._id;
-    synCites_(resource)
+    // synCites_(resource) TODO FIXME might be incomplete so it is dangerous to invoke here
     console.log('JUST BEFORE SUBMISSION:', resource);
     return this.http.put(url, resource, options).map(this.extractData).catch(this.handleError);
   }

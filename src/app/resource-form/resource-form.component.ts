@@ -34,8 +34,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     // roles: string[] = AgentRole.ROLES;
     roles: string[] =  ROLES;
 
-    constructor( private fb: FormBuilder, private locdbService: LocdbService)  { this.createForm(); }
-
+    constructor(
+        private fb: FormBuilder,
+        private locdbService: LocdbService
+    ) { this.createForm(); }
 
     createForm()  {
         this.resourceForm = this.fb.group( {
