@@ -12,7 +12,7 @@ import {Observable} from 'rxjs/Rx';
 import { Citation } from './citation';
 
 // new types
-import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource } from './locdb'
+import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource, Feed} from './locdb'
 
 import { synCites_ } from './locdb'
 
@@ -248,6 +248,21 @@ export class LocdbService {
     if (instance) { this.locdbUrl = instance } ;
     this.updateUrls();
     return this;
+  }
+
+  addFeed(name: string, url: string): Observable<Feed> {
+    const reqUrl = `${this.locdbUrl}/addFeed`;
+    return this.http.post(reqUrl, {name: name, url}).map(res => res.json() as Feed);
+  }
+
+  fetchFeeds(): Observable<Feed[]> {
+    const url = `${this.locdbUrl}/fetchFeeds`;
+    return this.http.get(url).map(res => res.json() as Feed[]);
+  }
+
+  deleteFeed(identifier: string): Observable<Feed[]> {
+    const url = `${this.locdbUrl}/deleteFeed/${identifier}`;
+    return this.http.get(url).map(res => res.json()['feeds'] as Feed[])
   }
 
 
