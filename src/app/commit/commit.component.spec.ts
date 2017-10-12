@@ -9,7 +9,7 @@ describe('CommitComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [ LocdbService ]
+      providers: [ LocdbService ],
       declarations: [ CommitComponent ]
     })
     .compileComponents();
