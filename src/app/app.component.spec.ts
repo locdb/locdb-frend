@@ -1,9 +1,9 @@
 /* tslint:disable:no-unused-variable */
 import { AppComponent } from './app.component';
 
-import { TestBed }      from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { By }           from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -27,8 +27,10 @@ import { SuggestionComponent } from './suggestion/suggestion.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { VisualComponent } from './visual/visual.component';
 import { LoginComponent } from './login/login.component';
+import { CommitComponent} from './commit/commit.component';
 import { PopoverModule } from 'ngx-popover';
 
+import { CredentialsService } from 'angular-with-credentials';
 
 ////////  SPECS  /////////////
 
@@ -42,19 +44,22 @@ describe('Smoke test', () => {
 describe('AppComponent with TCB', function () {
   beforeEach(() => {
     TestBed.configureTestingModule(
-      {declarations: [
-        AppComponent,
-        CitationFormComponent,
-        DisplayComponent,
-        TodoComponent,
-        SuggestionComponent,
-        EntryFormComponent,
-        ScanComponent,
-        ResourceFormComponent,
-        VisualComponent,
-        LoginComponent
-      ],
-      imports: [ModalModule.forRoot(), BrowserModule, FormsModule, HttpModule, ReactiveFormsModule, PopoverModule]});
+      {
+        providers: [ LocdbService, CredentialsService ],
+        declarations: [
+          AppComponent,
+          CitationFormComponent,
+          DisplayComponent,
+          TodoComponent,
+          SuggestionComponent,
+          EntryFormComponent,
+          ScanComponent,
+          ResourceFormComponent,
+          VisualComponent,
+          LoginComponent,
+          CommitComponent
+        ],
+        imports: [ModalModule.forRoot(), BrowserModule, FormsModule, HttpModule, ReactiveFormsModule, PopoverModule]});
   });
 
   it('should instantiate component', () => {

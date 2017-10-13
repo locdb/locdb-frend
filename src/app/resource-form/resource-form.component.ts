@@ -1,4 +1,4 @@
-import { BibliographicResource, BibliographicEntry, AgentRole, ResponsibleAgent, ROLES } from '../locdb';
+import { BibliographicResource, BibliographicEntry, AgentRole, ResponsibleAgent, ToDo, ROLES } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
@@ -12,7 +12,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // if this is a string, we can try to dereference it from the back-end
-    @Input() resource: BibliographicResource;
+    @Input() resource: BibliographicResource | ToDo;
     @Input() folded = false;
 
     @Input() exSuggests: any[];
@@ -34,8 +34,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     // roles: string[] = AgentRole.ROLES;
     roles: string[] =  ROLES;
 
-    constructor( private fb: FormBuilder, private locdbService: LocdbService)  { this.createForm(); }
-
+    constructor(
+        private fb: FormBuilder,
+        private locdbService: LocdbService
+    ) { this.createForm(); }
 
     createForm()  {
         this.resourceForm = this.fb.group( {
@@ -65,6 +67,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
 
     ngOnChanges()  {
+        // This is called when the model changes, not the form
         if (!this.resourceForm || !this.resource)  {
             return;
         }
@@ -192,13 +195,20 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             publicationYear: formModel.publicationyear as string || '',
             partOf: formModel.partof as string || '',
             // warning: no deep copy (but this ok as long as not editable)
-            embodiedAs: this.resource.embodiedAs,
+                embodiedAs: this.resource.embodiedAs,
             parts: this.resource.parts,
         }
+        // TODO FIXME
+        // if (this.resource.hasOwnProperty('children')) {
+        //    resource = <ToDo> resource;
+        //    // in case were dealing with ToDo item resources, we need to aswell copy children
+        //    resource.children = this.resource.children;
+        // }
         return resource;
     }
 
     saveEntries() {
+        // UNUSED See :code:`prepareSaveResource` instead
         this.oldresource = JSON.parse(JSON.stringify(this.resource));
 
         // correctness check eg. all Roles set
@@ -359,6 +369,14 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
     onSelect()  {
         console.log('[ResourceForm] inMerge(): ', 'onSelect select');
+
+    }
+
+    deleteResource() {
+        if (confirm('Are you sure to delete resource ' + this.resource._id)) {
+            this.locdbService.deleteBibliographicResource(this.resource).subscribe((res) => console.log('Deleted'));
+            this.resource = null;
+        }
 
     }
 

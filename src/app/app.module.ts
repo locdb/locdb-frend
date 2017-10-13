@@ -35,6 +35,8 @@ import { CredentialsService } from 'angular-with-credentials';
 import * as d3 from 'd3';
 import { LoginComponent } from './login/login.component';
 import { VisualComponent } from './visual/visual.component';
+import { CommitComponent } from './commit/commit.component';
+import { FeedReaderComponent } from './feed-reader/feed-reader.component';
 
 @NgModule({
   imports: [
@@ -59,6 +61,8 @@ import { VisualComponent } from './visual/visual.component';
     ResourceFormComponent,
     LoginComponent,
     VisualComponent,
+    CommitComponent,
+    FeedReaderComponent,
     // LocdbService
   ],
   providers: [ LocdbService, CredentialsService ],

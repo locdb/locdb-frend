@@ -38,20 +38,20 @@
 	    <p class="list-group-item-text">{{file.size/1024/1024 | number:'.2' }} MB, {{file.type}}</p>
 	  </a>
 	  <div *ngIf="active == i && fileIsActive">
+	    <br/>
 	    <form>
-	      <div class="form-control">
-		<label>PPN</label>
-		<input type="text" name="ppn" [(ngModel)]="ppn"><br>
+	      <div class="form-group">
+		<label for="ppn">PPN</label>
+		<input type="text" name="ppn" [(ngModel)]="ppn">
 	      </div>
-	      <div class="form-control">
-		<label>First page</label>
+	      <div class="form-group">
+		<label>Pages</label>
 		<input type="number" name="firstpage" [(ngModel)]="firstpage">
-		<label>Last page</label>
-		<input type="number" name="firstlastpage" [(ngModel)]="lastpage"><br>
+		<input type="number" name="firstlastpage" [(ngModel)]="lastpage">
 	      </div>
-	      <div class="form-control">
-		<label>Resource Type</label>
-		<select name="select" [(ngModel)]="resourceType">
+	      <div class="form-group">
+		<label for="typeselect">Resource Type</label>
+		<select name="typeselect" [(ngModel)]="resourceType">
 		  <option value="MONOGRAPH">
 		    Monograph
 		  </option>

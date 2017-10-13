@@ -1,0 +1,6 @@
+<p>{{ source ? source._id : None }}[{{ entry ? entry._id : None }}] = {{ target ? target._id : None}}</p>
+<div class="text-right">
+<button class='btn btn-primary' [disabled]='!source || !entry || !target'>
+  <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Commit
+</button>
+</div>

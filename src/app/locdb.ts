@@ -14,7 +14,7 @@ export class BibliographicResource {
   partOf?: string;
   embodiedAs?: ResourceEmbodiment[];
   /* should be aggregate of parts.references */
-  cites?: string[];  
+  cites?: string[];
 }
 
 
@@ -129,19 +129,28 @@ export class ToDoScans {
   _id: string;
 }
 
+
 /** External Resource Placeholder */
 export class ExternalResource {
   identifiers?: Identifier[];
   status?: string;
   authors: string[];
   title: string;
-  // added
   publisher?: string;
   year?: number;
   number?: number;
 }
 
+export interface Feed {
+  _id: string;
+  name: string;
+  url: string;
+}
+
+
 export function synCites_(br: BibliographicResource) {
-  let citations:string[] = br.parts.map(x => x.references);
-  br.cites = citations;
+  if (br.parts) {
+    const citations: string[] = br.parts.map(x => x.references);
+    br.cites = citations;
+  }
 }

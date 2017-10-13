@@ -12,7 +12,7 @@ import {Observable} from 'rxjs/Rx';
 import { Citation } from './citation';
 
 // new types
-import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource } from './locdb'
+import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource, Feed} from './locdb'
 
 import { synCites_ } from './locdb'
 
@@ -148,17 +148,17 @@ export class LocdbService {
       .catch(this.handleError);
   }
 
-  suggestions(be: BibliographicEntry, external?: boolean): Observable<any[]> {
+  suggestions(be: BibliographicEntry, external?: boolean): Observable<BibliographicResource[]> {
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
 
     if (external) {
       return this.http.post(this.externalSuggestions, be, options)
-        .map(this.extractData)
+        .map(response => response.json() as BibliographicResource[])
         .catch(this.handleError);
     } else {
       return this.http.post(this.internalSuggestions, be, options)
-        .map(this.extractData)
+        .map(response => response.json() as BibliographicResource[])
         .catch(this.handleError);
     }
   }
@@ -166,11 +166,14 @@ export class LocdbService {
   triggerOcrProcessing(scanId: string) {
     const params: URLSearchParams = new URLSearchParams();
     params.set('id', scanId.toString())
+    // const headers = new Headers({ 'Content-Type': 'application/json' });
+    // const options = new RequestOptions(
+    //   { headers: headers, withCredentials: true, search: params }
+    // );
     return this.http.get(
       this.locdbTriggerOcrProcessing,
-      { search: params}
+      { search: params }
     ).map(this.extractData).catch(this.handleError);
-
   }
 
   getScan(identifier: string) {
@@ -193,7 +196,7 @@ export class LocdbService {
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
     const url = this.locdbBibliographicResources + resource._id;
-    synCites_(resource)
+    // synCites_(resource) TODO FIXME might be incomplete so it is dangerous to invoke here
     console.log('JUST BEFORE SUBMISSION:', resource);
     return this.http.put(url, resource, options).map(this.extractData).catch(this.handleError);
   }
@@ -203,6 +206,12 @@ export class LocdbService {
     console.log('Push BR', resource);
     const url = this.locdbBibliographicResources;
     return this.http.post(url, resource).map(this.extractData).catch(this.handleError);
+  }
+
+  deleteBibliographicResource(resource: BibliographicResource) {
+    const url = this.locdbBibliographicResources + resource._id;
+    console.log('Deleting', resource);
+    return this.http.delete(url).map(this.extractData).catch(this.handleError);
   }
 
   /* The following needs to be reconsidered, actually we could store login status here */
@@ -239,6 +248,21 @@ export class LocdbService {
     if (instance) { this.locdbUrl = instance } ;
     this.updateUrls();
     return this;
+  }
+
+  addFeed(name: string, url: string): Observable<Feed> {
+    const reqUrl = `${this.locdbUrl}/addFeed`;
+    return this.http.post(reqUrl, {name: name, url}).map(res => res.json() as Feed);
+  }
+
+  fetchFeeds(): Observable<Feed[]> {
+    const url = `${this.locdbUrl}/fetchFeeds`;
+    return this.http.get(url).map(res => res.json() as Feed[]);
+  }
+
+  deleteFeed(identifier: string): Observable<Feed[]> {
+    const url = `${this.locdbUrl}/deleteFeed/${identifier}`;
+    return this.http.get(url).map(res => res.json()['feeds'] as Feed[])
   }
 
 
