@@ -276,10 +276,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     toggleEdit(event?: any) {
         console.log('toggleEdit');
         this.editable = !this.editable;
-        // if(this.editable)
-        //     this.editable=false;
-        // else
-        //     this.editable=true;
     }
     saveExternal(sgt) {
         this.exSuggests = sgt
@@ -367,5 +363,3 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
 
 }
-
-

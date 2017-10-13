@@ -1,4 +1,4 @@
-<div class="panel panel-default"> 
+<div class="panel panel-default">
   <div class="panel-heading">
     <div class="row justify-content-between">
       <div class="col-xs-6 text-left">
@@ -13,12 +13,13 @@
   </div>
 
   <div class="panel-body">
-    <div class="panel-group">
-      <div class="panel panel-default" *ngFor="let t of all_todos()">
-        <div class="panel-heading">
-          <app-resource-form [resource]="t" [folded]="true"></app-resource-form>
-        </div>
-        <div class="panel-body">
+      <div *ngFor="let t of all_todos()">
+        <accordion>
+
+            <accordion-group heading="{{t.title}} ({{t.publicationYear}})">
+              <app-resource-form [resource]="t" [folded]="true"></app-resource-form>
+            </accordion-group>
+
           <div class="list-group">
             <!-- scans directly attached to the resource -->
             <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of t.scans" (click)="onSelect(s)"> -->
@@ -33,9 +34,8 @@
               </a>
             </div>
           </div>
-        </div>
+        </accordion>
       </div>
-    </div>
 
   </div>
 </div>
