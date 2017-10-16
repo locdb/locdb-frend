@@ -43,11 +43,11 @@ export class ScanComponent {
   }
 
   onclickupload() { // check if content is set
-   if (this.fileIsActive) {
-     this.saveentries();
+    if (this.fileIsActive) {
+      this.saveentries();
     }
-   let ready = true;
-   if (this.listoffiles !== []) {
+    let ready = true;
+    if (this.listoffiles !== []) {
       for (const file of this.listoffiles){
         if (!file.allset) {
           ready = false;
@@ -60,8 +60,8 @@ export class ScanComponent {
       // clear after upload
       this.onclickclear();
     } else {
-        console.log('Files not ready!');
-        }
+      alert('Files not ready!');
+    }
   }
 
   onclickclear() {
@@ -184,8 +184,10 @@ export class ScanComponent {
     // rufe scan auf
     this.locdbService.saveScan(listelement.ppn,
       listelement.firstpage.toString(), listelement.lastpage.toString(),
-      listelement.filecontent, listelement.file, listelement.resourceType).subscribe((result) =>
-        console.log(result)) }
+      listelement.filecontent, listelement.file, listelement.resourceType).subscribe(
+      (result) => console.log(result),
+      (error) => console.log(error)
+      ) }
 }
 
 class MetaData {

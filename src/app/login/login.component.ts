@@ -20,8 +20,9 @@ export class LoginComponent implements OnInit {
   }
 
   validate(instance: string, user: string, msg: Response | any) {
-    console.log(msg);
+    // console.log(msg);
     if (msg.ok) {
+      console.log(instance, user, msg);
       this.currentUser = user;
       this.currentInstance = instance;
     } else {
@@ -31,8 +32,7 @@ export class LoginComponent implements OnInit {
     this.connecting = false;
   }
 
-  fail() {
-    console.log('Failed');
+  fail(err: any) {
     this.connecting = false;
     this.currentUser = null;
     this.currentInstance = null;
@@ -42,26 +42,35 @@ export class LoginComponent implements OnInit {
 
   onSignUp(instance: string, user: string, pass: string) {
     this.connecting = true;
-    this.locdbService.instance(instance).signup(user, pass).subscribe(
-      (message) => this.validate(instance, user, message),
-      (error) => this.fail
+    // todo fixme
+    // this.locdbService.instance(instance).register(user, pass)
+    // .then( (message) => this.validate(instance, user, message))
+    // .catch((err) => this.fail(err));
+    this.locdbService.instance(instance).register(user, pass).subscribe(
+      (msg) => this.validate(instance, user, msg),
+        (err) => this.fail(err)
     );
   }
 
   onSignIn(instance: string, user: string, pass: string) {
     this.connecting = true;
     // fancy server interaction
+    // this.locdbService.instance(instance).register(user, pass)
+    // .map( (message) => this.validate(instance, user, message))
+    // .catch((err) => this.fail(err));
     this.locdbService.instance(instance).login(user, pass).subscribe(
       (message) => this.validate(instance, user, message),
-      (error) => this.fail
+      (error) => this.fail(error)
     );
   }
 
   onLogout() {
     this.locdbService.logout().subscribe(
-      (msg) => this.validate(null, null, msg),
-      (err) => this.fail
+      // brute logout
+      (msg) => this.fail(msg),
+      (err) => this.fail(err),
     );
+      // .catch((err) => this.fail);
   }
 
 }
