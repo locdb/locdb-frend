@@ -111,19 +111,19 @@ export class LocdbService {
                     .catch(this.handleError);
   }
 
-  getToDoBibliographicResources(scan_id: string): Observable<BibliographicResource[]> {
-    // UNUSED //
-    //
-    // fetches list of entries for a scan id
-    const params: URLSearchParams = new URLSearchParams();
-    params.set('scanId', scan_id);
-    console.log('');
-    const res =  this.http.get(this.locdbTodoResources, { search: params } )
-                    .map(this.extractData)
-                    .catch(this.handleError);
-    console.log('resources: ', res);
-    return res;
-  }
+    getToDoBibliographicResources(scan_id: string): Observable<BibliographicResource[]> {
+      // UNUSED //
+      //
+      // fetches list of entries for a scan id
+      const params: URLSearchParams = new URLSearchParams();
+      params.set('scanId', scan_id);
+      console.log('');
+      const res =  this.http.get(this.locdbTodoResources, { search: params } )
+                      .map(this.extractData)
+                      .catch(this.handleError);
+      console.log('resources: ', res);
+      return res;
+    }
 
   saveScan(
     ppn: string,

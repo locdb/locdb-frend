@@ -29,6 +29,7 @@ import { VisualComponent } from './visual/visual.component';
 import { LoginComponent } from './login/login.component';
 import { CommitComponent} from './commit/commit.component';
 import { PopoverModule } from 'ngx-popover';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 
 import { CredentialsService } from 'angular-with-credentials';
 
@@ -42,6 +43,7 @@ describe('Smoke test', () => {
 });
 
 describe('AppComponent with TCB', function () {
+
   beforeEach(() => {
     TestBed.configureTestingModule(
       {
@@ -59,7 +61,17 @@ describe('AppComponent with TCB', function () {
           LoginComponent,
           CommitComponent
         ],
-        imports: [ModalModule.forRoot(), BrowserModule, FormsModule, HttpModule, ReactiveFormsModule, PopoverModule]});
+        imports: [
+          ModalModule.forRoot(),
+          AccordionModule.forRoot(),
+          BrowserModule,
+          FormsModule,
+          HttpModule,
+          ReactiveFormsModule,
+          PopoverModule
+        ]
+      }
+    );
   });
 
   it('should instantiate component', () => {
