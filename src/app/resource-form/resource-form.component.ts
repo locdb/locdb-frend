@@ -19,11 +19,12 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     @Input() resource_id: string = null;
 
-     @Input() entry: BibliographicEntry;
+    @Input() entry: BibliographicEntry;
     oldresource: BibliographicResource;
 
     resourceForm: FormGroup;
     contributorsForms: FormGroup[] = [];
+    identifiersForms: FormGroup[] = [];
     embodiments: FormGroup[] = [];
     editable = false;
     parts: FormGroup[] = [];
@@ -95,6 +96,16 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             })
             this.contributorsForms.push(conForm);
         }
+        //  set Identifiers
+        this.identifiersForms = [];
+        for (const ident of this.resource.identifiers) {
+            const idForm: FormGroup =  this.fb.group( {
+              literalValue: ident.literalValue,
+              scheme: ident.scheme
+            })
+            this.identifiersForms.push(idForm);
+        }
+
         this.embodiments = []
         // set Embodiments
         if (this.resource.embodiedAs)  {
@@ -140,6 +151,19 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     delContributorField(pos: number) {
         this.contributorsForms.splice(pos, 1);
+    }
+
+    addIdentifierField() {
+        const identForm: FormGroup =  this.fb.group( {
+            literalValue: 'author',
+            scheme: '',
+        });
+
+        this.identifiersForms.push(identForm);
+    }
+
+    delIdentifierField(pos: number) {
+        this.identifiersForms.splice(pos, 1);
     }
 
     dropboxitemselected(conForm: FormGroup, s: string) {
@@ -234,6 +258,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         if (this.resourceForm.value.partof) {
             this.resource.partOf = this.resourceForm.value.partof;
         }
+        // if identifiers ...
 
 
         //   roleidentifiers: con.identifiers,

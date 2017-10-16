@@ -16,7 +16,6 @@ import { environment } from 'environments/environment';
     styleUrls: ['./suggestion.component.css']
 })
 export class SuggestionComponent implements OnChanges {
-  public customClass: string = 'customClass';
 
 
     @Input() entry: BibliographicEntry;
@@ -187,7 +186,6 @@ export class SuggestionComponent implements OnChanges {
       else{
           this.max_in = 0
       }
-
     }
 
 }

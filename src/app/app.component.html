@@ -3,7 +3,7 @@
 <!--   <div class="panel-body"> -->
 
 
-<h1><b>{{title}}</b></h1> 
+<h1><b>{{title}}</b></h1>
 
 <app-visual [state]="visualState"></app-visual>
 
@@ -13,7 +13,7 @@
   </div>
   <div class='row' style='margin-top: 10px'>
     <div class='col-xs-12 col-sm-6 col-md-6'>
-      <!-- display component OUTPUT: entry to use --> 
+      <!-- display component OUTPUT: entry to use -->
       <app-display (entry)='updateEntry($event)'></app-display>
     </div>
     <div *ngIf="entry" class="col-xs-12 col-sm-6 col-md-6">

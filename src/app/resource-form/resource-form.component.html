@@ -1,112 +1,112 @@
 <!--<button class="btn btn-success pull-left" (click)="toggleEdit()">Edit</button>-->
 <div *ngIf="resource">
   <!-- <div class="panel-heading">
-    <!--<div *ngIf="folded">
-      <button type="button" class="btn btn-info" aria-label="Toggle folding" (click)="toggleFolding()">
-        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-      </button>
-      <em>{{resource.title}}</em> ({{resource.publicationYear}})
-    </div>
-    <div class="row justify-content-between" *ngIf="!folded">
-      <div class="col-xs-8 text-left">
-        <button type="button" class="btn btn-info" aria-label="Toggle folding" (click)="toggleFolding()">
-          <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-        </button>
-        <b>Bibliographic Resource</b>
-      </div>
-      <div class="col-xs-4 text-right">
-        <button type="button" class="btn btn-warning" aria-label="Edit" (click)="lgModal.show()">
-          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
-        </button>
-      </div>
-    </div>-->
+  <!--<div *ngIf="folded">
+  <button type="button" class="btn btn-info" aria-label="Toggle folding" (click)="toggleFolding()">
+  <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+</button>
+<em>{{resource.title}}</em> ({{resource.publicationYear}})
+</div>
+<div class="row justify-content-between" *ngIf="!folded">
+<div class="col-xs-8 text-left">
+<button type="button" class="btn btn-info" aria-label="Toggle folding" (click)="toggleFolding()">
+<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+</button>
+<b>Bibliographic Resource</b>
+</div>
+<div class="col-xs-4 text-right">
+<button type="button" class="btn btn-warning" aria-label="Edit" (click)="lgModal.show()">
+<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+</button>
+</div>
+</div>-->
 <!--  </div>-->
-  <!-- <div class="panel-body">-->
-    <!--<div *ngIf="!folded" class="panel-body">-->
-      <!-- <button class="btn btn-success pull-left" (click)="toggleEdit()">Edit</button> -->
-    <div class="row">
-      <div class="col-md-12">
-      </div>
-    </div>
-    <div>
-      <table class="table table-striped">
-        <tbody>
-          <tr *ngIf="resource.title">
-            <td>
-              <label>Title</label>
-            </td>
-            <td>
-              {{resource.title}}
-            </td>
-          </tr>
-          <tr *ngIf="resource.subtitle">
-            <td>
-              <label>Subtitle</label>
-            </td>
-            <td>
-              {{resource.subtitle}}
-            </td>
-          </tr>
-          <tr *ngIf="resource.edition">
-            <td>
-              <label>Edition</label>
-            </td>
-            <td>
-              {{resource.edition}}
-            </td>
-          </tr>
-          <tr *ngIf="resource.type">
-            <td>
-              <label>Type</label>
-            </td>
-            <td>
-              {{resource.type}}
-            </td>
-          </tr>
-          <tr *ngIf="resource.number">
-            <td>
-              <label>Number</label>
-            </td>
-            <td>
-              {{resource.number}}
-            </td>
-          </tr>
-          <!--   contribs   -->
-          <!-- <tr *ngIf="resource.contributors"> -->
-            <!--   <td> -->
-              <!--     <label>Contributors</label> -->
-              <!--   </td> -->
-            <!--   <td> -->
-              <!--   </td> -->
-            <!-- </tr> -->
-          <tr *ngFor="let contrib of resource.contributors">
-            <td>
-              <label>{{contrib.roleType}}</label>
-            </td>
-            <td>
-              {{contrib.heldBy.nameString}}
-            </td>
-          </tr>
-          <tr *ngIf="resource.publicationYear">
-            <td>
-              <label>Pub. year</label>
-            </td>
-            <td>
-              {{resource.publicationYear}}
-            </td>
-          </tr>
-          <tr *ngIf="resource.partOf">
-            <td>
-              <label>Part of</label>
-            </td>
-            <td>
-              {{resource.partOf}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  <!--</div>-->
+<!-- <div class="panel-body">-->
+<!--<div *ngIf="!folded" class="panel-body">-->
+<!-- <button class="btn btn-success pull-left" (click)="toggleEdit()">Edit</button> -->
+<div class="row">
+  <div class="col-md-12">
+  </div>
+</div>
+<div>
+  <table class="table table-striped">
+    <tbody>
+      <tr *ngIf="resource.title">
+        <td>
+          <label>Title</label>
+        </td>
+        <td>
+          {{resource.title}}
+        </td>
+      </tr>
+      <tr *ngIf="resource.subtitle">
+        <td>
+          <label>Subtitle</label>
+        </td>
+        <td>
+          {{resource.subtitle}}
+        </td>
+      </tr>
+      <tr *ngIf="resource.edition">
+        <td>
+          <label>Edition</label>
+        </td>
+        <td>
+          {{resource.edition}}
+        </td>
+      </tr>
+      <tr *ngIf="resource.type">
+        <td>
+          <label>Type</label>
+        </td>
+        <td>
+          {{resource.type}}
+        </td>
+      </tr>
+      <tr *ngIf="resource.number">
+        <td>
+          <label>Number</label>
+        </td>
+        <td>
+          {{resource.number}}
+        </td>
+      </tr>
+      <!--   contribs   -->
+      <!-- <tr *ngIf="resource.contributors"> -->
+      <!--   <td> -->
+      <!--     <label>Contributors</label> -->
+      <!--   </td> -->
+      <!--   <td> -->
+      <!--   </td> -->
+      <!-- </tr> -->
+      <tr *ngFor="let contrib of resource.contributors">
+        <td>
+          <label>{{contrib.roleType}}</label>
+        </td>
+        <td>
+          {{contrib.heldBy.nameString}}
+        </td>
+      </tr>
+      <tr *ngIf="resource.publicationYear">
+        <td>
+          <label>Pub. year</label>
+        </td>
+        <td>
+          {{resource.publicationYear}}
+        </td>
+      </tr>
+      <tr *ngIf="resource.partOf">
+        <td>
+          <label>Part of</label>
+        </td>
+        <td>
+          {{resource.partOf}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!--</div>-->
 </div>
 <div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -119,167 +119,216 @@
       </div>
       <div class="modal-body">
         <!-- <form *ngIf="editable" [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>-->
-          <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
-            <!--
-            _id: string;
-            identifiers?: Identifier[];
-            type?: string;
-            title?: string;
-            subtitle?: string;
-            edition?: string;
-            number?: number;
-            contributors?: AgentRole[];
-            publicationYear?: number;
-            parts?: BibliographicEntry[];
-            partOf?: string;
-            embodiedAs?: ResourceEmbodiment[];-->
-            <table class="table table-striped">
-              <tbody>
-                <tr>
-                  <td>
-                    <label>Title</label>
-                  </td>
-                  <td>
-                    <textarea class="form-control" formControlName="title" style="resize: none;" ></textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label>Subtitle</label>
-                  </td>
-                  <td>
-                    <input class="form-control" formControlName="subtitle">
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label>Edition</label>
-                  </td>
-                  <td>
-                    <input class="form-control" formControlName="edition">
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label>Type</label>
-                  </td>
-                  <td>
-                    <input class="form-control" formControlName="resourcetype">
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label>Number</label>
-                  </td>
-                  <td>
-                    <input type="number" class="form-control" formControlName="resourcenumber">
-                  </td>
-                </tr>
-                <!--   contribs   -->
-                <tr>
-                  <td>
-                    <label>Contributors</label>
-                  </td>
-                  <td>
-                  </td>
-                </tr>
-                <tr *ngFor="let contributorForm of contributorsForms; let j = index">
-                  <td>
-                    <table class="table-condensed">
+        <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
+          <!--
+          _id: string;
+          identifiers?: Identifier[];
+          type?: string;
+          title?: string;
+          subtitle?: string;
+          edition?: string;
+          number?: number;
+          contributors?: AgentRole[];
+          publicationYear?: number;
+          parts?: BibliographicEntry[];
+          partOf?: string;
+          embodiedAs?: ResourceEmbodiment[];-->
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <td>
+                  <label>Title</label>
+                </td>
+                <td>
+                  <textarea class="form-control" formControlName="title" style="resize: none;" ></textarea>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>Subtitle</label>
+                </td>
+                <td>
+                  <input class="form-control" formControlName="subtitle">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>Edition</label>
+                </td>
+                <td>
+                  <input class="form-control" formControlName="edition">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>Type</label>
+                </td>
+                <td>
+                  <input class="form-control" formControlName="resourcetype">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>Number</label>
+                </td>
+                <td>
+                  <input type="number" class="form-control" formControlName="resourcenumber">
+                </td>
+              </tr>
+              <!--   identifier   -->
+              <tr>
+                <td>
+                  <label>Identifiers</label>
+                </td>
+                <td>
+                </td>
+              </tr>
+              <tr *ngFor="let identifierForm of identifiersForms; let j = index">
+                <td>
+                  <table class="table-condensed">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <!-- <button type="button" class="btn btn-warning" (click)="delContributorField(j)">Delete</button> -->
+                          <button type="button" class="btn btn-danger" aria-label="Remove Identifier" (click)="delIdentifierField(j)">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td>
+                  <form [formGroup]="identifierForm" (ngSubmit)="onSubmit()" style="width: 100%;" novalidate>
+                    <table class="table-condensed" style="width: 100%;">
                       <tbody>
                         <tr>
                           <td>
-                            <!-- <button type="button" class="btn btn-warning" (click)="delContributorField(j)">Delete</button> -->
-                            <button type="button" class="btn btn-danger" aria-label="Remove Contributor" (click)="delContributorField(j)">
-                              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </button>
+                            <input class="form-control" formControlName="literalValue">
+                          </td>
+                          <td>
+                            <input class="form-control" formControlName="scheme">
                           </td>
                         </tr>
                       </tbody>
                     </table>
-                  </td>
-                  <td>
-                    <form [formGroup]="contributorForm" (ngSubmit)="onSubmit()" style="width: 100%;" novalidate>
-                      <table class="table-condensed" style="width: 100%;">
-                        <tbody>
-                          <tr>
-                            <td style="width: 25%;">
-                              <select class="form-control" formControlName="role" name="Role Select" (select)= "onSelect()">
-                                <!--         <select class="form-control" formControlName="role"> -->
-                                  <option *ngIf="contributorForm.value.role==''" selected disabled="true">Please Select</option>
-                                  <option *ngFor="let item of roles" [attr.selected]="contributorForm.value.role == item ? 'selected' : null" [value]="item">{{item}}</option>
-                                </select>
-                              </td>
-                              <td>
-                                <input class="form-control" formControlName="name">
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </form>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                    </td>
-                    <td>
-                      <button type="button" class="btn btn-success" aria-label="Add Contributor" (click)="addContributorField()">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <label>Pub. year</label>
-                    </td>
-                    <td>
-                      <input type="string" class="form-control" formControlName="publicationyear">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <label>Part of</label>
-                    </td>
-                    <td>
-                      <input class="form-control" formControlName="partof">
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="row justify-content-between">
-                <div class="col-xs-4 text-left">
-                  <button type="button" class="btn btn-warning" (click)="resetEntries()">
-                    <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset
+                  </form>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-success" aria-label="Add Identifier" (click)="addIdentifierField()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                   </button>
-                  <button type="button" class="btn btn-danger" (click)="deleteResource()">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
+                </td>
+              </tr>
+              <!--   contribs   -->
+              <tr>
+                <td>
+                  <label>Contributors</label>
+                </td>
+                <td>
+                </td>
+              </tr>
+              <tr *ngFor="let contributorForm of contributorsForms; let j = index">
+                <td>
+                  <table class="table-condensed">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <!-- <button type="button" class="btn btn-warning" (click)="delContributorField(j)">Delete</button> -->
+                          <button type="button" class="btn btn-danger" aria-label="Remove Contributor" (click)="delContributorField(j)">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td>
+                  <form [formGroup]="contributorForm" (ngSubmit)="onSubmit()" style="width: 100%;" novalidate>
+                    <table class="table-condensed" style="width: 100%;">
+                      <tbody>
+                        <tr>
+                          <td style="width: 25%;">
+                            <select class="form-control" formControlName="role" name="Role Select" (select)= "onSelect()">
+                              <!--         <select class="form-control" formControlName="role"> -->
+                              <option *ngIf="contributorForm.value.role==''" selected disabled="true">Please Select</option>
+                              <option *ngFor="let item of roles" [attr.selected]="contributorForm.value.role == item ? 'selected' : null" [value]="item">{{item}}</option>
+                            </select>
+                          </td>
+                          <td>
+                            <input class="form-control" formControlName="name">
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </form>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-success" aria-label="Add Contributor" (click)="addContributorField()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                   </button>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>Pub. year</label>
+                </td>
+                <td>
+                  <input type="string" class="form-control" formControlName="publicationyear">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>Part of</label>
+                </td>
+                <td>
+                  <input class="form-control" formControlName="partof">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="row justify-content-between">
+            <div class="col-xs-4 text-left">
+              <button type="button" class="btn btn-warning" (click)="resetEntries()">
+                <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset
+              </button>
+              <button type="button" class="btn btn-danger" (click)="deleteResource()">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
+              </button>
+            </div>
+            <div class="col-xs-4 text-center">
+              <div>
+                <popover-content #myPopover
+                title="Choose external resources"
+                placement="auto"
+                [closeOnClickOutside]="true">
+                <div class="list-group" style="height:400px; max-height:500px; overflow-y: auto;">
+                  <a href="#" *ngFor="let r of exSuggests" class="list-group-item list-group-item-action list-group-item-info" (click)="inMerge(r)" (click)="myPopover.hide()">
+                    {{r.title}}
+                    <!--{{r.ocrData.title}}-->
+                    <span class="badge badge-default badge-pill">123</span>
+                  </a>
                 </div>
-                <div class="col-xs-4 text-center">
-                  <div>
-                    <popover-content #myPopover
-                      title="Choose external resources"
-                      placement="auto"
-                      [closeOnClickOutside]="true">
-                      <div class="list-group" style="height:400px; max-height:500px; overflow-y: auto;">
-                        <a href="#" *ngFor="let r of exSuggests" class="list-group-item list-group-item-action list-group-item-info" (click)="inMerge(r)" (click)="myPopover.hide()">
-                          {{r.title}}
-                          <!--{{r.ocrData.title}}-->
-                          <span class="badge badge-default badge-pill">123</span>
-                        </a>
-                      </div>
-                    </popover-content>
-                    <button [popover]="myPopover" (click)="loadExtenalSuggestions()">Show external resources</button>
-                  </div>
-                </div>
-                <div class="col-xs-4 text-right">
-                  <button type="button" class="btn btn-primary" (click)="lgModal.hide()" (click)="onSubmit()">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Submit
-                  </button>
-                </div>
-              </div>
-            </form>
+              </popover-content>
+              <button [popover]="myPopover" (click)="loadExtenalSuggestions()">Show external resources</button>
+            </div>
+          </div>
+          <div class="col-xs-4 text-right">
+            <button type="button" class="btn btn-primary" (click)="lgModal.hide()" (click)="onSubmit()">
+              <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Submit
+            </button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
+  </div>
+</div>
+</div>
