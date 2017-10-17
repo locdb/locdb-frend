@@ -145,8 +145,9 @@ export class LocdbService {
     formData.append('ppn', ppn);
     formData.append('firstPage', firstPage);
     formData.append('lastPage', lastPage);
-    formData.append('scan', file, file.name);
+    formData.append('scan', file);
     formData.append('resourceType', resourceType);
+    console.log(formData);
     return this.http.post(url, formData) // , {headers: this.headers})
       .map(this.extractData)
       .catch(this.handleError);
@@ -181,7 +182,7 @@ export class LocdbService {
   }
 
   getScan(identifier: string) {
-    return this.locdbUrl + '/scans/' + identifier;
+    return `${this.locdbUrl}/scans/${identifier}`;
   }
 
   putBibliographicEntry(entry: BibliographicEntry) {

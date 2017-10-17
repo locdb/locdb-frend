@@ -16,19 +16,19 @@
       <div *ngFor="let t of all_todos()">
         <accordion>
 
-            <accordion-group heading="{{t.title}} ({{t.publicationYear}})">
-              <app-resource-form [resource]="t" [folded]="true"></app-resource-form>
-            </accordion-group>
+          <accordion-group heading="{{t.title}} ({{t.publicationYear}})">
+            <app-resource-form [resource]="t" [folded]="true"></app-resource-form>
+          </accordion-group>
 
           <div class="list-group">
             <!-- scans directly attached to the resource -->
-            <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of t.scans" (click)="onSelect(s)"> -->
-            <!--   Scan on pp. {{s.firstPage}}-{{s.lastPage}} -->
-            <!-- </a> -->
-            <!-- <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span> -->
+            <a href="#" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans" (click)="onSelect(s)">
+              Scan on pp. {{s.firstPage}}-{{s.lastPage}}
+              <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
+            </a>
             <div class="list-group" *ngFor="let c of t.children">
               <!-- scans attached to children of resource -->
-              <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of c.scans" (click)="onSelect(s)">
+              <a href="#" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of c.scans" (click)="onSelect(s)">
                 Scan on pp. {{s.firstPage}}-{{s.lastPage}}
                 <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
               </a>
