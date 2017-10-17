@@ -138,7 +138,7 @@ export class LocdbService {
     scan: any,
     file: File,
     resourceType: string
-  ): Observable<any> {
+  ): Promise<any> {
     // Take FileWithMetadata object instead
     const url = `${this.locdbUrl}/saveScan`;
     const formData: FormData = new FormData();
@@ -148,9 +148,9 @@ export class LocdbService {
     formData.append('scan', file);
     formData.append('resourceType', resourceType);
     console.log(formData);
-    return this.http.post(url, formData) // , {headers: this.headers})
-      .map(this.extractData)
-      .catch(this.handleError);
+    return this.http.post(url, formData).toPromise(); // , {headers: this.headers})
+      // .map(this.extractData)
+      // .catch(this.handleError);
   }
 
   suggestions(be: BibliographicEntry, external?: boolean): Observable<BibliographicResource[]> {
