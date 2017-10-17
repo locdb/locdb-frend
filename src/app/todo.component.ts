@@ -38,6 +38,9 @@ export class TodoComponent implements OnInit {
     } else {
       this.selectedTodo = scan;
       console.log('Todo item selected', scan._id);
+      // TODO FIXME this gets passed to display component
+      // and the entries corresponding to its identifier are looked up
+      // there might be a cleaner alternative
       this.todo.next(scan);
     }
   }
