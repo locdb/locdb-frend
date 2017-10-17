@@ -5,8 +5,8 @@
     "start": "npm start"
   },
   "src/app/*.css": {"type": "css"},
-  "src/app/*.html": {"alternate": "locdb-frend/src/app/{}.ts", "type": "html"},
+  "src/app/*.html": {"alternate": "src/app/{}.ts", "type": "html"},
   "src/app/*.spec": {"type": "spec"},
-  "src/app/*.ts": {"alternate": "locdb-frend/src/app/{}.html", "type": "ts"},
+  "src/app/*.ts": {"alternate": "src/app/{}.html", "type": "ts"},
   "todo.rst": {"type": "todo"}
 } 

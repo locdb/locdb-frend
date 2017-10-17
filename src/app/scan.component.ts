@@ -43,11 +43,11 @@ export class ScanComponent {
   }
 
   onclickupload() { // check if content is set
-   if (this.fileIsActive) {
-     this.saveentries();
+    if (this.fileIsActive) {
+      this.saveentries();
     }
-   let ready = true;
-   if (this.listoffiles !== []) {
+    let ready = true;
+    if (this.listoffiles !== []) {
       for (const file of this.listoffiles){
         if (!file.allset) {
           ready = false;
@@ -60,8 +60,8 @@ export class ScanComponent {
       // clear after upload
       this.onclickclear();
     } else {
-        console.log('Files not ready!');
-        }
+      alert('Files not ready!');
+    }
   }
 
   onclickclear() {
@@ -138,7 +138,7 @@ export class ScanComponent {
     this.listoffiles[this.active].resourceType = this.resourceType;
     if (
       this.listoffiles[this.active].ppn && this.listoffiles[this.active].firstpage &&
-    this.listoffiles[this.active].lastpage && this.listoffiles[this.active].resourceType
+      this.listoffiles[this.active].lastpage && this.listoffiles[this.active].resourceType
     ) {
       this.listoffiles[this.active].allset = true;
     }
@@ -183,9 +183,10 @@ export class ScanComponent {
 
     // rufe scan auf
     this.locdbService.saveScan(listelement.ppn,
-      listelement.firstpage.toString(), listelement.lastpage.toString(),
-      listelement.filecontent, listelement.file, listelement.resourceType).subscribe((result) =>
-        console.log(result)) }
+                               listelement.firstpage.toString(), listelement.lastpage.toString(),
+                               listelement.filecontent, listelement.file, listelement.resourceType).then(
+                               (result) => console.log(result))
+  }
 }
 
 class MetaData {

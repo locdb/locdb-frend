@@ -33,8 +33,8 @@ export class DisplayComponent implements OnInit {
     zoom: any;
 
     rects: Rect[] = [];
-    imgX = 500;    // initvalues no relevance if new picture is set
-    imgY = 500;
+    imgX = 1500;    // initvalues no relevance if new picture is set
+    imgY = 1500;
 
     @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
 
@@ -64,9 +64,11 @@ export class DisplayComponent implements OnInit {
 
     entriesArrived(entries) {
         console.log('ENTRIES ARRIVED ===');
+        // make entry_id an input property and move this code to ngOnChange()
         this.entries = entries;
         this.extractRects(this.entries);
         console.log(this.rects);
+        // we could find the first one with status: not processed
         this.currentIndex = 0;
         this.entry.next(entries[0]);
     }
@@ -77,10 +79,12 @@ export class DisplayComponent implements OnInit {
     }
 
     newCustomEntry() {
+        // unused but should be used //
         this.entry.next(new BibliographicEntry());
     }
 
     next(diff: number) {
+        // unused //
         this.currentIndex = Math.abs((this.entries.length + this.currentIndex + diff) % this.entries.length);
         const entry = this.entries[this.currentIndex];
         console.log('Emission of entry at index ' + this.currentIndex, entry);
@@ -116,10 +120,17 @@ export class DisplayComponent implements OnInit {
             const coords = e.ocrData.coordinates;
             const rectField = coords.split(' ');
             this.rects.push({
+                // x1 y1 x2 y2
+                // x: Number(rectField[0]),
+                // y: Number(rectField[1]),
+                // width: Number(rectField[2])  - Number(rectField[0]),
+                // height: Number(rectField[3]) - Number(rectField[1]),
+                //
+                // x1 x2 y1 y2
                 x: Number(rectField[0]),
-                y: Number(rectField[1]),
-                width: Number(rectField[2]) - Number(rectField[0]),
-                height: Number(rectField[3]) - Number(rectField[1]),
+                y: Number(rectField[2]),
+                width: Number(rectField[1])  - Number(rectField[0]),
+                height: Number(rectField[3]) - Number(rectField[2]),
                 state: e.references ? 1 : -1
             });
         }
@@ -135,8 +146,8 @@ export class DisplayComponent implements OnInit {
     }
 
     imageOnload() {
-        console.log('Image Loaded, Dimensions: ', this.realImgDimension(this.displaySource));
         const realDim = this.realImgDimension(this.displaySource);
+        console.log('Image Loaded, Dimensions: ', realDim); // e.g 4299, 3035
         this.imgX = realDim.naturalWidth;
         this.imgY = realDim.naturalHeight;
         if ((this.imgX + this.imgY) <= 0) {
@@ -152,20 +163,11 @@ class Rect {
     height: number;
     width: number;
     state = 0;
-    static fromEntry(entry: BibliographicEntry) {
-        // unused //
-        const coords = entry.ocrData.coordinates;
-        const rectField = coords.split(' ');
-        return new Rect(Number(rectField[0]), Number(rectField[1]),
-                        Number(rectField[2]) - Number(rectField[0]),
-                        Number(rectField[3]) - Number(rectField[1]),
-                        entry.references ? 1 : -1)
-    }
     constructor(
         x: number,
         y: number,
-        height: number,
         width: number,
+        height: number,
         state?: number
     ) {}
 }

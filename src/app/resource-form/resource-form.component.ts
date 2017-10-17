@@ -34,8 +34,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     // roles: string[] = AgentRole.ROLES;
     roles: string[] =  ROLES;
 
-    constructor( private fb: FormBuilder, private locdbService: LocdbService)  { this.createForm(); }
-
+    constructor(
+        private fb: FormBuilder,
+        private locdbService: LocdbService
+    ) { this.createForm(); }
 
     createForm()  {
         this.resourceForm = this.fb.group( {
@@ -206,6 +208,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
 
     saveEntries() {
+        // UNUSED See :code:`prepareSaveResource` instead
         this.oldresource = JSON.parse(JSON.stringify(this.resource));
 
         // correctness check eg. all Roles set
@@ -283,10 +286,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     toggleEdit(event?: any) {
         console.log('toggleEdit');
         this.editable = !this.editable;
-        // if(this.editable)
-        //     this.editable=false;
-        // else
-        //     this.editable=true;
     }
     saveExternal(sgt) {
         this.exSuggests = sgt
@@ -373,6 +372,12 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     }
 
+    deleteResource() {
+        if (confirm('Are you sure to delete resource ' + this.resource._id)) {
+            this.locdbService.deleteBibliographicResource(this.resource).subscribe((res) => console.log('Deleted'));
+            this.resource = null;
+        }
+
+    }
+
 }
-
-

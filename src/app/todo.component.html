@@ -1,11 +1,11 @@
-<div class="panel panel-default"> 
+<div class="panel panel-default">
   <div class="panel-heading">
     <div class="row justify-content-between">
       <div class="col-xs-6 text-left">
         <h4><b>{{title}}</b></h4>
       </div>
       <div class="col-xs-6 text-right">
-        <button (click)="fetchScans()" type="button" class="btn btn-info" aria-label="Refresh">
+        <button (click)="fetchTodos()" type="button" class="btn btn-info" aria-label="Refresh">
           <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
         </button>
       </div>
@@ -13,29 +13,29 @@
   </div>
 
   <div class="panel-body">
-    <div class="panel-group">
-      <div class="panel panel-default" *ngFor="let t of all_todos()">
-        <div class="panel-heading">
-          <app-resource-form [resource]="t" [folded]="true"></app-resource-form>
-        </div>
-        <div class="panel-body">
+      <div *ngFor="let t of all_todos()">
+        <accordion>
+
+          <accordion-group heading="{{t.title}} ({{t.publicationYear}})">
+            <app-resource-form [resource]="t" [folded]="true"></app-resource-form>
+          </accordion-group>
+
           <div class="list-group">
             <!-- scans directly attached to the resource -->
-            <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of t.scans" (click)="onSelect(s)"> -->
-            <!--   Scan on pp. {{s.firstPage}}-{{s.lastPage}} -->
-            <!-- </a> -->
-            <!-- <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span> -->
+            <a href="#" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans" (click)="onSelect(s)">
+              Scan on pp. {{s.firstPage}}-{{s.lastPage}}
+              <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
+            </a>
             <div class="list-group" *ngFor="let c of t.children">
               <!-- scans attached to children of resource -->
-              <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of c.scans" (click)="onSelect(s)">
+              <a href="#" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of c.scans" (click)="onSelect(s)">
                 Scan on pp. {{s.firstPage}}-{{s.lastPage}}
                 <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
               </a>
             </div>
           </div>
-        </div>
+        </accordion>
       </div>
-    </div>
 
   </div>
 </div>

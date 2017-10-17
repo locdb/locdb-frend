@@ -1,7 +1,7 @@
 <!--<button class="btn btn-success pull-left" (click)="toggleEdit()">Edit</button>-->
-<div *ngIf="resource" class="panel panel-default">
-  <div class="panel-heading">
-    <div *ngIf="folded">
+<div *ngIf="resource">
+  <!-- <div class="panel-heading">
+    <!--<div *ngIf="folded">
       <button type="button" class="btn btn-info" aria-label="Toggle folding" (click)="toggleFolding()">
         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
       </button>
@@ -19,10 +19,11 @@
           <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
         </button>
       </div>
-    </div>
-  </div>
-  <div *ngIf="!folded" class="panel-body">
-    <!-- <button class="btn btn-success pull-left" (click)="toggleEdit()">Edit</button> -->
+    </div>-->
+<!--  </div>-->
+  <!-- <div class="panel-body">-->
+    <!--<div *ngIf="!folded" class="panel-body">-->
+      <!-- <button class="btn btn-success pull-left" (click)="toggleEdit()">Edit</button> -->
     <div class="row">
       <div class="col-md-12">
       </div>
@@ -32,7 +33,7 @@
         <tbody>
           <tr *ngIf="resource.title">
             <td>
-              <label>Title</label> 
+              <label>Title</label>
             </td>
             <td>
               {{resource.title}}
@@ -40,7 +41,7 @@
           </tr>
           <tr *ngIf="resource.subtitle">
             <td>
-              <label>Subtitle</label> 
+              <label>Subtitle</label>
             </td>
             <td>
               {{resource.subtitle}}
@@ -48,7 +49,7 @@
           </tr>
           <tr *ngIf="resource.edition">
             <td>
-              <label>Edition</label> 
+              <label>Edition</label>
             </td>
             <td>
               {{resource.edition}}
@@ -56,7 +57,7 @@
           </tr>
           <tr *ngIf="resource.type">
             <td>
-              <label>Type</label> 
+              <label>Type</label>
             </td>
             <td>
               {{resource.type}}
@@ -64,7 +65,7 @@
           </tr>
           <tr *ngIf="resource.number">
             <td>
-              <label>Number</label> 
+              <label>Number</label>
             </td>
             <td>
               {{resource.number}}
@@ -73,14 +74,14 @@
           <!--   contribs   -->
           <!-- <tr *ngIf="resource.contributors"> -->
             <!--   <td> -->
-              <!--     <label>Contributors</label> --> 
+              <!--     <label>Contributors</label> -->
               <!--   </td> -->
             <!--   <td> -->
               <!--   </td> -->
             <!-- </tr> -->
           <tr *ngFor="let contrib of resource.contributors">
             <td>
-              {{contrib.roleType}}
+              <label>{{contrib.roleType}}</label>
             </td>
             <td>
               {{contrib.heldBy.nameString}}
@@ -88,7 +89,7 @@
           </tr>
           <tr *ngIf="resource.publicationYear">
             <td>
-              <label>Pub. year</label> 
+              <label>Pub. year</label>
             </td>
             <td>
               {{resource.publicationYear}}
@@ -96,7 +97,7 @@
           </tr>
           <tr *ngIf="resource.partOf">
             <td>
-              <label>Part of</label> 
+              <label>Part of</label>
             </td>
             <td>
               {{resource.partOf}}
@@ -105,7 +106,7 @@
         </tbody>
       </table>
     </div>
-  </div>
+  <!--</div>-->
 </div>
 <div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -119,7 +120,7 @@
       <div class="modal-body">
         <!-- <form *ngIf="editable" [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>-->
           <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
-            <!-- 
+            <!--
             _id: string;
             identifiers?: Identifier[];
             type?: string;
@@ -136,7 +137,7 @@
               <tbody>
                 <tr>
                   <td>
-                    <label>Title</label> 
+                    <label>Title</label>
                   </td>
                   <td>
                     <textarea class="form-control" formControlName="title" style="resize: none;" ></textarea>
@@ -144,7 +145,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <label>Subtitle</label> 
+                    <label>Subtitle</label>
                   </td>
                   <td>
                     <input class="form-control" formControlName="subtitle">
@@ -152,7 +153,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <label>Edition</label> 
+                    <label>Edition</label>
                   </td>
                   <td>
                     <input class="form-control" formControlName="edition">
@@ -160,7 +161,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <label>Type</label> 
+                    <label>Type</label>
                   </td>
                   <td>
                     <input class="form-control" formControlName="resourcetype">
@@ -168,7 +169,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <label>Number</label> 
+                    <label>Number</label>
                   </td>
                   <td>
                     <input type="number" class="form-control" formControlName="resourcenumber">
@@ -177,7 +178,7 @@
                 <!--   contribs   -->
                 <tr>
                   <td>
-                    <label>Contributors</label> 
+                    <label>Contributors</label>
                   </td>
                   <td>
                   </td>
@@ -229,15 +230,15 @@
                   </tr>
                   <tr>
                     <td>
-                      <label>Pub. year</label> 
+                      <label>Pub. year</label>
                     </td>
                     <td>
-                      <input type="number" class="form-control" formControlName="publicationyear">
+                      <input type="string" class="form-control" formControlName="publicationyear">
                     </td>
                   </tr>
                   <tr>
                     <td>
-                      <label>Part of</label> 
+                      <label>Part of</label>
                     </td>
                     <td>
                       <input class="form-control" formControlName="partof">
@@ -247,13 +248,16 @@
               </table>
               <div class="row justify-content-between">
                 <div class="col-xs-4 text-left">
-                  <button type="button" class="btn btn-danger" (click)="resetEntries()">
+                  <button type="button" class="btn btn-warning" (click)="resetEntries()">
                     <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset
+                  </button>
+                  <button type="button" class="btn btn-danger" (click)="deleteResource()">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
                   </button>
                 </div>
                 <div class="col-xs-4 text-center">
                   <div>
-                    <popover-content #myPopover 
+                    <popover-content #myPopover
                       title="Choose external resources"
                       placement="auto"
                       [closeOnClickOutside]="true">

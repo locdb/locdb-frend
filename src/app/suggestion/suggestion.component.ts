@@ -5,6 +5,8 @@ import { LocdbService } from '../locdb.service';
 
 import { MOCK_INTERNAL } from '../mock-bresources'
 
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+
 import { environment } from 'environments/environment';
 
 
@@ -14,25 +16,29 @@ import { environment } from 'environments/environment';
     styleUrls: ['./suggestion.component.css']
 })
 export class SuggestionComponent implements OnChanges {
-    
+  public customClass: string = 'customClass';
+
+
     @Input() entry: BibliographicEntry;
     @Output() suggest: EventEmitter<BibliographicResource> = new EventEmitter();
-    
+
     // make this visible to template
     environment = environment;
-    
+
     selectedResource: BibliographicResource;
     suggestfield; //environment.production ? this.entry.title : this.entry.ocrData.title;
-    
+
     internalSuggestions : BibliographicResource[];
-    
+
     externalSuggestions : any[];
     committed = false;
-    
+    max_ex = 5
+    max_in = 5
+
     testresource: BibliographicResource;
-    
+
     constructor(private locdbService: LocdbService) { }
-    
+
     ngOnInit() {
         let br : BibliographicResource = {
             //_id: entry.references,
@@ -44,31 +50,31 @@ export class SuggestionComponent implements OnChanges {
         }
         this.testresource = br;
     }
-    
+
     ngOnChanges() {
         if (this.entry){
             this.fetchInternalSuggestions();
             this.fetchExternalSuggestions();
             this.suggestfield = this.entry.ocrData.title;
             if (this.entry.references) {
-                
+
             }
         } else {
             this.internalSuggestions = [];
             this.externalSuggestions = [];
         }
     }
-    
+
     fetchInternalSuggestions() : void {
         console.log("Fetching internal suggestions for", this.entry);
         this.locdbService.suggestions(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
     }
-    
+
     fetchExternalSuggestions() : void {
         console.log("Fetching external suggestions for", this.entry);
         this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
     }
-    
+
     // these two functions could go somewhere else e.g. static in locdb.ts
     // BEGIN
     authors2contributors (authors: string[]): AgentRole[] {
@@ -90,10 +96,10 @@ export class SuggestionComponent implements OnChanges {
         }
         return contributors;
     }
-    
+
     resourceFromEntry(entry) : BibliographicResource {
         console.log("resourceFromEntry", entry)
-        
+
         // When the production backend is used, entry does not have ocr data yet
         // but when the development backend is used, entry does indeed have ocr data field
         console.log('ENTRY REFERENCES', entry.references);
@@ -106,29 +112,29 @@ export class SuggestionComponent implements OnChanges {
                 embodiedAs: [],
                 parts: [],
         }
-        
+
         return br;
     }
     // END
-    
+
     plusPressed() {
         let newResource: BibliographicResource = this.resourceFromEntry(this.entry);
         this.locdbService.pushBibligraphicResource(newResource).subscribe( (br) => this.internalSuggestions.push(br));
     }
-    
-    
+
+
     onSelect(br?: BibliographicResource) : void {
-        
+
         console.log("Suggestion emitted", br);
         this.selectedResource = br;
         this.committed = false;
         this.suggest.next(br);
     }
-    
+
     refreshSuggestions(){
         console.log("Internal Suggestions: ", this.internalSuggestions);
         console.log("External Suggestions: ", this.externalSuggestions);
-        
+
         let searchentry = JSON.parse(JSON.stringify(this.entry));
         searchentry.ocrData.title = this.suggestfield;
         console.log("Searchentry: ", searchentry);
@@ -141,28 +147,47 @@ export class SuggestionComponent implements OnChanges {
         console.log("Done.");
         this.entry = searchentry;
     }
-    
+
     saveInternal(sgt){
         // if (sgt.length == 0) {
         //   this.internalSuggestions = MOCK_INTERNAL;
-        // } 
+        // }
         // else {
         this.internalSuggestions = sgt
         console.log("Received Internal Suggestions: ", this.internalSuggestions);
         // }
     }
-    
+
     saveExternal(sgt){
         this.externalSuggestions = sgt
         console.log("Received External Suggestions: ", this.externalSuggestions);
     }
-    
+
     commit() {
-        // This the actual linking of entry to resource 
+        // This the actual linking of entry to resource
         this.entry.references = this.selectedResource._id;
         // TODO FIXME this should update the whole Bibliographic Resource
         this.locdbService.putBibliographicEntry(this.entry).subscribe( (result) => console.log("Submitted Entry with result", result));
         this.committed = true;
     }
-    
+
+    toggle_max_ex(){
+      if(this.max_ex == 0){
+        this.max_ex = 5
+      }
+      else{
+          this.max_ex = 0
+      }
+    }
+
+    toggle_max_in(){
+      if(this.max_in == 0){
+        this.max_in = 5
+      }
+      else{
+          this.max_in = 0
+      }
+
+    }
+
 }
