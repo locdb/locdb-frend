@@ -52,7 +52,7 @@ export class SuggestionComponent implements OnChanges {
     }
 
     ngOnChanges() {
-        if (this.entry){
+        if (this.entry) {
             this.fetchInternalSuggestions();
             this.fetchExternalSuggestions();
             this.suggestfield = this.entry.ocrData.title;
@@ -65,20 +65,20 @@ export class SuggestionComponent implements OnChanges {
         }
     }
 
-    fetchInternalSuggestions() : void {
-        console.log("Fetching internal suggestions for", this.entry);
+    fetchInternalSuggestions(): void {
+        console.log('Fetching internal suggestions for', this.entry);
         this.locdbService.suggestions(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
     }
 
-    fetchExternalSuggestions() : void {
-        console.log("Fetching external suggestions for", this.entry);
+    fetchExternalSuggestions(): void {
+        console.log('Fetching external suggestions for', this.entry);
         this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
     }
 
     // these two functions could go somewhere else e.g. static in locdb.ts
     // BEGIN
     authors2contributors (authors: string[]): AgentRole[] {
-        if (!authors) return [];
+        if (!authors) {return []};
         let contributors = [];
         for (let author of authors) {
             const agent: ResponsibleAgent = {
