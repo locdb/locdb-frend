@@ -18,17 +18,24 @@ import { PopoverModule } from 'ngx-popover/index';
     providers: [ LocdbService ]
 })
 
+// interface BibliographicEntry {
+// // we can use an interface to add propertys
+//     rect: rect;
+// }
+
 export class DisplayComponent implements OnInit {
     private zoomSVG: any;
     @ViewChild('zoomSVG') set content(content: any) {
         this.zoomSVG = content;
     }
 
+    @Input() todo: ToDoScans;
+    entries: BibliographicEntry[];
+
     displaySource: string;
     displayActive = false;
     title = 'Scan Display';
     currentIndex = 0;
-    entries: BibliographicEntry[];
     clickedRect = false;
     zoom: any;
 
@@ -52,6 +59,11 @@ export class DisplayComponent implements OnInit {
         const svgContainer = d3.select(this.zoomSVG.nativeElement);
         svgContainer.attr('width', '100%').attr('height', '100%').call(zoom);
         this.zoom = zoom;
+    }
+
+    ngOnChange() {
+        // Input todo and this method should replace manual calling of updateDisplay
+        this.updateDisplay(this.todo);
     }
 
     updateDisplay(newTodo: ToDoScans) {
@@ -85,6 +97,7 @@ export class DisplayComponent implements OnInit {
 
     next(diff: number) {
         // unused //
+        // we could make more use of it, when we check for status = -1
         this.currentIndex = Math.abs((this.entries.length + this.currentIndex + diff) % this.entries.length);
         const entry = this.entries[this.currentIndex];
         console.log('Emission of entry at index ' + this.currentIndex, entry);
@@ -106,7 +119,7 @@ export class DisplayComponent implements OnInit {
     rectLink(i: number) {
         this.rects[i].state = 0
         this.clickedRect = true;
-        console.log('Display: Clicked Rect ' + i);
+        console.log('Display: Clicked Rect ' + i + ', with coordinates', this.rects[i]);
         this.currentIndex = i
         const entry = this.entries[this.currentIndex];
         console.log('Emission of entry at index ' + this.currentIndex, entry);
@@ -120,18 +133,21 @@ export class DisplayComponent implements OnInit {
             const coords = e.ocrData.coordinates;
             const rectField = coords.split(' ');
             this.rects.push({
-                // x1 y1 x2 y2
-                // x: Number(rectField[0]),
-                // y: Number(rectField[1]),
-                // width: Number(rectField[2])  - Number(rectField[0]),
-                // height: Number(rectField[3]) - Number(rectField[1]),
-                //
-                // x1 x2 y1 y2
+
+                //x1 y1 x2 y2
                 x: Number(rectField[0]),
-                y: Number(rectField[2]),
-                width: Number(rectField[1])  - Number(rectField[0]),
-                height: Number(rectField[3]) - Number(rectField[2]),
+                y: Number(rectField[1]),
+                width: Number(rectField[2])  - Number(rectField[0]),
+                height: Number(rectField[3]) - Number(rectField[1]),
+                
+                // // x1 x2 y1 y2
+                // x: Number(rectField[0]),
+                // y: Number(rectField[2]),
+                // width: Number(rectField[1])  - Number(rectField[0]),
+                // height: Number(rectField[3]) - Number(rectField[2]),
+                
                 state: e.references ? 1 : -1
+
             });
         }
     }

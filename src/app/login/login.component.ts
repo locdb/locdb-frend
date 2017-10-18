@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { LocdbService } from '../locdb.service';
 import {  Response } from '@angular/http';
 
@@ -10,6 +10,8 @@ import {  Response } from '@angular/http';
 export class LoginComponent implements OnInit {
   @Input() instances = [{name: 'LOCDB Dev', url: 'https://locdb.bib.uni-mannheim.de/locdb-dev'},
     {name: 'UB Mannheim', url: 'https://locdb.bib.uni-mannheim.de/locdb'}];
+
+  @Output() userChanged: EventEmitter<boolean> = new EventEmitter();
   currentUser = null;
   currentInstance = null;
   connecting = false;
@@ -25,9 +27,11 @@ export class LoginComponent implements OnInit {
       console.log(instance, user, msg);
       this.currentUser = user;
       this.currentInstance = instance;
+      this.userChanged.next(true);
     } else {
       console.log('Message not ok');
       alert('Invalid credentials.');
+      this.userChanged.next(false);
     }
     this.connecting = false;
   }
@@ -36,6 +40,7 @@ export class LoginComponent implements OnInit {
     this.connecting = false;
     this.currentUser = null;
     this.currentInstance = null;
+    this.userChanged.next(false);
   }
 
 
