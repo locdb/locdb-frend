@@ -15,11 +15,13 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     @Input() resource: BibliographicResource | ToDo;
     @Input() folded = false;
 
-    @Input() exSuggests: any[];
 
     @Input() resource_id: string = null;
 
-     @Input() entry: BibliographicEntry;
+    // this should not be here, the resource should only rely on itself and not
+    // some entries TODO FIXME
+    @Input() exSuggests: any[];
+    @Input() entry: BibliographicEntry;
     oldresource: BibliographicResource;
 
     resourceForm: FormGroup;
@@ -329,10 +331,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         /* ---------------------*/
         // ocrData
 //         console.log('ocrData',r.ocrData)
-        //let title = r.ocrData.title;
-        //let authors = r.ocrData.authors;
-        //let name: string;
-        //let role = 'author';
+        // let title = r.ocrData.title;
+        // let authors = r.ocrData.authors;
+        // let name: string;
+        // let role = 'author';
 //         console.log('external suggestion: ', r);
 //         console.log('inMerge, r: ', r);
         /* ---------------------*/
