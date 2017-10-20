@@ -72,24 +72,14 @@ export class ScanComponent {
   onChange(event: any) { // file input
     this.files = '';
     this.files = event.target.files; // this.uploader.queue;
+    // we do we have this.files and this.listoffiles? TODO
     let file: any;
-    let filenumber = 0;
     for (file of this.files){
-      const ppnt = this.getidfromstring(file.name);
-      if (ppnt === '') {
-        this.listoffiles.push(
-          { ppn: null, firstpage: null, lastpage: null, file: file, filecontent
-            : null, ppnsucc: false, allset: false, resourceType: null}
-        );
-      } else {
-        this.listoffiles.push(
-          { ppn: ppnt, firstpage: null, lastpage: null, file: file, filecontent
-            : null, ppnsucc: true, allset: false, resourceType: null}
-        );
-      }
-
-      filenumber += 1;
-
+      const [ppn, first, last] = this.extractPPNandPages(file.name);
+      this.listoffiles.push(
+        { ppn: ppn, firstpage: first, lastpage: last, file: file, filecontent
+          : null, allset: ppn != null && first != null && last != null, resourceType: null}
+      );
     }
   }
 
@@ -105,32 +95,37 @@ export class ScanComponent {
 
     this.active = i;
 
-    if (this.listoffiles[i].ppnsucc) {
       this.ppn = this.listoffiles[i].ppn;
       this.firstpage = this.listoffiles[i].firstpage;
       this.lastpage = this.listoffiles[i].lastpage;
-    }
   }
 
 
-  getidfromstring(name: any) {
+  extractPPNandPages(name: any) {
     // do same magic
     // let re = /(?:\.([^.]+))?$/;
-    const re = /([0-9]{7})/;
-    let id;
+    const ppn_re = /([0-9]{8}[0-9X])/;
+    console.log('extracting ppn and pages from filename');
+    let id = null;
     try {
-      id = re.exec(name)[0];
-    } catch (err) {
-      console.log('FLUP: RegEx not found; '); // + err);
-      id = '';
-    }
+      const match = ppn_re.exec(name)
+      id = match[0];
+    } catch (err) { console.log(err); }
+    const pages_re = /([1-9]+)[-_+]([1-9]+)/;
+    let first = null, last = null;
+    try {
+      const match = pages_re.exec(name);
+      first = match[1]; // match[0] is the whole match
+      last = match[2];
+    } catch (err) { console.log(err); }
+    console.log('extracted:', id, first, last)
+
     // some more maybe?
-    return id;
+    return [id, first, last];
   }
 
   // nicht mehr als onclick genutzt
   saveentries() {
-    // if (!(this.getidfromstring(this.ppn) === '') && this.firstpage && this.lastpage) {  // check if number
     this.fileIsActive = false;
     this.listoffiles[this.active].ppn = this.ppn ;
     this.listoffiles[this.active].firstpage = this.firstpage;
@@ -196,6 +191,5 @@ class MetaData {
   file: File;
   filecontent: any;
   resourceType: string;
-  ppnsucc: boolean;
   allset: boolean;
 }
