@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angular/http';
 
-// advanced rxjs async handling
+// advanced rxjs async handling;
 import {Observable} from 'rxjs/Rx';
 // import { Observable } from 'rxjs/Observable';
 // import 'rxjs/add/operator/catch';
@@ -32,15 +32,6 @@ import { environment } from 'environments/environment';
 export class LocdbService {
   private locdbUrl = environment.locdbUrl;
 
-  private locdbTodoEndpoint: string;
-  private locdbSaveScan: string;
-  private locdbTodoEntries: string;
-  private locdbTodoResources: string;
-  private internalSuggestions: string;
-  private externalSuggestions: string;
-  private locdbTriggerOcrProcessing: string;
-  private locdbBibliographicEntries: string;
-  private locdbBibliographicResources: string;
   // standard headers
   private headers: Headers = new Headers({'Content-Type': 'application/json',
                                          'Accept': 'application/json'});
@@ -54,23 +45,6 @@ export class LocdbService {
         xhr.withCredentials = true;
       });
     }
-    this.updateUrls();
-  }
-
-
-  private updateUrls() {
-    /* It would be also fine to construct the urls in the respective methods */
-    this.locdbTodoEndpoint             = this.locdbUrl + '/getToDo';
-    this.locdbSaveScan                 = this.locdbUrl + '/saveScan';
-    this.locdbTodoEntries              = this.locdbUrl + '/getToDoBibliographicEntries';
-    // This url just does not exist yet
-    this.locdbTodoResources            = this.locdbUrl + '/getToDoBibliographicResources';
-    this.internalSuggestions           = this.locdbUrl + '/getInternalSuggestions';
-    this.externalSuggestions           = this.locdbUrl + '/getExternalSuggestions';
-    this.locdbTriggerOcrProcessing     = this.locdbUrl + '/triggerOcrProcessing';
-    this.locdbBibliographicEntries     = this.locdbUrl + '/bibliographicEntries/';
-    // just a guess
-    this.locdbBibliographicResources   = this.locdbUrl + '/bibliographicResources/';
   }
 
 
@@ -111,25 +85,26 @@ export class LocdbService {
     // fetches list of entries for a scan id
     const params: URLSearchParams = new URLSearchParams();
     params.set('scanId', scan_id);
-    console.log('locdb todo entries url: ', this.locdbTodoEntries);
-    return this.http.get(this.locdbTodoEntries, { search: params } )
-                    .map(this.extractData)
-                    .catch(this.handleError);
+    const url = `${this.locdbUrl}/getToDoBibliographicEntries`
+    return this.http.get(url, { search: params } )
+    .map(this.extractData)
+    .catch(this.handleError);
   }
 
-    getToDoBibliographicResources(scan_id: string): Observable<BibliographicResource[]> {
-      // UNUSED //
-      //
-      // fetches list of entries for a scan id
-      const params: URLSearchParams = new URLSearchParams();
-      params.set('scanId', scan_id);
-      console.log('');
-      const res =  this.http.get(this.locdbTodoResources, { search: params } )
-                      .map(this.extractData)
-                      .catch(this.handleError);
-      console.log('resources: ', res);
-      return res;
-    }
+  getToDoBibliographicResources(scan_id: string): Observable<BibliographicResource[]> {
+    // UNUSED //
+    //
+    // fetches list of entries for a scan id
+    const params: URLSearchParams = new URLSearchParams();
+    params.set('scanId', scan_id);
+    console.log('');
+    const url = `${this.locdbUrl}/getToDoBibliographicResources`
+    const res =  this.http.get(url, { search: params } )
+    .map(this.extractData)
+    .catch(this.handleError);
+    console.log('resources: ', res);
+    return res;
+  }
 
   saveScan(
     ppn: string,
@@ -138,33 +113,29 @@ export class LocdbService {
     scan: any,
     file: File,
     resourceType: string
-  ): Observable<any> {
+  ): Promise<any> {
     // Take FileWithMetadata object instead
     const url = `${this.locdbUrl}/saveScan`;
     const formData: FormData = new FormData();
     formData.append('ppn', ppn);
     formData.append('firstPage', firstPage);
     formData.append('lastPage', lastPage);
-    formData.append('scan', file, file.name);
+    formData.append('scan', file);
     formData.append('resourceType', resourceType);
-    return this.http.post(url, formData) // , {headers: this.headers})
-      .map(this.extractData)
-      .catch(this.handleError);
+    return this.http.post(url, formData).toPromise(); // , {headers: this.headers})
+    // .map(this.extractData)
+    // .catch(this.handleError);
   }
 
   suggestions(be: BibliographicEntry, external?: boolean): Observable<BibliographicResource[]> {
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
 
-    if (external) {
-      return this.http.post(this.externalSuggestions, be, options)
-        .map(response => response.json() as BibliographicResource[])
-        .catch(this.handleError);
-    } else {
-      return this.http.post(this.internalSuggestions, be, options)
-        .map(response => response.json() as BibliographicResource[])
-        .catch(this.handleError);
-    }
+    const url = external ? `${this.locdbUrl}/getExternalSuggestions` : `${this.locdbUrl}/getInternalSuggestions`
+
+    return this.http.post(url, be, options)
+    .map(response => response.json() as BibliographicResource[])
+    .catch(this.handleError);
   }
 
   triggerOcrProcessing(scanId: string) {
@@ -174,23 +145,25 @@ export class LocdbService {
     // const options = new RequestOptions(
     //   { headers: headers, withCredentials: true, search: params }
     // );
+    const url = `${this.locdbUrl}/triggerOcrProcessing`;
     return this.http.get(
-      this.locdbTriggerOcrProcessing,
+      url,
       { search: params }
     ).map(this.extractData).catch(this.handleError);
   }
 
   getScan(identifier: string) {
-    return this.locdbUrl + '/scans/' + identifier;
+    return `${this.locdbUrl}/scans/${identifier}`;
   }
 
   putBibliographicEntry(entry: BibliographicEntry) {
-    const url = this.locdbBibliographicEntries + entry._id;
+    // obsolete by addTarget
+    const url = `${this.locdbUrl}/bibliographicEntries/${entry._id}`;
     return this.http.put(url, entry).map(this.extractData).catch(this.handleError);
   }
 
   bibliographicResource(identifier: string) {
-    const url = this.locdbBibliographicResources + identifier;
+    const url = `${this.locdbUrl}/bibliographicResources/${identifier}`;
     return this.http.get(url).map(this.extractData).catch(this.handleError);
   }
 
@@ -199,7 +172,7 @@ export class LocdbService {
     console.log('Put BR for', resource._id);
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
-    const url = this.locdbBibliographicResources + resource._id;
+    const url = `${this.locdbUrl}/bibliographicResources/${resource._id}`;
     // synCites_(resource) TODO FIXME might be incomplete so it is dangerous to invoke here
     console.log('JUST BEFORE SUBMISSION:', resource);
     return this.http.put(url, resource, options).map(this.extractData).catch(this.handleError);
@@ -208,12 +181,12 @@ export class LocdbService {
   pushBibligraphicResource(resource: BibliographicResource) {
     // we could merge this with the method above, first try put then push.
     console.log('Push BR', resource);
-    const url = this.locdbBibliographicResources;
+    const url = `${this.locdbUrl}/bibliographicResources`;
     return this.http.post(url, resource).map(this.extractData).catch(this.handleError);
   }
 
   deleteBibliographicResource(resource: BibliographicResource) {
-    const url = this.locdbBibliographicResources + resource._id;
+    const url = `${this.locdbUrl}/bibliographicResources/${resource._id}`;
     console.log('Deleting', resource);
     return this.http.delete(url).map(this.extractData).catch(this.handleError);
   }
@@ -264,11 +237,9 @@ export class LocdbService {
 
   instance(instance?: string) {
     if (instance) { this.locdbUrl = instance } ;
-    this.updateUrls();
     return this;
   }
   //
-
   addFeed(name: string, url: string): Observable<Feed> {
     const reqUrl = `${this.locdbUrl}/addFeed`;
     return this.http.post(
@@ -293,6 +264,4 @@ export class LocdbService {
       {headers: this.headers, withCredentials: true}
     ).map(res => res.json()['feeds'] as Feed[])
   }
-
-
 } // LocdbService

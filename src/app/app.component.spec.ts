@@ -28,6 +28,7 @@ import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { VisualComponent } from './visual/visual.component';
 import { LoginComponent } from './login/login.component';
 import { CommitComponent} from './commit/commit.component';
+import { FeedReaderComponent, FeedComponent } from './feed-reader/feed-reader.component';
 import { PopoverModule } from 'ngx-popover';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 
@@ -59,7 +60,9 @@ describe('AppComponent with TCB', function () {
           ResourceFormComponent,
           VisualComponent,
           LoginComponent,
-          CommitComponent
+          CommitComponent,
+          FeedReaderComponent,
+          FeedComponent
         ],
         imports: [
           ModalModule.forRoot(),

@@ -15,7 +15,12 @@ import { environment } from 'environments/environment';
     templateUrl: './suggestion.component.html',
     styleUrls: ['./suggestion.component.css']
 })
+<<<<<<< HEAD
 export class SuggestionComponent implements OnChanges {
+=======
+export class SuggestionComponent implements OnInit, OnChanges {
+  public customClass = 'customClass';
+>>>>>>> 91e6bf0cbc3fca6b625487649e9df3fb76abe0d9
 
 
     @Input() entry: BibliographicEntry;
@@ -25,11 +30,11 @@ export class SuggestionComponent implements OnChanges {
     environment = environment;
 
     selectedResource: BibliographicResource;
-    suggestfield; //environment.production ? this.entry.title : this.entry.ocrData.title;
+    suggestfield; // environment.production ? this.entry.title : this.entry.ocrData.title;
 
-    internalSuggestions : BibliographicResource[];
+    internalSuggestions: BibliographicResource[];
 
-    externalSuggestions : any[];
+    externalSuggestions: any[];
     committed = false;
     max_ex = 5
     max_in = 5
@@ -39,9 +44,9 @@ export class SuggestionComponent implements OnChanges {
     constructor(private locdbService: LocdbService) { }
 
     ngOnInit() {
-        let br : BibliographicResource = {
-            //_id: entry.references,
-            title: "title",
+        const br: BibliographicResource = {
+            //  _id: entry.references,
+            title: 'title',
             publicationYear: '123',
                 contributors: [],
                 embodiedAs: [],
@@ -51,7 +56,7 @@ export class SuggestionComponent implements OnChanges {
     }
 
     ngOnChanges() {
-        if (this.entry){
+        if (this.entry) {
             this.fetchInternalSuggestions();
             this.fetchExternalSuggestions();
             this.suggestfield = this.entry.ocrData.title;
@@ -64,30 +69,30 @@ export class SuggestionComponent implements OnChanges {
         }
     }
 
-    fetchInternalSuggestions() : void {
-        console.log("Fetching internal suggestions for", this.entry);
+    fetchInternalSuggestions(): void {
+        console.log('Fetching internal suggestions for', this.entry);
         this.locdbService.suggestions(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
     }
 
-    fetchExternalSuggestions() : void {
-        console.log("Fetching external suggestions for", this.entry);
+    fetchExternalSuggestions(): void {
+        console.log('Fetching external suggestions for', this.entry);
         this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
     }
 
     // these two functions could go somewhere else e.g. static in locdb.ts
     // BEGIN
     authors2contributors (authors: string[]): AgentRole[] {
-        if (!authors) return [];
-        let contributors = [];
-        for (let author of authors) {
+        if (!authors) {return []};
+        const contributors = [];
+        for (const author of authors) {
             const agent: ResponsibleAgent = {
                 nameString: author,
                 identifiers: [],
-                givenName: "",
-                familyName: "",
+                givenName: '',
+                familyName: '',
             }
             const role: AgentRole = {
-                roleType: "author",
+                roleType: 'author',  /// TODO FIXME this is totally outdated
                 heldBy: agent,
                 identifiers: [],
             }
@@ -96,15 +101,15 @@ export class SuggestionComponent implements OnChanges {
         return contributors;
     }
 
-    resourceFromEntry(entry) : BibliographicResource {
-        console.log("resourceFromEntry", entry)
+    resourceFromEntry(entry): BibliographicResource {
+        console.log('resourceFromEntry', entry)
 
         // When the production backend is used, entry does not have ocr data yet
         // but when the development backend is used, entry does indeed have ocr data field
         console.log('ENTRY REFERENCES', entry.references);
-        let ocr = entry.ocrData;
-        let br : BibliographicResource = {
-            //_id: entry.references,
+        const ocr = entry.ocrData;
+        const br: BibliographicResource = {
+            // _id: entry.references,
             title: ocr.title,
             publicationYear: ocr.date, // unary + operator makes it a number
                 contributors: this.authors2contributors(ocr.authors),
@@ -117,73 +122,70 @@ export class SuggestionComponent implements OnChanges {
     // END
 
     plusPressed() {
-        let newResource: BibliographicResource = this.resourceFromEntry(this.entry);
+        const newResource: BibliographicResource = this.resourceFromEntry(this.entry);
         this.locdbService.pushBibligraphicResource(newResource).subscribe( (br) => this.internalSuggestions.push(br));
     }
 
 
-    onSelect(br?: BibliographicResource) : void {
-
-        console.log("Suggestion emitted", br);
+    onSelect(br?: BibliographicResource): void {
+        console.log('Suggestion emitted', br);
         this.selectedResource = br;
         this.committed = false;
         this.suggest.next(br);
     }
 
-    refreshSuggestions(){
-        console.log("Internal Suggestions: ", this.internalSuggestions);
-        console.log("External Suggestions: ", this.externalSuggestions);
+    refreshSuggestions() {
+        console.log('Internal Suggestions: ', this.internalSuggestions);
+        console.log('External Suggestions: ', this.externalSuggestions);
 
-        let searchentry = JSON.parse(JSON.stringify(this.entry));
+        const searchentry = JSON.parse(JSON.stringify(this.entry)); // why is deep copy needed?
         searchentry.ocrData.title = this.suggestfield;
-        console.log("Searchentry: ", searchentry);
-        console.log("get internal Suggestions");
+        console.log('Searchentry: ', searchentry);
+        console.log('get internal Suggestions');
         //     this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.internalSuggestions = sgt );
         this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.saveInternal(sgt) );
-        console.log("get external Suggestions");
+        console.log('get external Suggestions');
         //     this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.externalSuggestions = sgt );
         this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
-        console.log("Done.");
+        console.log('Done.');
         this.entry = searchentry;
     }
 
-    saveInternal(sgt){
+    saveInternal(sgt) {
         // if (sgt.length == 0) {
         //   this.internalSuggestions = MOCK_INTERNAL;
         // }
         // else {
         this.internalSuggestions = sgt
-        console.log("Received Internal Suggestions: ", this.internalSuggestions);
+        console.log('Received Internal Suggestions: ', this.internalSuggestions);
         // }
     }
 
-    saveExternal(sgt){
+    saveExternal(sgt) {
         this.externalSuggestions = sgt
-        console.log("Received External Suggestions: ", this.externalSuggestions);
+        console.log('Received External Suggestions: ', this.externalSuggestions);
     }
 
     commit() {
         // This the actual linking of entry to resource
         this.entry.references = this.selectedResource._id;
         // TODO FIXME this should update the whole Bibliographic Resource
-        this.locdbService.putBibliographicEntry(this.entry).subscribe( (result) => console.log("Submitted Entry with result", result));
+        this.locdbService.putBibliographicEntry(this.entry).subscribe( (result) => console.log('Submitted Entry with result', result));
         this.committed = true;
     }
 
-    toggle_max_ex(){
-      if(this.max_ex == 0){
+    toggle_max_ex() {
+      if (this.max_ex === 0) {
         this.max_ex = 5
-      }
-      else{
+      } else {
           this.max_ex = 0
       }
     }
 
-    toggle_max_in(){
-      if(this.max_in == 0){
+    toggle_max_in() {
+      if (this.max_in === 0) {
         this.max_in = 5
-      }
-      else{
+      } else {
           this.max_in = 0
       }
     }
