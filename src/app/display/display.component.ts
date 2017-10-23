@@ -61,16 +61,13 @@ export class DisplayComponent implements OnInit {
         this.zoom = zoom;
     }
 
-<<<<<<< HEAD
     /*updateDisplay(newTodo: ToDoScans) {
-=======
     ngOnChange() {
         // Input todo and this method should replace manual calling of updateDisplay
         this.updateDisplay(this.todo);
     }
 
     updateDisplay(newTodo: ToDoScans) {
->>>>>>> 91e6bf0cbc3fca6b625487649e9df3fb76abe0d9
         // this method is called when a todo item is selected
         console.log('newTodo: ', newTodo);
         this.displaySource = this.locdbService.getScan(newTodo._id);
@@ -87,13 +84,15 @@ export class DisplayComponent implements OnInit {
     }
 
     entriesArrived(input) {
+        console.log("display.component.entriesArrived()")
+        console.log(input)
         let entries = input.parts
+        if (entries == undefined){
+          entries = input.children
+        }
         console.log('ENTRIES ARRIVED ===');
-<<<<<<< HEAD
         console.log(entries)
-=======
         // make entry_id an input property and move this code to ngOnChange()
->>>>>>> 91e6bf0cbc3fca6b625487649e9df3fb76abe0d9
         this.entries = entries;
         this.extractRects(this.entries);
         console.log(this.rects);
@@ -167,13 +166,13 @@ export class DisplayComponent implements OnInit {
                 y: Number(rectField[1]),
                 width: Number(rectField[2])  - Number(rectField[0]),
                 height: Number(rectField[3]) - Number(rectField[1]),
-                
+
                 // // x1 x2 y1 y2
                 // x: Number(rectField[0]),
                 // y: Number(rectField[2]),
                 // width: Number(rectField[1])  - Number(rectField[0]),
                 // height: Number(rectField[3]) - Number(rectField[2]),
-                
+
                 state: e.references ? 1 : -1
 
             });

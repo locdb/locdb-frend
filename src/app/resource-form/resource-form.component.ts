@@ -18,12 +18,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     @Input() resource_id: string = null;
 
-<<<<<<< HEAD
-=======
     // this should not be here, the resource should only rely on itself and not
     // some entries TODO FIXME
     @Input() exSuggests: any[];
->>>>>>> 91e6bf0cbc3fca6b625487649e9df3fb76abe0d9
+
     @Input() entry: BibliographicEntry;
     oldresource: BibliographicResource;
 

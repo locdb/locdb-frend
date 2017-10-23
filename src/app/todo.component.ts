@@ -29,6 +29,7 @@ export class TodoComponent implements OnInit {
   constructor ( private locdbService: LocdbService ) {}
 
   onSelect(scan: ToDoScans): void {
+    console.log("onSelect: ", scan)
     if ( scan.status === 'NOT_OCR_PROCESSED' ) {
       console.log('Starting processing');
       scan.status = 'OCR_PROCESSING';
@@ -39,15 +40,13 @@ export class TodoComponent implements OnInit {
     } else {
       this.selectedTodo = scan;
       console.log('Todo item selected', scan._id);
-<<<<<<< HEAD
+
       this.todo.next({"scan": scan, "id": scan._id});
       // this.todo.next(scan);
-=======
+
       // TODO FIXME this gets passed to display component
       // and the entries corresponding to its identifier are looked up
       // there might be a cleaner alternative
-      this.todo.next(scan);
->>>>>>> 91e6bf0cbc3fca6b625487649e9df3fb76abe0d9
     }
   }
 
@@ -94,6 +93,6 @@ export class TodoComponent implements OnInit {
   }
 
   printme(p){
-    console.log(p)
+    //console.log(p)
   }
 }

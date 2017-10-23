@@ -15,12 +15,8 @@ import { environment } from 'environments/environment';
     templateUrl: './suggestion.component.html',
     styleUrls: ['./suggestion.component.css']
 })
-<<<<<<< HEAD
-export class SuggestionComponent implements OnChanges {
-=======
+
 export class SuggestionComponent implements OnInit, OnChanges {
-  public customClass = 'customClass';
->>>>>>> 91e6bf0cbc3fca6b625487649e9df3fb76abe0d9
 
 
     @Input() entry: BibliographicEntry;
