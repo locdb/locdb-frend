@@ -38,7 +38,7 @@
     <h4 class="text-center mb-0">
       External Suggestions
     </h4>
-    <accordion *ngIf="externalSuggestios">
+    <accordion *ngIf="externalSuggestions">
       <div *ngFor="let r of externalSuggestions;let i = index">
         <app-resource-form *ngIf="max_ex == 0 || i < max_ex" [entry]="entry"
           [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">

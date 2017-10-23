@@ -15,6 +15,24 @@ export class BibliographicResource {
   embodiedAs?: ResourceEmbodiment[];
   /* should be aggregate of parts.references */
   cites?: string[];
+
+  // can be handled by casting
+  // constructor(other: BibliographicResource) {
+  //   this._id = other._id;
+  //   this.identifiers = other.identifiers;
+  //   this.type = other.type;
+  //   this.title = other.title;
+  //   this.subtitle = other.subtitle;
+  //   this.edition = other.edition;
+  //   this.number = other.number;
+  //   this.contributors = other.contributors;
+  //   this.publicationYear = other.publicationYear;
+  //   this.status = other.status;
+  //   this.partOf = other.partOf;
+  //   this.parts = other.parts;
+  //   this.embodiedAs = other.embodiedAs;
+  //   this.cites = other.cites;
+  // }
 }
 
 
@@ -64,7 +82,7 @@ export const ROLES = [
  * agents */
 export class AgentRole {
   _id?: string;
-  identifiers?: Identifier[];
+  identifiers: Identifier[]; // should not be optional!
   roleType: string;
   heldBy?: ResponsibleAgent;
 
