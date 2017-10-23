@@ -29,8 +29,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
     suggestfield; // environment.production ? this.entry.title : this.entry.ocrData.title;
 
     internalSuggestions: BibliographicResource[];
+    externalSuggestions: BibliographicResource[];
 
-    externalSuggestions: any[];
     committed = false;
     max_ex = 5
     max_in = 5
@@ -56,9 +56,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
             this.fetchInternalSuggestions();
             this.fetchExternalSuggestions();
             this.suggestfield = this.entry.ocrData.title;
-            if (this.entry.references) {
-
-            }
         } else {
             this.internalSuggestions = [];
             this.externalSuggestions = [];
@@ -119,7 +116,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     plusPressed() {
         const newResource: BibliographicResource = this.resourceFromEntry(this.entry);
-        this.locdbService.pushBibligraphicResource(newResource).subscribe( (br) => this.internalSuggestions.push(br));
+        this.locdbService.pushBibligraphicResource(newResource).subscribe(
+          (br) => { this.internalSuggestions.push(br); this.selectedResource = br }
+        );
     }
 
 

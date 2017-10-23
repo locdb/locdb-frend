@@ -17,10 +17,10 @@
 
   <!-- Panel body providing suggestions -->
   <div class="panel-body">
+    <h4 class="text-center mb-0">
+      Internal Suggestions
+    </h4>
     <accordion>
-          <h4 class="list-group-item list-group-item-action list-group-item-info">
-            Internal
-          </h4>
       <div *ngFor="let r of internalSuggestions;let i = index">
         <accordion-group heading="{{r.title}} ({{r.publicationYear}})"
         [panelClass]="selectedResource == r ? 'panel-success' : 'panel-default'"

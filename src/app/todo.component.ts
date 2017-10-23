@@ -14,11 +14,6 @@ import { LocdbService } from './locdb.service';
 
 export class TodoComponent implements OnInit {
   title = 'Todo Management';
-  // scans: ToDoScans[];// = TodoComponent.extractScans(MOCK_TODOBRS);
-  // scans: ScanEntries[];
-  // unprocessed: ToDoScans[];
-  // unprocessed: ScanEntries[];
-
   selectedTodo: ToDoScans;
   todolist: ToDo[] = [];
   unprocessed: ToDo[] = [];

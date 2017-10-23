@@ -134,8 +134,8 @@ export class LocdbService {
     const url = external ? `${this.locdbUrl}/getExternalSuggestions` : `${this.locdbUrl}/getInternalSuggestions`
 
     return this.http.post(url, be, options)
-    .map(response => response.json() as BibliographicResource[])
-    .catch(this.handleError);
+      .map(response => response.json() as BibliographicResource[])
+      .catch(this.handleError);
   }
 
   triggerOcrProcessing(scanId: string) {
