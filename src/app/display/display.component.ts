@@ -84,10 +84,10 @@ export class DisplayComponent implements OnInit {
     }
 
     entriesArrived(input) {
-        console.log("display.component.entriesArrived()")
-        console.log(input)
-        let entries = input.parts
-        if (entries == undefined){
+        console.log("display.component.entriesArrived()");
+        console.log(input);
+        let entries = input.parts;
+        if (entries === undefined) { // looks not so clean TODO FIXME
           entries = input.children
         }
         console.log('ENTRIES ARRIVED ===');
@@ -161,7 +161,7 @@ export class DisplayComponent implements OnInit {
             const rectField = coords.split(' ');
             this.rects.push({
 
-                //x1 y1 x2 y2
+                // x1 y1 x2 y2
                 x: Number(rectField[0]),
                 y: Number(rectField[1]),
                 width: Number(rectField[2])  - Number(rectField[0]),

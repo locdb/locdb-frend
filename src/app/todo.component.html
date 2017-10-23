@@ -17,16 +17,16 @@
         <accordion>
 
             <accordion-group heading="{{t.title}} ({{t.publicationYear}}) {{printme(t)}}"
-            panelClass = "panel-success">
+            panelClass = "panel-default">
               <app-resource-form [resource]="t" [folded]="true"></app-resource-form>
-              <a href="#" class="list-group-item list-group-item-action list-group-item-success"  (click)="onSelect(t)"> <!-- (click)="onSelectNew(s)"> -->
+              <a href="#" class="list-group-item list-group-item-action list-group-item-info"  (click)="onSelect(t)"> <!-- (click)="onSelectNew(s)"> -->
               <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of c.scans" (click)="onSelect(s)">-->
                 Scan <!-- on pp. {{s.firstPage}}-{{s.lastPage}} -->
                 <span class="badge badge-default badge-pill">{{ prettyStatus(t) }}</span>
               </a>
             </accordion-group>
 
-          <div class="list-group">
+          <!-- <div class="list-group"> -->
             <!-- scans directly attached to the resource -->
             <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of t.scans" (click)="onSelect(s)"> -->
             <!--   Scan on pp. {{s.firstPage}}-{{s.lastPage}} -->
@@ -42,7 +42,7 @@
               </a>
             </div>
           -->
-          </div>
+          <!-- </div> -->
         </accordion>
       </div>
 

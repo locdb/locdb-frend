@@ -1,34 +1,4 @@
-<!--<button class="btn btn-success pull-left" (click)="toggleEdit()">Edit</button>-->
 <div *ngIf="resource">
-  <!-- <div class="panel-heading">
-  <!--<div *ngIf="folded">
-  <button type="button" class="btn btn-info" aria-label="Toggle folding" (click)="toggleFolding()">
-  <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-</button>
-<em>{{resource.title}}</em> ({{resource.publicationYear}})
-</div>
-<div class="row justify-content-between" *ngIf="!folded">
-<div class="col-xs-8 text-left">
-<button type="button" class="btn btn-info" aria-label="Toggle folding" (click)="toggleFolding()">
-<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-</button>
-<b>Bibliographic Resource</b>
-</div>-->
-<div class="col-xs-12 text-right">
-<button type="button" class="btn btn-warning" aria-label="Edit" (click)="lgModal.show()">
-<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
-</button>
-</div>
-<!-- </div>-->
-<!--  </div>-->
-<!-- <div class="panel-body">-->
-<!--<div *ngIf="!folded" class="panel-body">-->
-<!-- <button class="btn btn-success pull-left" (click)="toggleEdit()">Edit</button> -->
-<div class="row">
-  <div class="col-md-12">
-  </div>
-</div>
-<div>
   <table class="table table-striped">
     <tbody>
       <tr *ngIf="resource.title">
@@ -105,8 +75,11 @@
       </tr>
     </tbody>
   </table>
+<div class="text-right">
+<button type="button" class="btn btn-warning" aria-label="Edit" (click)="lgModal.show()">
+<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+</button>
 </div>
-<!--</div>-->
 </div>
 <div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">

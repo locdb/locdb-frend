@@ -18,6 +18,7 @@ export class TodoComponent implements OnInit {
   todolist: ToDo[] = [];
   unprocessed: ToDo[] = [];
 
+  // we should only send something to the outside world if it is a concrete scan
   @Output() todo: EventEmitter<Object> = new EventEmitter();
   // @Output() todo: EventEmitter<ToDoScans> = new EventEmitter();
 
@@ -36,7 +37,7 @@ export class TodoComponent implements OnInit {
       this.selectedTodo = scan;
       console.log('Todo item selected', scan._id);
 
-      this.todo.next({"scan": scan, "id": scan._id});
+      this.todo.next({'scan': scan, 'id': scan._id});
       // this.todo.next(scan);
 
       // TODO FIXME this gets passed to display component

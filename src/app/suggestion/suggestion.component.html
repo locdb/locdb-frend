@@ -27,7 +27,7 @@
         *ngIf="max_in == 0 || i<max_in"
         (click)="onSelect(r)">
         <!-- [class]="selectedResource == r ? 'panel panel-success' : 'panel  panel-default '"-->
-        <app-resource-form [entry]="entry" [exSuggests]="externalSuggestions" [resource]="r" [folded]="true"></app-resource-form>
+        <app-resource-form [entry]="entry" [exSuggests]="externalSuggestions" [resource]="r"></app-resource-form>
       </accordion-group>
     </div>
     <h4 *ngIf="internalSuggestions && internalSuggestions.length >= max_in" class="list-group-item list-group-item-action list-group-item-info" style="margin-top: 0" (click)="toggle_max_in()">
@@ -42,7 +42,7 @@
       <accordion-group heading="{{r.title}} ({{r.publicationYear}})  {{r.identifiers.slice(-1)[0].scheme}}" *ngIf="max_ex == 0 || i<max_ex"
       [panelClass]="selectedResource == r ? 'panel-success' : 'panel-default'"
       (click)="onSelect(r)">
-      <app-resource-form [entry]="entry" [exSuggests]="externalSuggestions" [resource]="r" [folded]="true"></app-resource-form>
+      <app-resource-form [entry]="entry" [exSuggests]="externalSuggestions" [resource]="r"></app-resource-form>
     </accordion-group>
   </div>
   <h4 *ngIf="externalSuggestions && externalSuggestions.length >= max_in" class="list-group-item list-group-item-action list-group-item-info mt-0" style="margin-top: 0" (click)="toggle_max_ex()">
