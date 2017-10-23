@@ -23,7 +23,8 @@ export class TodoComponent implements OnInit {
   todolist: ToDo[] = [];
   unprocessed: ToDo[] = [];
 
-  @Output() todo: EventEmitter<ToDoScans> = new EventEmitter();
+  @Output() todo: EventEmitter<Object> = new EventEmitter();
+  // @Output() todo: EventEmitter<ToDoScans> = new EventEmitter();
 
   constructor ( private locdbService: LocdbService ) {}
 
@@ -38,8 +39,13 @@ export class TodoComponent implements OnInit {
     } else {
       this.selectedTodo = scan;
       console.log('Todo item selected', scan._id);
-      this.todo.next(scan);
+      this.todo.next({"scan": scan, "id": scan._id});
+      // this.todo.next(scan);
     }
+  }
+
+  onSelectNew(scan: ToDoScans): void {
+    console.log(scan)
   }
 
   ngOnInit() {
@@ -54,7 +60,7 @@ export class TodoComponent implements OnInit {
   }
 
   all_todos() {
-    return this.todolist.concat(this.unprocessed);
+    return this.todolist.concat(this.unprocessed)
   }
 
 
@@ -78,5 +84,9 @@ export class TodoComponent implements OnInit {
     } else {
       alert('Already processing...')
     }
+  }
+
+  printme(p){
+    console.log(p)
   }
 }

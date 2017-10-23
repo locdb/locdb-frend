@@ -101,7 +101,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         for (const ident of this.resource.identifiers) {
             const idForm: FormGroup =  this.fb.group( {
               literalValue: ident.literalValue,
-              scheme: ident.scheme
+              scheme: ident.scheme // TODO scheme dropdown?
             })
             this.identifiersForms.push(idForm);
         }
@@ -155,7 +155,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     addIdentifierField() {
         const identForm: FormGroup =  this.fb.group( {
-            literalValue: 'author',
+            literalValue: '',
             scheme: '',
         });
 
@@ -198,7 +198,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                 roleType:  conFormModel.role,
                 identifiers: [],
                 heldBy : <ResponsibleAgent> {
-                    identifiers: [],
+                    identifiers:  [], /// TODO implement
                     nameString: conFormModel.name,
                     givenName: '',
                     familyName: '',

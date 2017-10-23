@@ -30,9 +30,9 @@
         <app-resource-form [entry]="entry" [exSuggests]="externalSuggestions" [resource]="r" [folded]="true"></app-resource-form>
       </accordion-group>
     </div>
-    <h2 class="list-group-item list-group-item-action list-group-item-info mt-0" (click)="toggle_max_in()">
+    <h4 *ngIf="internalSuggestions && internalSuggestions.length >= max_in" class="list-group-item list-group-item-action list-group-item-info" style="margin-top: 0" (click)="toggle_max_in()">
       Show more...
-    </h2>
+    </h4>
   </accordion>
   <accordion>
     <h2 class="list-group-item list-group-item-action list-group-item-info">
@@ -45,9 +45,9 @@
       <app-resource-form [entry]="entry" [exSuggests]="externalSuggestions" [resource]="r" [folded]="true"></app-resource-form>
     </accordion-group>
   </div>
-  <h2 class="list-group-item list-group-item-action list-group-item-info mt-0" (click)="toggle_max_ex()">
+  <h4 *ngIf="externalSuggestions && externalSuggestions.length >= max_in" class="list-group-item list-group-item-action list-group-item-info mt-0" style="margin-top: 0" (click)="toggle_max_ex()">
     Show more...
-  </h2>
+  </h4>
 </accordion>
 <!---
 <div class="list-group suggestions">

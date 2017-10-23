@@ -54,22 +54,43 @@ export class DisplayComponent implements OnInit {
         this.zoom = zoom;
     }
 
-    updateDisplay(newTodo: ToDoScans) {
+    /*updateDisplay(newTodo: ToDoScans) {
         // this method is called when a todo item is selected
         console.log('newTodo: ', newTodo);
         this.displaySource = this.locdbService.getScan(newTodo._id);
         this.displayActive = true;
         this.locdbService.getToDoBibliographicEntries(newTodo._id).subscribe( (res) => this.entriesArrived(res) ) ;
+    } */
+
+    updateDisplay(input) {
+        // this method is called when a todo item is selected
+        console.log('newTodo: ', input);
+        this.displaySource = this.locdbService.getScan(input.id);
+        this.displayActive = true;
+        this.entriesArrived(input.scan);
     }
 
-    entriesArrived(entries) {
+    entriesArrived(input) {
+        let entries = input.parts
         console.log('ENTRIES ARRIVED ===');
+        console.log(entries)
         this.entries = entries;
         this.extractRects(this.entries);
         console.log(this.rects);
         this.currentIndex = 0;
         this.entry.next(entries[0]);
     }
+
+
+    /*entriesArrived(entries) {
+        console.log('ENTRIES ARRIVED ===');
+        console.log(entries)
+        this.entries = entries;
+        this.extractRects(this.entries);
+        console.log(this.rects);
+        this.currentIndex = 0;
+        this.entry.next(entries[0]);
+    }*/
 
     onSelect(entry: any) {
         // selection of an entry of one todo item

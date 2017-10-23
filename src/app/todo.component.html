@@ -16,8 +16,14 @@
       <div *ngFor="let t of all_todos()">
         <accordion>
 
-            <accordion-group heading="{{t.title}} ({{t.publicationYear}})">
+            <accordion-group heading="{{t.title}} ({{t.publicationYear}}) {{printme(t)}}"
+            panelClass = "panel-success">
               <app-resource-form [resource]="t" [folded]="true"></app-resource-form>
+              <a href="#" class="list-group-item list-group-item-action list-group-item-success"  (click)="onSelect(t)"> <!-- (click)="onSelectNew(s)"> -->
+              <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of c.scans" (click)="onSelect(s)">-->
+                Scan <!-- on pp. {{s.firstPage}}-{{s.lastPage}} -->
+                <span class="badge badge-default badge-pill">{{ prettyStatus(t) }}</span>
+              </a>
             </accordion-group>
 
           <div class="list-group">
@@ -26,13 +32,16 @@
             <!--   Scan on pp. {{s.firstPage}}-{{s.lastPage}} -->
             <!-- </a> -->
             <!-- <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span> -->
-            <div class="list-group" *ngFor="let c of t.children">
-              <!-- scans attached to children of resource -->
-              <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of c.scans" (click)="onSelect(s)">
-                Scan on pp. {{s.firstPage}}-{{s.lastPage}}
-                <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
+<!--
+            <div class="list-group" *ngFor="let c of t.parts">
+              <!-- scans attached to children of resource
+              <a href="#" class="list-group-item list-group-item-action list-group-item-success"  (click)="onSelect(c)"> <!-- (click)="onSelectNew(s)">
+              <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of c.scans" (click)="onSelect(s)">
+                Scan <!-- on pp. {{s.firstPage}}-{{s.lastPage}}
+                <span class="badge badge-default badge-pill">{{ prettyStatus(c) }}</span>
               </a>
             </div>
+          -->
           </div>
         </accordion>
       </div>
