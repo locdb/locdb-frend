@@ -82,7 +82,7 @@ export const ROLES = [
  * agents */
 export class AgentRole {
   _id?: string;
-  identifiers: Identifier[]; // should not be optional!
+  identifiers: Identifier[];
   roleType: string;
   heldBy?: ResponsibleAgent;
 
