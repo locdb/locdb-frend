@@ -40,18 +40,15 @@
     </h4>
     <accordion *ngIf="externalSuggestios">
       <div *ngFor="let r of externalSuggestions;let i = index">
-        <accordion-group heading="{{r.title}} ({{r.publicationYear}})" *ngIf="max_ex == 0 || i<max_ex"
-            [attr.class]="selectedResource == r ? 'list-group-item list-group-item-action list-group-item-info selected' :
-            'list-group-item list-group-item-action list-group-item-info'"
-            (click)="onSelect(r)">
-            <app-resource-form [entry]="entry" [exSuggests]="externalSuggestions" [resource]="r" [folded]="true" (click)="onSelect(r)"></app-resource-form>
-          </accordion-group>
-        </div>
-        <a href="#" *ngIf="max_ex" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
-          <p><em>Show all</em></p>
-        </a>
-      </accordion>
-<!---
+        <app-resource-form *ngIf="max_ex == 0 || i < max_ex" [entry]="entry"
+          [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
+        </app-resource-form>
+      </div>
+      <a href="#" *ngIf="max_ex" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
+        <p><em>Show all</em></p>
+      </a>
+    </accordion>
+  <!---
     <div class="list-group suggestions">
    <span href="#" *ngFor="let r of internalSuggestions" [attr.class]="selectedResource == r ? 'list-group-item list-group-item-action list-group-item-info selected' : 'list-group-item list-group-item-action list-group-item-info'" (click)="onSelect(r)">
    <app-resource-form [entry]="entry" [exSuggests]="externalSuggestions" [resource]="r" [folded]="true"></app-resource-form>
