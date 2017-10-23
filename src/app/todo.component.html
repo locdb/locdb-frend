@@ -16,9 +16,7 @@
       <div *ngFor="let t of all_todos()">
         <accordion>
 
-          <accordion-group heading="{{t.title}} ({{t.publicationYear}})">
-            <app-resource-form [resource]="t" [folded]="true"></app-resource-form>
-          </accordion-group>
+          <app-resource-form [resource]="t"></app-resource-form>
 
           <div class="list-group">
             <!-- scans directly attached to the resource -->

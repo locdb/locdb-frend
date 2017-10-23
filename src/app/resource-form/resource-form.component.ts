@@ -13,7 +13,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // if this is a string, we can try to dereference it from the back-end
     @Input() resource: BibliographicResource | ToDo;
-    @Input() folded = false;
 
 
     @Input() resource_id: string = null;
@@ -22,6 +21,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     // some entries TODO FIXME
     @Input() exSuggests: any[];
     @Input() entry: BibliographicEntry;
+    @Input() selected = false;
     oldresource: BibliographicResource;
 
     resourceForm: FormGroup;
@@ -51,10 +51,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             publicationyear: '',
             partof: '',
         });
-    }
-
-    toggleFolding()  {
-        this.folded = !this.folded;
     }
 
     ngOnInit()  {
