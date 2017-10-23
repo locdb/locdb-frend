@@ -18,7 +18,7 @@
 
             <accordion-group heading="{{t.title}} ({{t.publicationYear}}) {{printme(t)}}"
             panelClass = "panel-default">
-              <app-resource-form [resource]="t" [folded]="true"></app-resource-form>
+              <app-resource-form [resource]="t"></app-resource-form>
               <a href="#" class="list-group-item list-group-item-action list-group-item-info"  (click)="onSelect(t)"> <!-- (click)="onSelectNew(s)"> -->
               <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of c.scans" (click)="onSelect(s)">-->
                 Scan <!-- on pp. {{s.firstPage}}-{{s.lastPage}} -->
