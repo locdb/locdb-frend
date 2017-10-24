@@ -109,6 +109,8 @@ export class OCRData {
   date?: string;
   marker?: string;
   comments?: string;
+  journal?: string;
+  volume?: string;
 }
 
 /** A model for embodiments of a resource */
