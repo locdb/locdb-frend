@@ -378,4 +378,15 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     }
 
+    short(br: BibliographicResource) {
+        let s = br.title
+        if (br.publicationYear) {
+            s += ` (${br.publicationYear})`
+        }
+        if (br.status === 'EXTERNAL') {
+            s += ` [${br.identifiers[br.identifiers.length - 1].scheme}]`
+        }
+        return s;
+    }
+
 }

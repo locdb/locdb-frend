@@ -1,5 +1,4 @@
-<accordion-group [heading]="resource.title + ' (' + resource.publicationYear + ')'"
-  [isOpen]="selected" [panelClass]="selected ? 'panel-primary' : 'panel-default'">
+<accordion-group [heading]=short(resource)  [isOpen]="selected" [panelClass]="selected ? 'panel-primary' : 'panel-default'">
   <table class="table table-striped">
     <tbody>
       <tr *ngIf="resource.title">
@@ -184,7 +183,7 @@
                         <a href="#" *ngFor="let r of exSuggests" class="list-group-item list-group-item-action list-group-item-info" (click)="inMerge(r)" (click)="myPopover.hide()">
                           {{r.title}}
                           <!--{{r.ocrData.title}}-->
-                          <span class="badge badge-default badge-pill">123</span>
+                          <span class="badge badge-default badge-pill">{{ r.identifiers[r.identifiers.length - 1].scheme </span>
                         </a>
                       </div>
                     </popover-content>

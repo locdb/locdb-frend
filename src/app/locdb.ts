@@ -125,7 +125,7 @@ export class ResourceEmbodiment {
 
 /** This is the model for agents, e.g. actual persons */
 export class ResponsibleAgent {
-  identifiers?: Identifier[];
+  identifiers: Identifier[];
   nameString: string;
   givenName?: string;
   familyName?: string;
