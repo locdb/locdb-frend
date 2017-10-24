@@ -66,6 +66,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     ngOnChanges()  {
         // This is called when the model changes, not the form
+        // TODO FIXME yes it does get called, since the resource is bound to the form
+        // maybe it is enough to shift this code to OnInit
         if (!this.resourceForm || !this.resource)  {
             return;
         }
