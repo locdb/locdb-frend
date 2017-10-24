@@ -23,7 +23,7 @@
     <accordion>
       <div *ngFor="let r of internalSuggestions;let i = index">
         <accordion-group heading="{{r.title}} ({{r.publicationYear}})"
-        [panelClass]="selectedResource == r ? 'panel-success' : 'panel-default'"
+        [panelClass]="selectedResource == r ? 'panel-primary' : 'panel-default'"
         *ngIf="max_in == 0 || i<max_in"
         (click)="onSelect(r)">
         <!-- [class]="selectedResource == r ? 'panel panel-success' : 'panel  panel-default '"-->
@@ -35,12 +35,12 @@
     </h4>
   </accordion>
   <accordion>
-    <h2 class="list-group-item list-group-item-action list-group-item-info">
-      External
-    </h2>
+    <h4 class="text-center mb-0">
+      External Suggestions
+    </h4>
     <div *ngFor="let r of externalSuggestions;let i = index">
       <accordion-group heading="{{r.title}} ({{r.publicationYear}})  {{r.identifiers.slice(-1)[0].scheme}}" *ngIf="max_ex == 0 || i<max_ex"
-      [panelClass]="selectedResource == r ? 'panel-success' : 'panel-default'"
+      [panelClass]="selectedResource == r ? 'panel-primary' : 'panel-default'"
       (click)="onSelect(r)">
       <app-resource-form [entry]="entry" [exSuggests]="externalSuggestions" [resource]="r"></app-resource-form>
     </accordion-group>

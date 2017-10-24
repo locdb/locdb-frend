@@ -32,8 +32,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
     externalSuggestions: BibliographicResource[];
 
     committed = false;
-    max_ex = 5
-    max_in = 5
+    max_ex = 5;
+    max_in = 5;
 
     testresource: BibliographicResource;
 
@@ -162,26 +162,38 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     commit() {
-        // This the actual linking of entry to resource
+      // This the actual linking of entry to resource
+      if (this.selectedResource.status === 'EXTERNAL') {
+        this.locdbService.pushBibligraphicResource(this.selectedResource).subscribe(
+          (response) => {
+            this.entry.references = response._id;
+            this.locdbService.putBibliographicEntry(this.entry);
+            console.log('Submitted Entry pointing to former external BR', response);
+            this.committed = true;
+          }
+        );
+      } else {
         this.entry.references = this.selectedResource._id;
-        // TODO FIXME this should update the whole Bibliographic Resource
-        this.locdbService.putBibliographicEntry(this.entry).subscribe( (result) => console.log('Submitted Entry with result', result));
-        this.committed = true;
+        this.locdbService.putBibliographicEntry(this.entry).subscribe( (result) => {
+          this.committed = true;
+          console.log('Submitted Entry with result', result)
+        });
+      }
     }
 
     toggle_max_ex() {
       if (this.max_ex === 0) {
-        this.max_ex = 5
+        this.max_ex = 5;
       } else {
-          this.max_ex = 0
+          this.max_ex = 0;
       }
     }
 
     toggle_max_in() {
       if (this.max_in === 0) {
-        this.max_in = 5
+        this.max_in = 5;
       } else {
-          this.max_in = 0
+          this.max_in = 0;
       }
     }
 

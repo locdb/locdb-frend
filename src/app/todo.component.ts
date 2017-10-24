@@ -73,6 +73,10 @@ export class TodoComponent implements OnInit {
     if ( scan.status === 'NOT_OCR_PROCESSED' ) {
       return 'not OCR processed';
     }
+    if ( scan.status === undefined ) {
+      return 'undefined';
+    }
+    console.log("prettyStatus", scan.status, scan)
     return 'Processing'
   }
 

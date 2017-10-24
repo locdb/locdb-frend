@@ -14,9 +14,9 @@ export const MOCK_INTERNAL: BibliographicResource[] = [
       lastPage: 74,
     }],
     contributors: [
-      {roleType: 'author', heldBy: {nameString: 'Abramson, L.Y.'}},
-      {roleType: 'author', heldBy: {nameString: 'Seligman, M.E.P'}},
-      {roleType: 'author', heldBy: {nameString: 'Teasdale, J.D.'}},
+      {roleType: 'author', identifiers: [], heldBy: {nameString: 'Abramson, L.Y.', identifiers: []}},
+      {roleType: 'author', identifiers: [], heldBy: {nameString: 'Seligman, M.E.P', identifiers: []}},
+      {roleType: 'author', identifiers: [], heldBy: {nameString: 'Teasdale, J.D.', identifiers: []}},
     ]
   },
   { 
@@ -28,8 +28,8 @@ export const MOCK_INTERNAL: BibliographicResource[] = [
       format: 'print',
     }],
     contributors: [
-      {roleType: 'author', heldBy: {nameString: 'Adorno, T.W.'}},
-      {roleType: 'publisher', heldBy: {nameString: 'Suhrkamp (Frankfurt)'}},
+      {roleType: 'author', identifiers: [],  heldBy: {nameString: 'Adorno, T.W.', identifiers: []}},
+      {roleType: 'publisher', identifiers: [], heldBy: {nameString: 'Suhrkamp (Frankfurt)', identifiers: []}},
     ]
   }
 ];

@@ -16,13 +16,13 @@
       <!-- display component OUTPUT: entry to use -->
       <app-display (entry)='updateEntry($event)'></app-display>
     </div>
-    <div *ngIf='!entry' class="col-xs-12 col-sm-6 col-md-6">
-      <app-feed-reader></app-feed-reader>
-    </div>
+    <!-- <div *ngIf='!entry' class="col-xs-12 col-sm-6 col-md-6"> -->
+    <!--   <app-feed-reader></app-feed-reader> -->
+    <!-- </div> -->
     <div *ngIf='entry' class="col-xs-12 col-sm-6 col-md-6">
       <!-- suggestion component INPUT: entry, OUTPUT: resource -->
       <app-suggestion [entry]='entry' (suggest)='updateTarget($event)'></app-suggestion>
-      <app-commit [source]='source' [entry]='entry' [target]='target'></app-commit>
+      <!-- <app-commit [source]='source' [entry]='entry' [target]='target'></app-commit> -->
     </div>
   </div>
 </section>
