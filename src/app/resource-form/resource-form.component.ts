@@ -153,7 +153,11 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         this.resource = this.prepareSaveResource();
         this.toggleEdit();
         console.log('Sending resource to backend!', this.resource);
-        this.locdbService.putBibliographicResource(this.resource).subscribe((rval) => console.log('Yay. submitted', rval));
+        if (this.resource.status !== 'EXTERNAL') {
+            // resource does not have an internal identifier
+            // only store in memory for now (until commit is called)
+            this.locdbService.putBibliographicResource(this.resource).subscribe((rval) => console.log('Yay. submitted', rval));
+        }
     }
 
     resetEntries() {
@@ -193,8 +197,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             publicationYear: formModel.publicationyear as string || '',
             partOf: formModel.partof as string || '',
             // warning: no deep copy (but this ok as long as not editable)
-                embodiedAs: this.resource.embodiedAs,
+            embodiedAs: this.resource.embodiedAs,
             parts: this.resource.parts,
+            cites: this.resource.cites,
+            status: this.resource.status
         }
         // TODO FIXME
         // if (this.resource.hasOwnProperty('children')) {
