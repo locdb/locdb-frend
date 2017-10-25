@@ -152,6 +152,7 @@ export class ToDoScans {
 
 /** External Resource Placeholder */
 export class ExternalResource {
+  // should be unused
   identifiers?: Identifier[];
   status?: string;
   authors: string[];

@@ -18,6 +18,7 @@ export class TodoComponent implements OnInit {
   todolist: ToDo[] = [];
   unprocessed: ToDo[] = [];
 
+
   @Output() todo: EventEmitter<ToDoScans> = new EventEmitter();
 
   constructor ( private locdbService: LocdbService ) {}
