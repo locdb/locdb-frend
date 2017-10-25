@@ -84,6 +84,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         this.contributors.push(this.fb.group({role: '', name: ''}));
     }
 
+    removeContributor(index: number) {
+        this.contributors.removeAt(index);
+    }
+
     // clean array treatment end
     setIdentifiers(ids: Identifier[]) {
         const contribFGs = ids.map(

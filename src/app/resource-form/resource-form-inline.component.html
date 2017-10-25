@@ -60,6 +60,9 @@
       <div formArrayName="contributors" class="well well-sm">
         <div *ngFor="let contributor of contributors.controls; let i = index" [formGroupName]="i">
           <div class="form-group">
+            <button type="button" class="btn btn-danger" aria-label="Remove contributor" (click)="removeContributor(i)">
+                <span class="glyphicon glyphicon-remove"></span> Remove
+            </button>
             <label class="center-block">Role:
               <select class="form-control" formControlName="role">
                 <option *ngFor="let r of roles" [value]="r">{{r}}</option>
@@ -74,7 +77,9 @@
         </div>
         <br>
         <!-- End of repeated contributor template -->
-        <button (click)="addContributor()" type="button">Add a Contributor</button>
+        <button (click)="addContributor()" type="button" class="btn btn-info">
+          <span class="glyphicon glyphicon-add"></span> Add
+        </button>
       </div>
       <div class="form-group">
         <label class="center-block">Edition:
@@ -88,20 +93,27 @@
         <label class="center-block">Part of:
           <input class="form-control" formControlName="partof">
         </label>
-          <label class="center-block">Number:
+        <label class="center-block">Number:
           <input type=number class="form-control" formControlName="resourcenumber">
         </label>
       </div>
       <div style="margin-bottom: 1em">
-        <button type="button" class="btn btn-default" (click)="showForm(false)">Cancel</button> &nbsp;
-        <button type="button" class="btn btn-danger" (click)="deleteResource()">Delete</button> &nbsp;
+        <button type="button" class="btn btn-default" (click)="showForm(false)">
+          Cancel
+        </button> &nbsp;
+        <button type="button" class="btn btn-danger" (click)="deleteResource()">
+          Delete
+        </button> &nbsp;
         <button type="reset" (click)="revert()"
-          [disabled]="resourceForm.pristine" class="btn btn-warning">Revert</button> &nbsp;
+          [disabled]="resourceForm.pristine" class="btn btn-warning">
+          Revert
+        </button> &nbsp;
         <button type="submit"
-          [disabled]="resourceForm.pristine" class="btn btn-success">Save</button>
+          [disabled]="resourceForm.pristine" class="btn btn-success">
+          <span class="glyphicon glyphicon-save"></span> Add
+        </button>
       </div>
     </form>
-    {{formModel | json }}
     <!-- End of editable form -->
   </div>
 </accordion-group>
