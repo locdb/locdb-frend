@@ -85,6 +85,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
                 familyName: '',
             }
             const role: AgentRole = {
+                _id: '', // ...
                 roleType: 'author',  /// TODO FIXME this is totally outdated
                 heldBy: agent,
                 identifiers: [],

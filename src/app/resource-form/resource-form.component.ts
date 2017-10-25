@@ -1,11 +1,11 @@
-import { BibliographicResource, BibliographicEntry, AgentRole, ResponsibleAgent, ToDo, ROLES } from '../locdb';
+import { BibliographicResource, BibliographicEntry, AgentRole, ResponsibleAgent, ToDo, ROLES, Identifier } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
 @Component( {
     selector: 'app-resource-form',
-    templateUrl: './resource-form.component.html',
+    templateUrl: './resource-form-inline.component.html',
     styleUrls: ['./resource-form.component.css']
 })
 
@@ -19,15 +19,14 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // this should not be here, the resource should only rely on itself and not
     // some entries TODO FIXME
-    @Input() exSuggests: any[];
-    @Input() entry: BibliographicEntry;
+    // @Input() exSuggests: any[];
     @Input() selected = false;
     oldresource: BibliographicResource;
 
     resourceForm: FormGroup;
     contributorsForms: FormGroup[] = [];
     embodiments: FormGroup[] = [];
-    editable = false;
+    submitted = true;
     parts: FormGroup[] = [];
 
 
@@ -50,6 +49,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             resourcenumber: 0,
             publicationyear: '',
             partof: '',
+            contributors: this.fb.array([])
         });
     }
 
@@ -64,72 +64,71 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         }
     }
 
+    // clean array treatment
+    setContributors(roles: AgentRole[]) {
+        const contribFGs = roles.map(
+            arole => this.fb.group(
+                {role: arole.roleType, name: arole.heldBy.nameString }
+            )
+        );
+        const contribFormArray = this.fb.array(contribFGs);
+        this.resourceForm.setControl('contributors', contribFormArray);
+    }
+
+    get contributors(): FormArray {
+        return this.resourceForm.get('contributors') as FormArray;
+    }
+
+    addContributor() {
+        // reference from getter above
+        this.contributors.push(this.fb.group({role: '', name: ''}));
+    }
+
+    // clean array treatment end
+    setIdentifiers(ids: Identifier[]) {
+        const contribFGs = ids.map(
+            identifier => this.fb.group(
+                {literalValue: identifier.literalValue,
+                    scheme: identifier.scheme }
+            )
+        );
+        const idsFormArray = this.fb.array(contribFGs);
+        this.resourceForm.setControl('identifiers', idsFormArray);
+    }
+
+    get identifiers(): FormArray {
+        return this.resourceForm.get('identifiers') as FormArray;
+    }
+
+    addIdentifier() {
+        // reference from getter above
+        this.contributors.push(this.fb.group(new Identifier()));
+    }
+
     ngOnChanges()  {
         // This is called when the model changes, not the form
         // TODO FIXME yes it does get called, since the resource is bound to the form
         // maybe it is enough to shift this code to OnInit
-        if (!this.resourceForm || !this.resource)  {
-            return;
-        }
+        // if (!this.resourceForm || !this.resource)  {
+        //     return;
+        // }
         this.resourceForm.reset( {
             title: this.resource.title,
-            resourcetype: this.resource.type,
             subtitle: this.resource.subtitle,
+            resourcetype: this.resource.type,
             edition: this.resource.edition,
             resourcenumber: this.resource.number,
             publicationyear: this.resource.publicationYear,
-                partof: this.resource.partOf,
+            partof: this.resource.partOf,
                 // ...
         });
-        //  set Contributors
-        this.contributorsForms = [];
-        for (const con of this.resource.contributors) {
-            const conForm: FormGroup =  this.fb.group( {
-                role: con.roleType,
-                name: con.heldBy.nameString,
-
-                roleidentifiers: con.identifiers,
-                resagentidentifiers: con.heldBy.identifiers,
-                givenName: con.heldBy.givenName,
-                familyName: con.heldBy.familyName,
-            })
-            this.contributorsForms.push(conForm);
-        }
-        this.embodiments = []
-        // set Embodiments
-        if (this.resource.embodiedAs)  {
-            for (const emb of this.resource.embodiedAs) {
-                const embForm: FormGroup =  this.fb.group( {
-                    typeMongo: emb.typeMongo,
-                    format: emb.format,
-                        firstPage: emb.firstPage,
-                        lastPage: emb.lastPage,
-                        url: emb.url,
-                        // scans?: ToDoParts[];
-                })
-                this.embodiments.push(embForm);
-            }
-        }
-        this.parts = [];
-        // set parts
-        if (this.resource.parts)  {
-            for (const part of this.resource.parts) {
-                const partForm: FormGroup =  this.fb.group( {
-                    id: part._id,
-                    bibliographicEntryText: part.bibliographicEntryText,
-                    references: part.references,
-                    // coordinates: part.coordinates, << removed for now, is part of ocrData
-                    scanId: part.scanId,
-                    status: part.status,
-                    // added
-                    // identifiers: part.identifiers; // <-- Array
-                })
-            }
-        }
-
+        // new clean set contribs
+        this.setContributors(this.resource.contributors);
+        this.setIdentifiers(this.resource.identifiers);
     }
 
     addContributorField() {
+        // only used by modal variant
         const conForm: FormGroup =  this.fb.group( {
             role: 'author',
             name: '',
@@ -139,63 +138,60 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
 
     delContributorField(pos: number) {
+        // only used by modal variant
         this.contributorsForms.splice(pos, 1);
     }
 
-    dropboxitemselected(conForm: FormGroup, s: string) {
-        // console.log('Role:', s);
-        // console.log('conForm:', conForm);
-        // console.log('Role ' + s + ' selected.');
-        conForm.patchValue( {
-            role: s
-        });
-    }
     onSubmit() {
-        // this.saveEntries();
         this.resource = this.prepareSaveResource();
-        this.toggleEdit();
-        console.log('Sending resource to backend!', this.resource);
+        this.submitted = true;
         if (this.resource.status !== 'EXTERNAL') {
+            console.log('Sending resource updates to backend!', this.resource);
             // resource does not have an internal identifier
             // only store in memory for now (until commit is called)
             this.locdbService.putBibliographicResource(this.resource).subscribe((rval) => console.log('Yay. submitted', rval));
+        } else {
+            console.log('Saving external resource updates in the frontend');
         }
+        this.ngOnChanges(); // as suggested by https://angular.io/guide/reactive-forms
     }
 
-    resetEntries() {
+    revert() {
         this.ngOnChanges()
+    }
+
+    reconstructAgentRole(name: string, role: string): AgentRole {
+        const agentRole = {
+            identifiers: [],
+            roleType: role,
+            heldBy: {
+                identifiers: [],
+                roleType: role,
+                givenName: '',
+                familyName: '',
+                nameString: name,
+            }
+        }
+        return agentRole;
     }
 
 
     prepareSaveResource(): BibliographicResource  {
-        /* Saves the form value into the captured resource */
-        /* not sure if rewrite of method below */
+        // Form values need deep copy, else shallow copy is enough
         const formModel = this.resourceForm.value;
         const contributors: AgentRole[] = []
-        for (const conForm of this.contributorsForms)  {
-            const conFormModel = conForm.value;
-            const role: AgentRole =  {
-                roleType:  conFormModel.role,
-                identifiers: [],
-                heldBy : <ResponsibleAgent> {
-                    identifiers: [],
-                    nameString: conFormModel.name,
-                    givenName: '',
-                    familyName: '',
-                }
-            };
-            contributors.push(role);
-        }
-
+        const contribsDeepCopy = formModel.contributors.map(
+            (elem: {name: string, role: string }) => this.reconstructAgentRole(elem.name, elem.role)
+        );
         const resource: BibliographicResource =  {
             _id: this.resource._id,
-            identifiers: this.resource.identifiers,
+            identifiers: this.resource.identifiers, // TODO needs to come from form model, when changeable
             type: formModel.resourcetype as string || '',
             title: formModel.title as string || '',
             subtitle: formModel.subtitle as string || '',
             edition: formModel.edition as string || '',
             number: formModel.resourcenumber as number || 0,
-            contributors: contributors,
+            contributors: contribsDeepCopy,
             publicationYear: formModel.publicationyear as string || '',
             partOf: formModel.partof as string || '',
             // warning: no deep copy (but this ok as long as not editable)
@@ -289,96 +285,77 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         // what of them schould be displayed and be editable? schould it be possible to make new entries?
         // this.toggleEdit();
     }
-    toggleEdit(event?: any) {
-        console.log('toggleEdit');
-        this.editable = !this.editable;
-    }
-    saveExternal(sgt) {
-        this.exSuggests = sgt
-        console.log('Recieved External: ', this.exSuggests);
-    }
-    loadExtenalSuggestions() {
-        // search for external Suggestions with entry emitted by app-display (current active entry)
-        console.log('[ResourceForm] loadExtenalSuggestions(): ', this.entry);
-        const searchentry = JSON.parse(JSON.stringify(this.entry));
-        // set new title to search with
-        searchentry.ocrData.title = this.resourceForm.value.title;
-        console.log('[ResourceForm] loadExtenalSuggestions(): ',
-            this.resourceForm.value.title, '; searchentry.ocrData.title',
-            searchentry);
-        this.locdbService.suggestions(searchentry, true).subscribe( (sgt) => this.saveExternal(sgt) );
-    }
-    inMerge(r: any) {
-        // empty fields are filled with information from selected external resource if possible
-        console.log('[ResourceForm] inMerge(): ', this.resource, '; Clicked External Entry: ',  r);
-        /* ---------------------*/
-        // depending on import type (BibResource/ocrData) two differend imports
-        // BibResource
-        const title = r.title;
-        const authors = [];
-        for (const contributor of r.contributors) {
-            const name = contributor.heldBy.nameString;
-//             console.log('name: ', name);
-            // let test: any= [' AUTHOR'];
-//             console.log(test);
-            let role = contributor.roleType;
-            if (ROLES.indexOf(role) >= 0) {
-                console.log('Role of external Resource found');
-            } else {
-                role = 'author';
-            }
-//             console.log('role: ', role);
-            authors.push( {name: name, role: role});
-        }
-        /* ---------------------*/
 
-        /* ---------------------*/
-        // ocrData
-//         console.log('ocrData',r.ocrData)
-        // let title = r.ocrData.title;
-        // let authors = r.ocrData.authors;
-        // let name: string;
-        // let role = 'author';
-//         console.log('external suggestion: ', r);
-//         console.log('inMerge, r: ', r);
-        /* ---------------------*/
+    // toggleEdit(event?: any) {
+    //     console.log('toggleEdit');
+    //     this.editable = !this.editable;
+    // }
+    // ** THE FOLLOWING CODE MIGHT GO TO SUGGESTIONS **
+    // loadExtenalSuggestions() {
+    //     // search for external Suggestions with entry emitted by app-display (current active entry)
+    //     console.log('[ResourceForm] loadExtenalSuggestions(): ', this.entry);
+    //     const searchentry = JSON.parse(JSON.stringify(this.entry));
+    //     // set new title to search with
+    //     searchentry.ocrData.title = this.resourceForm.value.title;
+    //     console.log('[ResourceForm] loadExtenalSuggestions(): ',
+    //         this.resourceForm.value.title, '; searchentry.ocrData.title',
+    //         searchentry);
+    //     this.locdbService.suggestions(searchentry, true).subscribe( (sgt) => this.saveExternal(sgt) );
+    // }
+    // inMerge(r: any) {
+    //     // empty fields are filled with information from selected external resource if possible
+    //     console.log('[ResourceForm] inMerge(): ', this.resource, '; Clicked External Entry: ',  r);
+    //     /* ---------------------*/
+    //     // depending on import type (BibResource/ocrData) two differend imports
+    //     // BibResource
+    //     const title = r.title;
+    //     const authors = [];
+    //     for (const contributor of r.contributors) {
+    //         const name = contributor.heldBy.nameString;
+    //         let role = contributor.roleType;
+    //         if (ROLES.indexOf(role) >= 0) {
+    //             console.log('Role of external Resource found');
+    //         } else {
+    //             role = 'author';
+    //         }
+    //         authors.push( {name: name, role: role});
+    //     }
 
-        if (this.resourceForm.value.title === '') {
-            this.resourceForm.patchValue( {
-                title: title,
-            });
-        }
-        // add authors if not in list already
-        for (const author of authors) {
-            const name = author.name; // author for ocrData.authors
-            const role = author.role; // dummy for ocrData
+    //     if (this.resourceForm.value.title === '') {
+    //         this.resourceForm.patchValue( {
+    //             title: title,
+    //         });
+    //     }
+    //     // add authors if not in list already
+    //     for (const author of authors) {
+    //         const name = author.name; // author for ocrData.authors
+    //         const role = author.role; // dummy for ocrData
 
-            let isListed = false;
+    //         let isListed = false;
 
-            for (const con of this.contributorsForms) {
-                if (con.value.name === name) {
-                    isListed = true;
-                    break;
-                }
-            }
-            if (!isListed) {
-                // this.resourceForm.patchValue( {});
-                const conForm: FormGroup =  this.fb.group( {
-                    role: role,
-                    name: name,
-                })
-                this.contributorsForms.push(conForm);
-            }
-        }
+    //         for (const con of this.contributorsForms) {
+    //             if (con.value.name === name) {
+    //                 isListed = true;
+    //                 break;
+    //             }
+    //         }
+    //         if (!isListed) {
+    //             // this.resourceForm.patchValue( {});
+    //             const conForm: FormGroup =  this.fb.group( {
+    //                 role: role,
+    //                 name: name,
+    //             })
+    //             this.contributorsForms.push(conForm);
+    //         }
+    //     }
+    // }
+    // onSelect()  {
+    //     console.log('[ResourceForm] inMerge(): ', 'onSelect select');
 
-
-    }
-    onSelect()  {
-        console.log('[ResourceForm] inMerge(): ', 'onSelect select');
-
-    }
+    // }
 
     deleteResource() {
+        // Deletes the whole currently selected resouces
         if (confirm('Are you sure to delete resource ' + this.resource._id)) {
             this.locdbService.deleteBibliographicResource(this.resource).subscribe((res) => console.log('Deleted'));
             this.resource = null;
@@ -386,7 +363,13 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     }
 
+    showForm(val: boolean) {
+        // Display the form or stop displaying it
+        this.submitted = !val;
+    }
+
     short(br: BibliographicResource) {
+        // A shorthand name for accordion heading
         let s = br.title
         if (br.publicationYear) {
             s += ` (${br.publicationYear})`

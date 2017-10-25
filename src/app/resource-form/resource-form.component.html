@@ -46,7 +46,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Edit Resource</h4>
-        <button type="button" class="close pull-right" (click)="toggleEdit()" (click)="lgModal.hide()" aria-label="Close">
+        <button type="button" class="close pull-right" (click)="submitted = true" (click)="lgModal.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -166,7 +166,7 @@
               </table>
               <div class="row justify-content-between">
                 <div class="col-xs-4 text-left">
-                  <button type="button" class="btn btn-warning" (click)="resetEntries()">
+                  <button type="button" class="btn btn-warning" (click)="revert()">
                     <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset
                   </button>
                   <button type="button" class="btn btn-danger" (click)="deleteResource()">
