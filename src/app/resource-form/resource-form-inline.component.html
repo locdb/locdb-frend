@@ -1,0 +1,107 @@
+<accordion-group [heading]="short(resource)" [isOpen]="selected" [panelClass]="selected ? 'panel-primary' : 'panel-default'">
+  <div *ngIf="submitted">
+    <table class="table table-striped">
+      <tbody>
+        <tr *ngIf="resource.title">
+          <td> <label>Title</label> </td>
+          <td> {{resource.title}} </td>
+        </tr>
+        <tr *ngIf="resource.subtitle">
+          <td> <label>Subtitle</label> </td>
+          <td> {{resource.subtitle}} </td>
+        </tr>
+        <tr *ngFor="let ident of resource.identifiers">
+          <td> <label>{{ident.scheme}}</label> </td>
+          <td> {{ident.literalValue}} </td>
+        </tr>
+        <tr *ngIf="resource.edition">
+          <td> <label>Edition</label> </td>
+          <td> {{resource.edition}} </td>
+        </tr>
+        <tr *ngIf="resource.type">
+          <td> <label>Type</label> </td>
+          <td> {{resource.type}} </td>
+        </tr>
+        <tr *ngIf="resource.number">
+          <td> <label>Number</label> </td>
+          <td> {{resource.number}} </td>
+        </tr>
+        <tr *ngFor="let contrib of resource.contributors">
+          <td> <label>{{contrib.roleType}}</label> </td>
+          <td> {{contrib.heldBy.nameString}} </td>
+        </tr>
+        <tr *ngIf="resource.publicationYear">
+          <td> <label>Pub. year</label> </td>
+          <td> {{resource.publicationYear}} </td>
+        </tr>
+        <tr *ngIf="resource.partOf">
+          <td> <label>Part of</label> </td>
+          <td> {{resource.partOf}} </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-right">
+      <button type="button" class="btn btn-warning" aria-label="Edit" (click)="showForm(true)">
+        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+      </button>
+    </div>
+    <!-- End of submitted read-only variant -->
+  </div>
+  <div *ngIf="!submitted">
+    <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-group">
+        <label class="center-block">Title:
+          <input class="form-control" formControlName="title">
+        </label>
+        <label class="center-block">Subtitle:
+          <input class="form-control" formControlName="subtitle">
+        </label>
+      </div>
+      <div formArrayName="contributors" class="well well-sm">
+        <div *ngFor="let contributor of contributors.controls; let i = index" [formGroupName]="i">
+          <div class="form-group">
+            <label class="center-block">Role:
+              <select class="form-control" formControlName="role">
+                <option *ngFor="let r of roles" [value]="r">{{r}}</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="center-block">Name:
+              <input class="form-control" formControlName="name">
+            </label>
+          </div>
+        </div>
+        <br>
+        <!-- End of repeated contributor template -->
+        <button (click)="addContributor()" type="button">Add a Contributor</button>
+      </div>
+      <div class="form-group">
+        <label class="center-block">Edition:
+          <input class="form-control" formControlName="edition">
+        </label>
+        <label class="center-block">Year:
+          <input class="form-control" formControlName="publicationyear">
+        </label>
+      </div>
+      <div class="form-group">
+        <label class="center-block">Part of:
+          <input class="form-control" formControlName="partof">
+        </label>
+          <label class="center-block">Number:
+          <input type=number class="form-control" formControlName="resourcenumber">
+        </label>
+      </div>
+      <div style="margin-bottom: 1em">
+        <button type="button" class="btn btn-default" (click)="showForm(false)">Cancel</button> &nbsp;
+        <button type="button" class="btn btn-danger" (click)="deleteResource()">Delete</button> &nbsp;
+        <button type="reset" (click)="revert()"
+          [disabled]="resourceForm.pristine" class="btn btn-warning">Revert</button> &nbsp;
+        <button type="submit"
+          [disabled]="resourceForm.pristine" class="btn btn-success">Save</button>
+      </div>
+    </form>
+    {{formModel | json }}
+    <!-- End of editable form -->
+  </div>
+</accordion-group>
