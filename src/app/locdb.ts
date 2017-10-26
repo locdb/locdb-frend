@@ -127,8 +127,8 @@ export class ResourceEmbodiment {
 export class ResponsibleAgent {
   identifiers: Identifier[];
   nameString: string;
-  givenName: string;
-  familyName: string;
+  givenName?: string;
+  familyName?: string;
 }
 
 /** Apart from the children property, todo items are basically resource */
