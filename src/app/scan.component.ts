@@ -74,15 +74,33 @@ export class ScanComponent {
   onChange(event: any) { // file input
     this.files = '';
     this.files = event.target.files; // this.uploader.queue;
-    // we do we have this.files and this.listoffiles? TODO
     let file: any;
     for (file of this.files){
       const [ppn, first, last] = this.extractPPNandPages(file.name);
+      let rtype = 'MONOGRAPH';
+      if (first && last) {
+        rtype = 'COLLECTION';
+      }
       this.listoffiles.push(
         { ppn: ppn, firstpage: first, lastpage: last, file: file, filecontent
-          : null, allset: ppn != null && first != null && last != null, resourceType: null}
+          : null, allset: this.isValid(ppn, rtype, first, last), resourceType: rtype}
       );
     }
+  }
+
+  isValid(ppn: string, rtype: string, first: number, last: number): boolean {
+    if (!ppn) {
+      return false;
+    }
+    if (rtype === 'MONOGRAPH') {
+      return true;
+    } else {
+      if (first && last) {
+        return true;
+      }
+    }
+    // default
+    return false;
   }
 
   onSelectFile(i: number) {
@@ -113,6 +131,7 @@ export class ScanComponent {
       const match = ppn_re.exec(name)
       id = match[0];
     } catch (err) { console.log(err); }
+    // could pick last number of ppn as we did not remove it
     const pages_re = /([1-9][0-9]+)[-_+]([1-9][0-9]+)/;
     let first = null, last = null;
     try {
@@ -135,20 +154,21 @@ export class ScanComponent {
     this.listoffiles[this.active].lastpage = this.lastpage;
     this.listoffiles[this.active].resourceType = this.resourceType;
     // can we do this check elsewhere? it is only triggered when the file is collapsed
-    if (this.listoffiles[this.active].ppn && this.listoffiles[this.active].resourceType) {
-      if (this.listoffiles[this.active].resourceType === 'MONOGRAPH') {
-        // hard coded enum value TODO FIXME (long-term)
-        //
-        this.listoffiles[this.active].allset = true;
+    this.listoffiles[this.active].allset = this.isValid(this.ppn, this.resourceType, this.firstpage, this.lastpage);
+    // if (this.listoffiles[this.active].ppn && this.listoffiles[this.active].resourceType) {
+    //   if (this.listoffiles[this.active].resourceType === 'MONOGRAPH') {
+    //     // hard coded enum value TODO FIXME (long-term)
+    //     //
+    //     this.listoffiles[this.active].allset = true;
 
-      } else if (this.listoffiles[this.active].firstpage && this.listoffiles[this.active].lastpage) {
-          this.listoffiles[this.active].allset = true;
-      } else {
-        this.listoffiles[this.active].allset = false;
-      }
-    } else {
-      this.listoffiles[this.active].allset = false;
-    }
+    //   } else if (this.listoffiles[this.active].firstpage && this.listoffiles[this.active].lastpage) {
+    //       this.listoffiles[this.active].allset = true;
+    //   } else {
+    //     this.listoffiles[this.active].allset = false;
+    //   }
+    // } else {
+    //   this.listoffiles[this.active].allset = false;
+    // }
   }
 
   readURL(input, i) {

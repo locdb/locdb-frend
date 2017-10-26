@@ -50,7 +50,7 @@
                 <td><input type="text" name="ppn" [(ngModel)]="ppn" style="width: 100%;"
                   class="form-control input-sm pull-right"></td>
               </tr>
-              <tr>
+              <tr *ngIf="resourceType !== 'MONOGRAPH'">
                 <td><label>Pages</label> from <input type="number" name="firstpage" [(ngModel)]="firstpage" style="width: 75%;"
                   class="form-control input-sm pull-right"></td>
                 <td> to <input type="number" name="firstlastpage" [(ngModel)]="lastpage" style="width: 90%;"
