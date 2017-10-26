@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
 @Component( {
     selector: 'app-resource-form',
-    templateUrl: './resource-form.component.html',
+    templateUrl: './resource-form-inline.component.html',
     styleUrls: ['./resource-form.component.css']
 })
 
@@ -66,6 +66,9 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // clean array treatment
     setContributors(roles: AgentRole[]) {
+        if (!roles) { // should catch undefined
+            return [];
+        }
         const contribFGs = roles.map(
             arole => this.fb.group(
                 {role: arole.roleType, name: arole.heldBy.nameString }
@@ -90,13 +93,13 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // clean array treatment end
     setIdentifiers(ids: Identifier[]) {
-        const contribFGs = ids.map(
+        const identsFGs = ids.map(
             identifier => this.fb.group(
                 {literalValue: identifier.literalValue,
                     scheme: identifier.scheme }
             )
         );
-        const idsFormArray = this.fb.array(contribFGs);
+        const idsFormArray = this.fb.array(identsFGs);
         this.resourceForm.setControl('identifiers', idsFormArray);
     }
 

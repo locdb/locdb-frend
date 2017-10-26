@@ -26,10 +26,10 @@
             </a>
 
             <!-- maybe include ml-1 as classes below for margin -->
-            <div class="list-group" *ngFor="let c of t.children">
+            <div class="list-group" *ngFor="let c of t.children" style="margin-left: 1em">
               <!-- <app-resource-form [resource]="c"></app-resource-form> -->
               <!-- scans attached to children of resource -->
-              <a href="#" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of c.scans" (click)="onSelect(s)">
+              <a href="#" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of c.scans" (click)="onSelect(s)" style="margin-left: 1em">
                 Scan on pp. {{s.firstPage}}-{{s.lastPage}}
                 <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
               </a>
