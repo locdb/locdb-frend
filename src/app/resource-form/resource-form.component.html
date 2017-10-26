@@ -96,19 +96,20 @@
                   </td>
                 </tr>
                 <!--   contribs   -->
+                <div formArrayName="contributors">
                 <tr>
                   <td>
                     <label>Contributors</label> </td> <td>
                   </td>
                 </tr>
-                <tr *ngFor="let contributorForm of contributorsForms; let j = index">
+                <tr *ngFor="let contributor of contributors.controls; let j = index" [formGroupName]="j">
                   <td>
                     <table class="table-condensed">
                       <tbody>
                         <tr>
                           <td>
                             <!-- <button type="button" class="btn btn-warning" (click)="delContributorField(j)">Delete</button> -->
-                            <button type="button" class="btn btn-danger" aria-label="Remove Contributor" (click)="delContributorField(j)">
+                            <button type="button" class="btn btn-danger" aria-label="Remove Contributor" (click)="removeContributor(j)">
                               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </button>
                           </td>
@@ -117,35 +118,35 @@
                     </table>
                   </td>
                   <td>
-                    <form [formGroup]="contributorForm" (ngSubmit)="onSubmit()" style="width: 100%;" novalidate>
-                      <table class="table-condensed" style="width: 100%;">
-                        <tbody>
-                          <tr>
-                            <td style="width: 25%;">
-                              <select class="form-control" formControlName="role" name="Role Select" (select)= "onSelect()">
-                                <!--         <select class="form-control" formControlName="role"> -->
-                                  <option *ngIf="contributorForm.value.role==''" selected disabled="true">Please Select</option>
-                                  <option *ngFor="let item of roles" [attr.selected]="contributorForm.value.role == item ? 'selected' : null" [value]="item">{{item}}</option>
-                                </select>
-                              </td>
-                              <td>
-                                <input class="form-control" formControlName="name">
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </form>
+                    <table class="table-condensed" style="width: 100%;">
+                      <tbody>
+                        <tr>
+                          <td style="width: 25%;">
+                            <select class="form-control" formControlName="role">
+                              <!--         <select class="form-control" formControlName="role"> -->
+                                <!-- <option *ngIf="contributorForm.value.role==''" selected disabled="true">Please Select</option> -->
+                                <!-- <option *ngFor="let item of roles" [attr.selected]="contributorForm.value.role == item ? 'selected' : null" [value]="item">{{item}}</option> -->
+                                <option *ngFor="let r of roles" [value]="r">{{r}}</option>
+                              </select>
+                            </td>
+                            <td>
+                              <input class="form-control" formControlName="name">
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </td>
                   </tr>
                   <tr>
                     <td>
                     </td>
                     <td>
-                      <button type="button" class="btn btn-success" aria-label="Add Contributor" (click)="addContributorField()">
+                      <button type="button" class="btn btn-success" aria-label="Add Contributor" (click)="addContributor()">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                       </button>
                     </td>
                   </tr>
+                </div>
                   <tr>
                     <td>
                       <label>Pub. year</label>
@@ -173,23 +174,21 @@
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
                   </button>
                 </div>
-                <div class="col-xs-4 text-center">
-                  <div>
-                    <popover-content #myPopover
-                      title="Choose external resources"
-                      placement="auto"
-                      [closeOnClickOutside]="true">
-                      <div class="list-group" style="height:400px; max-height:500px; overflow-y: auto;">
-                        <a href="#" *ngFor="let r of exSuggests" class="list-group-item list-group-item-action list-group-item-info" (click)="inMerge(r)" (click)="myPopover.hide()">
-                          {{r.title}}
-                          <!--{{r.ocrData.title}}-->
-                          <span class="badge badge-default badge-pill">{{ r.identifiers[r.identifiers.length - 1].scheme </span>
-                        </a>
-                      </div>
-                    </popover-content>
-                    <button [popover]="myPopover" (click)="loadExtenalSuggestions()">Show external resources</button>
-                  </div>
-                </div>
+                <!-- <div class="col-xs-4 text-center"> -->
+                <!--   <div> -->
+                <!--     <popover-content #myPopover -->
+                <!--       title="Choose external resources" -->
+                <!--       placement="auto" -->
+                <!--       [closeOnClickOutside]="true"> -->
+                <!--       <div class="list-group" style="height:400px; max-height:500px; overflow-y: auto;"> -->
+                <!--         <a href="#" *ngFor="let r of exSuggests" class="list-group-item list-group-item-action list-group-item-info" (click)="inMerge(r)" (click)="myPopover.hide()"> -->
+                <!--           <span class="badge badge-default badge-pill">{{ r.identifiers[r.identifiers.length - 1].scheme </span> -->
+                <!--         </a> -->
+                <!--       </div> -->
+                <!--     </popover-content> -->
+                <!--     <button [popover]="myPopover" (click)="loadExtenalSuggestions()">Show external resources</button> -->
+                <!--   </div> -->
+                <!-- </div> -->
                 <div class="col-xs-4 text-right">
                   <button type="button" class="btn btn-primary" (click)="lgModal.hide()" (click)="onSubmit()">
                     <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Submit
