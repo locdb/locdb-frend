@@ -1,4 +1,4 @@
-import { BibliographicResource, BibliographicEntry, AgentRole, ResponsibleAgent, ToDo, ROLES, Identifier } from '../locdb';
+import { BibliographicResource, BibliographicEntry, AgentRole, ResponsibleAgent, ToDo, ROLES, Identifier, RESOURCE_TYPES } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
@@ -35,6 +35,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     // roles: string[] = ['CORPORATE','PUBLISHER', 'author']; // <-- to Locdb.ts as class?
     // roles: string[] = AgentRole.ROLES;
     roles: string[] =  ROLES;
+    resourceTypes: string[] = RESOURCE_TYPES;
 
     constructor(
         private fb: FormBuilder,

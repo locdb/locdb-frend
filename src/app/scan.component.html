@@ -31,12 +31,12 @@
     <div class="panel panel-default">
       <div class="list-group">
         <div *ngFor="let file of files; let i = index">
-          <a href="#"  class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectFile(i)">
+          <button type="button"  class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectFile(i)">
             <span class="badge" *ngIf="listoffiles[i].allset">Ready</span>
             <span class="badge" *ngIf="!listoffiles[i].allset">Enter information</span>
             <h5 class="list-group-item-heading"><b>{{file.name}}</b></h5>
             <p class="list-group-item-text">{{file.size/1024/1024 | number:'.2' }} MB, {{file.type}}</p>
-          </a>
+          </button>
 
           <div *ngIf="active == i && fileIsActive">
 
@@ -58,17 +58,10 @@
               </tr>
               <tr>
                 <td><label for="typeselect">Resource Type</label></td>
-                <td><select name="typeselect" [(ngModel)]="resourceType" style="width: 100%;"
+                <td>
+                <select name="typeselect" [(ngModel)]="resourceType" style="width: 100%;"
                   class="form-control input-sm pull-right">
-                  <option value="MONOGRAPH">
-                    Monograph
-                  </option>
-                  <option value="JOURNAL">
-                    Journal Article
-                  </option>
-                  <option value="COLLECTION">
-                    In Collection
-                  </option>
+                  <option *ngFor="let rt of resourceTypes" [value]="rt">
                 </select>
               </td>
               </tr>
@@ -90,5 +83,3 @@
     </div>
   </div>
 </div>
-
-{{ listoffiles | json }}

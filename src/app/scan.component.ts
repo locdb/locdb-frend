@@ -5,6 +5,8 @@ import { REFERENCES, REFERENCES_ALT } from './mock-references';
 
 import { LocdbService } from './locdb.service';
 
+import { RESOURCE_TYPES } from './locdb';
+
 const URL = '/api/'; // Same Origin Policy
 
 @Component({
@@ -22,7 +24,9 @@ export class ScanComponent {
   ppn: string;
   firstpage: number;
   lastpage: number;
-  resourceType: string = "MONOGRAPH"; // needs to be value of select block
+  resourceType = 'MONOGRAPH'; // needs to be value of select block
+
+  resourceTypes = RESOURCE_TYPES;
 
   listoffiles: MetaData[] = [];
   listoffilescontents = [];

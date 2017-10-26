@@ -91,7 +91,9 @@
                     <label>Type</label>
                   </td>
                   <td>
-                    <input class="form-control" formControlName="resourcetype">
+                    <select class="form-control" formControlName="resourcetype">
+                      <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
+                    </select>
                   </td>
                 </tr>
                 <tr>
@@ -122,9 +124,6 @@
                         </td>
                         <td>
                           <select class="form-control" formControlName="role">
-                            <!--         <select class="form-control" formControlName="role"> -->
-                              <!-- <option *ngIf="contributorForm.value.role==''" selected disabled="true">Please Select</option> -->
-                              <!-- <option *ngFor="let item of roles" [attr.selected]="contributorForm.value.role == item ? 'selected' : null" [value]="item">{{item}}</option> -->
                               <option *ngFor="let r of roles" [value]="r">{{r}}</option>
                             </select>
                           </td>
