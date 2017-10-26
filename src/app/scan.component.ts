@@ -113,7 +113,7 @@ export class ScanComponent {
       const match = ppn_re.exec(name)
       id = match[0];
     } catch (err) { console.log(err); }
-    const pages_re = /([1-9]+)[-_+]([1-9]+)/;
+    const pages_re = /([1-9][0-9]+)[-_+]([1-9][0-9]+)/;
     let first = null, last = null;
     try {
       const match = pages_re.exec(name);
@@ -127,21 +127,28 @@ export class ScanComponent {
   }
 
   // nicht mehr als onclick genutzt
+  // oh yes it is called by onSelectFile
   saveentries() {
     this.fileIsActive = false;
     this.listoffiles[this.active].ppn = this.ppn ;
     this.listoffiles[this.active].firstpage = this.firstpage;
     this.listoffiles[this.active].lastpage = this.lastpage;
     this.listoffiles[this.active].resourceType = this.resourceType;
-    if (
-      this.listoffiles[this.active].ppn && this.listoffiles[this.active].firstpage &&
-      this.listoffiles[this.active].lastpage && this.listoffiles[this.active].resourceType
-    ) {
-      this.listoffiles[this.active].allset = true;
+    // can we do this check elsewhere? it is only triggered when the file is collapsed
+    if (this.listoffiles[this.active].ppn && this.listoffiles[this.active].resourceType) {
+      if (this.listoffiles[this.active].resourceType === 'MONOGRAPH') {
+        // hard coded enum value TODO FIXME (long-term)
+        //
+        this.listoffiles[this.active].allset = true;
+
+      } else if (this.listoffiles[this.active].firstpage && this.listoffiles[this.active].lastpage) {
+          this.listoffiles[this.active].allset = true;
+      } else {
+        this.listoffiles[this.active].allset = false;
+      }
+    } else {
+      this.listoffiles[this.active].allset = false;
     }
-    // } else {
-    // console.log('FLUP: Invalid PPN or no firstpage or no lastpage set'); // throw error
-    // }
   }
 
   readURL(input, i) {

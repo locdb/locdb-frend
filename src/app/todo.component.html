@@ -13,28 +13,25 @@
   </div>
 
   <div class="panel-body">
+    <accordion>
       <div *ngFor="let t of all_todos()">
-        <accordion>
-            <app-resource-form [resource]="t"></app-resource-form>
-             <!-- <div class="btn-group-vertical" style="width: 100%;"> -->
-             <div class="list-group">
-              <button type="button" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans" (click)="onSelect(s)">
-                Scan {{ trimHash(s._id) }}
-                <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
-              </button>
-            </div>
+        <app-resource-form [resource]="t"></app-resource-form>
+        <!-- <div class="btn-group-vertical" style="width: 100%;"> -->
+          <div class="list-group">
+            <button type="button" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans" (click)="onSelect(s)">
+              Scan {{ trimHash(s._id) }}
+              <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
+            </button>
             <div *ngFor="let c of t.children" style="margin-left: 1em; margin-right:1em">
               <!-- <app-resource-form [resource_id]="c._id"></app-resource-form> -->
               <!-- scans attached to children of resource -->
-             <div class="list-group">
               <button type="button" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of c.scans" (click)="onSelect(s)" style="margin-left: 1em;">
                 Scan {{ trimHash(s._id) }} on pp. {{s.firstPage}}-{{s.lastPage}}
                 <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
               </button>
             </div>
-            </div>
-        </accordion>
-      </div>
-
-  </div>
+          </div>
+        </div> <!-- end of for loop -->
+      </accordion>
+    </div>
 </div>
