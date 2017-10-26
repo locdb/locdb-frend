@@ -2,24 +2,24 @@
   <div (click)="toggle()" class="panel-heading">
     <div class="row justify-content-between">
       <div class="col-xs-6 text-left">
-	<h4><b>{{title}}</b></h4>
+        <h4><b>{{title}}</b></h4>
       </div>
       <div class="col-xs-6 text-right">
-	<span *ngIf="!isActive" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-	<span *ngIf="isActive" class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+        <span *ngIf="!isActive" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        <span *ngIf="isActive" class="glyphicon glyphicon-minus" aria-hidden="true"></span>
       </div>
     </div>
   </div>
   <div *ngIf="isActive && !files" class="panel-body">
     <div class="panel panel-default">
       <div ng-controller="formCtrl" class="panel-body">
-	<input class="simple-form" type="file" multiple
-	(change)= "onChange($event)">
+        <input class="simple-form" type="file" multiple
+        (change)= "onChange($event)">
       </div>
     </div>
-    <div class="panel panel-default" *ngIf="files" > 
+    <div class="panel panel-default" *ngIf="files" >
       <div class="panel-body">
-	<img [src]="src" [hidden]="!src" style="width: 100%;" alt="Specify file to inspect ...">
+        <img [src]="src" [hidden]="!src" style="width: 100%;" alt="Specify file to inspect ...">
       </div>
     </div>
     <div align="right" [hidden]="!src">
@@ -28,44 +28,60 @@
     </div>
   </div>
   <div *ngIf="isActive && files" class="panel-body">
-    <div class="panel panel-default"> 				
+    <div class="panel panel-default">
       <div class="list-group">
-	<div *ngFor="let file of files; let i = index">
-	  <a href="#"  class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectFile(i)">
-	    <span class="badge" *ngIf="listoffiles[i].allset">Ready</span>
-	    <span class="badge" *ngIf="!listoffiles[i].allset">Enter information</span>
-	    <h5 class="list-group-item-heading"><b>{{file.name}}</b></h5>
-	    <p class="list-group-item-text">{{file.size/1024/1024 | number:'.2' }} MB, {{file.type}}</p>
-	  </a>
-	  <div *ngIf="active == i && fileIsActive">
-	    <br/>
-	    <form>
-	      <div class="form-group">
-		<label for="ppn">PPN</label>
-		<input type="text" name="ppn" [(ngModel)]="ppn">
-	      </div>
-	      <div class="form-group">
-		<label>Pages</label>
-		<input type="number" name="firstpage" [(ngModel)]="firstpage">
-		<input type="number" name="firstlastpage" [(ngModel)]="lastpage">
-	      </div>
-	      <div class="form-group">
-		<label for="typeselect">Resource Type</label>
-		<select name="typeselect" [(ngModel)]="resourceType">
-		  <option value="MONOGRAPH">
-		    Monograph
-		  </option>
-		  <option value="JOURNAL">
-		    Journal Article
-		  </option>
-		  <option value="COLLECTION">
-		    In Collection
-		  </option>
-		</select>
-	      </div>
-	    </form>
-	  </div>
-	</div>
+        <div *ngFor="let file of files; let i = index">
+          <a href="#"  class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectFile(i)">
+            <span class="badge" *ngIf="listoffiles[i].allset">Ready</span>
+            <span class="badge" *ngIf="!listoffiles[i].allset">Enter information</span>
+            <h5 class="list-group-item-heading"><b>{{file.name}}</b></h5>
+            <p class="list-group-item-text">{{file.size/1024/1024 | number:'.2' }} MB, {{file.type}}</p>
+          </a>
+
+          <div *ngIf="active == i && fileIsActive">
+
+            <br/>
+            <form>
+              <table class="table table-striped">
+                <tbody>
+
+              <tr>
+                <td><label for="ppn">PPN</label></td>
+                <td><input type="text" name="ppn" [(ngModel)]="ppn" style="width: 100%;"
+                  class="form-control input-sm pull-right"></td>
+              </tr>
+              <tr>
+                <td><label>Pages</label> from <input type="number" name="firstpage" [(ngModel)]="firstpage" style="width: 75%;"
+                  class="form-control input-sm pull-right"></td>
+                <td> to <input type="number" name="firstlastpage" [(ngModel)]="lastpage" style="width: 90%;"
+                  class="form-control input-sm pull-right"></td>
+              </tr>
+              <tr>
+                <td><label for="typeselect">Resource Type</label></td>
+                <td><select name="typeselect" [(ngModel)]="resourceType" style="width: 100%;"
+                  class="form-control input-sm pull-right">
+                  <option value="MONOGRAPH">
+                    Monograph
+                  </option>
+                  <option value="JOURNAL">
+                    Journal Article
+                  </option>
+                  <option value="COLLECTION">
+                    In Collection
+                  </option>
+                </select>
+              </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+            </form>
+
+          </div>
+
+
+        </div>
       </div>
     </div>
     <div align="right">

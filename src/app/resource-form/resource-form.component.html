@@ -73,6 +73,14 @@
           {{resource.partOf}}
         </td>
       </tr>
+      <tr *ngFor="let idents of resource.identifiers">
+        <td>
+          <label>{{idents.scheme}}</label>
+        </td>
+        <td>
+          {{idents.literalValue}}
+        </td>
+      </tr>
     </tbody>
   </table>
 <div class="text-right">
