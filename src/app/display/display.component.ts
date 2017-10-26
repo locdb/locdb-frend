@@ -61,6 +61,7 @@ export class DisplayComponent implements OnInit {
         this.zoom = zoom;
     }
 
+    /*updateDisplay(newTodo: ToDoScans) {
     ngOnChange() {
         // Input todo and this method should replace manual calling of updateDisplay
         this.updateDisplay(this.todo);
@@ -72,10 +73,25 @@ export class DisplayComponent implements OnInit {
         this.displaySource = this.locdbService.getScan(newTodo._id);
         this.displayActive = true;
         this.locdbService.getToDoBibliographicEntries(newTodo._id).subscribe( (res) => this.entriesArrived(res) ) ;
+    } */
+
+    updateDisplay(input) {
+        // this method is called when a todo item is selected
+        console.log('newTodo: ', input);
+        this.displaySource = this.locdbService.getScan(input.id);
+        this.displayActive = true;
+        this.entriesArrived(input.scan);
     }
 
-    entriesArrived(entries) {
+    entriesArrived(input) {
+        console.log("display.component.entriesArrived()");
+        console.log(input);
+        let entries = input.parts;
+        if (entries === undefined) { // looks not so clean TODO FIXME
+          entries = input.children
+        }
         console.log('ENTRIES ARRIVED ===');
+        console.log(entries)
         // make entry_id an input property and move this code to ngOnChange()
         this.entries = entries;
         this.extractRects(this.entries);
@@ -84,6 +100,17 @@ export class DisplayComponent implements OnInit {
         this.currentIndex = 0;
         this.entry.next(entries[0]);
     }
+
+
+    /*entriesArrived(entries) {
+        console.log('ENTRIES ARRIVED ===');
+        console.log(entries)
+        this.entries = entries;
+        this.extractRects(this.entries);
+        console.log(this.rects);
+        this.currentIndex = 0;
+        this.entry.next(entries[0]);
+    }*/
 
     onSelect(entry: any) {
         // selection of an entry of one todo item
@@ -134,18 +161,18 @@ export class DisplayComponent implements OnInit {
             const rectField = coords.split(' ');
             this.rects.push({
 
-                //x1 y1 x2 y2
+                // x1 y1 x2 y2
                 x: Number(rectField[0]),
                 y: Number(rectField[1]),
                 width: Number(rectField[2])  - Number(rectField[0]),
                 height: Number(rectField[3]) - Number(rectField[1]),
-                
+
                 // // x1 x2 y1 y2
                 // x: Number(rectField[0]),
                 // y: Number(rectField[2]),
                 // width: Number(rectField[1])  - Number(rectField[0]),
                 // height: Number(rectField[3]) - Number(rectField[2]),
-                
+
                 state: e.references ? 1 : -1
 
             });

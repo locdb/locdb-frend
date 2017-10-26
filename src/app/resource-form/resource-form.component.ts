@@ -25,6 +25,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     resourceForm: FormGroup;
     contributorsForms: FormGroup[] = [];
+    identifiersForms: FormGroup[] = [];
     embodiments: FormGroup[] = [];
     submitted = true;
     parts: FormGroup[] = [];
@@ -213,8 +214,41 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         //    // in case were dealing with ToDo item resources, we need to aswell copy children
         //    resource.children = this.resource.children;
         // }
+
+        // TODO method get authors/identifiers
         return resource;
     }
+
+    getContributers() {
+      const contributors: AgentRole[] = []
+      for (const conForm of this.contributorsForms)  {
+          const conFormModel = conForm.value;
+          const role: AgentRole =  {
+              roleType:  conFormModel.role,
+              identifiers: [],
+              heldBy : <ResponsibleAgent> {
+                  identifiers:  [], /// TODO implement
+                  nameString: conFormModel.name,
+                  givenName: '',
+                  familyName: '',
+              }
+          };
+          contributors.push(role);
+
+  }
+return contributors
+}
+
+  getIdentifiers() {
+    const idents: Identifier[] = [];
+    for (const identForm of this.identifiersForms) {
+        const identifier = new Identifier();
+        identifier.literalValue = identForm.value.literalValue
+        identifier.scheme = identForm.value.scheme
+        idents.push(identifier);
+    }
+    return idents
+  }
 
     saveEntries() {
         // UNUSED See :code:`prepareSaveResource` instead
@@ -243,6 +277,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         if (this.resourceForm.value.partof) {
             this.resource.partOf = this.resourceForm.value.partof;
         }
+        // if identifiers ...
 
 
         //   roleidentifiers: con.identifiers,
@@ -278,10 +313,20 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             if (resAgent) {
                 agent.heldBy = resAgent;
             }
-            agents.push(agent);
+        agents.push(agent);
+      }
+
+        const idents: Identifier[] = [];
+        for (const identForm of this.identifiersForms) {
+            const identifier = new Identifier();
+            identifier.literalValue = identForm.value.literalValue
+            identifier.scheme = identForm.value.scheme
+            idents.push(identifier);
         }
 
         this.resource.contributors = agents;
+        this.resource.identifiers = idents;
+
         console.log('Resource ready to save: ', this.resource);
         console.log('Input Resource: ', this.oldresource);
         // AgentRole Objects have ids, that are not defined in class and can not be restored

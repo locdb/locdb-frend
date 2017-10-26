@@ -57,8 +57,6 @@ export class ScanComponent {
     if (ready) {
       console.log('Ready for upload..');
       this.listoffiles.map((elem) => this.writefilecontent(elem));
-      // clear after upload
-      this.onclickclear();
     } else {
       alert('Files not ready!');
     }
@@ -179,8 +177,18 @@ export class ScanComponent {
     // rufe scan auf
     this.locdbService.saveScan(listelement.ppn,
                                listelement.firstpage.toString(), listelement.lastpage.toString(),
-                               listelement.filecontent, listelement.file, listelement.resourceType).then(
-                               (result) => console.log(result))
+                               listelement.filecontent, listelement.file, listelement.resourceType)
+                               .then((suc) => this.removeItemFromList(suc))
+                               .catch((err) => this.processError(err))
+  }
+  removeItemFromList(item){
+    console.log("Send item: ", item)
+    // clear after upload
+    this.onclickclear(); // TODO remove items not at once
+  }
+  processError(err){
+    console.log("Send Scans failed: ", err)
+    //set item error
   }
 }
 

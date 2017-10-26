@@ -15,8 +15,8 @@ import { environment } from 'environments/environment';
     templateUrl: './suggestion.component.html',
     styleUrls: ['./suggestion.component.css']
 })
+
 export class SuggestionComponent implements OnInit, OnChanges {
-  public customClass = 'customClass';
 
 
     @Input() entry: BibliographicEntry;
@@ -202,7 +202,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
       } else {
           this.max_in = 0;
       }
-
     }
 
 }
