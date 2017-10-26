@@ -166,12 +166,17 @@ export class SuggestionComponent implements OnInit, OnChanges {
     commit() {
       // This the actual linking of entry to resource
       if (this.selectedResource.status === 'EXTERNAL') {
+        this.selectedResource.status = 'VALID';
         this.locdbService.pushBibligraphicResource(this.selectedResource).subscribe(
           (response) => {
             this.entry.references = response._id;
             this.locdbService.putBibliographicEntry(this.entry);
             console.log('Submitted Entry pointing to former external BR', response);
             this.committed = true;
+          },
+          (error) => {
+            this.selectedResource.status = 'EXTERNAL';
+            console.log('Submitting external resource failed');
           }
         );
       } else {
