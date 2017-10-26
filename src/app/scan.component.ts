@@ -80,6 +80,9 @@ export class ScanComponent {
       let rtype = 'MONOGRAPH';
       if (first && last) {
         rtype = 'COLLECTION';
+        console.log('Assuming a collection')
+      } else {
+        console.log('Assuming a monograph')
       }
       this.listoffiles.push(
         { ppn: ppn, firstpage: first, lastpage: last, file: file, filecontent
@@ -115,9 +118,10 @@ export class ScanComponent {
 
     this.active = i;
 
-      this.ppn = this.listoffiles[i].ppn;
-      this.firstpage = this.listoffiles[i].firstpage;
-      this.lastpage = this.listoffiles[i].lastpage;
+    this.ppn = this.listoffiles[i].ppn;
+    this.firstpage = this.listoffiles[i].firstpage;
+    this.lastpage = this.listoffiles[i].lastpage;
+    this.resourceType = this.listoffiles[i].resourceType;
   }
 
 
@@ -130,7 +134,7 @@ export class ScanComponent {
     try {
       const match = ppn_re.exec(name)
       id = match[0];
-    } catch (err) { console.log(err); }
+    } catch (err) { console.log('No PPN found in filename'); }
     // could pick last number of ppn as we did not remove it
     const pages_re = /([1-9][0-9]+)[-_+]([1-9][0-9]+)/;
     let first = null, last = null;
@@ -138,7 +142,7 @@ export class ScanComponent {
       const match = pages_re.exec(name);
       first = match[1]; // match[0] is the whole match
       last = match[2];
-    } catch (err) { console.log(err); }
+    } catch (err) { console.log('No pages found in filename'); }
     console.log('extracted:', id, first, last)
 
     // some more maybe?
@@ -212,13 +216,13 @@ export class ScanComponent {
                                .then((suc) => this.removeItemFromList(suc))
                                .catch((err) => this.processError(err))
   }
-  removeItemFromList(item){
-    console.log("Send item: ", item)
+  removeItemFromList(item) {
+    console.log('Send item: ', item)
     // clear after upload
     this.onclickclear(); // TODO remove items not at once
   }
-  processError(err){
-    console.log("Send Scans failed: ", err)
+  processError(err) {
+    console.log('Send Scans failed: ', err)
     //set item error
   }
 }
