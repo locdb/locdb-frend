@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
 @Component( {
     selector: 'app-resource-form',
-    templateUrl: './resource-form-inline.component.html',
+    templateUrl: './resource-form.component.html',
     styleUrls: ['./resource-form.component.css']
 })
 

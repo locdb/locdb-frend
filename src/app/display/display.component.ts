@@ -61,7 +61,7 @@ export class DisplayComponent implements OnInit {
         this.zoom = zoom;
     }
 
-    /*updateDisplay(newTodo: ToDoScans) {
+
     ngOnChange() {
         // Input todo and this method should replace manual calling of updateDisplay
         this.updateDisplay(this.todo);
@@ -73,16 +73,8 @@ export class DisplayComponent implements OnInit {
         this.displaySource = this.locdbService.getScan(newTodo._id);
         this.displayActive = true;
         this.locdbService.getToDoBibliographicEntries(newTodo._id).subscribe( (res) => this.entriesArrived(res) ) ;
-    } */
-
-    updateDisplay(input) {
-        // this method is called when a todo item is selected
-        console.log('newTodo: ', input);
-        this.displaySource = this.locdbService.getScan(input.id);
-        this.displayActive = true;
-        this.entriesArrived(input.scan);
     }
-
+/*
     entriesArrived(input) {
         console.log("display.component.entriesArrived()");
         console.log(input);
@@ -99,10 +91,10 @@ export class DisplayComponent implements OnInit {
         // we could find the first one with status: not processed
         this.currentIndex = 0;
         this.entry.next(entries[0]);
-    }
+    }*/
 
 
-    /*entriesArrived(entries) {
+    entriesArrived(entries) {
         console.log('ENTRIES ARRIVED ===');
         console.log(entries)
         this.entries = entries;
@@ -110,7 +102,7 @@ export class DisplayComponent implements OnInit {
         console.log(this.rects);
         this.currentIndex = 0;
         this.entry.next(entries[0]);
-    }*/
+    }
 
     onSelect(entry: any) {
         // selection of an entry of one todo item
