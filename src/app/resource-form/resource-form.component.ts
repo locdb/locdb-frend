@@ -12,7 +12,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // if this is a string, we can try to dereference it from the back-end
-    @Input() resource: BibliographicResource | ToDo;
+    @Input() resource: BibliographicResource | ToDo = null;
 
 
     @Input() resource_id: string = null;
@@ -120,6 +120,9 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         // if (!this.resourceForm || !this.resource)  {
         //     return;
         // }
+        if (!this.resource) {
+            return; // only resource identifier given for now
+        }
         this.resourceForm.reset( {
             title: this.resource.title,
             subtitle: this.resource.subtitle,
@@ -420,16 +423,23 @@ return contributors
         this.submitted = !val;
     }
 
-    short(br: BibliographicResource) {
+    short() {
         // A shorthand name for accordion heading
-        let s = br.title
-        if (br.publicationYear) {
-            s += ` (${br.publicationYear})`
+        if (this.resource) {
+            // resource already present
+            const br = this.resource;
+            let s = br.title;
+            if (br.publicationYear) {
+                s += ` (${br.publicationYear})`
+            }
+            if (br.status === 'EXTERNAL') {
+                s += ` [${br.identifiers[br.identifiers.length - 1].scheme}]`
+            }
+            return s;
+        } else {
+            // maybe only identifier given, resource is getting retrieved
+            return this.resource_id;
         }
-        if (br.status === 'EXTERNAL') {
-            s += ` [${br.identifiers[br.identifiers.length - 1].scheme}]`
-        }
-        return s;
     }
 
 }

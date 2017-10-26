@@ -1,4 +1,10 @@
-<accordion-group [heading]=short(resource)  [isOpen]="selected" [panelClass]="selected ? 'panel-primary' : 'panel-default'">
+<accordion-group [heading]=short()  [isOpen]="selected" [panelClass]="selected ? 'panel-primary' : 'panel-default'">
+  <div *ngIf="!resource">
+    <p>
+      Fetching details for resource with identifier {{resource._id}}.
+    </p>
+  </div>
+  <div *ngIf="resource">
   <table class="table table-striped">
     <tbody>
       <tr *ngIf="resource.title">
@@ -40,6 +46,7 @@
       <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
     </button>
   </div>
+</div>
 </accordion-group>
 <div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">

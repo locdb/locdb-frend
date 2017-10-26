@@ -6,7 +6,7 @@
       </div>
       <div class="col-xs-6 text-right">
         <button (click)="fetchTodos()" type="button" class="btn btn-info" aria-label="Refresh">
-          <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+          <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Reload
         </button>
       </div>
     </div>
@@ -15,49 +15,23 @@
   <div class="panel-body">
       <div *ngFor="let t of all_todos()">
         <accordion>
-
-            <!--accordion-group heading="{{t.title}} ({{t.publicationYear}}) {{printme(t)}}"
-            panelClass = "panel-default"-->
-              <app-resource-form [resource]="t"></app-resource-form>
-<!--
-              <a href="#" class="list-group-item list-group-item-action list-group-item-info"  (click)="onSelect(t)"> <!-- (click)="onSelectNew(s)"> -->
-              <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of c.scans" (click)="onSelect(s)">>
-                Scan <!-- on pp. {{s.firstPage}}-{{s.lastPage}} >
-                <span class="badge badge-default badge-pill">{{ prettyStatus(t) }}</span>
-              </a>-->
-            <!--/accordion-group-->
-
-          <!-- <div class="list-group"> -->
-            <!-- scans directly attached to the resource -->
-
-            <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of t.scans" (click)="onSelect(s)"> -->
-            <!--   Scan on pp. {{s.firstPage}}-{{s.lastPage}} -->
-            <!-- </a> -->
-            <!-- <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span> -->
-<!--
-            <div class="list-group" *ngFor="let c of t.parts">
-              <!-- scans attached to children of resource
-              <a href="#" class="list-group-item list-group-item-action list-group-item-success"  (click)="onSelect(c)"> <!-- (click)="onSelectNew(s)">
-              <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngFor="let s of c.scans" (click)="onSelect(s)">
-                Scan <!-- on pp. {{s.firstPage}}-{{s.lastPage}}
-                <span class="badge badge-default badge-pill">{{ prettyStatus(c) }}</span>
--->
-            <a href="#" class="list-group-item list-group-item-action list-group-item-info ml-1" *ngFor="let s of t.scans" (click)="onSelect(s)">
-              Scan on pp. {{s.firstPage}}-{{s.lastPage}}
-              <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
-            </a>
-
-            <!-- maybe include ml-1 as classes below for margin -->
-            <div class="list-group" *ngFor="let c of t.children" style="margin-left: 1em">
-              <!-- <app-resource-form [resource]="c"></app-resource-form> -->
-              <!-- scans attached to children of resource -->
-              <a href="#" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of c.scans" (click)="onSelect(s)" style="margin-left: 1em">
-                Scan on pp. {{s.firstPage}}-{{s.lastPage}}
+            <app-resource-form [resource]="t"></app-resource-form>
+             <div class="btn-group-vertical" style="width: 100%;">
+              <button type="button" class="btn btn-block btn-success" *ngFor="let s of t.scans" (click)="onSelect(s)">
+                Scan {{ trimHash(s._id) }}
                 <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
-
-              </a>
+              </button>
             </div>
-          <!-- </div> -->
+            <div *ngFor="let c of t.children" style="margin-left: 1em; margin-right:1em">
+              <!-- <app-resource-form [resource_id]="c._id"></app-resource-form> -->
+              <!-- scans attached to children of resource -->
+             <div class="btn-group-vertical" style="width: 100%;">
+              <button type="button" class="btn btn-block btn-success" *ngFor="let s of c.scans" (click)="onSelect(s)" style="margin-left: 1em;">
+                Scan {{ trimHash(s._id) }} on pp. {{s.firstPage}}-{{s.lastPage}}
+                <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
+              </button>
+            </div>
+            </div>
         </accordion>
       </div>
 

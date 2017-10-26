@@ -147,6 +147,8 @@ export class ToDoParts {
 export class ToDoScans {
   status: string;
   _id: string;
+  firstpage?: number;
+  lastpage?: number;
 }
 
 
