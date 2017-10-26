@@ -216,7 +216,7 @@ export class ScanComponent {
         listelement.file,
         listelement.filecontent,
       ).then((suc) => this.removeItemFromList(suc))
-       .catch((err) => this.processError(err))
+       .catch((err) => this.processError(err));
     } else {
       this.locdbService.saveScan(
         listelement.ppn,
@@ -226,7 +226,7 @@ export class ScanComponent {
         listelement.firstpage.toString(),
         listelement.lastpage.toString()
       ).then((suc) => this.removeItemFromList(suc))
-       .catch((err) => this.processError(err))
+       .catch((err) => this.processError(err));
     }
 
     // rufe scan auf
