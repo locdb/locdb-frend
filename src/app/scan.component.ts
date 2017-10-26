@@ -209,13 +209,29 @@ export class ScanComponent {
     listelement.filecontent = contents;
     console.log('Pushing: ', listelement);
 
+    if (listelement.resourceType === 'MONOGRAPH') {
+      this.locdbService.saveScan(
+        listelement.ppn,
+        listelement.resourceType,
+        listelement.file,
+        listelement.filecontent,
+      ).then((suc) => this.removeItemFromList(suc))
+       .catch((err) => this.processError(err))
+    } else {
+      this.locdbService.saveScan(
+        listelement.ppn,
+        listelement.resourceType,
+        listelement.file,
+        listelement.filecontent,
+        listelement.firstpage.toString(),
+        listelement.lastpage.toString()
+      ).then((suc) => this.removeItemFromList(suc))
+       .catch((err) => this.processError(err))
+    }
+
     // rufe scan auf
-    this.locdbService.saveScan(listelement.ppn,
-                               listelement.firstpage.toString(), listelement.lastpage.toString(),
-                               listelement.filecontent, listelement.file, listelement.resourceType)
-                               .then((suc) => this.removeItemFromList(suc))
-                               .catch((err) => this.processError(err))
   }
+
   removeItemFromList(item) {
     console.log('Send item: ', item)
     // clear after upload
@@ -223,7 +239,7 @@ export class ScanComponent {
   }
   processError(err) {
     console.log('Send Scans failed: ', err)
-    //set item error
+    // set item error
   }
 }
 

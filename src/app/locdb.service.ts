@@ -108,18 +108,21 @@ export class LocdbService {
 
   saveScan(
     ppn: string,
-    firstPage: string,
-    lastPage: string,
-    scan: any,
+    resourceType: string,
     file: File,
-    resourceType: string
+    scan: any,
+    firstPage?: string,
+    lastPage?: string,
   ): Promise<any> {
     // Take FileWithMetadata object instead
     const url = `${this.locdbUrl}/saveScan`;
     const formData: FormData = new FormData();
     formData.append('ppn', ppn);
-    formData.append('firstPage', firstPage);
-    formData.append('lastPage', lastPage);
+    if (firstPage && lastPage) {
+      formData.append('firstPage', firstPage);
+      formData.append('lastPage', lastPage);
+    }
+
     formData.append('scan', file);
     formData.append('resourceType', resourceType);
     return this.http.post(url, formData).toPromise(); // , {headers: this.headers})
