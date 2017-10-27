@@ -92,12 +92,28 @@
                 </tr>
                 <tr>
                   <td>
+                    <label>Pub. year</label>
+                  </td>
+                  <td>
+                    <input type="string" class="form-control" formControlName="publicationyear">
+                  </td>
+                </tr>
+                <tr>
+                  <td>
                     <label>Type</label>
                   </td>
                   <td>
                     <select class="form-control" formControlName="resourcetype">
                       <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
                     </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label>Part of</label>
+                  </td>
+                  <td>
+                    <input class="form-control" formControlName="partof">
                   </td>
                 </tr>
                 <tr>
@@ -111,12 +127,12 @@
               </tbody>
               </table>
               <!--   Idents   -->
-              <div formArrayName="identifiers">
+              <div formArrayName="identifiers" class="well well-sm">
                 <table class="table-condensed" style="width: 100%;">
                   <tbody>
                     <tr>
                       <td>
-                        <label>Identifier</label> </td> <td>
+                        <label>Identifiers</label> </td> <td>
                       </td>
                     </tr>
                     <tr *ngFor="let identifier of identifiers.controls; let j = index" [formGroupName]="j">
@@ -146,7 +162,7 @@
                   </table>
                 </div>
                 <!--   contribs   -->
-                <div formArrayName="contributors">
+                <div formArrayName="contributors" class="well well-sm">
                   <table class="table-condensed" style="width: 100%;">
                     <tbody>
                       <tr>
@@ -182,28 +198,8 @@
                       </tbody>
                     </table>
                   </div>
-                  <table class="table table-striped" style="width: 100%;">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <label>Pub. year</label>
-                        </td>
-                        <td>
-                          <input type="string" class="form-control" formControlName="publicationyear">
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <label>Part of</label>
-                        </td>
-                        <td>
-                          <input class="form-control" formControlName="partof">
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
               <div class="row justify-content-between">
-                <div class="col-xs-4 text-left">
+                <div class="col-xs-6 text-left">
                   <button type="button" class="btn btn-warning" (click)="revert()">
                     <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset
                   </button>
@@ -226,7 +222,7 @@
                 <!--     <button [popover]="myPopover" (click)="loadExtenalSuggestions()">Show external resources</button> -->
                 <!--   </div> -->
                 <!-- </div> -->
-                <div class="col-xs-4 text-right">
+                <div class="col-xs-6 text-right">
                   <button type="button" class="btn btn-primary" (click)="lgModal.hide()" (click)="onSubmit()">
                     <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Submit
                   </button>

@@ -29,12 +29,12 @@
         [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
       </app-resource-form>
     </div>
-    <div *ngIf="max_in == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
+    <button type="button" *ngIf="max_in == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
       <p><em>Show all</em></p>
-    </div>
-    <div href="#" *ngIf="max_in == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
+    </button>
+    <button type="button" *ngIf="max_in == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
       <p><em>Show less</em></p>
-    </div>
+    </button>
     </accordion>
     <hr>
     <h4 class="text-center mb-0">
@@ -46,12 +46,12 @@
           [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
         </app-resource-form>
       </div>
-      <div *ngIf="max_ex == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
+      <button type="button" *ngIf="max_ex == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
         <p><em>Show all</em></p>
-      </div>
-      <div *ngIf="max_ex == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
+      </button>
+      <button type="button" *ngIf="max_ex == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
         <p><em>Show less</em></p>
-      </div>
+      </button>
     </accordion>
   </div>
 
