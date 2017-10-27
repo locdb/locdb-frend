@@ -1,6 +1,6 @@
 {
   "*": {
-    "dispatch": "karma start karma.conf.js --single-run",
+    "dispatch": "./node_modules/.bin/karma start karma.conf.js --single-run --browsers Chrome",
     "make": "npm build",
     "start": "npm start"
   },
