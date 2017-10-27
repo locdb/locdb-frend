@@ -32,8 +32,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
     externalSuggestions: BibliographicResource[];
 
     committed = false;
-    max_ex = 5;
-    max_in = 5;
+    max_shown_suggestions = 5
+    max_ex = -1;
+    max_in = -1;
 
     testresource: BibliographicResource;
 
@@ -153,12 +154,24 @@ export class SuggestionComponent implements OnInit, OnChanges {
         // }
         // else {
         this.internalSuggestions = sgt
+        if (this.internalSuggestions && this.internalSuggestions.length <= this.max_shown_suggestions){
+          this.max_in = -1
+        }
+        else {
+          this.max_in = this.max_shown_suggestions
+        }
         console.log('Received Internal Suggestions: ', this.internalSuggestions);
         // }
     }
 
     saveExternal(sgt) {
         this.externalSuggestions = sgt
+        if (this.externalSuggestions && this.externalSuggestions.length <= this.max_shown_suggestions){
+          this.max_ex = -1
+        }
+        else {
+          this.max_ex = this.max_shown_suggestions
+        }
         console.log('Received External Suggestions: ', this.externalSuggestions);
     }
 
@@ -189,7 +202,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     toggle_max_ex() {
       if (this.max_ex === 0) {
-        this.max_ex = 5;
+        this.max_ex = this.max_shown_suggestions;
       } else {
           this.max_ex = 0;
       }
@@ -197,7 +210,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     toggle_max_in() {
       if (this.max_in === 0) {
-        this.max_in = 5;
+        this.max_in = this.max_shown_suggestions;
       } else {
           this.max_in = 0;
       }

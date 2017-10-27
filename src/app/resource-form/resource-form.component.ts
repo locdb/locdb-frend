@@ -51,7 +51,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             resourcenumber: 0,
             publicationyear: '',
             partof: '',
-            contributors: this.fb.array([])
+            contributors: this.fb.array([]),
+            identifiers: this.fb.array([]),
         });
     }
 
@@ -111,7 +112,11 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     addIdentifier() {
         // reference from getter above
-        this.contributors.push(this.fb.group(new Identifier()));
+        this.identifiers.push(this.fb.group(new Identifier()));
+    }
+
+    removeIdentifier(index: number) {
+        this.identifiers.removeAt(index);
     }
 
     ngOnChanges()  {

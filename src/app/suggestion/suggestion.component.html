@@ -25,13 +25,16 @@
       <!-- <accordion-group heading="{{r.title}} ({{r.publicationYear}})" *ngIf="max_in == 0 || i<max_in" -->
       <!--     [panelClass]="selectedResource == r ? customClass : ''" -->
       <!--     (click)="onSelect(r)"> -->
-      <app-resource-form *ngIf="max_in == 0 || i < max_in"
+      <app-resource-form *ngIf="max_in <= 0 || i < max_in"
         [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
       </app-resource-form>
     </div>
-    <a href="#" *ngIf="max_in" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
+    <div *ngIf="max_in == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
       <p><em>Show all</em></p>
-    </a>
+    </div>
+    <div href="#" *ngIf="max_in == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
+      <p><em>Show less</em></p>
+    </div>
     </accordion>
     <hr>
     <h4 class="text-center mb-0">
@@ -39,13 +42,16 @@
     </h4>
     <accordion *ngIf="externalSuggestions">
       <div *ngFor="let r of externalSuggestions;let i = index">
-        <app-resource-form *ngIf="max_ex == 0 || i < max_ex"
+        <app-resource-form *ngIf="max_ex <= 0 || i < max_ex"
           [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
         </app-resource-form>
       </div>
-      <a href="#" *ngIf="max_ex" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
+      <div *ngIf="max_ex == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
         <p><em>Show all</em></p>
-      </a>
+      </div>
+      <div *ngIf="max_ex == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
+        <p><em>Show less</em></p>
+      </div>
     </accordion>
   </div>
 

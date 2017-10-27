@@ -110,6 +110,41 @@
                 </tr>
               </tbody>
               </table>
+              <!--   Idents   -->
+              <div formArrayName="identifiers">
+                <table class="table-condensed" style="width: 100%;">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <label>Identifier</label> </td> <td>
+                      </td>
+                    </tr>
+                    <tr *ngFor="let identifier of identifiers.controls; let j = index" [formGroupName]="j">
+                      <td>
+                        <!-- <button type="button" class="btn btn-warning" (click)="delContributorField(j)">Delete</button> -->
+                        <button type="button" class="btn btn-danger" aria-label="Remove Identifier" (click)="removeIdentifier(j)">
+                          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                      </td>
+                      <td>
+                        <input class="form-control" formControlName="scheme">
+                        </td>
+                        <td>
+                          <input class="form-control" formControlName="literalValue">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                        </td>
+                        <td>
+                          <button type="button" class="btn btn-success" aria-label="Add Identifier" (click)="addIdentifier()">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
                 <!--   contribs   -->
                 <div formArrayName="contributors">
                   <table class="table-condensed" style="width: 100%;">
