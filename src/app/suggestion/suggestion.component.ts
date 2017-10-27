@@ -53,13 +53,14 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges() {
+        this.internalSuggestions = [];
+        this.externalSuggestions = [];
         if (this.entry) {
             this.fetchInternalSuggestions();
             this.fetchExternalSuggestions();
             this.suggestfield = this.entry.ocrData.title;
         } else {
-            this.internalSuggestions = [];
-            this.externalSuggestions = [];
+          this.suggestfield = '';
         }
     }
 
