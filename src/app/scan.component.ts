@@ -29,6 +29,7 @@ export class ScanComponent {
   resourceTypes = RESOURCE_TYPES;
 
   listoffiles: MetaData[] = [];
+  // unused?
   listoffilescontents = [];
 
   active: number;
@@ -67,8 +68,21 @@ export class ScanComponent {
   }
 
   onclickclear() {
+    // file lists
     this.files = '';
     this.listoffiles = [];
+
+    // active files
+    this.active = null;
+    this.fileIsActive = false;
+    this.isActive = false;
+    this.activefile = 0;
+
+    // current data
+    this.ppn = null;
+    this.firstpage = null;
+    this.lastpage = null;
+    this.resourceType = 'MONOGRAPH'; // needs to be value of select block
   }
 
   onChange(event: any) { // file input

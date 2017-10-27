@@ -13,7 +13,7 @@
     <b>Username:</b>
     <input #user [disabled]='connecting' value='name'>
     <b>Password:</b>
-    <input #pass [disabled]='connecting' value='pass'>
+    <input #pass [disabled]='connecting' type='password' value='pass'>
     <button class='btn btn-default' [disabled]='connecting' (click)='onSignUp(instance.value, user.value, pass.value)'>Sign up</button>
     <button class='btn btn-primary' [disabled]='connecting' (click)='onSignIn(instance.value, user.value, pass.value)'>Sign in</button>
   </div>

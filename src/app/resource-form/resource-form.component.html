@@ -15,13 +15,17 @@
         <td> <label>Subtitle</label> </td>
         <td> {{resource.subtitle}} </td>
       </tr>
-      <tr *ngIf="resource.edition">
-        <td> <label>Edition</label> </td>
-        <td> {{resource.edition}} </td>
-      </tr>
       <tr *ngIf="resource.type">
         <td> <label>Type</label> </td>
         <td> {{resource.type}} </td>
+      </tr>
+      <tr *ngFor="let ident of resource.identifiers">
+        <td> <label>{{ident.scheme}}</label> </td>
+        <td> {{ident.literalValue}} </td>
+      </tr>
+      <tr *ngIf="resource.edition">
+        <td> <label>Edition</label> </td>
+        <td> {{resource.edition}} </td>
       </tr>
       <tr *ngIf="resource.number">
         <td> <label>Number</label> </td>
