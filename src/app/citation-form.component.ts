@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { Citation } from './citation';
-import { MOCK_INTERNAL, MOCK_EXTERNAL } from './mock-bresources';
+import { MOCK_INTERNAL } from './mock-bresources';
 
 import { LocdbService } from './locdb.service';
 import { BibliographicEntry, BibliographicResource } from './locdb';
@@ -8,7 +8,7 @@ import { AgentRole } from './locdb';
 
 @Component({
   moduleId: module.id,
-  selector: 'citation-form',
+  selector: 'app-citation-form',
   templateUrl: 'citation-form.component.html',
   providers: [ LocdbService ]
 })
@@ -20,7 +20,7 @@ export class CitationFormComponent implements OnChanges {
   @Input() entry: BibliographicEntry;
 
   internalSuggestions: BibliographicResource[] = MOCK_INTERNAL;
-  externalSuggestions: any[] = MOCK_EXTERNAL;
+  externalSuggestions: BibliographicResource[] = MOCK_INTERNAL;
   // submitted = true;
 
   reftypes = Citation.REFTYPES;
@@ -46,7 +46,6 @@ export class CitationFormComponent implements OnChanges {
     return;
   }
   // Behaviour for external bibliographic resources modal END
-  
 
   addAuthorToModel() {
     this.entry.ocrData.authors.push(this.authorCandidate);

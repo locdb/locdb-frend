@@ -110,7 +110,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
             embodiedAs: [],
             parts: [],
             partOf: ocr.journal, // these two properties are new in ocr data
-            number: +ocr.volume, // hope they work
+            number: ocr.volume, // hope they work
         }
 
         return br;
