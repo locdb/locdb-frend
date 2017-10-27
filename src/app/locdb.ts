@@ -6,7 +6,7 @@ export class BibliographicResource {
   title?: string;
   subtitle?: string;
   edition?: string;
-  number?: number;
+  number?: string;
   contributors?: AgentRole[];
   publicationYear?: string;
   status?: string;
