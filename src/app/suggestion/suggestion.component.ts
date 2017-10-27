@@ -120,7 +120,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     plusPressed() {
         const newResource: BibliographicResource = this.resourceFromEntry(this.entry);
         this.locdbService.pushBibligraphicResource(newResource).subscribe(
-          (br) => { this.internalSuggestions.push(br); this.selectedResource = br }
+          (br) => { this.internalSuggestions.unshift(br); this.selectedResource = br }
         );
     }
 
