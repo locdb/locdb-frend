@@ -142,21 +142,23 @@ export class ScanComponent {
   extractPPNandPages(name: any) {
     // do same magic
     // let re = /(?:\.([^.]+))?$/;
-    const ppn_re = /([0-9]{8}[0-9X])/;
+    const re = /([0-9]{8}[0-9X])([-_.+]0*([1-9][0-9]+)([-_.+]0*([1-9][0-9]+))?)?/;
     console.log('extracting ppn and pages from filename');
-    let id = null;
+    let id = null, first = null, last = null;
     try {
-      const match = ppn_re.exec(name)
-      id = match[0];
+      const match = re.exec(name)
+      console.log(match)
+      id = match[1];
+      // 2 ..
+      first = match[3];
+      // and 4 are grouped to make them optional
+      last = match[5];
     } catch (err) { console.log('No PPN found in filename'); }
     // could pick last number of ppn as we did not remove it
-    const pages_re = /([1-9][0-9]+)[-_+]([1-9][0-9]+)/;
-    let first = null, last = null;
-    try {
-      const match = pages_re.exec(name);
-      first = match[1]; // match[0] is the whole match
-      last = match[2];
-    } catch (err) { console.log('No pages found in filename'); }
+    // const pages_re = /([1-9][0-9]+)[-_+]([1-9][0-9]+)/;
+    if (first && !last) {
+      last = first;
+    }
     console.log('extracted:', id, first, last)
 
     // some more maybe?
