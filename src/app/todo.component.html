@@ -19,6 +19,8 @@
 
   <div class="panel-body">
     <accordion>
+      <div *ngIf="loading" class="loader">
+      </div>
       <div *ngFor="let t of all_todos()">
         <app-resource-form [resource]="t"></app-resource-form>
         <!-- <div class="btn-group-vertical" style="width: 100%;"> -->

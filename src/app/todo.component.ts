@@ -8,8 +8,9 @@ import { LocdbService } from './locdb.service';
 
 @Component({
   selector: 'app-todo',
-  templateUrl: 'todo.component.html' ,
-  providers: [ LocdbService ]
+  templateUrl: 'todo.component.html',
+  providers: [ LocdbService ],
+  styleUrls: ['./locdb.css']
 })
 
 export class TodoComponent implements OnInit {
@@ -17,6 +18,7 @@ export class TodoComponent implements OnInit {
   selectedTodo: ToDoScans;
   todolist: ToDo[] = [];
   unprocessed: ToDo[] = [];
+  loading = false;
 
 
   @Output() todo: EventEmitter<ToDoScans> = new EventEmitter();
@@ -45,9 +47,10 @@ export class TodoComponent implements OnInit {
   }
 
   fetchTodos() {
+    this.loading = true;
     console.log('Fetching todo scans from backend');
-    this.locdbService.getToDo(true).subscribe( (todos) => {this.todolist = <ToDo[]>todos} );
-    this.locdbService.getToDo(false).subscribe( (todos) => {this.unprocessed = <ToDo[]>todos} );
+    this.locdbService.getToDo(true).subscribe( (todos) => {this.todolist = <ToDo[]>todos; this.loading = false });
+    this.locdbService.getToDo(false).subscribe( (todos) => {this.unprocessed = <ToDo[]>todos; this.loading = false } );
   }
 
   all_todos() {

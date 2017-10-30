@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Rx';
 @Component({
   selector: 'app-entry-list',
   templateUrl: './entry-list.component.html',
-  styleUrls: ['./entry-list.component.css']
+  styleUrls: ['../locdb.css', './entry-list.component.css']
 })
 
 export class EntryListComponent implements OnInit, OnChanges {

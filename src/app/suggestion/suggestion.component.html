@@ -20,6 +20,8 @@
     <h4 class="text-center mb-0">
       Internal Suggestions
     </h4>
+    <div *ngIf="internalInProgress" class="loader">
+    </div>
     <accordion>
       <div *ngFor="let r of internalSuggestions;let i = index">
       <!-- <accordion-group heading="{{r.title}} ({{r.publicationYear}})" *ngIf="max_in == 0 || i<max_in" -->
@@ -40,7 +42,7 @@
     <h4 class="text-center mb-0">
       External Suggestions
     </h4>
-    <div class="loader">
+    <div *ngIf="externalInProgress" class="loader">
     </div>
     <accordion *ngIf="externalSuggestions">
       <div *ngFor="let r of externalSuggestions;let i = index">

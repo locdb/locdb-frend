@@ -13,7 +13,7 @@ import { environment } from 'environments/environment';
 @Component({
     selector: 'app-suggestion',
     templateUrl: './suggestion.component.html',
-    styleUrls: ['./suggestion.component.css']
+    styleUrls: ['../locdb.css', './suggestion.component.css']
 })
 
 export class SuggestionComponent implements OnInit, OnChanges {
@@ -36,6 +36,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
     max_ex = -1;
     max_in = -1;
 
+    externalInProgress = false;
+    internalInProgress = false;
     testresource: BibliographicResource;
 
     constructor(private locdbService: LocdbService) { }
@@ -55,6 +57,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
     ngOnChanges() {
         this.internalSuggestions = [];
         this.externalSuggestions = [];
+        this.externalInProgress = true;
+        this.internalInProgress = true;
+
         if (this.entry) {
             this.fetchInternalSuggestions();
             this.fetchExternalSuggestions();
@@ -155,25 +160,25 @@ export class SuggestionComponent implements OnInit, OnChanges {
         // }
         // else {
         this.internalSuggestions = sgt
-        if (this.internalSuggestions && this.internalSuggestions.length <= this.max_shown_suggestions){
-          this.max_in = -1
+        if (this.internalSuggestions && this.internalSuggestions.length <= this.max_shown_suggestions) {
+          this.max_in = -1;
+        } else {
+          this.max_in = this.max_shown_suggestions;
         }
-        else {
-          this.max_in = this.max_shown_suggestions
-        }
+        this.internalInProgress = false;
         console.log('Received Internal Suggestions: ', this.internalSuggestions);
         // }
     }
 
     saveExternal(sgt) {
         this.externalSuggestions = sgt
-        if (this.externalSuggestions && this.externalSuggestions.length <= this.max_shown_suggestions){
-          this.max_ex = -1
-        }
-        else {
-          this.max_ex = this.max_shown_suggestions
+        if (this.externalSuggestions && this.externalSuggestions.length <= this.max_shown_suggestions) {
+          this.max_ex = -1;
+        } else {
+          this.max_ex = this.max_shown_suggestions;
         }
         console.log('Received External Suggestions: ', this.externalSuggestions);
+        this.externalInProgress = false;
     }
 
     commit() {
