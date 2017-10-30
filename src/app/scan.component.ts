@@ -216,7 +216,12 @@ export class ScanComponent {
       r.onload = (e) => this.readFileContent(e, listelement);
       r.readAsBinaryString(listelement.file);
     } else {
-      console.log('Failed to load file');
+      // saveElectronicJournal should go here
+      console.log('Empty file. Uploading as Journal');
+      this.locdbService.saveElectronicJournal(listelement.id).subscribe(
+        (result) => this.removeItemFromList(result),
+        (err) => this.processError(err)
+      );
     }
   }
 
@@ -261,7 +266,7 @@ export class ScanComponent {
   addId(){
     this.listoffiles.push(
       { id: null, idtype: null, firstpage: null, lastpage: null, file: null, filecontent
-        : null, allset: false, resourceType: 'MONOGRAPH'}
+        : null, allset: false, resourceType: 'JOURNAL'}
     );
     console.log("added emtpy to listoffiles: ", this.listoffiles)
   }
