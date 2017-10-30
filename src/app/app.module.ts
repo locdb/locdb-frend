@@ -37,6 +37,7 @@ import { LoginComponent } from './login/login.component';
 import { VisualComponent } from './visual/visual.component';
 import { CommitComponent } from './commit/commit.component';
 import { FeedReaderComponent } from './feed-reader/feed-reader.component';
+import { EntryListComponent } from './entry-list/entry-list.component';
 
 @NgModule({
   imports: [
@@ -63,6 +64,7 @@ import { FeedReaderComponent } from './feed-reader/feed-reader.component';
     VisualComponent,
     CommitComponent,
     FeedReaderComponent,
+    EntryListComponent,
     // LocdbService
   ],
   providers: [ LocdbService, CredentialsService ],

@@ -69,14 +69,11 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // clean array treatment
     setContributors(roles: AgentRole[]) {
-        if (!roles) { // should catch undefined
-            return [];
-        }
-        const contribFGs = roles.map(
+        const contribFGs = roles ? roles.map(
             arole => this.fb.group(
                 {role: arole.roleType, name: arole.heldBy.nameString }
             )
-        );
+        ) : [];
         const contribFormArray = this.fb.array(contribFGs);
         this.resourceForm.setControl('contributors', contribFormArray);
     }
@@ -96,12 +93,12 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // clean array treatment end
     setIdentifiers(ids: Identifier[]) {
-        const identsFGs = ids.map(
+        const identsFGs = ids ? ids.map(
             identifier => this.fb.group(
                 {literalValue: identifier.literalValue,
                     scheme: identifier.scheme }
             )
-        );
+        ) : [];
         const idsFormArray = this.fb.array(identsFGs);
         this.resourceForm.setControl('identifiers', idsFormArray);
     }
@@ -112,7 +109,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     addIdentifier() {
         // reference from getter above
-        this.identifiers.push(this.fb.group(new Identifier()));
+      this.identifiers.push(this.fb.group({scheme: '', literalValue: ''}));
     }
 
     removeIdentifier(index: number) {
@@ -144,20 +141,20 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         this.setIdentifiers(this.resource.identifiers);
     }
 
-    addContributorField() {
-        // only used by modal variant
-        const conForm: FormGroup =  this.fb.group( {
-            role: 'author',
-            name: '',
-        });
+    // addContributorField() {
+    //     // only used by modal variant
+    //     const conForm: FormGroup =  this.fb.group( {
+    //         role: 'author',
+    //         name: '',
+    //     });
 
-        this.contributorsForms.push(conForm);
-    }
+    //     this.contributorsForms.push(conForm);
+    // }
 
-    delContributorField(pos: number) {
-        // only used by modal variant
-        this.contributorsForms.splice(pos, 1);
-    }
+    // delContributorField(pos: number) {
+    //     // only used by modal variant
+    //     this.contributorsForms.splice(pos, 1);
+    // }
 
     onSubmit() {
         this.resource = this.prepareSaveResource();
@@ -192,6 +189,13 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         return agentRole;
     }
 
+    reconstructIdentifier(scheme: string, value: string): Identifier {
+      const identifier = {
+        scheme: scheme,
+        literalValue: value,
+      }
+      return identifier;
+    }
 
     prepareSaveResource(): BibliographicResource  {
         // Form values need deep copy, else shallow copy is enough
@@ -200,9 +204,12 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         const contribsDeepCopy = formModel.contributors.map(
             (elem: {name: string, role: string }) => this.reconstructAgentRole(elem.name, elem.role)
         );
+        const identsDeepCopy = formModel.identifiers.map(
+          (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
+        );
         const resource: BibliographicResource =  {
             _id: this.resource._id,
-            identifiers: this.resource.identifiers, // TODO needs to come from form model, when changeable
+            identifiers: identsDeepCopy,
             type: formModel.resourcetype as string || '',
             title: formModel.title as string || '',
             subtitle: formModel.subtitle as string || '',
@@ -217,14 +224,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             cites: this.resource.cites,
             status: this.resource.status
         }
-        // TODO FIXME
-        // if (this.resource.hasOwnProperty('children')) {
-        //    resource = <ToDo> resource;
-        //    // in case were dealing with ToDo item resources, we need to aswell copy children
-        //    resource.children = this.resource.children;
-        // }
-
-        // TODO method get authors/identifiers
         return resource;
     }
 
