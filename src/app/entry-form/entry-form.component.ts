@@ -34,8 +34,9 @@ export class EntryFormComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    if (!this.entryForm || !this.entry) 
+    if (!this.entry) {
       return;
+    }
     this.entryForm.reset({
       title: this.entry.ocrData.title,
       references: this.entry.references,
@@ -57,7 +58,7 @@ export class EntryFormComponent implements OnChanges {
   };
 
   addAuthor(){
-    this.authors.push(this.fb.control(""));
+    this.authors.push(this.fb.control(''));
   }
 
   removeAuthor(idx: number) {
@@ -88,21 +89,21 @@ export class EntryFormComponent implements OnChanges {
     // and deep copies of changed form model values
     const saveEntry: BibliographicEntry = {
       _id: this.entry._id,
-      bibliographicEntryText: formModel.bibliographicEntryText as string || "",
-      references: formModel.references as string || "",
+      bibliographicEntryText: formModel.bibliographicEntryText as string || '',
+      references: formModel.references as string || '',
       ocrData: {
-        title: formModel.title as string || "",
-        date: formModel.date as string || "",
+        title: formModel.title as string || '',
+        date: formModel.date as string || '',
         authors: authorsDeepCopy || [],
         },
-      status: "VALID" // validated
+      status: 'VALID' // validated
     };
     return saveEntry;
   }
 
   copyArray<T>(array: T[]): T[] {
-    let copy = []
-    for (let elem of array) {
+    const copy = []
+    for (const elem of array) {
       copy.push(elem);
     }
     return copy;
@@ -112,24 +113,24 @@ export class EntryFormComponent implements OnChanges {
 
   output() {
     const formModel = this.entryForm.value;
-    let authorsDeepCopy = this.copyArray<string>(formModel.authors);
+    const authorsDeepCopy = this.copyArray<string>(formModel.authors);
     // copy from original entry
-    const current : BibliographicEntry = {
-      _id: this.entry._id || "",
-      scanId: this.entry.scanId || "",
-      status: this.entry.status || "",
-      bibliographicEntryText: formModel.bibliographicEntryText as string || "",
-      references: formModel.references as string || "",
+    const current: BibliographicEntry = {
+      _id: this.entry._id || '',
+      scanId: this.entry.scanId || '',
+      status: this.entry.status || '',
+      bibliographicEntryText: formModel.bibliographicEntryText as string || '',
+      references: formModel.references as string || '',
       ocrData: {
-        coordinates: this.entry.ocrData.coordinates || "",
-        title: formModel.title as string || "",
-        date: formModel.date as string || "",
+        coordinates: this.entry.ocrData.coordinates || '',
+        title: formModel.title as string || '',
+        date: formModel.date as string || '',
         // might be also a form variable
-        marker: this.entry.ocrData.marker || "",
+        marker: this.entry.ocrData.marker || '',
         authors: authorsDeepCopy as string[] || []
       }
     };
-    console.log("output", current);
+    console.log('output', current);
     this.state.next(current);
   }
 
