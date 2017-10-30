@@ -126,7 +126,7 @@ export class ToDo extends BibliographicResource {
 }
 
 /** A possible child of a ToDo item */
-export class ToDoParts {
+export class ToDoParts extends BibliographicResource {
   _id: string;
   scans?: ToDoScans[];
 }

@@ -213,7 +213,7 @@ export class ScanComponent {
 
   writefilecontent(listelement: ToDoScansWithMeta) {
     // flag idonly objects, accept them but do not read them
-    
+
     if (listelement.file) {
       console.log('Trying to Read');
       const r = new FileReader();
@@ -221,7 +221,12 @@ export class ScanComponent {
       r.onload = (e) => this.readFileContent(e, listelement);
       r.readAsBinaryString(listelement.file);
     } else {
-      console.log('Failed to load file');
+      // saveElectronicJournal should go here
+      console.log('Empty file. Uploading as Journal');
+      this.locdbService.saveElectronicJournal(listelement._id).subscribe(
+        (result) => this.removeItemFromList(result),
+        (err) => this.processError(err)
+      );
     }
   }
 
