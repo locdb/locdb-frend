@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, EventEmitter, Output } from '@angular/core';
 import { BibliographicEntry } from '../locdb'
+import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'app-entry-list',
@@ -7,15 +8,19 @@ import { BibliographicEntry } from '../locdb'
   styleUrls: ['./entry-list.component.css']
 })
 
-export class EntryListComponent implements OnInit {
+export class EntryListComponent implements OnInit, OnChanges {
 
-  @Input() entries: BibliographicEntry;
+  @Input() entries: BibliographicEntry[];
   selectedEntry: BibliographicEntry;
   @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
+  }
+
+  ngOnChanges() {
   }
 
   onSelect(entry: BibliographicEntry) {

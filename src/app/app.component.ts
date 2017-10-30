@@ -16,6 +16,7 @@ import { environment } from 'environments/environment';
 export class AppComponent {
     title = 'LOC-DB Extrapolite';
     source: BibliographicResource;
+    todo: ToDoScans = null;
     entry: BibliographicEntry;
     target: BibliographicResource;
     entryForSuggestion: BibliographicEntry;
@@ -38,6 +39,11 @@ export class AppComponent {
     this.entry = updatedEntry;
     */
     constructor ( private locdbService: LocdbService ) {}
+
+    updateTodo(todo: ToDoScans) {
+        this.todo = todo;
+    }
+
 
     updateSource (br: BibliographicResource) {
         // this.enableCitation();

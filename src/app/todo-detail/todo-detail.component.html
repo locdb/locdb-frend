@@ -1,12 +1,23 @@
-<ul class="nav">
-  <li class="nav-item">
-    <button type="button" class="btn btn-info" (click)="viewScan(false)">
-      List of Entries
-    <button type="button">
-  </li>
-  <li class="nav-item">
-    <button type="button" class="btn btn-info" (click)="viewScan(true)">
-      Scan View
-    <button type="button">
-  </li>
-</ul>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <button type="button" class="btn btn-danger" aria-label="Back" (click)="back()">
+      <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+      Back
+    </button>
+    <div class="btn-group" role="group" aria-label="Toggle Scan View">
+      <button type="button" class="btn btn-info" (click)="hideScan()">
+        List of Entries
+      </button>
+      <button type="button" class="btn btn-info" (click)="showScan()">
+        Scan View
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="scanIsVisible" class="panel-body">
+    <app-display [img_src]="locdbService.getScan(todo._id)" [entries]="entries" (entry)="forwardEntry($event)"></app-display>
+  </div>
+  <div *ngIf="!scanIsVisible" class="panel-body">
+    <app-entry-list [entries]="entries" (entry)="forwardEntry($event)"></app-entry-list>
+  </div>
+</div>

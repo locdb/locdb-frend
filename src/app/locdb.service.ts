@@ -130,7 +130,7 @@ export class LocdbService {
     // .catch(this.handleError);
   }
 
-  saveElectronicJournal(doi: string) {
+  saveElectronicJournal(doi: string): Observable<any> {
     const url = `${this.locdbUrl}/saveElectronicJournal`
     const params: URLSearchParams = new URLSearchParams();
     params.set('doi', doi);

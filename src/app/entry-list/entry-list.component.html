@@ -1,5 +1,9 @@
-<accordion>
-  <app-entry-form *ngFor="let e of entries" [resource]="e" [selected]="e == selectedEntry" (click)="onSelect(r)">
-  </app-entry-form>
+<accordion *ngIf="entries">
+  <div *ngFor="let e of entries">
+    <app-entry-form [entry]="e" [active]="e == selectedEntry" (click)="onSelect(e)">
+    </app-entry-form>
+  </div>
 </accordion>
-
+<div *ngIf="!entries">
+  <p> Loading... </p>
+</div>

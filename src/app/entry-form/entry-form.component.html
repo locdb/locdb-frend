@@ -1,88 +1,123 @@
-<div style="margin-bottom: 1em" align="right">
-<button type="suggest" (click)="output()" [disabled]="entryForm.pristine" class="btn btn-info">Suggest</button> &nbsp;
-</div>
-<form [formGroup]="entryForm" (ngSubmit)="onSubmit()" novalidate>
-  <!-- Hero Detail Controls -->
-  <div class="form-group">
-      <label class="center-block">Raw text:
-        <input class="form-control" formControlName="bibliographicEntryText">
-      </label>
-  </div>
-  <div class="form-group">
-      <label class="center-block">Title:
-        <input class="form-control" formControlName="title">
-      </label>
-  </div>
-  <div formArrayName="authors" class="well well-lg">
-
-    <div *ngFor="let author of authors.controls; let i=index">
-      <!-- The repeated author template -->
-      <h4>Author #{{i + 1}}</h4>
-      <div style="margin-left: 1em;">
+<div *ngIf="entry">
+  <accordion-group [heading]=short() [isOpen]="active" [panelClass]="active ? 'panel-primary' : 'panel-default'">
+    <div *ngIf="submitted">
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <td> <label>Text</label> </td>
+            <td> {{entry.bibliographicEntryText}} </td>
+          </tr>
+          <tr>
+            <td> <label>References</label> </td>
+            <td> {{entry.references}} </td>
+          </tr>
+          <tr>
+            <td> <label>Title</label> </td>
+            <td> {{entry.ocrData.title}} </td>
+          </tr>
+          <tr>
+            <td> <label>Date</label> </td>
+            <td> {{entry.ocrData.date}} </td>
+          </tr>
+          <tr *ngFor="let author of entry.ocrData.authors; let i=index">
+            <td> <label> Author #{{i}}</label> </td>
+            <td> {{author}} </td>
+          </tr>
+          <tr>
+            <td> <label>Marker</label> </td>
+            <td> {{entry.ocrData.marker}} </td>
+          </tr>
+          <tr>
+            <td> <label>Comments</label> </td>
+            <td> {{entry.ocrData.comments}} </td>
+          </tr>
+          <tr>
+            <td> <label>Journal</label> </td>
+            <td> {{entry.ocrData.journal}} </td>
+          </tr>
+          <tr>
+            <td> <label>Volume</label> </td>
+            <td> {{entry.ocrData.volume}} </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-right">
+        <button type="button" class="btn btn-warning" aria-label="Edit" (click)="showForm(true)">
+          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+        </button>
+      </div>
+    </div>
+    <div *ngIf="!submitted">
+      <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" novalidate>
+        <!-- Hero Detail Controls -->
         <div class="form-group">
-          <label class="center-block"> Name:
-            <!-- <input class="form-control" formControlName="author"> -->
-            <input class="form-control" [formControlName]="i">
-            <button (click)="removeAuthor(i)" type="button" class="btn btn-default" aria-label="Remove Author">
-              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            </button>
+          <label class="center-block">Raw text:
+            <input class="form-control" formControlName="bibliographicEntryText">
           </label>
         </div>
-        <!-- <div class="form-group"> -->
-        <!--   <label class="center-block">Street: -->
-        <!--     <input class="form-control" formControlName="street"> -->
-        <!--   </label> -->
-        <!-- </div> -->
-        <!-- <div class="form-group"> -->
-        <!--   <label class="center-block">City: -->
-        <!--     <input class="form-control" formControlName="city"> -->
-        <!--   </label> -->
-        <!-- </div> -->
-        <!-- <div class="form-group"> -->
-        <!--   <label class="center-block">State: -->
-        <!--     <select class="form-control" formControlName="state"> -->
-        <!--       <option *ngFor="let state of states" [value]="state">{{state}}</option> -->
-        <!--     </select> -->
-        <!--   </label> -->
-        <!-- </div> -->
-        <!-- <div class="form-group"> -->
-        <!--   <label class="center-block">Zip Code: -->
-        <!--     <input class="form-control" formControlName="zip"> -->
-        <!--   </label> -->
-        <!-- </div> -->
-      </div>
-      <br>
-      <!-- End of the repeated author template -->
-    </div>
-    <button (click)="addAuthor()" type="button">Add author</button>
-  </div>
-  <div class="form-group">
-      <label class="center-block">Year:
-        <input class="form-control" formControlName="date">
-      </label>
-  </div>
-  <div class="form-group">
-      <label class="center-block">References:
-        <input class="form-control" formControlName="references">
-      </label>
-  </div>
+        <div class="form-group">
+          <label class="center-block">Title:
+            <input class="form-control" formControlName="title">
+          </label>
+        </div>
+        <div formArrayName="authors" class="well well-lg">
+          <div *ngFor="let author of authors.controls; let i=index">
+            <!-- The repeated author template -->
+            <h4>Author #{{i + 1}}</h4>
+            <div style="margin-left: 1em;">
+              <div class="form-group">
+                <label class="center-block"> Name:
+                  <!-- <input class="form-control" formControlName="author"> -->
+                  <input class="form-control" [formControlName]="i">
+                  <button (click)="removeAuthor(i)" type="button" class="btn btn-default" aria-label="Remove Author">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                  </button>
+                </label>
+              </div>
+            </div>
+            <br>
+            <!-- End of the repeated author template -->
+          </div>
+          <button (click)="addAuthor()" type="button">Add author</button>
+        </div>
+        <div class="form-group">
+          <label class="center-block">Year:
+            <input class="form-control" formControlName="date">
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="center-block">Journal:
+            <input class="form-control" formControlName="journal">
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="center-block">Volume:
+            <input class="form-control" formControlName="volume">
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="center-block">Marker:
+            <input class="form-control" formControlName="marker">
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="center-block">Comments:
+            <input class="form-control" formControlName="comments">
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="center-block">References:
+            <input class="form-control" formControlName="references">
+          </label>
+        </div>
 
-  <div style="margin-top: 1em" align="right">
-    <button type="reset" (click)="revert()"
+        <div style="margin-top: 1em" align="right">
+          <button type="reset" (click)="revert()"
             [disabled]="entryForm.pristine" class="btn btn-danger">Revert</button>
-    <button type="submit"
+          <button type="submit"
             [disabled]="entryForm.pristine" class="btn btn-success">Save</button> &nbsp;
-  </div>
-
-  <!-- <div class="form-group radio"> -->
-  <!--   <h4>Super power:</h4> -->
-  <!--   <label class="center-block"><input type="radio" formControlName="power" value="flight">Flight</label> -->
-  <!--   <label class="center-block"><input type="radio" formControlName="power" value="x-ray vision">X-ray vision</label> -->
-  <!--   <label class="center-block"><input type="radio" formControlName="power" value="strength">Strength</label> -->
-  <!-- </div> -->
-  <!-- <div class="checkbox"> -->
-  <!--   <label class="center-block"> -->
-  <!--     <input type="checkbox" formControlName="sidekick">I have a sidekick. -->
-  <!--   </label> -->
-  <!-- </div> -->
-</form>
+        </div>
+      </form>
+    </div>
+  </accordion-group>
+</div>

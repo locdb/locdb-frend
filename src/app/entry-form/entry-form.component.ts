@@ -11,7 +11,9 @@ import { LocdbService } from '../locdb.service';
 
 export class EntryFormComponent implements OnChanges {
   @Input() entry: BibliographicEntry;
+  @Input() active: false;
   entryForm: FormGroup;
+  submitted = true;
 
   @Output() state: EventEmitter<BibliographicEntry> = new EventEmitter()
 
@@ -24,11 +26,14 @@ export class EntryFormComponent implements OnChanges {
   createForm() {
     this.entryForm = this.fb.group({
       bibliographicEntryText: '',
-      // addresses: formModel.secretLairs // <-- bad!
       references: '',
       title: '',
       date: '',
       authors: this.fb.array([]),
+      marker: '',
+      comments: '',
+      journal: '',
+      volume: '',
     }
     )
   }
@@ -42,6 +47,11 @@ export class EntryFormComponent implements OnChanges {
       references: this.entry.references,
       date: this.entry.ocrData.date,
       bibliographicEntryText: this.entry.bibliographicEntryText,
+      // not reflected yet TODO FIXME
+      marker: this.entry.ocrData.marker,
+      comments: this.entry.ocrData.comments,
+      journal: this.entry.ocrData.journal,
+      volume: this.entry.ocrData.volume,
     });
     this.setAuthors(this.entry.ocrData.authors);
   }
@@ -57,23 +67,27 @@ export class EntryFormComponent implements OnChanges {
     return this.entryForm.get('authors') as FormArray;
   };
 
-  addAuthor(){
+  addAuthor() {
     this.authors.push(this.fb.control(''));
   }
 
   removeAuthor(idx: number) {
-    let authors: string[] = this.authors.value;
-    authors.splice(idx, 1);
-    this.setAuthors(authors);
+    this.authors.removeAt(idx);
+  }
+
+  showForm(val: boolean) {
+      // Display the form or stop displaying it
+      this.submitted = !val;
   }
 
   onSubmit() {
     this.entry = this.prepareSaveEntry();
-    console.log("Submitting entry", this.entry);
+    console.log('Submitting entry', this.entry);
 
     this.locdbService.putBibliographicEntry(this.entry).subscribe(
-      (result) => console.log("Submitted Entry with result", result)
+      (result) => console.log('Submitted Entry with result', result)
     );
+    this.submitted = true;
     this.ngOnChanges();
   }
 
@@ -95,7 +109,11 @@ export class EntryFormComponent implements OnChanges {
         title: formModel.title as string || '',
         date: formModel.date as string || '',
         authors: authorsDeepCopy || [],
-        },
+        marker: formModel.marker as string || '',
+        comments: formModel.comments as string || '',
+        journal: formModel.journal as string || '',
+        volume: formModel.volume as string || '',
+      },
       status: 'VALID' // validated
     };
     return saveEntry;
@@ -112,6 +130,7 @@ export class EntryFormComponent implements OnChanges {
   revert() { this.ngOnChanges(); }
 
   output() {
+    // why not reuse prepareSaveEntry
     const formModel = this.entryForm.value;
     const authorsDeepCopy = this.copyArray<string>(formModel.authors);
     // copy from original entry
@@ -132,6 +151,11 @@ export class EntryFormComponent implements OnChanges {
     };
     console.log('output', current);
     this.state.next(current);
+  }
+
+  short() {
+    if (!this.entry) { return 'Loading'; }
+    return this.entry.bibliographicEntryText;
   }
 
 }

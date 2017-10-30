@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, ViewChild} from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ViewChildren, ViewChild} from '@angular/core';
 
 import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, BibliographicResource } from '../locdb';
 import { LocdbService } from '../locdb.service';
@@ -6,6 +6,8 @@ import { LocdbService } from '../locdb.service';
 import { environment } from 'environments/environment';
 import * as d3 from 'd3';
 import { PopoverModule } from 'ngx-popover/index';
+
+import { Observable } from 'rxjs/Observable';
 
 // Display component consists of file upload, todo item selection and actual
 // display of the scan
@@ -23,17 +25,17 @@ import { PopoverModule } from 'ngx-popover/index';
 //     rect: rect;
 // }
 
-export class DisplayComponent implements OnInit {
+export class DisplayComponent implements OnInit, OnChanges {
     private zoomSVG: any;
     @ViewChild('zoomSVG') set content(content: any) {
         this.zoomSVG = content;
     }
 
-    @Input() todo: ToDoScans;
-    entries: BibliographicEntry[];
+    // @Input() todo: ToDoScans;
 
-    displaySource: string;
-    displayActive = false;
+    @Input() img_src: string;
+    @Input() entries: BibliographicEntry[];
+
     title = 'Scan Display';
     currentIndex = 0;
     clickedRect = false;
@@ -62,16 +64,17 @@ export class DisplayComponent implements OnInit {
     }
 
 
-    ngOnChange() {
+    ngOnChanges() {
         // Input todo and this method should replace manual calling of updateDisplay
-        this.updateDisplay(this.todo);
+        if (this.entries) {
+            // extract rectanlges and so on
+            this.entriesArrived(this.entries);
+        }
     }
 
     updateDisplay(newTodo: ToDoScans) {
         // this method is called when a todo item is selected
         console.log('newTodo: ', newTodo);
-        this.displaySource = this.locdbService.getScan(newTodo._id);
-        this.displayActive = true;
         this.locdbService.getToDoBibliographicEntries(newTodo._id).subscribe( (res) => this.entriesArrived(res) ) ;
     }
 /*
@@ -127,14 +130,6 @@ export class DisplayComponent implements OnInit {
 
     }
 
-    clear() {
-        this.displaySource = null;
-        this.displayActive = false;
-        console.log('Emission of null to clear');
-        this.rects = [];
-        this.entry.next(null); // reset view
-    }
-
     rectLink(i: number) {
         this.rects[i].state = 0
         this.clickedRect = true;
@@ -181,7 +176,7 @@ export class DisplayComponent implements OnInit {
     }
 
     imageOnload() {
-        const realDim = this.realImgDimension(this.displaySource);
+        const realDim = this.realImgDimension(this.img_src);
         console.log('Image Loaded, Dimensions: ', realDim); // e.g 4299, 3035
         this.imgX = realDim.naturalWidth;
         this.imgY = realDim.naturalHeight;
