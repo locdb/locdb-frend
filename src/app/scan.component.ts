@@ -21,7 +21,8 @@ export class ScanComponent {
   event: any;
   files: any;
 
-  ppn: string;
+  id: string;
+  idtype: string;
   firstpage: number;
   lastpage: number;
   resourceType = 'MONOGRAPH'; // needs to be value of select block
@@ -79,7 +80,7 @@ export class ScanComponent {
     this.activefile = 0;
 
     // current data
-    this.ppn = null;
+    this.id = null;
     this.firstpage = null;
     this.lastpage = null;
     this.resourceType = 'MONOGRAPH'; // needs to be value of select block
@@ -90,7 +91,7 @@ export class ScanComponent {
     this.files = event.target.files; // this.uploader.queue;
     let file: any;
     for (file of this.files){
-      const [ppn, first, last] = this.extractPPNandPages(file.name);
+      const [id, first, last] = this.extractidandPages(file.name);
       let rtype = 'MONOGRAPH';
       if (first && last) {
         rtype = 'COLLECTION';
@@ -99,14 +100,14 @@ export class ScanComponent {
         console.log('Assuming a monograph')
       }
       this.listoffiles.push(
-        { ppn: ppn, firstpage: first, lastpage: last, file: file, filecontent
-          : null, allset: this.isValid(ppn, rtype, first, last), resourceType: rtype}
+        { id: id, idtype: null, firstpage: first, lastpage: last, file: file, filecontent
+          : null, allset: this.isValid(id, rtype, first, last), resourceType: rtype}
       );
     }
   }
 
-  isValid(ppn: string, rtype: string, first: number, last: number): boolean {
-    if (!ppn) {
+  isValid(id: string, rtype: string, first: number, last: number): boolean {
+    if (!id) {
       return false;
     }
     if (rtype === 'MONOGRAPH') {
@@ -132,18 +133,18 @@ export class ScanComponent {
 
     this.active = i;
 
-    this.ppn = this.listoffiles[i].ppn;
+    this.id = this.listoffiles[i].id;
     this.firstpage = this.listoffiles[i].firstpage;
     this.lastpage = this.listoffiles[i].lastpage;
     this.resourceType = this.listoffiles[i].resourceType;
   }
 
 
-  extractPPNandPages(name: any) {
+  extractidandPages(name: any) {
     // do same magic
     // let re = /(?:\.([^.]+))?$/;
     const re = /([0-9]{8}[0-9X])([-_.+]0*([1-9][0-9]+)([-_.+]0*([1-9][0-9]+))?)?/;
-    console.log('extracting ppn and pages from filename');
+    console.log('extracting id and pages from filename');
     let id = null, first = null, last = null;
     try {
       const match = re.exec(name)
@@ -153,8 +154,8 @@ export class ScanComponent {
       first = match[3];
       // and 4 are grouped to make them optional
       last = match[5];
-    } catch (err) { console.log('No PPN found in filename'); }
-    // could pick last number of ppn as we did not remove it
+    } catch (err) { console.log('No id found in filename'); }
+    // could pick last number of id as we did not remove it
     // const pages_re = /([1-9][0-9]+)[-_+]([1-9][0-9]+)/;
     if (first && !last) {
       last = first;
@@ -169,13 +170,13 @@ export class ScanComponent {
   // oh yes it is called by onSelectFile
   saveentries() {
     this.fileIsActive = false;
-    this.listoffiles[this.active].ppn = this.ppn ;
+    this.listoffiles[this.active].id = this.id ;
     this.listoffiles[this.active].firstpage = this.firstpage;
     this.listoffiles[this.active].lastpage = this.lastpage;
     this.listoffiles[this.active].resourceType = this.resourceType;
     // can we do this check elsewhere? it is only triggered when the file is collapsed
-    this.listoffiles[this.active].allset = this.isValid(this.ppn, this.resourceType, this.firstpage, this.lastpage);
-    // if (this.listoffiles[this.active].ppn && this.listoffiles[this.active].resourceType) {
+    this.listoffiles[this.active].allset = this.isValid(this.id, this.resourceType, this.firstpage, this.lastpage);
+    // if (this.listoffiles[this.active].id && this.listoffiles[this.active].resourceType) {
     //   if (this.listoffiles[this.active].resourceType === 'MONOGRAPH') {
     //     // hard coded enum value TODO FIXME (long-term)
     //     //
@@ -227,7 +228,7 @@ export class ScanComponent {
 
     if (listelement.resourceType === 'MONOGRAPH') {
       this.locdbService.saveScan(
-        listelement.ppn,
+        listelement.id,
         listelement.resourceType,
         listelement.file,
         listelement.filecontent,
@@ -235,7 +236,7 @@ export class ScanComponent {
        .catch((err) => this.processError(err));
     } else {
       this.locdbService.saveScan(
-        listelement.ppn,
+        listelement.id,
         listelement.resourceType,
         listelement.file,
         listelement.filecontent,
@@ -257,14 +258,23 @@ export class ScanComponent {
     console.log('Send Scans failed: ', err)
     // set item error
   }
+  addId(){
+    this.listoffiles.push(
+      { id: null, idtype: null, firstpage: null, lastpage: null, file: null, filecontent
+        : null, allset: false, resourceType: 'MONOGRAPH'}
+    );
+    console.log("added emtpy to listoffiles: ", this.listoffiles)
+  }
+
 }
 
-class MetaData {
-  ppn: string;
-  firstpage: number;
-  lastpage: number;
-  file: File;
-  filecontent: any;
-  resourceType: string;
-  allset: boolean;
+interface MetaData {
+  id: string;
+  idtype: string;
+  firstpage?: number;
+  lastpage?: number;
+  file?: File;
+  filecontent?: any;
+  resourceType?: string; //maybe requiered?
+  allset?: boolean; //maybe save to assume?
 }
