@@ -1,16 +1,8 @@
 <div class="panel panel-default">
-  <div (click)="toggle()" class="panel-heading">
-    <div class="row justify-content-between">
-      <div class="col-xs-6 text-left">
+  <div class="panel-heading">
         <h4><b>{{title}}</b></h4>
-      </div>
-      <div class="col-xs-6 text-right">
-        <span *ngIf="!isActive" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        <span *ngIf="isActive" class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-      </div>
-    </div>
   </div>
-  <div *ngIf="isActive" class="panel-body">
+  <div class="panel-body">
     <div class="panel panel-default">
 
     <div class="row">
@@ -39,7 +31,7 @@
       <button type="button" class="btn btn-default" (click)="next(1)">Weiter</button>
     </div> -->
   </div>
-  <div *ngIf="isActive && listoffiles" class="panel-body">
+  <div *ngIf="listoffiles" class="panel-body">
     <div class="panel panel-default">
       <div class="list-group">
         <div *ngFor="let file of listoffiles; let i = index">

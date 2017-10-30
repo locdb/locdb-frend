@@ -112,10 +112,13 @@
         </div>
 
         <div style="margin-top: 1em" align="right">
+          <button type="button" class="btn btn-default" (click)="showForm(false)">
+            Cancel
+          </button> &nbsp;
           <button type="reset" (click)="revert()"
-            [disabled]="entryForm.pristine" class="btn btn-danger">Revert</button>
+            [disabled]="entryForm.pristine" class="btn btn-danger">Revert</button> &nbsp;
           <button type="submit"
-            [disabled]="entryForm.pristine" class="btn btn-success">Save</button> &nbsp;
+            [disabled]="entryForm.pristine" class="btn btn-success">Save</button>
         </div>
       </form>
     </div>
