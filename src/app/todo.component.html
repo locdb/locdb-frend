@@ -12,6 +12,11 @@
     </div>
   </div>
 
+  <!-- close button -->
+  <!-- <button type="button" class="close" aria-label="Close"> -->
+    <!--   <span aria-hidden="true">&times;</span> -->
+    <!-- </button> -->
+
   <div class="panel-body">
     <accordion>
       <div *ngFor="let t of all_todos()">
@@ -22,21 +27,25 @@
               Scan {{ trimHash(s._id) }}
               <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
             </button>
-            <div *ngFor="let c of t.children" style="margin-left: 1em; margin-right:1em">
-              <!-- <app-resource-form [resource_id]="c._id"></app-resource-form> -->
+            <div *ngFor="let c of t.children" style="margin-left: 1em;">
+              <app-resource-form [resource]="c"></app-resource-form>
               <!-- scans attached to children of resource -->
-              <button type="button" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of c.scans" (click)="onSelect(s)" style="margin-left: 1em;">
-                Scan {{ trimHash(s._id) }} on pp. {{s.firstPage}}-{{s.lastPage}}
-                <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
-              </button>
+              <div style="margin-right: 1em;">
+                <button type="button" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of c.scans" (click)="onSelect(s)" style="margin-left: 1em;">
+                  Scan {{ trimHash(s._id) }} on pp. {{s.firstPage}}-{{s.lastPage}}
+                  <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
+                </button>
+              </div>
             </div>
           </div>
         </div> <!-- end of for loop -->
       </accordion>
     </div>
     <div class="panel-footer">
+      <div class="text-right">
         <button (click)="fetchTodos()" type="button" class="btn btn-info" aria-label="Refresh">
           <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Reload
         </button>
+      </div>
     </div>
 </div>
