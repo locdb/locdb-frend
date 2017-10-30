@@ -5,7 +5,7 @@ import { REFERENCES, REFERENCES_ALT } from './mock-references';
 
 import { LocdbService } from './locdb.service';
 
-import { RESOURCE_TYPES } from './locdb';
+import { RESOURCE_TYPES, ToDoScans} from './locdb';
 
 const URL = '/api/'; // Same Origin Policy
 
@@ -19,9 +19,9 @@ const URL = '/api/'; // Same Origin Policy
 export class ScanComponent {
   title = 'File Upload';
   event: any;
-  files: any;
+  files: any; // TODO deprecated
 
-  id: string;
+  _id: string;
   idtype: string;
   firstpage: number;
   lastpage: number;
@@ -29,11 +29,11 @@ export class ScanComponent {
 
   resourceTypes = RESOURCE_TYPES;
 
-  listoffiles: MetaData[] = [];
+  listoffiles: ToDoScansWithMeta[] = [];
   // unused?
   listoffilescontents = [];
 
-  active: number;
+  active: ToDoScansWithMeta;
   fileIsActive = false;
   isActive = false;
   activefile = 0;
@@ -80,7 +80,8 @@ export class ScanComponent {
     this.activefile = 0;
 
     // current data
-    this.id = null;
+    this._id = null;
+    this.idtype = null;
     this.firstpage = null;
     this.lastpage = null;
     this.resourceType = 'MONOGRAPH'; // needs to be value of select block
@@ -91,7 +92,7 @@ export class ScanComponent {
     this.files = event.target.files; // this.uploader.queue;
     let file: any;
     for (file of this.files){
-      const [id, first, last] = this.extractidandPages(file.name);
+      const [_id, first, last] = this.extractidandPages(file.name);
       let rtype = 'MONOGRAPH';
       if (first && last) {
         rtype = 'COLLECTION';
@@ -100,14 +101,14 @@ export class ScanComponent {
         console.log('Assuming a monograph')
       }
       this.listoffiles.push(
-        { id: id, idtype: null, firstpage: first, lastpage: last, file: file, filecontent
-          : null, allset: this.isValid(id, rtype, first, last), resourceType: rtype}
+        { _id: _id, idtype: "PPN", firstpage: first, lastpage: last, file: file, filecontent
+          : null, allset: this.isValid(_id, rtype, first, last), resourceType: rtype, status: null}
       );
     }
   }
 
-  isValid(id: string, rtype: string, first: number, last: number): boolean {
-    if (!id) {
+  isValid(_id: string, rtype: string, first: number, last: number): boolean {
+    if (!_id) {
       return false;
     }
     if (rtype === 'MONOGRAPH') {
@@ -121,22 +122,23 @@ export class ScanComponent {
     return false;
   }
 
-  onSelectFile(i: number) {
+  onSelectFile(item: ToDoScansWithMeta) {
     if (this.fileIsActive) {
       this.saveentries();
       this.fileIsActive = true;
     }
 
-    if (i === this.active || !this.fileIsActive) {
+    if (item === this.active || !this.fileIsActive) {
       this.togglefile();
     }
 
-    this.active = i;
+    this.active = item;
 
-    this.id = this.listoffiles[i].id;
-    this.firstpage = this.listoffiles[i].firstpage;
-    this.lastpage = this.listoffiles[i].lastpage;
-    this.resourceType = this.listoffiles[i].resourceType;
+    this._id = item._id;
+    this.idtype = item.idtype;
+    this.firstpage = item.firstpage;
+    this.lastpage = item.lastpage;
+    this.resourceType = item.resourceType;
   }
 
 
@@ -145,11 +147,11 @@ export class ScanComponent {
     // let re = /(?:\.([^.]+))?$/;
     const re = /([0-9]{8}[0-9X])([-_.+]0*([1-9][0-9]+)([-_.+]0*([1-9][0-9]+))?)?/;
     console.log('extracting id and pages from filename');
-    let id = null, first = null, last = null;
+    let _id = null, first = null, last = null;
     try {
       const match = re.exec(name)
       console.log(match)
-      id = match[1];
+      _id = match[1];
       // 2 ..
       first = match[3];
       // and 4 are grouped to make them optional
@@ -160,22 +162,24 @@ export class ScanComponent {
     if (first && !last) {
       last = first;
     }
-    console.log('extracted:', id, first, last)
+    console.log('extracted:', _id, first, last)
 
     // some more maybe?
-    return [id, first, last];
+    return [_id, first, last];
   }
 
   // nicht mehr als onclick genutzt
   // oh yes it is called by onSelectFile
   saveentries() {
+    console.log("idtype saveentries: " + this.idtype)
     this.fileIsActive = false;
-    this.listoffiles[this.active].id = this.id ;
-    this.listoffiles[this.active].firstpage = this.firstpage;
-    this.listoffiles[this.active].lastpage = this.lastpage;
-    this.listoffiles[this.active].resourceType = this.resourceType;
+    this.active.idtype = this.idtype;
+    this.active.firstpage = this.firstpage;
+    this.active.lastpage = this.lastpage;
+    this.active._id = this._id ;
+    this.active.resourceType = this.resourceType;
     // can we do this check elsewhere? it is only triggered when the file is collapsed
-    this.listoffiles[this.active].allset = this.isValid(this.id, this.resourceType, this.firstpage, this.lastpage);
+    this.active.allset = this.isValid(this._id, this.resourceType, this.firstpage, this.lastpage);
     // if (this.listoffiles[this.active].id && this.listoffiles[this.active].resourceType) {
     //   if (this.listoffiles[this.active].resourceType === 'MONOGRAPH') {
     //     // hard coded enum value TODO FIXME (long-term)
@@ -207,8 +211,9 @@ export class ScanComponent {
     }
   }
 
-  writefilecontent(listelement: MetaData) {
-
+  writefilecontent(listelement: ToDoScansWithMeta) {
+    // flag idonly objects, accept them but do not read them
+    
     if (listelement.file) {
       console.log('Trying to Read');
       const r = new FileReader();
@@ -220,7 +225,7 @@ export class ScanComponent {
     }
   }
 
-  readFileContent(e, listelement: MetaData) {
+  readFileContent(e, listelement: ToDoScansWithMeta) {
     const contents = (<IDBOpenDBRequest>e.target).result;
 
     listelement.filecontent = contents;
@@ -228,7 +233,7 @@ export class ScanComponent {
 
     if (listelement.resourceType === 'MONOGRAPH') {
       this.locdbService.saveScan(
-        listelement.id,
+        listelement._id,
         listelement.resourceType,
         listelement.file,
         listelement.filecontent,
@@ -236,7 +241,7 @@ export class ScanComponent {
        .catch((err) => this.processError(err));
     } else {
       this.locdbService.saveScan(
-        listelement.id,
+        listelement._id,
         listelement.resourceType,
         listelement.file,
         listelement.filecontent,
@@ -260,16 +265,38 @@ export class ScanComponent {
   }
   addId(){
     this.listoffiles.push(
-      { id: null, idtype: null, firstpage: null, lastpage: null, file: null, filecontent
-        : null, allset: false, resourceType: 'MONOGRAPH'}
+      { _id: null, idtype: "DOI", firstpage: null, lastpage: null, file: null, filecontent
+        : null, allset: false, resourceType: 'MONOGRAPH', status: null}
     );
     console.log("added emtpy to listoffiles: ", this.listoffiles)
   }
+  getName(item: ToDoScansWithMeta){
+    if (item.file){
+        return item.file.name
+    }
+    else{
+      if (item._id == null){
+        return "insert ID"
+      }
+      else{
+      return item.idtype + ": " + item._id
+  }
+}
+  }
+  getMetadata(item: ToDoScansWithMeta){
+    if (item.file){
+        return (item.file.size/1024/1024).toFixed(3) + " MB, "
+                          + item.file.type
+    }
+    else{
+      return ""
 
+  }
+  }
 }
 
-interface MetaData {
-  id: string;
+interface ToDoScansWithMeta extends ToDoScans {
+  _id: string;
   idtype: string;
   firstpage?: number;
   lastpage?: number;

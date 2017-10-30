@@ -42,15 +42,15 @@
   <div *ngIf="isActive && listoffiles" class="panel-body">
     <div class="panel panel-default">
       <div class="list-group">
-        <div *ngFor="let file of listoffiles; let i = index">
-          <button type="button"  class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectFile(i)">
-            <span class="badge" *ngIf="listoffiles[i].allset">Ready</span>
-            <span class="badge" *ngIf="!listoffiles[i].allset">Enter information</span>
-            <h5 class="list-group-item-heading"><b>{{file.name}}</b></h5> <!--getname method filter nullfileobjects and return name-->
-            <p class="list-group-item-text">{{file.size/1024/1024 | number:'.2' }} MB, {{file.type}}</p>
+        <div *ngFor="let toDoScansWithMeta of listoffiles">
+          <button type="button"  class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectFile(toDoScansWithMeta)">
+            <span class="badge" *ngIf="toDoScansWithMeta.allset">Ready</span>
+            <span class="badge" *ngIf="!toDoScansWithMeta.allset">Enter information</span>
+            <h5 class="list-group-item-heading"><b>{{getName(toDoScansWithMeta)}}</b></h5> <!--getname method filter nullfileobjects and return name-->
+            <p class="list-group-item-text">{{getMetadata(toDoScansWithMeta)}}</p>
           </button>
 
-          <div *ngIf="active == i && fileIsActive">
+          <div *ngIf="active == toDoScansWithMeta && fileIsActive">
 
             <br/>
             <form>
@@ -59,10 +59,10 @@
 
               <tr>
                 <td><select name="idtype" [(ngModel)]="idtype">
-                  <option value="ppn" selected="selected">PPN</option>
-                  <option value="doi">DOI</option>
+                  <option value = "PPN">PPN</option>
+                  <option value = "DOI">DOI</option>
                 </select></td>
-                <td><input type="text" name="id" [(ngModel)]="id" style="width: 100%;"
+                <td><input type="text" name="_id" [(ngModel)]="_id" style="width: 100%;"
                   class="form-control input-sm pull-right"></td>
               </tr>
               <tr *ngIf="resourceType !== 'MONOGRAPH'">
@@ -74,7 +74,7 @@
               <tr>
                 <td><label for="typeselect">Resource Type</label></td>
                 <td>
-                <select [disabled]="!file.file" name="typeselect" [(ngModel)]="resourceType" style="width: 100%;"
+                <select [disabled]="!toDoScansWithMeta.file" name="typeselect" [(ngModel)]="resourceType" style="width: 100%;"
                   class="form-control input-sm pull-right">
                   <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
                 </select>
