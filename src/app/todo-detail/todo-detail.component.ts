@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angul
 import { ToDoScans, BibliographicEntry } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import {Observable} from 'rxjs/Rx';
+import { SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-todo-detail',
@@ -14,6 +15,7 @@ export class TodoDetailComponent implements OnInit, OnChanges {
   entries: BibliographicEntry[] = [];
   @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
   @Output() goBack: EventEmitter<null> = new EventEmitter();
+  loading = false;
 
 
   constructor( private locdbService: LocdbService) { }
@@ -21,11 +23,13 @@ export class TodoDetailComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges | any) {
     // fetch entries for todo item (cold observable, call in template with async)
     this.entries = [];
+    this.loading = true;
     this.locdbService.getToDoBibliographicEntries(this.todo._id).subscribe(
-      (result) => this.entries = result
+      (result) => {this.entries = result; this.loading = false},
+      (err) => {this.loading = false }
     );
   }
 

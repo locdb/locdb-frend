@@ -20,4 +20,7 @@
   <div *ngIf="!scanIsVisible" class="panel-body">
     <app-entry-list [entries]="entries" (entry)="forwardEntry($event)"></app-entry-list>
   </div>
+
+  <div *ngIf="loading" class="loader">
+  </div>
 </div>

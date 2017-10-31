@@ -1,4 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ViewChildren, ViewChild} from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 
 import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, BibliographicResource } from '../locdb';
 import { LocdbService } from '../locdb.service';
@@ -66,7 +67,7 @@ export class DisplayComponent implements OnInit, OnChanges {
 
     ngOnChanges() {
         // Input todo and this method should replace manual calling of updateDisplay
-        if (this.entries) {
+        if (this.entries && this.entries.length) {
             // extract rectanlges and so on
             this.entriesArrived(this.entries);
         }
@@ -98,13 +99,10 @@ export class DisplayComponent implements OnInit, OnChanges {
 
 
     entriesArrived(entries) {
-        console.log('ENTRIES ARRIVED ===');
+        console.log('=== ENTRIES ARRIVED ===');
         console.log(entries)
         this.entries = entries;
         this.extractRects(this.entries);
-        console.log(this.rects);
-        this.currentIndex = 0;
-        this.entry.next(entries[0]);
     }
 
     onSelect(entry: any) {

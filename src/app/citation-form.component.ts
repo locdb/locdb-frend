@@ -59,7 +59,7 @@ export class CitationFormComponent implements OnChanges {
   }
 
 
-  ngOnChanges(changes: any) {
+  ngOnChanges() {
     // console.log("onChanges called");
     // this.fetchInternals(this.entry);
     // this.fetchExternals(this.entry);

@@ -1,6 +1,7 @@
 import { Component, OnChanges, Input, Output, EventEmitter} from '@angular/core';
 import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
 import { BibliographicEntry, Identifier} from '../locdb';
+import { SimpleChanges } from '@angular/core';
 import { LocdbService } from '../locdb.service';
 
 @Component({
