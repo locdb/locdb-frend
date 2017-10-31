@@ -57,6 +57,7 @@ export class ScanComponent {
       for (const file of this.listoffiles){
         if (!file.allset) {
           ready = false;
+          break;
         }
       }
     }
@@ -211,9 +212,11 @@ export class ScanComponent {
     }
   }
 
+
   writefilecontent(listelement: ToDoScansWithMeta) {
     // flag idonly objects, accept them but do not read them
-
+    console.log(this.listoffiles.indexOf(listelement))
+    console.log(listelement.file)
     if (listelement.file) {
       console.log('Trying to Read');
       const r = new FileReader();
@@ -262,7 +265,11 @@ export class ScanComponent {
   removeItemFromList(item) {
     console.log('Send item: ', item)
     // clear after upload
-    this.onclickclear(); // TODO remove items not at once
+    let index = this.listoffiles.indexOf(item)
+    if(index != -1) {
+	     this.listoffiles.splice(index, 1);
+     }
+    // this.onclickclear(); // TODO remove items not at once
   }
   processError(err) {
     console.log('Send Scans failed: ', err)
