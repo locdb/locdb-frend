@@ -106,9 +106,15 @@ export class ScanComponent {
         console.log('Assuming a monograph')
       }
       this.listoffiles.push(
-        { _id: _id, idtype: "PPN", firstpage: first, lastpage: last, file: file, filecontent
-          : null, allset: this.isValid(_id, rtype, first, last), resourceType: rtype, status: null,
-        uploading: false}
+        { _id: _id, idtype: 'PPN',
+          firstpage: first, lastpage: last,
+          file: file, filecontent : null,
+          allset: this.isValid(
+          _id,
+          rtype,
+          first,
+          last
+        ), resourceType: rtype, status: null, uploading: false}
       );
     }
   }
@@ -177,7 +183,7 @@ export class ScanComponent {
   // nicht mehr als onclick genutzt
   // oh yes it is called by onSelectFile
   saveentries() {
-    console.log("idtype saveentries: " + this.idtype)
+    console.log('idtype sav;eentries;: ' + this.idtype)
     this.fileIsActive = false;
     this.active.idtype = this.idtype;
     this.active.firstpage = this.firstpage;
@@ -308,7 +314,7 @@ export class ScanComponent {
     if (item.file) {
       return item.file.name
     } else if (item._id == null) {
-      return 'insert ID';
+      return 'Electronic Resource';
     } else {
       return item.idtype + ': ' + item._id;
     }

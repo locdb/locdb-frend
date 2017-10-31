@@ -11,25 +11,21 @@
       <button type="button" class="btn btn-default" (click)="next(-1)">Zurück</button>
       <button type="button" class="btn btn-default" (click)="next(1)">Weiter</button>
     </div> -->
-  <div class="panel-body">
+  <div id="flup" class="panel-body">
     <div *ngIf="listoffiles[0]" class="panel panel-default">
       <div class="list-group">
         <div *ngFor="let toDoScansWithMeta of listoffiles">
-          <div class="row">
-          <div class="col-xs-11" style="padding-right: 0 !important;">
-          <button type="button"  class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectFile(toDoScansWithMeta)">
-            <span class="badge" *ngIf="toDoScansWithMeta.allset">Ready</span>
-            <span class="badge" *ngIf="!toDoScansWithMeta.allset">Enter information</span>
+          <a href="#flup" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectFile(toDoScansWithMeta); false">
             <h5 class="list-group-item-heading"><b>{{getName(toDoScansWithMeta)}}</b></h5> <!--getname method filter nullfileobjects and return name-->
-            <p class="list-group-item-text">{{getMetadata(toDoScansWithMeta)}}</p>
-          </button>
-        </div>
-        <div class="col-xs-1 text-center" style="padding-left: 0 !important;">
-        <button type="button" class="close pull-right" (click)="removeItemFromList(toDoScansWithMeta, 'button')" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-          </div>
-        </div>
+            <p class="list-group-item-text">{{getMetadata(toDoScansWithMeta)}}
+              <span class="badge" *ngIf="toDoScansWithMeta.allset">Ready</span>
+              <span class="badge" *ngIf="!toDoScansWithMeta.allset">Enter information</span>
+              <button type="button" class="close pull-right" (click)="removeItemFromList(toDoScansWithMeta, 'button'); $event.stopPropagation()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </p>
+
+          </a>
           <div *ngIf="active == toDoScansWithMeta && fileIsActive">
 
             <br/>
@@ -37,32 +33,32 @@
               <table class="table table-striped">
                 <tbody>
 
-              <tr>
-                <td><select name="idtype" [(ngModel)]="idtype">
-                  <option value = "PPN">PPN</option>
-                  <option value = "DOI">DOI</option>
-                </select></td>
-                <td><input type="text" name="_id" [(ngModel)]="_id" style="width: 100%;"
-                  class="form-control input-sm pull-right"></td>
-              </tr>
-              <tr *ngIf="resourceType !== 'MONOGRAPH'">
-                <td><label>Pages</label> from <input type="number" name="firstpage" [(ngModel)]="firstpage" style="width: 75%;"
-                  class="form-control input-sm pull-right"></td>
-                <td> to <input type="number" name="firstlastpage" [(ngModel)]="lastpage" style="width: 90%;"
-                  class="form-control input-sm pull-right"></td>
-              </tr>
-              <tr>
-                <td><label for="typeselect">Resource Type</label></td>
-                <td>
-                <select [disabled]="!toDoScansWithMeta.file" name="typeselect" [(ngModel)]="resourceType" style="width: 100%;"
-                  class="form-control input-sm pull-right">
-                  <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
-                </select>
-              </td>
-              </tr>
+                  <tr>
+                    <td><select name="idtype" [(ngModel)]="idtype">
+                        <option value = "PPN">PPN</option>
+                        <option value = "DOI">DOI</option>
+                    </select></td>
+                    <td><input type="text" name="_id" [(ngModel)]="_id" style="width: 100%;"
+                      class="form-control input-sm pull-right"></td>
+                  </tr>
+                  <tr *ngIf="resourceType !== 'MONOGRAPH'">
+                    <td><label>Pages</label> from <input type="number" name="firstpage" [(ngModel)]="firstpage" style="width: 75%;"
+                      class="form-control input-sm pull-right"></td>
+                    <td> to <input type="number" name="firstlastpage" [(ngModel)]="lastpage" style="width: 90%;"
+                      class="form-control input-sm pull-right"></td>
+                  </tr>
+                  <tr>
+                    <td><label for="typeselect">Resource Type</label></td>
+                    <td>
+                      <select [disabled]="!toDoScansWithMeta.file" name="typeselect" [(ngModel)]="resourceType" style="width: 100%;"
+                        class="form-control input-sm pull-right">
+                        <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
+                      </select>
+                    </td>
+                  </tr>
 
-            </tbody>
-          </table>
+                </tbody>
+              </table>
 
             </form>
 
