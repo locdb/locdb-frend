@@ -55,11 +55,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges() {
-        this.internalSuggestions = [];
-        this.externalSuggestions = [];
-        this.externalInProgress = true;
-        this.internalInProgress = true;
-
         if (this.entry) {
             this.fetchInternalSuggestions();
             this.fetchExternalSuggestions();
@@ -70,13 +65,17 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     fetchInternalSuggestions(): void {
+        this.internalInProgress = true;
+        this.internalSuggestions = [];
         console.log('Fetching internal suggestions for', this.entry);
-        this.locdbService.suggestions(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
+        this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
     }
 
     fetchExternalSuggestions(): void {
+        this.externalInProgress = true;
+        this.externalSuggestions = [];
         console.log('Fetching external suggestions for', this.entry);
-        this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
+        this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
     }
 
     // these two functions could go somewhere else e.g. static in locdb.ts
@@ -129,7 +128,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
         );
     }
 
-
     onSelect(br?: BibliographicResource): void {
         console.log('Suggestion emitted', br);
         this.selectedResource = br;
@@ -138,20 +136,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     refreshSuggestions() {
-        console.log('Internal Suggestions: ', this.internalSuggestions);
-        console.log('External Suggestions: ', this.externalSuggestions);
-
-        const searchentry = JSON.parse(JSON.stringify(this.entry)); // why is deep copy needed?
-        searchentry.ocrData.title = this.suggestfield;
-        console.log('Searchentry: ', searchentry);
-        console.log('get internal Suggestions');
-        //     this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.internalSuggestions = sgt );
-        this.locdbService.suggestions(searchentry, false).subscribe( (sgt) => this.saveInternal(sgt) );
-        console.log('get external Suggestions');
-        //     this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.externalSuggestions = sgt );
-        this.locdbService.suggestions(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
-        console.log('Done.');
-        this.entry = searchentry;
+      this.entry.ocrData.title = this.suggestfield;
+      this.ngOnChanges();
     }
 
     saveInternal(sgt) {
