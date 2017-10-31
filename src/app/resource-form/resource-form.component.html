@@ -1,10 +1,10 @@
-<accordion-group [isOpen]="selected" [panelClass]="selected ? 'panel-primary' : 'panel-default'">
+<accordion-group *ngIf="resource" [isOpen]="selected" [panelClass]="selected ? 'panel-primary' : 'panel-default'">
   <div accordion-heading>
     <p>{{ resource.title }}
     <span class="label label-info">{{resource.type}}</span>
     </p>
   </div>
-  <div *ngIf="resource && submitted">
+  <div *ngIf="submitted">
     <table class="table table-striped">
       <tbody>
         <tr *ngIf="resource.title">
@@ -52,7 +52,7 @@
       </button>
     </div>
   </div>
-  <div *ngIf="resource && !submitted">
+  <div *ngIf="!submitted">
     <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
       <table class="table table-striped" style="width: 100%;">
         <tbody>
