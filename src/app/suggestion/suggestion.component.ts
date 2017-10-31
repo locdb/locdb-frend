@@ -19,6 +19,7 @@ import { environment } from 'environments/environment';
 export class SuggestionComponent implements OnInit, OnChanges {
 
 
+    // retain entry as input, then we can modifiy its 'references' field
     @Input() entry: BibliographicEntry;
     @Output() suggest: EventEmitter<BibliographicResource> = new EventEmitter();
 
@@ -26,7 +27,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     environment = environment;
 
     selectedResource: BibliographicResource;
-    suggestfield; // environment.production ? this.entry.title : this.entry.ocrData.title;
+    query: string;
 
     internalSuggestions: BibliographicResource[];
     externalSuggestions: BibliographicResource[];
@@ -56,26 +57,39 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     ngOnChanges() {
         if (this.entry) {
-            this.fetchInternalSuggestions();
-            this.fetchExternalSuggestions();
-            this.suggestfield = this.entry.ocrData.title;
+          this.query = this.queryFromEntry(this.entry);
+          this.refresh();
         } else {
-          this.suggestfield = '';
+          this.query = '';
         }
     }
 
+    refresh() {
+      // when search button is triggered
+      this.fetchInternalSuggestions();
+      this.fetchExternalSuggestions();
+    }
+
     fetchInternalSuggestions(): void {
-        this.internalInProgress = true;
-        this.internalSuggestions = [];
-        console.log('Fetching internal suggestions for', this.entry);
-        this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
+      this.internalInProgress = true;
+      this.internalSuggestions = [];
+      console.log('Fetching internal suggestions for', this.entry);
+      // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
+      this.locdbService.suggestionsByQuery(this.query, false).subscribe(
+        (sug) => this.saveInternal(sug),
+        (err) => { this.internalInProgress = false }
+      );
     }
 
     fetchExternalSuggestions(): void {
-        this.externalInProgress = true;
-        this.externalSuggestions = [];
-        console.log('Fetching external suggestions for', this.entry);
-        this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
+      this.externalInProgress = true;
+      this.externalSuggestions = [];
+      console.log('Fetching external suggestions for', this.entry);
+      // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
+      this.locdbService.suggestionsByQuery(this.query, true).subscribe(
+        (sug) => this.saveExternal(sug),
+        (err) => { this.externalInProgress = false }
+      );
     }
 
     // these two functions could go somewhere else e.g. static in locdb.ts
@@ -133,11 +147,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
         this.selectedResource = br;
         this.committed = false;
         this.suggest.next(br);
-    }
-
-    refreshSuggestions() {
-      this.entry.ocrData.title = this.suggestfield;
-      this.ngOnChanges();
     }
 
     saveInternal(sgt) {
@@ -207,5 +216,19 @@ export class SuggestionComponent implements OnInit, OnChanges {
           this.max_in = 0;
       }
     }
+
+
+  // contributors2authors(roles: AgentRole[]) {
+  //   const authors = roles.map( (role) => role.heldBy.nameString);
+  //   const names = authors.join(' ');
+  //   return names
+  // }
+
+  queryFromEntry(entry: BibliographicEntry): string {
+    const ocr = entry.ocrData;
+    const names = ocr.authors.join(' ');
+    const query = `${entry.ocrData.title} ${names} ${entry.bibliographicEntryText}`;
+    return query;
+  }
 
 }

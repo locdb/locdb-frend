@@ -23,7 +23,8 @@ export class TodoListComponent implements OnInit, OnChanges {
     this.loading = true;
     this.todos = [];
     this.locdbService.getToDo(this.state).subscribe(
-      (todos) => { this.todos = todos; this.loading = false }
+      (todos) => { this.todos = todos; this.loading = false },
+      (err) => { this.loading = false; }
     );
   }
 

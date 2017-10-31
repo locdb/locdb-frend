@@ -3,11 +3,11 @@
   <div class="panel-heading">
     <div class="row justify-content-between">
       <div class="col-xs-10 text-left">
-        <textarea class="form-control" [(ngModel)]="suggestfield" rows="3" style="resize: none;"></textarea>
+        <textarea class="form-control" [(ngModel)]="query" rows="3" style="resize: none;"></textarea>
       </div>
       <div class="col-xs-2 text-right">
         <div class="bottom-column">
-          <button type="button" class="btn btn-success" aria-label="Search" (click)="refreshSuggestions()">
+          <button type="button" class="btn btn-success" aria-label="Search" (click)="refresh()">
             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
           </button>
         </div>

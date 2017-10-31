@@ -151,12 +151,15 @@ export class LocdbService {
   }
 
   suggestionsByQuery(query: string, external: boolean) {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
-    const url = external ? `${this.locdbUrl}/getExternalSuggestionsByQueryString` :
-      `${this.locdbUrl}/getInternalSuggestions`
+    const params: URLSearchParams = new URLSearchParams();
+    params.set('query', query);
+    console.log(params);
 
-    return this.http.post(url, { query : query } , options)
+    const options = new RequestOptions({ search: params });
+    const url = external ? `${this.locdbUrl}/getExternalSuggestionsByQueryString` :
+      `${this.locdbUrl}/getInternalSuggestionsByQueryString`
+
+    return this.http.get(url, options)
       .map(response => response.json() as BibliographicResource[])
       .catch(this.handleError);
   }
