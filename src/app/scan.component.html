@@ -3,23 +3,10 @@
         <h4><b>{{title}}</b></h4>
   </div>
   <div class="panel-body">
-    <div class="panel panel-default">
+      <div ng-controller="formCtrl">
+        <input type="file" multiple (change)= "onChange($event)">
+      </div>
 
-    <div class="row">
-      <div class="col-xs-6">
-        <div class="list-group">
-          <button type="button" class="list-group-item list-group-item-action list-group-item-info"
-            (click)="addId(i)">
-          <h5><b>Add id/DOI</b></h5>
-        </button>
-      </div>
-    </div>
-      <div class="col-xs-6">
-          <div ng-controller="formCtrl" class="list-group">
-            <input type="file" class="list-group-item list-group-item-action list-group-item-info" multiple (change)= "onChange($event)">
-        </div>
-      </div>
-    </div>
   </div>
   <!-- <div class="panel panel-default" *ngIf="files" >
       <div class="panel-body">
@@ -30,7 +17,6 @@
       <button type="button" class="btn btn-default" (click)="next(-1)">Zurück</button>
       <button type="button" class="btn btn-default" (click)="next(1)">Weiter</button>
     </div> -->
-  </div>
   <div *ngIf="listoffiles" class="panel-body">
     <div class="panel panel-default">
       <div class="list-group">
@@ -84,8 +70,11 @@
         </div>
       </div>
     </div>
+      <button type="button" class="btn btn-default" (click)="addId()"> Add Electronic Resource
+      </button>
+      <hr>
     <div align="right">
-      <button type="button" class="btn btn-default" (click)="onclickclear()">Clear</button>
+      <button type="button" class="btn btn-warning" (click)="onclickclear()">Clear</button>
       <button type="button" class="btn btn-primary" (click)="onclickupload()">Upload</button>
     </div>
   </div>

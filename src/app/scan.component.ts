@@ -271,7 +271,7 @@ export class ScanComponent {
   addId(){
     this.listoffiles.push(
       { _id: null, idtype: "DOI", firstpage: null, lastpage: null, file: null, filecontent
-        : null, allset: false, resourceType: 'MONOGRAPH', status: null}
+        : null, allset: false, resourceType: 'JOURNAL', status: null}
     );
     console.log("added emtpy to listoffiles: ", this.listoffiles)
   }

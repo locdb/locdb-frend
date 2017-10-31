@@ -69,10 +69,9 @@ export class LocdbService {
     return Observable.throw(errMsg);
   }
 
-  getToDo(ocr_processed: boolean): Observable<ToDo[]> {
+  getToDo(status_: string): Observable<ToDo[]> {
     // acquire todo items and scans
     const url = `${this.locdbUrl}/getToDo`
-    const status_: string = ocr_processed ? 'OCR_PROCESSED' : 'NOT_OCR_PROCESSED';
     const params: URLSearchParams = new URLSearchParams();
     params.set('status', status_);
     return this.http.get(

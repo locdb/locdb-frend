@@ -39,6 +39,7 @@ import { CommitComponent } from './commit/commit.component';
 import { FeedReaderComponent } from './feed-reader/feed-reader.component';
 import { EntryListComponent } from './entry-list/entry-list.component';
 import { TodoDetailComponent } from './todo-detail/todo-detail.component';
+import { TodoListComponent } from './todo-list/todo-list.component';
 
 @NgModule({
   imports: [
@@ -67,6 +68,7 @@ import { TodoDetailComponent } from './todo-detail/todo-detail.component';
     FeedReaderComponent,
     EntryListComponent,
     TodoDetailComponent,
+    TodoListComponent,
     // LocdbService
   ],
   providers: [ LocdbService, CredentialsService ],

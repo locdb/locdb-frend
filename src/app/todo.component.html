@@ -4,11 +4,11 @@
       <div class="col-xs-6 text-left">
         <h4><b>{{title}}</b></h4>
       </div>
-      <div class="col-xs-6 text-right">
-        <button (click)="fetchTodos()" type="button" class="btn btn-info" aria-label="Refresh">
-          <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Reload
-        </button>
-      </div>
+      <!-- <div class="col-xs-6 text-right"> -->
+      <!--   <button (click)="fetchTodos()" type="button" class="btn btn-info" aria-label="Refresh"> -->
+      <!--     <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Reload -->
+      <!--   </button> -->
+      <!-- </div> -->
     </div>
   </div>
 
@@ -17,37 +17,25 @@
     <!--   <span aria-hidden="true">&times;</span> -->
     <!-- </button> -->
 
-  <div class="panel-body">
-    <accordion>
-      <div *ngIf="loading" class="loader">
-      </div>
-      <div *ngFor="let t of all_todos()">
-        <app-resource-form [resource]="t"></app-resource-form>
-        <!-- <div class="btn-group-vertical" style="width: 100%;"> -->
-          <div class="list-group">
-            <button type="button" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans" (click)="onSelect(s)">
-              Scan {{ trimHash(s._id) }}
-              <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
-            </button>
-            <div *ngFor="let c of t.children" style="margin-left: 1em;">
-              <app-resource-form [resource]="c"></app-resource-form>
-              <!-- scans attached to children of resource -->
-              <div style="margin-right: 1em;">
-                <button type="button" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of c.scans" (click)="onSelect(s)" style="margin-left: 1em;">
-                  Scan {{ trimHash(s._id) }} on pp. {{s.firstPage}}-{{s.lastPage}}
-                  <span class="badge badge-default badge-pill">{{ prettyStatus(s) }}</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div> <!-- end of for loop -->
-      </accordion>
-    </div>
-    <div class="panel-footer">
-      <div class="text-right">
-        <button (click)="fetchTodos()" type="button" class="btn btn-info" aria-label="Refresh">
-          <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Reload
-        </button>
-      </div>
-    </div>
+  <div id="todo" class="panel-body">
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a class="nav-link" href="#todo" (click)='setState(states.ext); false'>External</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="#todo" (click)='setState(states.ocr); false'>OCR processed</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#todo" (click)='setState(states.nocr); false'>OCR unprocessed</a>
+      </li>
+    </ul>
+  <app-todo-list [state]="state" (todo)="onSelect($event)"></app-todo-list>
+  </div> <!--end of panel body -->
+    <!-- <div class="panel-footer"> -->
+    <!--   <div class="text-right"> -->
+    <!--     <button (click)="fetchTodos()" type="button" class="btn btn-info" aria-label="Refresh"> -->
+    <!--       <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Reload -->
+    <!--     </button> -->
+    <!--   </div> -->
+    <!-- </div> -->
 </div>

@@ -111,6 +111,13 @@ export class ResourceEmbodiment {
   scans?: ToDoParts[];
 }
 
+export enum ToDoStates {
+  ocr = 'OCR_PROCESSED',
+  nocr = 'NOT_OCR_PROCESSED',
+  iocr = 'OCR_PROCESSING',
+  ext = 'EXTERNAL'
+}
+
 /** This is the model for agents, e.g. actual persons */
 export class ResponsibleAgent {
   identifiers: Identifier[];
@@ -133,7 +140,7 @@ export class ToDoParts extends BibliographicResource {
 
 /** Wrapping a Scan image by its identifier that can be accessed by /scans/<identifier> */
 export class ToDoScans {
-  status: string;
+  status: ToDoStates;
   _id: string;
   firstpage?: number;
   lastpage?: number;

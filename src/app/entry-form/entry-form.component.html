@@ -20,7 +20,7 @@
             <td> {{entry.ocrData.date}} </td>
           </tr>
           <tr *ngFor="let author of entry.ocrData.authors; let i=index">
-            <td> <label> Author #{{i}}</label> </td>
+            <td> <label> Author #{{i + 1}}</label> </td>
             <td> {{author}} </td>
           </tr>
           <tr>
