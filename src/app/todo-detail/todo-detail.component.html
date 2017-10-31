@@ -14,7 +14,7 @@
     </div>
   </div>
 
-  <div *ngIf="scanIsVisible" class="panel-body">
+  <div *ngIf="todo && scanIsVisible" class="panel-body">
     <app-display [img_src]="locdbService.getScan(todo._id)" [entries]="entries" (entry)="forwardEntry($event)"></app-display>
   </div>
   <div *ngIf="!scanIsVisible" class="panel-body">

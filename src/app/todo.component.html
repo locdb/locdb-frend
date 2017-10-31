@@ -18,14 +18,15 @@
     <!-- </button> -->
 
   <div id="todo" class="panel-body">
-    <ul class="nav nav-pills">
-      <li class="nav-item">
+    <ul class="nav nav-tabs">
+      <!-- nav-item is bootstrap 4 and not bootstrap 3.37. Yet it does not harm -->
+      <li class="nav-item" [class.active]="state === states.ext">
         <a class="nav-link" href="#todo" (click)='setState(states.ext); false'>External</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link active" href="#todo" (click)='setState(states.ocr); false'>OCR processed</a>
+      <li class="nav-item" [class.active]="state === states.ocr">
+        <a class="nav-link" href="#todo" (click)='setState(states.ocr); false'>OCR processed</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" [class.active]="state === states.nocr">
         <a class="nav-link" href="#todo" (click)='setState(states.nocr); false'>OCR unprocessed</a>
       </li>
     </ul>

@@ -11,7 +11,7 @@ import {Observable} from 'rxjs/Rx';
 export class TodoDetailComponent implements OnInit, OnChanges {
   scanIsVisible = false;
   @Input() todo: ToDoScans;
-  entries: BibliographicEntry[];
+  entries: BibliographicEntry[] = [];
   @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
   @Output() goBack: EventEmitter<null> = new EventEmitter();
 
@@ -23,6 +23,7 @@ export class TodoDetailComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     // fetch entries for todo item (cold observable, call in template with async)
+    this.entries = [];
     this.locdbService.getToDoBibliographicEntries(this.todo._id).subscribe(
       (result) => this.entries = result
     );
@@ -38,8 +39,8 @@ export class TodoDetailComponent implements OnInit, OnChanges {
   }
 
   back() {
-    this.todo = null;
     this.entry.next(null);
+    this.todo = null;
     this.goBack.next(null);
   }
 

@@ -111,12 +111,6 @@ export class ResourceEmbodiment {
   scans?: ToDoParts[];
 }
 
-export enum ToDoStates {
-  ocr = 'OCR_PROCESSED',
-  nocr = 'NOT_OCR_PROCESSED',
-  iocr = 'OCR_PROCESSING',
-  ext = 'EXTERNAL'
-}
 
 /** This is the model for agents, e.g. actual persons */
 export class ResponsibleAgent {
@@ -171,4 +165,37 @@ export function synCites_(br: BibliographicResource) {
     const citations: string[] = br.parts.map(x => x.references);
     br.cites = citations;
   }
+}
+
+/** ENUMS */
+export enum ToDoStates {
+  ocr = 'OCR_PROCESSED',
+  nocr = 'NOT_OCR_PROCESSED',
+  iocr = 'OCR_PROCESSING',
+  ext = 'EXTERNAL',
+  valid = 'VALID',
+}
+
+export enum IdentifierScheme {
+  isbn = 'ISBN',
+  issn = 'ISSN',
+  ppn = 'PPN',
+  doi = 'DOI'
+}
+
+export enum ResourceType {
+  monograph = 'MONOGRAPH',
+  collection = 'COLLECTION',
+  journal = 'JOURNAL'
+}
+
+export enum EmbodimentType {
+  digital = 'DIGITAL',
+  print = 'PRINT'
+}
+
+export enum ExternalSource {
+  gScholar = 'URL_GOOGLE_SCHOLAR',
+  crossref = 'URL_CROSSREF',
+  swb = 'URL_SWB'
 }

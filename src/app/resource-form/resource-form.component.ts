@@ -24,8 +24,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     oldresource: BibliographicResource;
 
     resourceForm: FormGroup;
-    contributorsForms: FormGroup[] = [];
-    identifiersForms: FormGroup[] = [];
     embodiments: FormGroup[] = [];
     submitted = true;
     parts: FormGroup[] = [];
@@ -117,12 +115,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
 
     ngOnChanges()  {
-        // This is called when the model changes, not the form
-        // TODO FIXME yes it does get called, since the resource is bound to the form
-        // maybe it is enough to shift this code to OnInit
-        // if (!this.resourceForm || !this.resource)  {
-        //     return;
-        // }
         if (!this.resource) {
             return; // only resource identifier given for now
         }
@@ -140,21 +132,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         this.setContributors(this.resource.contributors);
         this.setIdentifiers(this.resource.identifiers);
     }
-
-    // addContributorField() {
-    //     // only used by modal variant
-    //     const conForm: FormGroup =  this.fb.group( {
-    //         role: 'author',
-    //         name: '',
-    //     });
-
-    //     this.contributorsForms.push(conForm);
-    // }
-
-    // delContributorField(pos: number) {
-    //     // only used by modal variant
-    //     this.contributorsForms.splice(pos, 1);
-    // }
 
     onSubmit() {
         this.resource = this.prepareSaveResource();
@@ -227,129 +204,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         return resource;
     }
 
-    getContributers() {
-      const contributors: AgentRole[] = []
-      for (const conForm of this.contributorsForms)  {
-          const conFormModel = conForm.value;
-          const role: AgentRole =  {
-              roleType:  conFormModel.role,
-              identifiers: [],
-              heldBy : <ResponsibleAgent> {
-                  identifiers:  [], /// TODO implement
-                  nameString: conFormModel.name,
-                  givenName: '',
-                  familyName: '',
-              }
-          };
-          contributors.push(role);
-
-  }
-return contributors
-}
-
-  getIdentifiers() {
-    const idents: Identifier[] = [];
-    for (const identForm of this.identifiersForms) {
-        const identifier = new Identifier();
-        identifier.literalValue = identForm.value.literalValue
-        identifier.scheme = identForm.value.scheme
-        idents.push(identifier);
-    }
-    return idents
-  }
-
-    saveEntries() {
-        // UNUSED See :code:`prepareSaveResource` instead
-        this.oldresource = JSON.parse(JSON.stringify(this.resource));
-
-        // correctness check eg. all Roles set
-
-        if (this.resourceForm.value.title) {
-            this.resource.title = this.resourceForm.value.title;
-        }
-        if (this.resourceForm.value.resourcetype) {
-            this.resource.type = this.resourceForm.value.resourcetype;
-        }
-        if (this.resourceForm.value.subtitle) {
-            this.resource.subtitle = this.resourceForm.value.subtitle;
-        }
-        if (this.resourceForm.value.edition) {
-            this.resource.edition = this.resourceForm.value.edition;
-        }
-        if (this.resourceForm.value.resourcenumber) {
-            this.resource.number = this.resourceForm.value.resourcenumber;
-        }
-        if (this.resourceForm.value.publicationyear) {
-            this.resource.publicationYear = this.resourceForm.value.publicationyear;
-        }
-        if (this.resourceForm.value.partof) {
-            this.resource.partOf = this.resourceForm.value.partof;
-        }
-        // if identifiers ...
-
-
-        //   roleidentifiers: con.identifiers,
-        //    resagentidentifiers: con.heldBy.identifiers,
-        //    nameString: con.heldBy.nameString,
-        //    givenName: con.heldBy.givenName,
-        //     familyName: con.heldBy.familyName,
-
-        const agents: AgentRole[] = [];
-        for (const conForm of this.contributorsForms) {
-            const agent = new AgentRole();
-            agent.identifiers = [];
-            let resAgent = new ResponsibleAgent();
-            resAgent.identifiers = [];
-            if (conForm.value.name) {
-                resAgent.nameString = conForm.value.name;
-                resAgent.identifiers = conForm.value.resagentidentifiers;
-                if (conForm.value.givenName) {
-                    resAgent.givenName = conForm.value.givenName;
-                }
-                if (conForm.value.familyName) {
-                    resAgent.familyName = conForm.value.familyName;
-                }
-            } else {
-                resAgent = null;
-            }
-
-            // console.log('conForm: ', conForm);
-            agent.roleType = conForm.value.role;
-            if (conForm.value.roleidentifiers) {
-                agent.identifiers = conForm.value.roleidentifiers;
-            }
-            if (resAgent) {
-                agent.heldBy = resAgent;
-            }
-        agents.push(agent);
-      }
-
-        const idents: Identifier[] = [];
-        for (const identForm of this.identifiersForms) {
-            const identifier = new Identifier();
-            identifier.literalValue = identForm.value.literalValue
-            identifier.scheme = identForm.value.scheme
-            idents.push(identifier);
-        }
-
-        this.resource.contributors = agents;
-        this.resource.identifiers = idents;
-
-        console.log('Resource ready to save: ', this.resource);
-        console.log('Input Resource: ', this.oldresource);
-        // AgentRole Objects have ids, that are not defined in class and can not be restored
-        console.log('' + (this.resource === this.oldresource));
-        // resource ready to send, closing form on send?
-
-        // parts and embodiments are displayed, but not saved yet.
-        // what of them schould be displayed and be editable? schould it be possible to make new entries?
-        // this.toggleEdit();
-    }
-
-    // toggleEdit(event?: any) {
-    //     console.log('toggleEdit');
-    //     this.editable = !this.editable;
-    // }
     // ** THE FOLLOWING CODE MIGHT GO TO SUGGESTIONS **
     // loadExtenalSuggestions() {
     //     // search for external Suggestions with entry emitted by app-display (current active entry)

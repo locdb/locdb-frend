@@ -1,7 +1,8 @@
 <accordion-group [isOpen]="selected" [panelClass]="selected ? 'panel-primary' : 'panel-default'">
   <div accordion-heading>
-    <p>{{ resource.title }}</p>
-    <span *ngIf="resource.status === 'EXTERNAL' && resource.type">{{resource.type}}</span>
+    <p>{{ resource.title }}
+    <span class="label label-info">{{resource.type}}</span>
+    </p>
   </div>
   <div *ngIf="resource && submitted">
     <table class="table table-striped">

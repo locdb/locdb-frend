@@ -13,6 +13,7 @@ export class TodoListComponent implements OnInit, OnChanges {
   @Input() state: ToDoStates;
   @Output() todo: EventEmitter<ToDoScans> = new EventEmitter();
   todos: ToDo[];
+  states = ToDoStates;
   loading = false;
   constructor(private locdbService: LocdbService) { }
 
@@ -33,6 +34,12 @@ export class TodoListComponent implements OnInit, OnChanges {
   }
 
 
+
+  onSelect(todoscan: any) {
+    this.todo.next(todoscan);
+  }
+
+  // 2 methods to delete after chagnes
   printState(scan: ToDoScans) {
     if (scan.status === ToDoStates.ocr) { return 'OCR processed' } ;
     if (scan.status === ToDoStates.nocr) { return  'not OCR processed '};
@@ -45,9 +52,4 @@ export class TodoListComponent implements OnInit, OnChanges {
     // heuristic :)
     return identifier.slice(0, 7);
   }
-
-  onSelect(todoscan: any) {
-    this.todo.next(todoscan);
-  }
-
 }

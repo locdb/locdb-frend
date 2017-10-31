@@ -68,25 +68,12 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-4" ng-controller="formCtrl">
-        <label class="btn btn-default btn-block">
-            Browse Files <input type="file" multiple (change)= "onChange($event)" hidden style="display: none !important;">
-        </label>
-      </div>
-      <div class="col-md-3">
-      <button type="button" class="btn btn-default btn-block" (click)="addId()"> Add Electronic Resource
-      </button>
-    </div>
-      <div class="col-md-1">
-      </div>
-    <div *ngIf="listoffiles[0]" class="col-md-2">
-      <button type="button" class="btn btn-warning btn-block" (click)="onclickclear()"
-        [disabled]="uploading">Clear</button>
-    </div>
-      <div *ngIf="listoffiles[0]" class="col-md-2">
-      <button type="button" class="btn btn-primary btn-block" (click)="onclickupload()" [disabled]="uploading">Upload</button>
-    </div>
-  </div>
+    <button type="button" class="btn btn-warning" (click)="onclickclear()" [disabled]="uploading || !listoffiles[0]">Clear</button> &nbsp;
+    <label class="btn btn-default">
+      Browse Files <input type="file" multiple (change)= "onChange($event)" hidden style="display: none !important;">
+    </label> &nbsp;
+    <button type="button" class="btn btn-default" (click)="addId()"> Add Electronic Resource
+    </button> &nbsp;
+    <button type="button" class="btn btn-primary" (click)="onclickupload()" [disabled]="uploading || !listoffiles[0]">Upload</button>
   </div>
 </div>

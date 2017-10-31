@@ -1,0 +1,10 @@
+<a href="#" class="list-group-item list-group-item-action list-group-item-info"
+  (click)="onSelect(); false">
+  <p *ngIf="leaf.status !== states.ext">
+    Scan {{ trimHash(leaf._id) }} on pp. {{leaf.firstPage}}-{{leaf.lastPage}}
+  </p>
+  <p *ngIf="leaf.status === states.ext">
+    {{ leaf._id }}
+  </p>
+  <span class="badge badge-default badge-pill">{{ printState(s) }}</span>
+</a>
