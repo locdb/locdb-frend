@@ -29,6 +29,9 @@ export class ScanComponent {
 
   resourceTypes = RESOURCE_TYPES;
 
+
+  uploading = false; // just for disabling the button
+
   listoffiles: ToDoScansWithMeta[] = [];
   // unused?
   listoffilescontents = [];
@@ -63,6 +66,7 @@ export class ScanComponent {
     }
     if (ready) {
       console.log('Ready for upload..');
+      this.uploading = true;
       this.listoffiles.map((elem) => this.writefilecontent(elem));
     } else {
       alert('Files not ready!');
@@ -103,7 +107,8 @@ export class ScanComponent {
       }
       this.listoffiles.push(
         { _id: _id, idtype: "PPN", firstpage: first, lastpage: last, file: file, filecontent
-          : null, allset: this.isValid(_id, rtype, first, last), resourceType: rtype, status: null}
+          : null, allset: this.isValid(_id, rtype, first, last), resourceType: rtype, status: null,
+        uploading: false}
       );
     }
   }
@@ -217,6 +222,7 @@ export class ScanComponent {
     // flag idonly objects, accept them but do not read them
     console.log(this.listoffiles.indexOf(listelement))
     console.log(listelement.file)
+    listelement.uploading = true;
     if (listelement.file) {
       console.log('Trying to Read');
       const r = new FileReader();
@@ -228,7 +234,7 @@ export class ScanComponent {
       console.log('Empty file. Uploading as Journal');
       this.locdbService.saveElectronicJournal(listelement._id).subscribe(
         (result) => this.removeItemFromList(listelement, result),
-        (err) => this.processError(err)
+        (err) => this.processError(listelement, err)
       );
     }
   }
@@ -246,7 +252,7 @@ export class ScanComponent {
         listelement.file,
         listelement.filecontent,
       ).then((suc) => this.removeItemFromList(listelement, suc))
-       .catch((err) => this.processError(err));
+       .catch((err) => this.processError(listelement, err));
     } else {
       this.locdbService.saveScan(
         listelement._id,
@@ -256,56 +262,78 @@ export class ScanComponent {
         listelement.firstpage.toString(),
         listelement.lastpage.toString()
       ).then((suc) => this.removeItemFromList(listelement, suc))
-       .catch((err) => this.processError(err));
+       .catch((err) => this.processError(listelement, err));
     }
 
     // rufe scan auf
   }
 
   removeItemFromList(item: ToDoScansWithMeta, suc) {
+    item.uploading = false;
     console.log('Send item: ', suc)
     // clear after upload
-    let index = this.listoffiles.indexOf(item)
-    if(index != -1) {
-	     this.listoffiles.splice(index, 1);
-     }
-    // this.onclickclear(); // TODO remove items not at once
+    const index = this.listoffiles.indexOf(item)
+    if (index !== -1) {
+      this.listoffiles.splice(index, 1);
+    }
+    this.checkUploading();
   }
-  processError(err) {
+
+  processError(elem: ToDoScansWithMeta, err: any) {
+    elem.uploading = false;
+    this.checkUploading();
     console.log('Send Scans failed: ', err)
     // set item error
   }
-  addId(){
-    this.listoffiles.push(
-      { _id: null, idtype: "DOI", firstpage: null, lastpage: null, file: null, filecontent
-        : null, allset: false, resourceType: 'JOURNAL', status: null}
-    );
-    console.log("added emtpy to listoffiles: ", this.listoffiles)
-  }
-  getName(item: ToDoScansWithMeta){
-    if (item.file){
-        return item.file.name
-    }
-    else{
-      if (item._id == null){
-        return "insert ID"
-      }
-      else{
-      return item.idtype + ": " + item._id
-  }
-}
-  }
-  getMetadata(item: ToDoScansWithMeta){
-    if (item.file){
-        return (item.file.size/1024/1024).toFixed(3) + " MB, "
-                          + item.file.type
-    }
-    else{
-      return ""
 
+  addId() {
+    this.listoffiles.push(
+      {
+        _id: null,
+        idtype: 'DOI',
+        firstpage: null,
+        lastpage: null,
+        file: null,
+        filecontent : null,
+        allset: false,
+        resourceType: 'JOURNAL',
+        status: null,
+        uploading: false
+      }
+    );
+    console.log('added empty to listoffiles: ', this.listoffiles)
   }
+
+  getName(item: ToDoScansWithMeta) {
+    if (item.file) {
+      return item.file.name
+    } else if (item._id == null) {
+      return 'insert ID';
+    } else {
+      return item.idtype + ': ' + item._id;
+    }
+  }
+
+  getMetadata(item: ToDoScansWithMeta) {
+    if (item.file) {
+      return (item.file.size / 1024 / 1024).toFixed(3) + ' MB, '
+        + item.file.type;
+    } else {
+      return '';
+    }
+  }
+
+  checkUploading() {
+    // disable button as long as at least one is still being uploaded
+    if (this.listoffiles.length === 0) {
+      this.uploading = true;
+    }
+    console.log(this.listoffiles.map((elem) => elem.uploading));
+    this.uploading = !this.listoffiles.every((elem) => !elem.uploading);
   }
 }
+
+
 
 interface ToDoScansWithMeta extends ToDoScans {
   _id: string;
@@ -314,6 +342,7 @@ interface ToDoScansWithMeta extends ToDoScans {
   lastpage?: number;
   file?: File;
   filecontent?: any;
-  resourceType?: string; //maybe requiered?
-  allset?: boolean; //maybe save to assume?
+  resourceType?: string; // maybe requiered?
+  allset?: boolean; // maybe save to assume?
+  uploading: boolean; // to determine button state
 }
