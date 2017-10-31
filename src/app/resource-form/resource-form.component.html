@@ -1,8 +1,7 @@
-<accordion-group [heading]=short()  [isOpen]="selected" [panelClass]="selected ? 'panel-primary' : 'panel-default'">
-  <div *ngIf="!resource">
-    <p>
-      Fetching details for resource with identifier {{resource._id}}.
-    </p>
+<accordion-group [isOpen]="selected" [panelClass]="selected ? 'panel-primary' : 'panel-default'">
+  <div accordion-heading>
+    <p>{{ resource.title }}</p>
+    <span *ngIf="resource.status === 'EXTERNAL' && resource.type">{{resource.type}}</span>
   </div>
   <div *ngIf="resource && submitted">
     <table class="table table-striped">
@@ -198,7 +197,7 @@
           </button>
         </div>
         <div class="col-xs-6 text-right">
-          <button type="button" class="btn btn-primary" (click)="lgModal.hide()" (click)="onSubmit()">
+          <button type="button" class="btn btn-primary" (click)="onSubmit()">
             <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Submit
           </button>
         </div>

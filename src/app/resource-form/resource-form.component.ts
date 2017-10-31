@@ -438,7 +438,7 @@ return contributors
                 s += ` (${br.publicationYear})`
             }
             if (br.status === 'EXTERNAL') {
-                s += ` [${br.identifiers[br.identifiers.length - 1].scheme}]`
+                s += ` [${br.type}]`
             }
             return s;
         } else {

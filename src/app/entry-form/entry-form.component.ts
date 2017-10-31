@@ -155,7 +155,7 @@ export class EntryFormComponent implements OnChanges {
 
   short() {
     if (!this.entry) { return 'Loading'; }
-    return this.entry.bibliographicEntryText;
+    return this.entry.ocrData.title;
   }
 
 }

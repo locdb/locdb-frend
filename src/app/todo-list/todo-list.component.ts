@@ -28,7 +28,7 @@ export class TodoListComponent implements OnInit, OnChanges {
     );
   }
 
-  reload() {
+  refresh() {
     this.ngOnChanges();
   }
 
