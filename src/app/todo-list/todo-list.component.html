@@ -1,0 +1,36 @@
+<div class="text-right" style="margin-top: 1em;">
+  <button (click)="refresh()" type="button" class="btn btn-secondary" aria-label="Refresh">
+    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+  </button>
+</div>
+<div style="margin-top: 1em; margin-bottom: 1em;">
+  <accordion>
+    <div *ngIf="loading" class="loader">
+    </div>
+    <div *ngFor="let t of todos">
+      <app-resource-form [resource]="t"></app-resource-form>
+      <div class="list-group">
+        <button type="button" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans" (click)="onSelect(s)">
+          Scan {{ trimHash(s._id) }}
+          <span class="badge badge-default badge-pill">{{ printState(s) }}</span>
+        </button>
+        <div *ngFor="let c of t.children" style="margin-left: 1em;">
+          <app-resource-form [resource]="c"></app-resource-form>
+          <!-- scans attached to children of resource -->
+          <div style="margin-right: 1em;">
+            <button type="button" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of c.scans" (click)="onSelect(s)" style="margin-left: 1em;">
+              Scan {{ trimHash(s._id) }} on pp. {{s.firstPage}}-{{s.lastPage}}
+              <span class="badge badge-default badge-pill">{{ printState(s) }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div> <!-- end of for loop -->
+  </accordion>
+  <hr>
+</div>
+<div class="text-right">
+  <button (click)="refresh()" type="button" class="btn btn-secondary" aria-label="Refresh">
+    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+  </button>
+</div>
