@@ -20,7 +20,6 @@
           <div *ngFor="let s of c.scans">
             <!-- <app-todo-leaf [leaf]="s" (select)="onSelect(s)"></app-todo-leaf> -->
             <button *ngIf="s.status !== states.ext" type="button" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(s)">
-              {{ s | json }}
               Scan {{ trimHash(s._id) }} on pp. {{s.firstPage}}-{{s.lastPage}}
               <span class="badge badge-default badge-pill">{{ printState(s) }}</span>
             </button>
