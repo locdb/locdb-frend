@@ -14,7 +14,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 // import { FileSelectDirective } from 'ng2-file-upload';
 
 import { AppComponent } from './app.component';
-import { CitationFormComponent } from './citation-form.component';
 import { ScanComponent } from './scan.component';
 import { TodoComponent } from './todo.component';
 import { DisplayComponent } from './display/display.component';
@@ -55,7 +54,6 @@ import { TodoListComponent } from './todo-list/todo-list.component';
     ],
   declarations: [
     AppComponent,
-    CitationFormComponent,
     ScanComponent,
     TodoComponent,
     DisplayComponent,
