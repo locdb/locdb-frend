@@ -139,7 +139,7 @@ export class LocdbService {
     ).map(this.extractData).catch(this.handleError);
   }
 
-  suggestions(be: BibliographicEntry, external?: boolean): Observable<BibliographicResource[]> {
+  suggestionsByEntry(be: BibliographicEntry, external?: boolean): Observable<BibliographicResource[]> {
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
 
@@ -149,6 +149,18 @@ export class LocdbService {
       .map(response => response.json() as BibliographicResource[])
       .catch(this.handleError);
   }
+
+  suggestionsByQuery(query: string, external: boolean) {
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
+    const url = external ? `${this.locdbUrl}/getExternalSuggestionsByQueryString` :
+      `${this.locdbUrl}/getInternalSuggestions`
+
+    return this.http.post(url, { query : query } , options)
+      .map(response => response.json() as BibliographicResource[])
+      .catch(this.handleError);
+  }
+
 
   triggerOcrProcessing(scanId: string) {
     const params: URLSearchParams = new URLSearchParams();
