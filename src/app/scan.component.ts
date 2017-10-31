@@ -57,6 +57,7 @@ export class ScanComponent {
       for (const file of this.listoffiles){
         if (!file.allset) {
           ready = false;
+          break;
         }
       }
     }
@@ -211,9 +212,11 @@ export class ScanComponent {
     }
   }
 
+
   writefilecontent(listelement: ToDoScansWithMeta) {
     // flag idonly objects, accept them but do not read them
-
+    console.log(this.listoffiles.indexOf(listelement))
+    console.log(listelement.file)
     if (listelement.file) {
       console.log('Trying to Read');
       const r = new FileReader();
@@ -224,7 +227,7 @@ export class ScanComponent {
       // saveElectronicJournal should go here
       console.log('Empty file. Uploading as Journal');
       this.locdbService.saveElectronicJournal(listelement._id).subscribe(
-        (result) => this.removeItemFromList(result),
+        (result) => this.removeItemFromList(listelement, result),
         (err) => this.processError(err)
       );
     }
@@ -242,7 +245,7 @@ export class ScanComponent {
         listelement.resourceType,
         listelement.file,
         listelement.filecontent,
-      ).then((suc) => this.removeItemFromList(suc))
+      ).then((suc) => this.removeItemFromList(listelement, suc))
        .catch((err) => this.processError(err));
     } else {
       this.locdbService.saveScan(
@@ -252,17 +255,21 @@ export class ScanComponent {
         listelement.filecontent,
         listelement.firstpage.toString(),
         listelement.lastpage.toString()
-      ).then((suc) => this.removeItemFromList(suc))
+      ).then((suc) => this.removeItemFromList(listelement, suc))
        .catch((err) => this.processError(err));
     }
 
     // rufe scan auf
   }
 
-  removeItemFromList(item) {
-    console.log('Send item: ', item)
+  removeItemFromList(item: ToDoScansWithMeta, suc) {
+    console.log('Send item: ', suc)
     // clear after upload
-    this.onclickclear(); // TODO remove items not at once
+    let index = this.listoffiles.indexOf(item)
+    if(index != -1) {
+	     this.listoffiles.splice(index, 1);
+     }
+    // this.onclickclear(); // TODO remove items not at once
   }
   processError(err) {
     console.log('Send Scans failed: ', err)
