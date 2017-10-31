@@ -33,12 +33,12 @@ export class CitationFormComponent implements OnChanges {
 
   fetchInternals(be: BibliographicEntry) {
     console.log('Fetching internal suggestions for', be);
-    this.locdbService.suggestions(be, false).subscribe( (sgt) => this.internalSuggestions = sgt );
+    this.locdbService.suggestionsByEntry(be, false).subscribe( (sgt) => this.internalSuggestions = sgt );
   }
 
   fetchExternals(be: BibliographicEntry) {
     console.log('Fetching external suggestions for', be);
-    this.locdbService.suggestions(be, true).subscribe( (sgt) => this.externalSuggestions = sgt );
+    this.locdbService.suggestionsByEntry(be, true).subscribe( (sgt) => this.externalSuggestions = sgt );
   }
 
   pushSelectedExternals() {
@@ -66,10 +66,9 @@ export class CitationFormComponent implements OnChanges {
     // this.submitted = false;
   }
 
-  onSelect (resource: BibliographicResource)
-  {
+  onSelect (resource: BibliographicResource) {
     console.log('onSelect called with', resource);
-    if (!resource) return;
+    if (!resource) { return } ;
     this.entry = resource;
     this.entry.ocrData.authors = this.extractAuthors(resource.contributors)
     // this.entry.number = resource.number;
@@ -89,13 +88,12 @@ export class CitationFormComponent implements OnChanges {
   onSubmit() {
     // prepare for submission
     // reverse-enginer publisher as role
-    
     // this.locdbService.putBibliographicEntry(this.entry._id, this.entry);
     // this.submitted = true;
     this.entry = null;
   }
 
-  removeAuthorAt(position:number) {
+  removeAuthorAt(position: number) {
     this.entry.ocrData.authors.splice(position, 1);
   }
 
@@ -108,8 +106,8 @@ export class CitationFormComponent implements OnChanges {
   }
 
   extractRole(contributors: AgentRole[], role): string[] {
-    let names: string[] = []
-    for (let agent of contributors) {
+    const names: string[] = []
+    for (const agent of contributors) {
       if (agent.roleType === role) {
          names.push(agent.heldBy.nameString);
       }
