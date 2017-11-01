@@ -126,13 +126,13 @@ export class SuggestionComponent implements OnInit, OnChanges {
         console.log('ENTRY REFERENCES', entry.references);
         const ocr = entry.ocrData;
         const br: BibliographicResource = {
-            title: ocr.title,
-            publicationYear: ocr.date, // unary + operator makes it a number
-            contributors: this.authors2contributors(ocr.authors),
-            embodiedAs: [],
-            parts: [],
-            partOf: ocr.journal, // these two properties are new in ocr data
-            number: ocr.volume, // hope they work
+          title: ocr.title || entry.bibliographicEntryText,
+          publicationYear: ocr.date || '', // unary + operator makes it a number
+          contributors: this.authors2contributors(ocr.authors),
+          embodiedAs: [],
+          parts: [],
+          partOf: ocr.journal, // these two properties are new in ocr data
+          number: ocr.volume, // hope they work
         }
 
         return br;

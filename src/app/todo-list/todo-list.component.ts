@@ -1,6 +1,7 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { BibliographicResource, ToDo, ToDoScans, ToDoStates } from '../locdb';
 import { LocdbService } from '../locdb.service';
+import { Provenance } from '../locdb';
 
 
 @Component({
@@ -14,6 +15,7 @@ export class TodoListComponent implements OnInit, OnChanges {
   @Output() todo: EventEmitter<ToDoScans | BibliographicResource> = new EventEmitter();
   todos: ToDo[];
   states = ToDoStates;
+  provenance = Provenance;
   loading = false;
   constructor(private locdbService: LocdbService) { }
 
