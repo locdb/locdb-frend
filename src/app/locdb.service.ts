@@ -195,6 +195,11 @@ export class LocdbService {
     return `${this.locdbUrl}/scans/${identifier}`;
   }
 
+  deleteScan(scan: ToDoScans) {
+    const url = `${this.locdbUrl}/scans/${scan._id}`
+    return this.http.delete(url).map(this.extractData).catch(this.handleError);
+  }
+
   putBibliographicEntry(entry: BibliographicEntry) {
     // obsolete by addTarget
     const url = `${this.locdbUrl}/bibliographicEntries/${entry._id}`;
@@ -278,6 +283,7 @@ export class LocdbService {
     if (instance) { this.locdbUrl = instance } ;
     return this;
   }
+
   //
   addFeed(name: string, url: string): Observable<Feed> {
     const reqUrl = `${this.locdbUrl}/addFeed`;

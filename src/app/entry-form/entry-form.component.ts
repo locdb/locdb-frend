@@ -130,30 +130,6 @@ export class EntryFormComponent implements OnChanges {
 
   revert() { this.ngOnChanges(); }
 
-  output() {
-    // why not reuse prepareSaveEntry
-    const formModel = this.entryForm.value;
-    const authorsDeepCopy = this.copyArray<string>(formModel.authors);
-    // copy from original entry
-    const current: BibliographicEntry = {
-      _id: this.entry._id || '',
-      scanId: this.entry.scanId || '',
-      status: this.entry.status || '',
-      bibliographicEntryText: formModel.bibliographicEntryText as string || '',
-      references: formModel.references as string || '',
-      ocrData: {
-        coordinates: this.entry.ocrData.coordinates || '',
-        title: formModel.title as string || '',
-        date: formModel.date as string || '',
-        // might be also a form variable
-        marker: this.entry.ocrData.marker || '',
-        authors: authorsDeepCopy as string[] || []
-      }
-    };
-    console.log('output', current);
-    this.state.next(current);
-  }
-
   short() {
     if (!this.entry) { return 'Loading'; }
     if (this.entry.ocrData.title) {

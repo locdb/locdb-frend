@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { BibliographicResource, ToDo, ToDoScans, ToDoStates } from '../locdb';
+import { BibliographicResource, ToDo, ToDoParts, ToDoScans, ToDoStates } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Provenance } from '../locdb';
 
@@ -32,9 +32,20 @@ export class TodoListComponent implements OnInit, OnChanges {
   }
 
 
-  removeScan(scan: ToDoScans) {
-    console.log('Placeholder, should remove scan', scan);
+  deleteScan(scanIndex: number, parent: ToDo | ToDoParts) {
+    const scan: ToDoScans = parent.scans[scanIndex]
+    console.log('Deleting scan', scan);
+    this.locdbService.deleteScan(scan).subscribe(
+      (success) => {
+        parent.scans.splice(scanIndex);
+        console.log('scan', scan, 'deleted');
+      },
+      (error) => {
+        console.log('error deleting scan', scan);
+      }
+    );
   }
+
 
   refresh() {
     this.ngOnChanges();

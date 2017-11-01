@@ -237,8 +237,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
   queryFromEntry(entry: BibliographicEntry): string {
     const ocr = entry.ocrData;
+    const title = ocr.title || ''
     const names = ocr.authors.join(' ');
-    const query = `${entry.ocrData.title} ${names} ${entry.bibliographicEntryText}`;
+    const query = `${title} ${names} ${entry.bibliographicEntryText}`;
     return query;
   }
 

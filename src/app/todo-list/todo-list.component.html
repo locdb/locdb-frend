@@ -10,8 +10,8 @@
     <div *ngFor="let t of todos">
       <app-resource-form [resource]="t"></app-resource-form>
       <div class="list-group">
-        <a href='#' class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans" (click)="onSelectScan(s); false">
-          <button type="button" class="close pull-right" (click)="removeScan(s); $event.stopPropagation()" aria-label="Close">
+        <a href='#' class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans; let i = index" (click)="onSelectScan(s); false">
+          <button type="button" class="close pull-right" (click)="deleteScan(i, t); $event.stopPropagation()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           Scan {{ trimHash(s._id) }}
@@ -24,9 +24,9 @@
             External References
             <span class="label label-danger">{{provenance.crossref}}</span>
           </a>
-          <div *ngFor="let s of c.scans">
+          <div *ngFor="let s of c.scans; let i = index">
             <a href="" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectScan(s); false">
-              <button type="button" class="close pull-right" (click)="removeScan(s); $event.stopPropagation()" aria-label="Close">
+              <button type="button" class="close pull-right" (click)="deleteScan(i, c); $event.stopPropagation()" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
               Scan {{ trimHash(s._id) }} on pp. {{s.firstPage}}-{{s.lastPage}}
