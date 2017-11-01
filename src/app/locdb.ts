@@ -215,5 +215,6 @@ export enum Provenance {
   gScholar = 'Google Scholar',
   crossref = 'CrossRef',
   swb = 'SWB',
-  locdb = 'LOC-DB'
+  locdb = 'LOC-DB',
+  local = 'Local'
 }

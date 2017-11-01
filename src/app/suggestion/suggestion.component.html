@@ -52,8 +52,6 @@
     <h5 class="text-center mb-0">
       External Suggestions
     </h5>
-    <div *ngIf="externalInProgress" class="loader">
-    </div>
     <accordion *ngIf="externalSuggestions">
       <div *ngFor="let r of externalSuggestions;let i = index">
         <app-resource-form *ngIf="max_ex <= 0 || i < max_ex"
@@ -66,6 +64,8 @@
       <button type="button" *ngIf="max_ex == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
         <p><em>Show less</em></p>
       </button>
+      <div *ngIf="externalInProgress" class="loader">
+      </div>
     </accordion>
   </div>
 

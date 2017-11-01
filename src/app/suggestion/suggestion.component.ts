@@ -9,6 +9,8 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 
 import { environment } from 'environments/environment';
 
+import { ToDoStates, Provenance } from '../locdb';
+
 
 @Component({
     selector: 'app-suggestion',
@@ -118,14 +120,14 @@ export class SuggestionComponent implements OnInit, OnChanges {
         return contributors;
     }
 
-    resourceFromEntry(entry): BibliographicResource {
+    resourceFromEntry(entry): ProvenResource {
         console.log('resourceFromEntry', entry)
 
         // When the production backend is used, entry does not have ocr data yet
         // but when the development backend is used, entry does indeed have ocr data field
         console.log('ENTRY REFERENCES', entry.references);
         const ocr = entry.ocrData;
-        const br: BibliographicResource = {
+        const br: ProvenResource = {
           title: ocr.title || entry.bibliographicEntryText,
           publicationYear: ocr.date || '', // unary + operator makes it a number
           contributors: this.authors2contributors(ocr.authors),
@@ -133,17 +135,20 @@ export class SuggestionComponent implements OnInit, OnChanges {
           parts: [],
           partOf: ocr.journal, // these two properties are new in ocr data
           number: ocr.volume, // hope they work
+          status: ToDoStates.ext,
+          provenance: Provenance.local
         }
-
         return br;
     }
   // END
 
     plusPressed() {
-        const newResource: BibliographicResource = this.resourceFromEntry(this.entry);
-        this.locdbService.pushBibligraphicResource(newResource).subscribe(
-          (br) => { this.internalSuggestions.unshift(br); this.selectedResource = br }
-        );
+        const newResource: ProvenResource = this.resourceFromEntry(this.entry);
+        this.externalSuggestions.unshift(newResource);
+        // wait until commit
+        // this.locdbService.pushBibligraphicResource(newResource).subscribe(
+        //   (br) => { this.internalSuggestions.unshift(br); this.selectedResource = br }
+        // );
     }
 
     onSelect(br?: BibliographicResource): void {
@@ -182,8 +187,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     commit() {
       // This the actual linking of entry to resource
-      if (this.selectedResource.status === 'EXTERNAL') {
-        this.selectedResource.status = 'VALID';
+      if (this.selectedResource.status === ToDoStates.ext) {
+        this.selectedResource.status = ToDoStates.valid;
         this.locdbService.pushBibligraphicResource(this.selectedResource).subscribe(
           (response) => {
             this.entry.references = response._id;
@@ -192,7 +197,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
             this.committed = true;
           },
           (error) => {
-            this.selectedResource.status = 'EXTERNAL';
+            this.selectedResource.status = ToDoStates.ext;
             console.log('Submitting external resource failed');
           }
         );
