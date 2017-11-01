@@ -152,7 +152,7 @@ export class LocdbService {
 
   suggestionsByQuery(query: string, external: boolean) {
     const params: URLSearchParams = new URLSearchParams();
-    params.set('query', query);
+    params.set('query', encodeURI(query));
     console.log(params);
 
     const options = new RequestOptions({ search: params });
