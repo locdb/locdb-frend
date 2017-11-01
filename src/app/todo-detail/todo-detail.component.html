@@ -8,11 +8,12 @@
       <button type="button" class="btn btn-info" (click)="hideScan()">
         List of Entries
       </button>
-      <button type="button" class="btn btn-info" (click)="showScan()">
+      <button type="button" class="btn btn-info" (click)="showScan()" [disabled]="!scanAvailable">
         Scan View
       </button>
     </div>
   </div>
+
 
   <div *ngIf="todo && scanIsVisible" class="panel-body">
     <app-display [img_src]="locdbService.getScan(todo._id)" [entries]="entries" (entry)="forwardEntry($event)"></app-display>

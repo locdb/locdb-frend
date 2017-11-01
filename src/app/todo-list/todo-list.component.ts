@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { ToDo, ToDoScans, ToDoStates } from '../locdb';
+import { BibliographicResource, ToDo, ToDoScans, ToDoStates } from '../locdb';
 import { LocdbService } from '../locdb.service';
 
 
@@ -11,7 +11,7 @@ import { LocdbService } from '../locdb.service';
 export class TodoListComponent implements OnInit, OnChanges {
 
   @Input() state: ToDoStates;
-  @Output() todo: EventEmitter<ToDoScans> = new EventEmitter();
+  @Output() todo: EventEmitter<ToDoScans | BibliographicResource> = new EventEmitter();
   todos: ToDo[];
   states = ToDoStates;
   loading = false;
@@ -29,14 +29,39 @@ export class TodoListComponent implements OnInit, OnChanges {
     );
   }
 
+
+  removeScan(scan: ToDoScans) {
+    console.log('Placeholder, should remove scan', scan);
+  }
+
   refresh() {
     this.ngOnChanges();
   }
 
 
+  onSelectScan(scan: ToDoScans) {
+    // called when pressing on a scan todo item
+    if ( scan.status === ToDoStates.nocr ) {
+      console.log('Starting processing');
+      scan.status = ToDoStates.iocr;
+      this.locdbService.triggerOcrProcessing(scan._id).subscribe(
+        (success) => scan.status = ToDoStates.ocr,
+        (err) => console.log(err)
+      )
+    } else {
+      console.log('Todo item selected', scan);
+      this.todo.next(scan);
+    }
+  }
 
-  onSelect(todoscan: any) {
-    this.todo.next(todoscan);
+  onSelectExternal(resource:  BibliographicResource) {
+    // called when pressing on an external todo item
+    this.todo.next(resource);
+  }
+
+
+  emit(scanOrResource: ToDoScans | BibliographicResource) {
+    this.todo.next(scanOrResource);
   }
 
   // 2 methods to delete after chagnes

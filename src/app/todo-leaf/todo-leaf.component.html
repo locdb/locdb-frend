@@ -1,5 +1,8 @@
 <a href="#" class="list-group-item list-group-item-action list-group-item-info"
   (click)="onSelect(); false">
+  <button type="button" class="close pull-right" (click)="onRemove(); $event.stopPropagation()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
   <p *ngIf="leaf.status !== states.ext">
     Scan {{ trimHash(leaf._id) }} on pp. {{leaf.firstPage}}-{{leaf.lastPage}}
   </p>

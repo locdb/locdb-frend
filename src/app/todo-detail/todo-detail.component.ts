@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
-import { ToDoScans, BibliographicEntry } from '../locdb';
+import { ToDoScans, BibliographicEntry, BibliographicResource } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import {Observable} from 'rxjs/Rx';
 import { SimpleChanges } from '@angular/core';
@@ -11,11 +11,12 @@ import { SimpleChanges } from '@angular/core';
 })
 export class TodoDetailComponent implements OnInit, OnChanges {
   scanIsVisible = false;
-  @Input() todo: ToDoScans;
+  @Input() todo: ToDoScans | BibliographicResource;
   entries: BibliographicEntry[] = [];
   @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
   @Output() goBack: EventEmitter<null> = new EventEmitter();
   loading = false;
+  scanAvailable = true;
 
 
   constructor( private locdbService: LocdbService) { }
@@ -25,12 +26,23 @@ export class TodoDetailComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges | any) {
     // fetch entries for todo item (cold observable, call in template with async)
-    this.entries = [];
-    this.loading = true;
-    this.locdbService.getToDoBibliographicEntries(this.todo._id).subscribe(
-      (result) => {this.entries = result; this.loading = false},
-      (err) => {this.loading = false }
-    );
+    if (this.todo.hasOwnProperty('parts')) {
+      // were dealing with a resource, not a scan
+      console.log('viewing details for external todo item');
+      this.scanAvailable = false;
+      const todoResource = this.todo as BibliographicResource;
+      this.entries = todoResource.parts;
+    } else {
+      console.log('viewing details for internal todo item');
+      // scan present
+      this.scanAvailable = true;
+      this.entries = [];
+      this.loading = true;
+      this.locdbService.getToDoBibliographicEntries(this.todo._id).subscribe(
+        (result) => {this.entries = result; this.loading = false},
+        (err) => {this.loading = false }
+      );
+    }
   }
 
 

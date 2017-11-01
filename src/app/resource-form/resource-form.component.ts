@@ -1,4 +1,14 @@
-import { BibliographicResource, BibliographicEntry, AgentRole, ResponsibleAgent, ToDo, ROLES, Identifier, RESOURCE_TYPES } from '../locdb';
+import {
+    BibliographicResource,
+    BibliographicEntry,
+    ProvenResource,
+    AgentRole,
+    ResponsibleAgent,
+    ToDo,
+    ROLES,
+    Identifier,
+    RESOURCE_TYPES
+} from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
@@ -12,7 +22,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // if this is a string, we can try to dereference it from the back-end
-    @Input() resource: BibliographicResource | ToDo = null;
+    @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
 
 
     @Input() resource_id: string = null;

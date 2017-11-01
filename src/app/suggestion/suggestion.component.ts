@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter} from '@angular/core';
 
-import { BibliographicEntry, BibliographicResource, AgentRole, ResponsibleAgent } from '../locdb';
+import { BibliographicEntry, BibliographicResource, AgentRole, ResponsibleAgent, ProvenResource } from '../locdb';
 import { LocdbService } from '../locdb.service';
 
 import { MOCK_INTERNAL } from '../mock-bresources'
@@ -29,8 +29,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
     selectedResource: BibliographicResource;
     query: string;
 
-    internalSuggestions: BibliographicResource[];
-    externalSuggestions: BibliographicResource[];
+    internalSuggestions: ProvenResource[];
+    externalSuggestions: ProvenResource[];
 
     committed = false;
     max_shown_suggestions = 5
@@ -40,6 +40,10 @@ export class SuggestionComponent implements OnInit, OnChanges {
     externalInProgress = false;
     internalInProgress = false;
     testresource: BibliographicResource;
+
+
+    internalThreshold = 1.0;
+    externalThreshold = 0.5;
 
     constructor(private locdbService: LocdbService) { }
 
@@ -75,7 +79,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       this.internalSuggestions = [];
       console.log('Fetching internal suggestions for', this.entry);
       // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
-      this.locdbService.suggestionsByQuery(this.query, false).subscribe(
+      this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold.toString()).subscribe(
         (sug) => this.saveInternal(sug),
         (err) => { this.internalInProgress = false }
       );
@@ -86,7 +90,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       this.externalSuggestions = [];
       console.log('Fetching external suggestions for', this.entry);
       // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
-      this.locdbService.suggestionsByQuery(this.query, true).subscribe(
+      this.locdbService.suggestionsByQuery(this.query, true, this.externalThreshold.toString()).subscribe(
         (sug) => this.saveExternal(sug),
         (err) => { this.externalInProgress = false }
       );
@@ -166,7 +170,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     saveExternal(sgt) {
-        this.externalSuggestions = sgt
+        this.externalSuggestions = sgt;
         if (this.externalSuggestions && this.externalSuggestions.length <= this.max_shown_suggestions) {
           this.max_ex = -1;
         } else {

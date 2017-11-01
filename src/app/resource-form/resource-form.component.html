@@ -1,7 +1,8 @@
 <accordion-group *ngIf="resource" [isOpen]="selected" [panelClass]="selected ? 'panel-primary' : 'panel-default'">
   <div accordion-heading>
     <p>{{ resource.title }}
-    <span class="label label-info">{{resource.type}}</span>
+      <span *ngIf="resource.type" class="label label-info">{{resource.type}}</span>
+      <span *ngIf="resource.provenance" class="label label-warning">{{resource.provenance}}</span>
     </p>
   </div>
   <div *ngIf="submitted">

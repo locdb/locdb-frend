@@ -141,16 +141,26 @@ export class ToDoScans {
 }
 
 
-/** External Resource Placeholder */
-export class ExternalResource {
-  // should be unused
-  identifiers?: Identifier[];
-  status?: string;
-  authors: string[];
-  title: string;
-  publisher?: string;
-  year?: number;
-  number?: number;
+export class ProvenResource extends BibliographicResource {
+  constructor(br: BibliographicResource) {
+    super();
+    Object.assign(this, br);
+  }
+  get provenance(): Provenance {
+    // could cache
+    let prov = Provenance.unknown;
+    if (this._id) {
+      prov = Provenance.locdb;
+    } else if (this.identifiers.find(id => id.scheme === ExternalSource.swb)) {
+      prov =  Provenance.swb;
+    } else if (this.identifiers.find(id => id.scheme === ExternalSource.crossref )) {
+      prov = Provenance.crossref
+    } else if (this.identifiers.find(id => id.scheme === ExternalSource.gScholar)) {
+      prov = Provenance.gScholar;
+    }
+
+    return prov
+  }
 }
 
 export interface Feed {
@@ -198,4 +208,12 @@ export enum ExternalSource {
   gScholar = 'URL_GOOGLE_SCHOLAR',
   crossref = 'URL_CROSSREF',
   swb = 'URL_SWB'
+}
+
+export enum Provenance {
+  unknown = 'Unknown',
+  gScholar = 'Google Scholar',
+  crossref = 'CrossRef',
+  swb = 'SWB',
+  locdb = 'LOC-DB'
 }

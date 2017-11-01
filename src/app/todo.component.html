@@ -30,7 +30,7 @@
         <a class="nav-link" href="#todo" (click)='setState(states.nocr); false'>OCR unprocessed</a>
       </li>
     </ul>
-  <app-todo-list [state]="state" (todo)="onSelect($event)"></app-todo-list>
+  <app-todo-list [state]="state" (todo)="pipe($event)"></app-todo-list>
   </div> <!--end of panel body -->
     <!-- <div class="panel-footer"> -->
     <!--   <div class="text-right"> -->

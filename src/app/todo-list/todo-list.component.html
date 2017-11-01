@@ -10,19 +10,28 @@
     <div *ngFor="let t of todos">
       <app-resource-form [resource]="t"></app-resource-form>
       <div class="list-group">
-        <a href='#' class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans" (click)="onSelect(s); false">
+        <a href='#' class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans" (click)="onSelectScan(s); false">
+          <button type="button" class="close pull-right" (click)="removeScan(s); $event.stopPropagation()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
           Scan {{ trimHash(s._id) }}
           <span class="badge badge-default badge-pill">{{ printState(s) }}</span>
         </a>
         <div *ngFor="let c of t.children" style="margin-left: 1em;">
           <app-resource-form [resource]="c"></app-resource-form>
           <!-- scans attached to children of resource -->
+          <a href='#' class="list-group-item list-group-item-action list-group-item-success" *ngIf="state === states.ext" (click)="onSelectExternal(c); false">
+            External References
+            <span class="label label-info">Crossref</span>
+          </a>
           <div *ngFor="let s of c.scans">
-            <!-- <app-todo-leaf [leaf]="s" (select)="onSelect(s)"></app-todo-leaf> -->
-            <button *ngIf="s.status !== states.ext" type="button" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelect(s)">
+            <a href="" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectScan(s); false">
+              <button type="button" class="close pull-right" (click)="removeScan(s); $event.stopPropagation()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
               Scan {{ trimHash(s._id) }} on pp. {{s.firstPage}}-{{s.lastPage}}
               <span class="badge badge-default badge-pill">{{ printState(s) }}</span>
-            </button>
+            </a>
           </div>
         </div>
       </div>

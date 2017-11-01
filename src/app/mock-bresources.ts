@@ -1,4 +1,4 @@
-import { BibliographicResource, ExternalResource } from './locdb'
+import { BibliographicResource, ProvenResource } from './locdb'
 
 export const MOCK_INTERNAL: BibliographicResource[] = [
   { 

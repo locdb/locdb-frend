@@ -12,6 +12,7 @@ import { ToDoScans, ToDoStates } from '../locdb';
 export class TodoLeafComponent implements OnInit {
   @Input() leaf: ToDoScans;
   @Output() select: EventEmitter<boolean> = new EventEmitter();
+  @Output() remove: EventEmitter<boolean> = new EventEmitter();
   states = ToDoStates;
 
   constructor() { }
@@ -34,6 +35,10 @@ export class TodoLeafComponent implements OnInit {
 
   onSelect() {
     this.select.next(true);
+  }
+
+  onRemove() {
+    this.remove.next(true);
   }
 
 }

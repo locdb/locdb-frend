@@ -12,7 +12,7 @@ import {Observable} from 'rxjs/Rx';
 import { Citation } from './citation';
 
 // new types
-import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource, Feed} from './locdb'
+import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource, ProvenResource, Feed} from './locdb'
 
 import { synCites_ } from './locdb'
 
@@ -150,18 +150,30 @@ export class LocdbService {
       .catch(this.handleError);
   }
 
-  suggestionsByQuery(query: string, external: boolean) {
+  suggestionsByQuery(query: string, external: boolean, threshold?: string): Observable<BibliographicResource[] | ProvenResource> {
     const params: URLSearchParams = new URLSearchParams();
     params.set('query', encodeURI(query));
+    if (threshold) {
+      params.set('threshold', encodeURI(threshold));
+    }
+
     console.log(params);
-
     const options = new RequestOptions({ search: params });
-    const url = external ? `${this.locdbUrl}/getExternalSuggestionsByQueryString` :
-      `${this.locdbUrl}/getInternalSuggestionsByQueryString`
 
-    return this.http.get(url, options)
-      .map(response => response.json() as BibliographicResource[])
-      .catch(this.handleError);
+    if (external) {
+      const url = `${this.locdbUrl}/getExternalSuggestionsByQueryString`;
+      return this.http.get(url, options)
+        .map(response => (response.json() as BibliographicResource[])
+          .map(x => new ProvenResource(x)))
+        .catch(this.handleError);
+    } else {
+      const url = `${this.locdbUrl}/getInternalSuggestionsByQueryString`;
+      return this.http.get(url, options)
+        .map(response => (response.json() as BibliographicResource[])
+          .map(x => new ProvenResource(x)))
+        .catch(this.handleError);
+    }
+
   }
 
 
