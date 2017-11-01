@@ -129,10 +129,26 @@ export class LocdbService {
     // .catch(this.handleError);
   }
 
-  saveElectronicJournal(doi: string): Observable<any> {
+  saveScanForElectronicJournal(
+    ppn: string,
+    file: File,
+  ): Promise<any> {
+    // SCAN IS UNUSED => NOT NECESSARY AFTER ALL TODO FIXME
+    // Take FileWithMetadata object instead
+    const url = `${this.locdbUrl}/saveScanForElectronicJournal`;
+    const formData: FormData = new FormData();
+    formData.append('ppn', ppn);
+    formData.append('scan', file);
+    return this.http.post(url, formData).toPromise(); // , {headers: this.headers})
+    // .map(this.extractData)
+    // .catch(this.handleError);
+  }
+
+
+  saveElectronicJournal(scheme: string, identifier: string): Observable<any> {
     const url = `${this.locdbUrl}/saveElectronicJournal`
     const params: URLSearchParams = new URLSearchParams();
-    params.set('doi', doi);
+    params.set(scheme, identifier);
     return this.http.get(
       url,
       { search: params}

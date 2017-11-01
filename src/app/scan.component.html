@@ -15,7 +15,7 @@
     <div *ngIf="listoffiles[0]" class="panel panel-default">
       <div class="list-group">
         <div *ngFor="let toDoScansWithMeta of listoffiles">
-          <a href="#flup" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectFile(toDoScansWithMeta); false">
+          <a href="#flup" class="list-group-item list-group-item-action" [class.list-group-item-danger]="toDoScansWithMeta.err" [class.list-group-item-info]="!toDoScansWithMeta.err" (click)="onSelectFile(toDoScansWithMeta); false">
             <h5 class="list-group-item-heading"><b>{{getName(toDoScansWithMeta)}}</b></h5> <!--getname method filter nullfileobjects and return name-->
             <p class="list-group-item-text">{{getMetadata(toDoScansWithMeta)}}
               <span class="badge" *ngIf="toDoScansWithMeta.allset">Ready</span>
@@ -35,13 +35,13 @@
 
                   <tr>
                     <td><select name="idtype" [(ngModel)]="idtype">
-                        <option value = "PPN">PPN</option>
-                        <option value = "DOI">DOI</option>
+                        <option value="ppn">PPN</option>
+                        <option value="doi" [disabled]="resourceType !== 'JOURNAL' ">DOI</option>
                     </select></td>
                     <td><input type="text" name="_id" [(ngModel)]="_id" style="width: 100%;"
                       class="form-control input-sm pull-right"></td>
                   </tr>
-                  <tr *ngIf="resourceType !== 'MONOGRAPH'">
+                  <tr *ngIf="resourceType === 'COLLECTION'">
                     <td><label>Pages</label> from <input type="number" name="firstpage" [(ngModel)]="firstpage" style="width: 75%;"
                       class="form-control input-sm pull-right"></td>
                     <td> to <input type="number" name="firstlastpage" [(ngModel)]="lastpage" style="width: 90%;"

@@ -106,15 +106,11 @@ export class ScanComponent {
         console.log('Assuming a monograph')
       }
       this.listoffiles.push(
-        { _id: _id, idtype: 'PPN',
+        { _id: _id, idtype: 'ppn',
           firstpage: first, lastpage: last,
           file: file, filecontent : null,
-          allset: this.isValid(
-          _id,
-          rtype,
-          first,
-          last
-        ), resourceType: rtype, status: null, uploading: false}
+          allset: this.isValid( _id, rtype, first, last),
+          resourceType: rtype, status: null, uploading: false}
       );
     }
   }
@@ -123,9 +119,10 @@ export class ScanComponent {
     if (!_id) {
       return false;
     }
-    if (rtype === 'MONOGRAPH') {
+    if (rtype === 'MONOGRAPH' || rtype === 'JOURNAL') {
       return true;
     } else {
+      // currently only collection since (electronic) journals moved above
       if (first && last) {
         return true;
       }
@@ -181,7 +178,7 @@ export class ScanComponent {
   }
 
   // nicht mehr als onclick genutzt
-  // oh yes it is called by onSelectFile
+  // oh yes it is called by onclickupload and onSelectFile
   saveentries() {
     console.log('idtype sav;eentries;: ' + this.idtype)
     this.fileIsActive = false;
@@ -229,7 +226,12 @@ export class ScanComponent {
     console.log(this.listoffiles.indexOf(listelement))
     console.log(listelement.file)
     listelement.uploading = true;
+    listelement.err = null;
     if (listelement.file) {
+      // READFILECONTENT COULD GO HERE TODO FIXME
+      // it is obviously enough to just provide the file metadata
+      // as formdata push will then load the file on server side
+      // do not test it before workshop
       console.log('Trying to Read');
       const r = new FileReader();
 
@@ -238,7 +240,7 @@ export class ScanComponent {
     } else {
       // saveElectronicJournal should go here
       console.log('Empty file. Uploading as Journal');
-      this.locdbService.saveElectronicJournal(listelement._id).subscribe(
+      this.locdbService.saveElectronicJournal(listelement.idtype, listelement._id).subscribe(
         (result) => this.removeItemFromList(listelement, result),
         (err) => this.processError(listelement, err)
       );
@@ -252,6 +254,7 @@ export class ScanComponent {
     console.log('Pushing: ', listelement);
 
     if (listelement.resourceType === 'MONOGRAPH') {
+      // no page numbers necessary
       this.locdbService.saveScan(
         listelement._id,
         listelement.resourceType,
@@ -259,7 +262,15 @@ export class ScanComponent {
         listelement.filecontent,
       ).then((suc) => this.removeItemFromList(listelement, suc))
        .catch((err) => this.processError(listelement, err));
+    } else if (listelement.resourceType === 'JOURNAL') {
+      // new (needs testing)
+      this.locdbService.saveScanForElectronicJournal (
+        listelement._id,
+        listelement.file
+      ).then((suc) => this.removeItemFromList(listelement, suc))
+        .catch((err) => this.processError(listelement, err))
     } else {
+      // collection...
       this.locdbService.saveScan(
         listelement._id,
         listelement.resourceType,
@@ -287,16 +298,16 @@ export class ScanComponent {
 
   processError(elem: ToDoScansWithMeta, err: any) {
     elem.uploading = false;
+    elem.err = err; // first assigned this property
     this.checkUploading();
-    console.log('Send Scans failed: ', err)
-    // set item error
+    console.log('Send Scans failed: ', elem, err)
   }
 
   addId() {
     this.listoffiles.push(
       {
         _id: null,
-        idtype: 'DOI',
+        idtype: 'doi',
         firstpage: null,
         lastpage: null,
         file: null,
@@ -342,13 +353,16 @@ export class ScanComponent {
 
 
 interface ToDoScansWithMeta extends ToDoScans {
+  // TODO FIXME the first four properties are redundant with ToDoScans
   _id: string;
   idtype: string;
   firstpage?: number;
   lastpage?: number;
   file?: File;
+  // TODO FIXME the filecontent might not be required, but needs testing (see above)
   filecontent?: any;
-  resourceType?: string; // maybe requiered?
+  resourceType: string; // maybe requiered?
   allset?: boolean; // maybe save to assume?
   uploading: boolean; // to determine button state
+  err?: any;
 }

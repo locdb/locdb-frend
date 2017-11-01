@@ -60,11 +60,6 @@ export const ROLES = [
    'TRANSLATOR',
 ];
 
-export const RESOURCE_TYPES = [
-  'MONOGRAPH',
-  'COLLECTION',
-  'JOURNAL',
-]
 
 /** An intermediate class to model N:M relationships between resources and
  * agents */
@@ -198,6 +193,12 @@ export enum ResourceType {
   collection = 'COLLECTION',
   journal = 'JOURNAL'
 }
+
+export const RESOURCE_TYPES = [
+  'MONOGRAPH',
+  'COLLECTION',
+  'JOURNAL',
+]
 
 export enum EmbodimentType {
   digital = 'DIGITAL',
