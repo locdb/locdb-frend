@@ -77,7 +77,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     fetchInternalSuggestions(): void {
       this.internalInProgress = true;
       this.internalSuggestions = [];
-      console.log('Fetching internal suggestions for', this.entry);
+      console.log('Fetching internal suggestions for', this.query, 'with threshold', this.internalThreshold);
       // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
       this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold.toString()).subscribe(
         (sug) => this.saveInternal(sug),
@@ -88,7 +88,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     fetchExternalSuggestions(): void {
       this.externalInProgress = true;
       this.externalSuggestions = [];
-      console.log('Fetching external suggestions for', this.entry);
+      console.log('Fetching external suggestions for', this.query, 'with threshold', this.internalThreshold);
       // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
       this.locdbService.suggestionsByQuery(this.query, true, this.externalThreshold.toString()).subscribe(
         (sug) => this.saveExternal(sug),
