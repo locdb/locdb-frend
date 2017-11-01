@@ -145,6 +145,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     plusPressed() {
         const newResource: ProvenResource = this.resourceFromEntry(this.entry);
         this.externalSuggestions.unshift(newResource);
+        this.selectedResource = newResource;
         // wait until commit
         // this.locdbService.pushBibligraphicResource(newResource).subscribe(
         //   (br) => { this.internalSuggestions.unshift(br); this.selectedResource = br }
