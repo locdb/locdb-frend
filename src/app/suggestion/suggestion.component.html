@@ -27,7 +27,7 @@
 
   <!-- Panel body providing suggestions -->
   <div class="panel-body">
-    <h5 class="text-center mb-0">
+    <h5 class="text-center mb-1">
       Internal Suggestions
     </h5>
     <div *ngIf="internalInProgress" class="loader">
@@ -49,7 +49,7 @@
     </button>
     </accordion>
     <hr>
-    <h5 class="text-center mb-0">
+    <h5 class="text-center mb-1">
       External Suggestions
     </h5>
     <accordion *ngIf="externalSuggestions">
@@ -67,6 +67,17 @@
       <div *ngIf="externalInProgress" class="loader">
       </div>
     </accordion>
+    <div *ngIf="localResources.length">
+      <hr>
+      <h5 class="text-center mb-1">
+        Local Resources
+      </h5>
+      <accordion>
+        <app-resource-form *ngFor="let r of localResources"
+          [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
+        </app-resource-form>
+      </accordion>
+    </div>
   </div>
 
   <!-- Panel footer allowing actions -->

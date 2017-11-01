@@ -33,6 +33,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     internalSuggestions: ProvenResource[];
     externalSuggestions: ProvenResource[];
+    localResources: ProvenResource[] = [];
 
     committed = false;
     max_shown_suggestions = 5
@@ -144,7 +145,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     plusPressed() {
         const newResource: ProvenResource = this.resourceFromEntry(this.entry);
-        this.externalSuggestions.unshift(newResource);
+        this.localResources.push(newResource);
         this.selectedResource = newResource;
         // wait until commit
         // this.locdbService.pushBibligraphicResource(newResource).subscribe(
