@@ -19,7 +19,7 @@
     "@angular/http": "^4.3.3",
     "@angular/platform-browser": "^4.3.3",
     "@angular/platform-browser-dynamic": "^4.3.3",
-    "@angular/router": "^4.3.3",
+    "@angular/router": "^5.0.0",
     "@types/d3": "^4.10.0",
     "bootstrap": "^3.3.7",
     "core-js": "^2.5.0",
