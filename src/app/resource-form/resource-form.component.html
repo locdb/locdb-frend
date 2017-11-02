@@ -191,15 +191,15 @@
       </div>
       <div class="row justify-content-between">
         <div class="col-xs-6 text-left">
-          <button type="button" class="btn btn-warning" (click)="revert()">
+          <button type="button" class="btn btn-warning" (click)="revert()" [disabled]="submitting">
             <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset
           </button>
-          <button type="button" class="btn btn-danger" (click)="deleteResource()">
+          <button type="button" class="btn btn-danger" (click)="deleteResource()" [disabled]="submitting">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
           </button>
         </div>
         <div class="col-xs-6 text-right">
-          <button type="button" class="btn btn-primary" (click)="onSubmit()">
+          <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="submitting">
             <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Submit
           </button>
         </div>
