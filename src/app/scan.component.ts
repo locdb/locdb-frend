@@ -265,6 +265,7 @@ export class ScanComponent {
     } else if (listelement.resourceType === 'JOURNAL') {
       // new (needs testing)
       this.locdbService.saveScanForElectronicJournal (
+        listelement.idtype,
         listelement._id,
         listelement.file
       ).then((suc) => this.removeItemFromList(listelement, suc))

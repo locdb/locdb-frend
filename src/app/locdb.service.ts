@@ -130,14 +130,15 @@ export class LocdbService {
   }
 
   saveScanForElectronicJournal(
-    ppn: string,
+    scheme: string,
+    value: string,
     file: File,
   ): Promise<any> {
     // SCAN IS UNUSED => NOT NECESSARY AFTER ALL TODO FIXME
     // Take FileWithMetadata object instead
     const url = `${this.locdbUrl}/saveScanForElectronicJournal`;
     const formData: FormData = new FormData();
-    formData.append('ppn', ppn);
+    formData.append(scheme, value);
     formData.append('scan', file);
     return this.http.post(url, formData).toPromise(); // , {headers: this.headers})
     // .map(this.extractData)
