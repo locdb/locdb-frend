@@ -366,4 +366,5 @@ interface ToDoScansWithMeta extends ToDoScans {
   allset?: boolean; // maybe save to assume?
   uploading: boolean; // to determine button state
   err?: any;
+  pdfIsTextual?: boolean; // textual pdf flag.
 }
