@@ -58,7 +58,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             edition: '',
             resourcenumber: '',
             publicationyear: '',
-            partof: '',
+            // partof: '',
             contributors: this.fb.array([]),
             identifiers: this.fb.array([]),
         });
@@ -135,7 +135,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             edition: this.resource.edition,
             resourcenumber: this.resource.number,
             publicationyear: this.resource.publicationYear,
-            partof: this.resource.partOf,
+            // partof: this.resource.partOf,
                 // ...
         });
         // new clean set contribs
@@ -204,8 +204,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             number: formModel.resourcenumber as string || '',
             contributors: contribsDeepCopy,
             publicationYear: formModel.publicationyear as string || '',
-            partOf: formModel.partof as string || '',
-            // warning: no deep copy (but this ok as long as not editable)
+            // partOf: formModel.partof as string || '',
+            // warning: retain internal identifiers (dont show primary keys to the user)
+            // not editable, but copied values
+            partOf: this.resource.partOf,
             embodiedAs: this.resource.embodiedAs,
             parts: this.resource.parts,
             cites: this.resource.cites,
