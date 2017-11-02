@@ -222,7 +222,7 @@ export class LocdbService {
     return this.http.put(url, entry).map(this.extractData).catch(this.handleError);
   }
 
-  bibliographicResource(identifier: string) {
+  bibliographicResource(identifier: string): Observable<BibliographicResource> {
     const url = `${this.locdbUrl}/bibliographicResources/${identifier}`;
     return this.http.get(url).map(this.extractData).catch(this.handleError);
   }

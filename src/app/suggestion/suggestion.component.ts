@@ -33,7 +33,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     internalSuggestions: ProvenResource[];
     externalSuggestions: ProvenResource[];
-    localResources: ProvenResource[] = [];
+    currentTarget: ProvenResource;
+    newResource: ProvenResource = null;
 
     committed = false;
     max_shown_suggestions = 5
@@ -42,7 +43,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     externalInProgress = false;
     internalInProgress = false;
-    testresource: BibliographicResource;
 
 
     internalThreshold = 1.0;
@@ -59,13 +59,28 @@ export class SuggestionComponent implements OnInit, OnChanges {
                 embodiedAs: [],
                 parts: [],
         }
-        this.testresource = br;
     }
 
     ngOnChanges() {
         if (this.entry) {
           this.query = this.queryFromEntry(this.entry);
           this.refresh();
+          // add new Resource
+          this.newResource = this.resourceFromEntry(this.entry);
+          if (this.entry.references) {
+            // entry already has a link
+            this.locdbService.bibliographicResource(this.entry.references).subscribe(
+              (res) => {
+                const br = new ProvenResource(res);
+                this.currentTarget = br;
+                this.selectedResource = br
+              },
+              (err) => { console.log('Invalid entry.references pointer', this.entry.references) });
+          } else {
+            // entry was not linked yet
+            this.currentTarget = null;
+            this.selectedResource = this.newResource;
+          }
         } else {
           this.query = '';
         }
@@ -145,7 +160,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     plusPressed() {
         const newResource: ProvenResource = this.resourceFromEntry(this.entry);
-        this.localResources.push(newResource);
+        this.newResource = newResource;
         this.selectedResource = newResource;
         // wait until commit
         // this.locdbService.pushBibligraphicResource(newResource).subscribe(
@@ -153,7 +168,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
         // );
     }
 
-    onSelect(br?: BibliographicResource): void {
+    onSelect(br?: ProvenResource): void {
         console.log('Suggestion emitted', br);
         this.selectedResource = br;
         this.committed = false;
@@ -194,11 +209,16 @@ export class SuggestionComponent implements OnInit, OnChanges {
         this.locdbService.pushBibligraphicResource(this.selectedResource).subscribe(
           (response) => {
             this.entry.references = response._id;
-            this.locdbService.putBibliographicEntry(this.entry);
-            console.log('Submitted Entry pointing to former external BR', response);
-            this.committed = true;
+            this.locdbService.putBibliographicEntry(this.entry).subscribe(
+              (second_response) => {
+                // push succeeded now commit link
+                console.log('Submitted Entry pointing to former external BR', response);
+                this.committed = true;
+              }
+            );
           },
           (error) => {
+            // push failed, so reset state
             this.selectedResource.status = ToDoStates.ext;
             console.log('Submitting external resource failed');
           }

@@ -44,10 +44,10 @@ export class EntryFormComponent implements OnChanges {
       return;
     }
     this.entryForm.reset({
-      title: this.entry.ocrData.title,
-      references: this.entry.references,
-      date: this.entry.ocrData.date,
       bibliographicEntryText: this.entry.bibliographicEntryText,
+      references: this.entry.references,
+      title: this.entry.ocrData.title,
+      date: this.entry.ocrData.date,
       // not reflected yet TODO FIXME
       marker: this.entry.ocrData.marker,
       comments: this.entry.ocrData.comments,
@@ -70,6 +70,11 @@ export class EntryFormComponent implements OnChanges {
 
   addAuthor() {
     this.authors.push(this.fb.control(''));
+  }
+
+  clearReference() {
+    // for the future
+    this.entryForm.setValue({references: ''});
   }
 
   removeAuthor(idx: number) {

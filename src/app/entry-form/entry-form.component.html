@@ -1,5 +1,6 @@
 <div *ngIf="entry">
   <accordion-group [heading]=short() [isOpen]="active" [panelClass]="active ? 'panel-primary' : entry.references ? 'panel-success' : 'panel-danger'">
+    {{ this.entry | json }}
     <div *ngIf="submitted">
       <table class="table table-striped">
         <tbody>
@@ -107,7 +108,7 @@
         </div>
         <div class="form-group">
           <label class="center-block">References:
-            <input class="form-control" formControlName="references">
+            <input type="search" class="form-control" formControlName="references">
           </label>
         </div>
 
@@ -115,8 +116,8 @@
           <button type="button" class="btn btn-default" (click)="showForm(false)">
             Cancel
           </button> &nbsp;
-          <button type="reset" (click)="revert()"
-            [disabled]="entryForm.pristine" class="btn btn-danger">Revert</button> &nbsp;
+          <button type="button" (click)="revert()"
+            [disabled]="entryForm.pristine" class="btn btn-warning">Revert</button> &nbsp;
           <button type="submit"
             [disabled]="entryForm.pristine" class="btn btn-success">Save</button>
         </div>
