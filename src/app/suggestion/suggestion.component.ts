@@ -106,7 +106,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     fetchExternalSuggestions(): void {
       this.externalInProgress = true;
       this.externalSuggestions = [];
-      console.log('Fetching external suggestions for', this.query, 'with threshold', this.internalThreshold);
+      console.log('Fetching external suggestions for', this.query, 'with threshold', this.externalThreshold);
       // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
       this.locdbService.suggestionsByQuery(this.query, true, this.externalThreshold.toString()).subscribe(
         (sug) => this.saveExternal(sug),
@@ -204,17 +204,35 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     commit() {
       // This the actual linking of entry to resource
+      // we could also check for _id
       if (this.selectedResource.status === ToDoStates.ext) {
+        // selectedResource is either external or NEW
         this.selectedResource.status = ToDoStates.valid;
         this.locdbService.pushBibligraphicResource(this.selectedResource).subscribe(
           (response) => {
-            this.entry.references = response._id;
-            this.locdbService.putBibliographicEntry(this.entry).subscribe(
-              (second_response) => {
-                // push succeeded now commit link
-                console.log('Submitted Entry pointing to former external BR', response);
-                this.committed = true;
-              }
+            // this.entry.references = response._id;
+            // this.locdbService.putBibliographicEntry(this.entry).subscribe(
+            //   (second_response) => {
+            //     // push succeeded now commit link
+            //     console.log('Submitted Entry pointing to former external BR', response);
+            //     this.committed = true;
+            //   }
+            // );
+            // POST resource succeeded
+            // remain in consitent state even if linking failed
+            this.currentTarget = new ProvenResource(response); // update view
+            this.selectedResource = this.currentTarget;
+            // addTarget
+            this.locdbService.addTargetBibliographicResource(this.entry, response).subscribe(
+              (success) => {
+                // addTarget succeeded
+                // Update the view
+                this.entry.status = 'VALID';
+                console.log('Setting entry references to', response._id);
+                this.entry.references = response._id;
+              },
+              // addTarget failed
+              (error) => console.log('Could not add target', this.entry, response)
             );
           },
           (error) => {
@@ -223,12 +241,23 @@ export class SuggestionComponent implements OnInit, OnChanges {
             console.log('Submitting external resource failed');
           }
         );
-      } else {
-        this.entry.references = this.selectedResource._id;
-        this.locdbService.putBibliographicEntry(this.entry).subscribe( (result) => {
-          this.committed = true;
-          console.log('Submitted Entry with result', result)
-        });
+      } else { // Resource was an internal suggestion
+        // this.entry.references = this.selectedResource._id;
+        // this.locdbService.putBibliographicEntry(this.entry).subscribe( (result) => {
+        //   this.committed = true;
+        //   console.log('Submitted Entry with result', result)
+        // });
+        this.locdbService.addTargetBibliographicResource(this.entry, this.selectedResource).subscribe(
+          (success) => {
+            // addTarget succeeded
+            // update view
+            this.entry.status = 'VALID';
+            this.entry.references = this.selectedResource._id;
+            this.currentTarget = new ProvenResource(this.selectedResource);
+          },
+          // addTarget failed
+          (error) => console.log('Could not add target', this.entry, this.selectedResource)
+        )
       }
     }
 

@@ -222,6 +222,16 @@ export class LocdbService {
     return this.http.put(url, entry).map(this.extractData).catch(this.handleError);
   }
 
+  addTargetBibliographicResource(entry: BibliographicEntry, resource: BibliographicResource):
+  Observable<BibliographicResource> {
+    console.log('add Target', entry, resource);
+    const url = `${this.locdbUrl}/addTargetBibliographicResource`;
+    const params: URLSearchParams = new URLSearchParams();
+    params.set('bibliographicEntryId', entry._id);
+    params.set('bibliographicResourceId', resource._id);
+    return this.http.get(url, { search: params}).map(this.extractData).catch(this.handleError);
+  }
+
   bibliographicResource(identifier: string): Observable<BibliographicResource> {
     const url = `${this.locdbUrl}/bibliographicResources/${identifier}`;
     return this.http.get(url).map(this.extractData).catch(this.handleError);

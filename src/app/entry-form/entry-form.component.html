@@ -1,6 +1,5 @@
 <div *ngIf="entry">
   <accordion-group [heading]=short() [isOpen]="active" [panelClass]="active ? 'panel-primary' : entry.references ? 'panel-success' : 'panel-danger'">
-    {{ this.entry | json }}
     <div *ngIf="submitted">
       <table class="table table-striped">
         <tbody>

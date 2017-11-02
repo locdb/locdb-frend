@@ -14,6 +14,7 @@ export class EntryListComponent implements OnInit, OnChanges {
   selectedEntry: BibliographicEntry;
   @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
 
+
   constructor() {
   }
 
@@ -21,6 +22,15 @@ export class EntryListComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
+  }
+
+  addEntry() {
+    const entry = new BibliographicEntry();
+    this.onSelect(entry);
+  }
+
+  deleteEntry() {
+
   }
 
   onSelect(entry: BibliographicEntry) {

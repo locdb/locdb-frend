@@ -87,14 +87,21 @@ export class EntryFormComponent implements OnChanges {
   }
 
   onSubmit() {
-    this.entry = this.prepareSaveEntry();
+    const entry = this.prepareSaveEntry();
     console.log('Submitting entry', this.entry);
 
-    this.locdbService.putBibliographicEntry(this.entry).subscribe(
-      (result) => console.log('Submitted Entry with result', result)
-    );
-    this.submitted = true;
-    this.ngOnChanges();
+    if (entry._id) {
+      this.locdbService.putBibliographicEntry(entry).subscribe(
+        (result) => { this.entry = result; this.submitted = true; this.ngOnChanges()},
+        (error) => console.log('Error updating entry', entry)
+      );
+    } else {
+      console.log('Post entry not implemented');
+      // this.locdbService.posthBibliographicEntry(entry).subscribe(
+      //   (result) => { this.entry = result; this.submitted = true; this.ngOnChanges()},
+      //   (error) => console.log('Error putting new entry')
+      // )
+    }
   }
 
   prepareSaveEntry(): BibliographicEntry {
@@ -102,7 +109,6 @@ export class EntryFormComponent implements OnChanges {
     // deep copy of form model lairs
     // const authorsDeepCopy: string[] = formModel.authors.map(
     //   (author: string) => Object.assign({}, author)
-    // );
     // const authorsDeepCopy = Object.create(formModel.authors);
     const authorsDeepCopy = this.copyArray<string>(formModel.authors);
     // return new `BibliographicEntry` object containing a combination of original entry value(s)
