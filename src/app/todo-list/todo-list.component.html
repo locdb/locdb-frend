@@ -10,6 +10,10 @@
     <div *ngFor="let t of todos">
       <app-resource-form [resource]="t"></app-resource-form>
       <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="t.parts && t.parts.length" (click)="onSelectExternal(t); false">
+          <em>References</em>
+          <span class="label label-danger">{{provenance.crossref}}</span>
+        </a>
         <a href='#' class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans; let i = index" (click)="onSelectScan(s); false">
           <button type="button" class="close pull-right" (click)="deleteScan(i, t); $event.stopPropagation()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -20,8 +24,8 @@
         <div *ngFor="let c of t.children" style="margin-left: 1em;">
           <app-resource-form [resource]="c"></app-resource-form>
           <!-- scans attached to children of resource -->
-          <a href="#" class="list-group-item list-group-item-action list-group-item-info" *ngIf="state === states.ext" (click)="onSelectExternal(c); false">
-            External References
+          <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="c.parts && c.parts.length" (click)="onSelectExternal(c); false">
+            <em>References</em>
             <span class="label label-danger">{{provenance.crossref}}</span>
           </a>
           <div *ngFor="let s of c.scans; let i = index">

@@ -67,13 +67,14 @@ export class TodoListComponent implements OnInit, OnChanges {
     }
   }
 
-  onSelectExternal(resource:  BibliographicResource) {
+  onSelectExternal(resource: ToDo) {
     // called when pressing on an external todo item
+    console.log('onselect external')
     this.todo.next(resource);
   }
 
 
-  emit(scanOrResource: ToDoScans | BibliographicResource) {
+  emit(scanOrResource: ToDoScans | ToDo) {
     this.todo.next(scanOrResource);
   }
 
