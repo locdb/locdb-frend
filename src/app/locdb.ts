@@ -1,4 +1,5 @@
 /** A Bibliographic Resource */
+// actually a partial resource
 export class BibliographicResource {
   _id?: string;
   identifiers?: Identifier[];
@@ -11,7 +12,8 @@ export class BibliographicResource {
   publicationYear?: string;
   status?: string;
   parts?: BibliographicEntry[];
-  partOf?: string;
+  partOf?: string; // _id of other resource
+  containerTitle?: string;
   embodiedAs?: ResourceEmbodiment[];
   /* should be aggregate of parts.references */
   cites?: string[];

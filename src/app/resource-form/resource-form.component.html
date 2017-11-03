@@ -28,6 +28,10 @@
           <td> <label>Edition</label> </td>
           <td> {{resource.edition}} </td>
         </tr>
+        <tr *ngIf="resource.containerTitle">
+          <td> <label>Container Title</label> </td>
+          <td> {{resource.edition}} </td>
+        </tr>
         <tr *ngIf="resource.number">
           <td> <label>Number</label> </td>
           <td> {{resource.number}} </td>
