@@ -27,12 +27,10 @@
 
           </a>
           <div *ngIf="active == toDoScansWithMeta && fileIsActive">
-
             <br/>
             <form>
               <table class="table table-striped">
                 <tbody>
-
                   <tr>
                     <td><select name="idtype" [(ngModel)]="idtype">
                         <option value="ppn">PPN</option>
@@ -56,7 +54,7 @@
                       </select>
                     </td>
                   </tr>
-                  <tr>
+                  <tr *ngIf="toDoScansWithMeta.file.name.toLowerCase().endsWith('.pdf')">
                     <td><label for="istextual">Is textual PDF?</label></td>
                     <td>
                       <input type="checkbox" name="istextual" [(ngModel)]="textualPdf" style="width: 100%;" class="form-control input-sm pull-right">
