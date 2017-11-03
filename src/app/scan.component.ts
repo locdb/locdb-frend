@@ -26,6 +26,7 @@ export class ScanComponent {
   firstpage: number;
   lastpage: number;
   resourceType = 'MONOGRAPH'; // needs to be value of select block
+  textualPdf: boolean;
 
   resourceTypes = RESOURCE_TYPES;
 
@@ -90,6 +91,7 @@ export class ScanComponent {
     this.firstpage = null;
     this.lastpage = null;
     this.resourceType = 'MONOGRAPH'; // needs to be value of select block
+    this.textualPdf = null;
   }
 
   onChange(event: any) { // file input
@@ -110,7 +112,8 @@ export class ScanComponent {
           firstpage: first, lastpage: last,
           file: file, filecontent : null,
           allset: this.isValid( _id, rtype, first, last),
-          resourceType: rtype, status: null, uploading: false}
+          resourceType: rtype, status: null, uploading: false,
+          textualPdf: false}
       );
     }
   }
@@ -148,6 +151,7 @@ export class ScanComponent {
     this.firstpage = item.firstpage;
     this.lastpage = item.lastpage;
     this.resourceType = item.resourceType;
+    this.textualPdf = item.textualPdf;
   }
 
 
@@ -187,6 +191,7 @@ export class ScanComponent {
     this.active.lastpage = this.lastpage;
     this.active._id = this._id ;
     this.active.resourceType = this.resourceType;
+    this.active.textualPdf = this.textualPdf;
     // can we do this check elsewhere? it is only triggered when the file is collapsed
     this.active.allset = this.isValid(this._id, this.resourceType, this.firstpage, this.lastpage);
     // if (this.listoffiles[this.active].id && this.listoffiles[this.active].resourceType) {
@@ -258,6 +263,7 @@ export class ScanComponent {
       this.locdbService.saveScan(
         listelement._id,
         listelement.resourceType,
+        listelement.textualPdf,
         listelement.file,
         listelement.filecontent,
       ).then((suc) => this.removeItemFromList(listelement, suc))
@@ -267,6 +273,7 @@ export class ScanComponent {
       this.locdbService.saveScanForElectronicJournal (
         listelement.idtype,
         listelement._id,
+        listelement.textualPdf,
         listelement.file
       ).then((suc) => this.removeItemFromList(listelement, suc))
         .catch((err) => this.processError(listelement, err))
@@ -275,6 +282,7 @@ export class ScanComponent {
       this.locdbService.saveScan(
         listelement._id,
         listelement.resourceType,
+        listelement.textualPdf,
         listelement.file,
         listelement.filecontent,
         listelement.firstpage.toString(),
@@ -366,5 +374,5 @@ interface ToDoScansWithMeta extends ToDoScans {
   allset?: boolean; // maybe save to assume?
   uploading: boolean; // to determine button state
   err?: any;
-  pdfIsTextual?: boolean; // textual pdf flag.
+  textualPdf?: boolean; // textual pdf flag. optional since not needed for electronic
 }

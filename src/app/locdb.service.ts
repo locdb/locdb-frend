@@ -108,10 +108,11 @@ export class LocdbService {
   saveScan(
     ppn: string,
     resourceType: string,
+    textualPdf: boolean,
     file: File,
     scan: any,
     firstPage?: string,
-    lastPage?: string,
+    lastPage?: string
   ): Promise<any> {
     // Take FileWithMetadata object instead
     const url = `${this.locdbUrl}/saveScan`;
@@ -121,7 +122,7 @@ export class LocdbService {
       formData.append('firstPage', firstPage);
       formData.append('lastPage', lastPage);
     }
-
+    formData.append('textualPdf', textualPdf.toString());
     formData.append('scan', file);
     formData.append('resourceType', resourceType);
     return this.http.post(url, formData).toPromise(); // , {headers: this.headers})
@@ -132,13 +133,15 @@ export class LocdbService {
   saveScanForElectronicJournal(
     scheme: string,
     value: string,
-    file: File,
+    textualPdf: boolean,
+    file: File
   ): Promise<any> {
     // SCAN IS UNUSED => NOT NECESSARY AFTER ALL TODO FIXME
     // Take FileWithMetadata object instead
     const url = `${this.locdbUrl}/saveScanForElectronicJournal`;
     const formData: FormData = new FormData();
     formData.append(scheme, value);
+    formData.append('textualPdf', textualPdf.toString());
     formData.append('scan', file);
     return this.http.post(url, formData).toPromise(); // , {headers: this.headers})
     // .map(this.extractData)
