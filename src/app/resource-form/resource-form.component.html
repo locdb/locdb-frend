@@ -103,14 +103,12 @@
               </select>
             </td>
           </tr>
-          <!-- <tr> -->
-          <!--   <td> -->
-          <!--     <label>Part of</label> -->
-          <!--   </td> -->
-          <!--   <td> -->
-          <!--     <input class="form-control" formControlName="partof"> -->
-          <!--   </td> -->
-          <!-- </tr> -->
+          <tr>
+            <td> <label>Container Title</label> </td>
+            <td>
+              <input class="form-control" formControlName="containerTitle">
+            </td>
+          </tr>
           <tr>
             <td>
               <label>Number</label>
@@ -146,8 +144,6 @@
             </tr>
             <tr>
               <td>
-              </td>
-              <td>
                 <button type="button" class="btn btn-success" aria-label="Add Identifier" (click)="addIdentifier()">
                   <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>
@@ -182,8 +178,6 @@
               </td>
             </tr>
             <tr>
-              <td>
-              </td>
               <td>
                 <button type="button" class="btn btn-success" aria-label="Add Contributor" (click)="addContributor()">
                   <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>

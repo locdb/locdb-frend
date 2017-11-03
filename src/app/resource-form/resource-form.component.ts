@@ -219,10 +219,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             title: formModel.title as string || '',
             subtitle: formModel.subtitle as string || '',
             edition: formModel.edition as string || '',
+            containerTitle: formModel.containerTitle as string || '',
             number: formModel.resourcenumber as string || '',
             contributors: contribsDeepCopy,
             publicationYear: formModel.publicationyear as string || '',
-            containerTitle: formModel.containerTitle as string || '',
             // partOf: formModel.partof as string || '',
             // warning: retain internal identifiers (dont show primary keys to the user)
             // not editable, but copied values
