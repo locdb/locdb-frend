@@ -84,6 +84,7 @@ export class BibliographicEntry {
   scanId?: string;
   status?: string;
   ocrData?: OCRData;
+  identifiers?: Identifier[];
 }
 
 /** Addition to the OCC Metadata model to support OCR data */

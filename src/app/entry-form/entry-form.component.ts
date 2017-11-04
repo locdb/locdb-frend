@@ -31,6 +31,7 @@ export class EntryFormComponent implements OnChanges {
       title: '',
       date: '',
       authors: this.fb.array([]),
+      identifiers: this.fb.array([]),
       marker: '',
       comments: '',
       journal: '',
@@ -55,6 +56,7 @@ export class EntryFormComponent implements OnChanges {
       volume: this.entry.ocrData.volume,
     });
     this.setAuthors(this.entry.ocrData.authors);
+    this.setIdentifiers(this.entry.identifiers);
   }
 
   setAuthors(authors: string[]) {
@@ -85,6 +87,29 @@ export class EntryFormComponent implements OnChanges {
       // Display the form or stop displaying it
       this.submitted = !val;
   }
+  setIdentifiers(ids: Identifier[]) {
+    const identsFGs = ids ? ids.map(
+      identifier => this.fb.group(
+        {literalValue: identifier.literalValue,
+          scheme: identifier.scheme }
+      )
+    ) : [];
+    const idsFormArray = this.fb.array(identsFGs);
+    this.entryForm.setControl('identifiers', idsFormArray);
+  }
+
+  get identifiers(): FormArray {
+    return this.entryForm.get('identifiers') as FormArray;
+  }
+
+  addIdentifier() {
+    // reference from getter above
+    this.identifiers.push(this.fb.group({scheme: '', literalValue: ''}));
+  }
+
+  removeIdentifier(index: number) {
+    this.identifiers.removeAt(index);
+  }
 
   onSubmit() {
     const entry = this.prepareSaveEntry();
@@ -103,6 +128,13 @@ export class EntryFormComponent implements OnChanges {
       // )
     }
   }
+  reconstructIdentifier(scheme: string, value: string): Identifier {
+    const identifier = {
+      scheme: scheme,
+      literalValue: value,
+    }
+    return identifier;
+  }
 
   prepareSaveEntry(): BibliographicEntry {
     const formModel = this.entryForm.value;
@@ -110,13 +142,18 @@ export class EntryFormComponent implements OnChanges {
     // const authorsDeepCopy: string[] = formModel.authors.map(
     //   (author: string) => Object.assign({}, author)
     // const authorsDeepCopy = Object.create(formModel.authors);
-    const authorsDeepCopy = this.copyArray<string>(formModel.authors);
+    // const authorsDeepCopy = this.copyArray<string>(formModel.authors);
     // return new `BibliographicEntry` object containing a combination of original entry value(s)
     // and deep copies of changed form model values
+    const authorsDeepCopy = formModel.authors.map( x => x);
+    const identsDeepCopy = formModel.identifiers.map(
+      (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
+    );
     const saveEntry: BibliographicEntry = {
       _id: this.entry._id,
       bibliographicEntryText: formModel.bibliographicEntryText as string || '',
       references: formModel.references as string || '',
+      identifiers: identsDeepCopy || [],
       ocrData: {
         title: formModel.title as string || '',
         date: formModel.date as string || '',
@@ -132,6 +169,7 @@ export class EntryFormComponent implements OnChanges {
   }
 
   copyArray<T>(array: T[]): T[] {
+    // not really deep
     const copy = []
     for (const elem of array) {
       copy.push(elem);
