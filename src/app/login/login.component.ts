@@ -22,9 +22,8 @@ export class LoginComponent implements OnInit {
   }
 
   validate(instance: string, user: string, msg: Response | any) {
-    // console.log(msg);
     if (msg.ok) {
-      console.log(instance, user, msg);
+      console.log(instance, user, msg.json());
       this.currentUser = user;
       this.currentInstance = instance;
       this.userChanged.next(true);

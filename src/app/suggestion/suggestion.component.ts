@@ -141,11 +141,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     resourceFromEntry(entry): ProvenResource {
-        console.log('resourceFromEntry', entry)
-
-        // When the production backend is used, entry does not have ocr data yet
-        // but when the development backend is used, entry does indeed have ocr data field
-        console.log('ENTRY REFERENCES', entry.references);
         const ocr = entry.ocrData;
         const br: ProvenResource = {
           title: ocr.title || entry.bibliographicEntryText,
@@ -153,14 +148,14 @@ export class SuggestionComponent implements OnInit, OnChanges {
           contributors: this.authors2contributors(ocr.authors),
           embodiedAs: [],
           parts: [],
-          partOf: ocr.journal, // these two properties are new in ocr data
-          number: ocr.volume, // hope they work
+          partOf: null, // these two properties are new in ocr data
+          containerTitle: ocr.journal || '',
+          number: ocr.volume || '', // hope they work
           status: ToDoStates.ext,
           provenance: Provenance.local
         }
         return br;
     }
-  // END
 
     plusPressed() {
         const newResource: ProvenResource = this.resourceFromEntry(this.entry);
