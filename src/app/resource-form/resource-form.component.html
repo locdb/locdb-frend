@@ -22,7 +22,8 @@
         </tr>
         <tr *ngFor="let ident of resource.identifiers">
           <td> <label>{{ident.scheme}}</label> </td>
-          <td> {{ident.literalValue}} </td>
+          <td *ngIf="ident.scheme.startsWith('URL_')"><a [href]="ident.literalValue">{{ident.literalValue}}</a></td>
+          <td *ngIf="!ident.scheme.startsWith('URL_')"> {{ident.literalValue}} </td>
         </tr>
         <tr *ngIf="resource.edition">
           <td> <label>Edition</label> </td>
