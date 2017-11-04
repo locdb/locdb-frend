@@ -309,10 +309,6 @@ export class LocdbService {
     );
   }
 
-  instance(instance?: string) {
-    if (instance) { this.locdbUrl = instance } ;
-    return this;
-  }
 
   //
   addFeed(name: string, url: string): Observable<Feed> {
