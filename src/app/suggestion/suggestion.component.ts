@@ -48,6 +48,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
     internalThreshold = 1.0;
     externalThreshold = 0.5;
 
+
+
     constructor(private locdbService: LocdbService) { }
 
     ngOnInit() {
@@ -93,23 +95,25 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     fetchInternalSuggestions(): void {
-      this.internalInProgress = true;
+      const oldEntry = this.entry;
+      this.internalInProgress = true; // loading icon
       this.internalSuggestions = [];
       console.log('Fetching internal suggestions for', this.query, 'with threshold', this.internalThreshold);
       // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
       this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold.toString()).subscribe(
-        (sug) => this.saveInternal(sug),
+        (sug) => { Object.is(this.entry, oldEntry) ? this.saveInternal(sug) : console.log('discarded suggestions') },
         (err) => { this.internalInProgress = false }
       );
     }
 
     fetchExternalSuggestions(): void {
-      this.externalInProgress = true;
+      const oldEntry = this.entry;
+      this.externalInProgress = true; // loading icon
       this.externalSuggestions = [];
       console.log('Fetching external suggestions for', this.query, 'with threshold', this.externalThreshold);
       // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
       this.locdbService.suggestionsByQuery(this.query, true, this.externalThreshold.toString()).subscribe(
-        (sug) => this.saveExternal(sug),
+        (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions') },
         (err) => { this.externalInProgress = false }
       );
     }
@@ -176,10 +180,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     saveInternal(sgt) {
-        // if (sgt.length == 0) {
-        //   this.internalSuggestions = MOCK_INTERNAL;
-        // }
-        // else {
         this.internalSuggestions = sgt
         if (this.internalSuggestions && this.internalSuggestions.length <= this.max_shown_suggestions) {
           this.max_in = -1;
