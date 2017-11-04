@@ -2,17 +2,7 @@
   <div class="panel-heading">
         <h4><b>{{title}}</b></h4>
   </div>
-  <!-- <div class="panel panel-default" *ngIf="files" >
-      <div class="panel-body">
-        <img [src]="src" [hidden]="!src" style="width: 100%;" alt="Specify file to inspect ...">
-      </div>
-    </div>
-    <div align="right" [hidden]="!src">
-      <button type="button" class="btn btn-default" (click)="next(-1)">Zurück</button>
-      <button type="button" class="btn btn-default" (click)="next(1)">Weiter</button>
-    </div> -->
   <div id="flup" class="panel-body">
-    <div *ngIf="listoffiles[0]" class="panel panel-default">
       <div class="list-group">
         <div *ngFor="let toDoScansWithMeta of listoffiles">
           <a href="#flup" class="list-group-item list-group-item-action" [class.list-group-item-danger]="toDoScansWithMeta.err" [class.list-group-item-info]="!toDoScansWithMeta.err" (click)="onSelectFile(toDoScansWithMeta); false">
@@ -54,7 +44,7 @@
                       </select>
                     </td>
                   </tr>
-                  <tr *ngIf="toDoScansWithMeta.file.name.toLowerCase().endsWith('.pdf')">
+                  <tr *ngIf="toDoScansWithMeta.file && toDoScansWithMeta.file.name.toLowerCase().endsWith('.pdf')">
                     <td><label for="istextual">Is textual PDF?</label></td>
                     <td>
                       <input type="checkbox" name="istextual" [(ngModel)]="textualPdf" style="width: 100%;" class="form-control input-sm pull-right">
@@ -62,21 +52,18 @@
                   </tr>
                 </tbody>
               </table>
-
             </form>
-
           </div>
-
-
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-warning" (click)="onclickclear()" [disabled]="uploading || !listoffiles[0]">Clear</button> &nbsp;
-    <label class="btn btn-default">
-      Browse Files <input type="file" multiple (change)= "onChange($event)" hidden style="display: none !important;">
-    </label> &nbsp;
-    <button type="button" class="btn btn-default" (click)="addId()"> Add Electronic Resource
-    </button> &nbsp;
-    <button type="button" class="btn btn-primary" (click)="onclickupload()" [disabled]="uploading || !listoffiles[0]">Upload</button>
-  </div>
+    <div class="panel-footer">
+      <button type="button" class="btn btn-warning" (click)="onclickclear()" [disabled]="uploading || !listoffiles[0]">Clear</button> &nbsp;
+      <label class="btn btn-default">
+        Browse Files <input type="file" multiple (change)= "onChange($event)" hidden style="display: none !important;">
+      </label> &nbsp;
+      <button type="button" class="btn btn-default" (click)="addId()"> Add Electronic Resource
+      </button> &nbsp;
+      <button type="button" class="btn btn-primary" (click)="onclickupload()" [disabled]="uploading || !listoffiles[0]">Upload</button>
+    </div>
 </div>

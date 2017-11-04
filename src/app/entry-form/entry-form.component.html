@@ -3,19 +3,19 @@
     <div *ngIf="submitted">
       <table class="table table-striped">
         <tbody>
-          <tr>
+          <tr *ngIf="entry.bibliographicEntryText">
             <td> <label>Text</label> </td>
             <td> {{entry.bibliographicEntryText}} </td>
           </tr>
-          <tr>
+          <tr *ngIf="entry.references">
             <td> <label>References</label> </td>
             <td> {{entry.references}} </td>
           </tr>
-          <tr>
+          <tr *ngIf="entry.ocrData.title">
             <td> <label>Title</label> </td>
             <td> {{entry.ocrData.title}} </td>
           </tr>
-          <tr>
+          <tr *ngIf="entry.ocrData.date">
             <td> <label>Date</label> </td>
             <td> {{entry.ocrData.date}} </td>
           </tr>
@@ -28,18 +28,19 @@
             <td> {{ident.literalValue}} </td>
           </tr>
           <tr>
+          <tr *ngIf="entry.ocrData.marker">
             <td> <label>Marker</label> </td>
             <td> {{entry.ocrData.marker}} </td>
           </tr>
-          <tr>
+          <tr *ngIf="entry.ocrData.comments">
             <td> <label>Comments</label> </td>
             <td> {{entry.ocrData.comments}} </td>
           </tr>
-          <tr>
+          <tr *ngIf="entry.ocrData.journal">
             <td> <label>Journal</label> </td>
             <td> {{entry.ocrData.journal}} </td>
           </tr>
-          <tr>
+          <tr *ngIf="entry.ocrData.volume">
             <td> <label>Volume</label> </td>
             <td> {{entry.ocrData.volume}} </td>
           </tr>

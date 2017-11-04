@@ -44,10 +44,6 @@ export class ScanComponent {
 
   constructor ( private locdbService: LocdbService ) { }
 
-  toggle() {
-    this.isActive = !this.isActive;
-  }
-
   togglefile() {
     this.fileIsActive = !this.fileIsActive;
   }
@@ -136,14 +132,18 @@ export class ScanComponent {
 
   onSelectFile(item: ToDoScansWithMeta) {
     if (this.fileIsActive) {
+      console.log('file was active');
+      // click on other list item
       this.saveentries();
-      this.fileIsActive = true;
+      this.fileIsActive = true; // this is a no-op..
     }
 
     if (item === this.active || !this.fileIsActive) {
+      console.log('closing details');
+      // close details
       this.togglefile();
     }
-
+    console.log('copying values');
     this.active = item;
 
     this._id = item._id;
@@ -322,7 +322,7 @@ export class ScanComponent {
         file: null,
         filecontent : null,
         allset: false,
-        resourceType: 'JOURNAL',
+        resourceType: 'JOURNAL', // electronic for now is always journal
         status: null,
         uploading: false
       }

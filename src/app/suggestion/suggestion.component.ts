@@ -285,11 +285,13 @@ export class SuggestionComponent implements OnInit, OnChanges {
   // }
 
   queryFromEntry(entry: BibliographicEntry): string {
-    const ocr = entry.ocrData;
-    const title = ocr.title || ''
-    const names = ocr.authors.join(' ');
-    const query = `${title} ${names} ${entry.bibliographicEntryText}`;
-    return query;
+    if (entry.ocrData.title) {
+      // if metadata is available, use it in favor of raw text
+      return `${entry.ocrData.title} ${entry.ocrData.authors.join(' ')}`
+    } else {
+      // authors typically included in entry text already
+      return `${entry.bibliographicEntryText}`
+    }
   }
 
 }
