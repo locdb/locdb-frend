@@ -152,6 +152,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
           containerTitle: ocr.journal || '',
           number: ocr.volume || '', // hope they work
           status: ToDoStates.ext,
+          identifiers: entry.identifiers,
           provenance: Provenance.local
         }
         return br;
