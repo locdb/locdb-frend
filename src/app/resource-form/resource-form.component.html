@@ -10,40 +10,40 @@
       <tbody>
         <tr *ngIf="resource.title">
           <td> <label>Title</label> </td>
-          <td> {{resource.title}} </td>
+          <td> <p>{{resource.title}}</p> </td>
         </tr>
         <tr *ngIf="resource.subtitle">
           <td> <label>Subtitle</label> </td>
-          <td> {{resource.subtitle}} </td>
+          <td> <p>{{resource.subtitle}}</p> </td>
         </tr>
         <tr *ngIf="resource.type">
           <td> <label>Type</label> </td>
-          <td> {{resource.type}} </td>
+          <td> <p>{{resource.type}}</p> </td>
         </tr>
         <tr *ngFor="let ident of resource.identifiers">
           <td> <label>{{ident.scheme}}</label> </td>
-          <td *ngIf="ident.scheme.startsWith('URL_')"><a [href]="ident.literalValue">{{ident.literalValue}}</a></td>
-          <td *ngIf="!ident.scheme.startsWith('URL_')"> {{ident.literalValue}} </td>
+          <td *ngIf="ident.scheme.startsWith('URL_') || ident.scheme === 'URI'"><a [href]="ident.literalValue"><p>{{ident.literalValue}}</p></a></td>
+          <td *ngIf="!(ident.scheme.startsWith('URL_') || ident.scheme == 'URI')"> <p>{{ident.literalValue}}</p> </td>
         </tr>
         <tr *ngIf="resource.edition">
           <td> <label>Edition</label> </td>
-          <td> {{resource.edition}} </td>
+          <td> <p>{{resource.edition}}</p> </td>
         </tr>
         <tr *ngIf="resource.containerTitle">
           <td> <label>Container Title</label> </td>
-          <td> {{resource.edition}} </td>
+          <td> <p>{{resource.edition}}</p> </td>
         </tr>
         <tr *ngIf="resource.number">
           <td> <label>Number</label> </td>
-          <td> {{resource.number}} </td>
+          <td> <p>{{resource.number}}</p> </td>
         </tr>
         <tr *ngFor="let contrib of resource.contributors">
           <td> <label>{{contrib.roleType}}</label> </td>
-          <td> {{contrib.heldBy.nameString}} </td>
+          <td> <p>{{contrib.heldBy.nameString}}</p> </td>
         </tr>
         <tr *ngIf="resource.publicationYear">
           <td> <label>Pub. year</label> </td>
-          <td> {{resource.publicationYear}} </td>
+          <td> <p>{{resource.publicationYear}}</p> </td>
         </tr>
         <!-- <tr *ngIf="resource.partOf"> -->
         <!--   <td> <label>Part of</label> </td> -->
