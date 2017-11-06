@@ -91,4 +91,14 @@ export class TodoListComponent implements OnInit, OnChanges {
     // heuristic :)
     return identifier.slice(0, 7);
   }
+
+  guard(t: ToDo) {
+    if (t.parts && t.parts.length) { return true; }
+    if (t.scans && t.scans.length) { return true; }
+    if (t.children) {
+      // any children satisfies condition above?
+      return !t.children.every((child) => !this.guard(child));
+    }
+    return false;
+  }
 }
