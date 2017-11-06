@@ -5,12 +5,12 @@
   <div id="flup" class="panel-body">
       <div class="list-group">
         <div *ngFor="let toDoScansWithMeta of listoffiles">
-          <a href="#flup" class="list-group-item list-group-item-action" [class.list-group-item-danger]="toDoScansWithMeta.err" [class.list-group-item-info]="!toDoScansWithMeta.err" (click)="onSelectFile(toDoScansWithMeta); false">
+          <a href="#flup" class="list-group-item list-group-item-action" [class.list-group-item-danger]="toDoScansWithMeta.err" [class.list-group-item-info]="!toDoScansWithMeta.err" (click)="onSelectFile(toDoScansWithMeta); $event.preventDefault(); $event.stopPropagation()">
             <h5 class="list-group-item-heading"><b>{{getName(toDoScansWithMeta)}}</b></h5> <!--getname method filter nullfileobjects and return name-->
             <p class="list-group-item-text">{{getMetadata(toDoScansWithMeta)}}
               <span class="badge" *ngIf="toDoScansWithMeta.allset">Ready</span>
               <span class="badge" *ngIf="!toDoScansWithMeta.allset">Enter information</span>
-              <button type="button" class="close pull-right" (click)="removeItemFromList(toDoScansWithMeta, 'button'); $event.stopPropagation()" aria-label="Close">
+              <button type="button" class="close pull-right" (click)="removeItemFromList(toDoScansWithMeta, 'button'); $event.preventDefault(); $event.stopPropagation()" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </p>
