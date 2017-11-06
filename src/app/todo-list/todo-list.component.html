@@ -10,13 +10,13 @@
     <div *ngFor="let t of todos">
       <app-resource-form [resource]="t"></app-resource-form>
       <div class="list-group">
-        <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="t.parts && t.parts.length" (click)="onSelectExternal(t); false">
+        <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="t.parts && t.parts.length" (click)="onSelectExternal(t); $event.stopPropagation(); $event.preventDefault()">
             <div class="text-center">
               <em>References</em>
             </div>
         </a>
-        <a href='#' class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans; let i = index" (click)="onSelectScan(s); false">
-          <button type="button" class="close pull-right" (click)="deleteScan(i, t); $event.stopPropagation()" aria-label="Close">
+        <a href='#' class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans; let i = index" (click)="onSelectScan(s); $event.stopPropagation(); $event.preventDefault()">
+          <button type="button" class="close pull-right" (click)="deleteScan(i, t); $event.preventDefault(); $event.stopPropagation()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           Scan {{ trimHash(s._id) }}
@@ -25,14 +25,14 @@
         <div *ngFor="let c of t.children" style="margin-left: 1em;">
           <app-resource-form [resource]="c"></app-resource-form>
           <!-- scans attached to children of resource -->
-          <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="c.parts && c.parts.length" (click)="onSelectExternal(c); false">
+          <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="c.parts && c.parts.length" (click)="onSelectExternal(c); $event.stopPropagation(); $event.preventDefault()">
             <div class="text-center">
               <em>References</em>
             </div>
           </a>
           <div *ngFor="let s of c.scans; let i = index">
-            <a href="" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectScan(s); false">
-              <button type="button" class="close pull-right" (click)="deleteScan(i, c); $event.stopPropagation()" aria-label="Close">
+            <a href="#" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectScan(s); false">
+              <button type="button" class="close pull-right" (click)="deleteScan(i, c); $event.preventDefault(); $event.stopPropagation()" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
               Scan {{ trimHash(s._id) }} on pp. {{s.firstPage}}-{{s.lastPage}}
