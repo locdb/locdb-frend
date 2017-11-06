@@ -1,7 +1,7 @@
 <div *ngIf="entry">
   <accordion-group [heading]=short() [isOpen]="active" [panelClass]="active ? 'panel-primary' : entry.references ? 'panel-success' : 'panel-danger'">
     <div *ngIf="submitted">
-      <table class="table table-striped">
+      <table class="table table-striped" style="table-layout:fixed;">
         <tbody>
           <tr *ngIf="entry.bibliographicEntryText">
             <td> <label>Text</label> </td>
