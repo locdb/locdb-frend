@@ -190,11 +190,14 @@
       </div>
       <div class="row justify-content-between">
         <div class="col-xs-6 text-left">
+          <button type="button" class="btn btn-warning" (click)="cancel()" [disabled]="submitting">
+            <span class="glyphicon" aria-hidden="true"></span> Cancel
+          </button>
           <button type="button" class="btn btn-warning" (click)="revert()" [disabled]="submitting">
-            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset
+            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset Form
           </button>
           <button type="button" class="btn btn-danger" (click)="deleteResource()" [disabled]="submitting">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete Resource
           </button>
         </div>
         <div class="col-xs-6 text-right">
