@@ -143,8 +143,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         // new clean set contribs
         this.setContributors(this.resource.contributors);
         this.setIdentifiers(this.resource.identifiers);
-        this.submitted = true;
-        this.submitting = false;
     }
 
     onSubmit() {
@@ -177,6 +175,11 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     revert() {
         this.ngOnChanges()
+    }
+
+
+    cancel() {
+        this.submitted = true; // effectively closes the form
     }
 
     reconstructAgentRole(name: string, role: string): AgentRole {
