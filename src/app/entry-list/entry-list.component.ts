@@ -22,6 +22,9 @@ export class EntryListComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
+    if (!this.entries) { return; }
+    this.selectedEntry = this.entries.find(e => !e.references);
+    this.entry.next(this.selectedEntry);
   }
 
   addEntry() {

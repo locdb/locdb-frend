@@ -75,6 +75,9 @@ export class DisplayComponent implements OnInit, OnChanges {
             this.rects = this.entries.filter(
                 e => this.validateCoordinates(e.ocrData.coordinates)
             ).map(this.rectFromEntry);
+            const firstUnprocessed = this.rects.find(r => !r.entry.references);
+            this.selectedEntry = firstUnprocessed.entry;
+            this.entry.next(this.selectedEntry);
         }
     }
 

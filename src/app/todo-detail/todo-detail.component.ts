@@ -27,6 +27,7 @@ export class TodoDetailComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges | any) {
     // fetch entries for todo item (cold observable, call in template with async)
     if (this.todo.hasOwnProperty('parts')) {
+      // this could be problematic TODO FIXME if parts and scans are present
       // were dealing with a resource, not a scan
       console.log('viewing details for external todo item');
       this.scanAvailable = false;
