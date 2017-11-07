@@ -19,7 +19,7 @@ More specific, two views are provided:
 
 ## Deployment on remote web server
 
-1. Run `ng build --base-href=<base-url>/PATH/TO/SITE/` to deploy files into dist
+1. Run `ng build --deploy-url=<base-url>/PATH/TO/SITE/` to deploy files into dist
 1. **with care**: Copy the files to the remote web server `scp dist/* <base-url>:/PATH/TO/SITE/`
 
 ## Development setup
