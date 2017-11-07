@@ -15,9 +15,19 @@ import { HttpModule } from '@angular/http';
 // import { ImageUploadModule } from 'ng2-imageupload';
 // exported to uploader
 
+
 // ng2-bootstrap
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { CitationFormComponent } from './citation-form.component';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+
+// misc
+import { PopoverModule } from 'ngx-popover';
+import { CredentialsService } from 'angular-with-credentials';
+
+
+// own
 import { ScanComponent } from './scan.component';
 import { TodoComponent } from './todo.component';
 import { DisplayComponent } from './display/display.component';
@@ -25,14 +35,14 @@ import { EntryFormComponent } from './entry-form/entry-form.component';
 import { LocdbService } from './locdb.service';
 import { SuggestionComponent } from './suggestion/suggestion.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
-import { VisualComponent } from './visual/visual.component';
 import { LoginComponent } from './login/login.component';
-import { CommitComponent} from './commit/commit.component';
-import { FeedReaderComponent, FeedComponent } from './feed-reader/feed-reader.component';
-import { PopoverModule } from 'ngx-popover';
-import { AccordionModule } from 'ngx-bootstrap/accordion';
-
-import { CredentialsService } from 'angular-with-credentials';
+import { VisualComponent } from './visual/visual.component';
+import { CommitComponent } from './commit/commit.component';
+import { FeedReaderComponent } from './feed-reader/feed-reader.component';
+import { EntryListComponent } from './entry-list/entry-list.component';
+import { TodoDetailComponent } from './todo-detail/todo-detail.component';
+import { TodoListComponent } from './todo-list/todo-list.component';
+import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
 
 ////////  SPECS  /////////////
 
@@ -51,22 +61,26 @@ describe('AppComponent with TCB', function () {
         providers: [ LocdbService, CredentialsService ],
         declarations: [
           AppComponent,
-          CitationFormComponent,
-          DisplayComponent,
-          TodoComponent,
-          SuggestionComponent,
-          EntryFormComponent,
           ScanComponent,
+          TodoComponent,
+          DisplayComponent,
+          EntryFormComponent,
+          SuggestionComponent,
           ResourceFormComponent,
-          VisualComponent,
           LoginComponent,
+          VisualComponent,
           CommitComponent,
           FeedReaderComponent,
-          FeedComponent
+          EntryListComponent,
+          TodoDetailComponent,
+          TodoListComponent,
+          TodoLeafComponent,
         ],
         imports: [
-          ModalModule.forRoot(),
           AccordionModule.forRoot(),
+          BsDropdownModule.forRoot(),
+          ModalModule.forRoot(),
+          CollapseModule.forRoot(),
           BrowserModule,
           FormsModule,
           HttpModule,

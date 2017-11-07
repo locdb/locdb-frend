@@ -5,15 +5,23 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 
-// import { ImageUploadModule } from 'ng2-imageupload';
-// exported to uploader
-
-// ng2-bootstrap
-import { ModalModule } from 'ngx-bootstrap/modal';
-// ng2-fileupload
-// import { FileSelectDirective } from 'ng2-file-upload';
 
 import { AppComponent } from './app.component';
+
+// d3
+import * as d3 from 'd3';
+
+// ngx-bootstrap
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+
+// misc
+import { CredentialsService } from 'angular-with-credentials';
+import { PopoverModule } from 'ngx-popover';
+
+// own
 import { ScanComponent } from './scan.component';
 import { TodoComponent } from './todo.component';
 import { DisplayComponent } from './display/display.component';
@@ -21,17 +29,6 @@ import { EntryFormComponent } from './entry-form/entry-form.component';
 import { LocdbService } from './locdb.service';
 import { SuggestionComponent } from './suggestion/suggestion.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
-
-
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { CollapseModule } from 'ngx-bootstrap/collapse';
-import { AccordionModule } from 'ngx-bootstrap/accordion';
-import { PopoverModule } from 'ngx-popover';
-
-import { CredentialsService } from 'angular-with-credentials';
-
-
-import * as d3 from 'd3';
 import { LoginComponent } from './login/login.component';
 import { VisualComponent } from './visual/visual.component';
 import { CommitComponent } from './commit/commit.component';
@@ -69,7 +66,6 @@ import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
     TodoDetailComponent,
     TodoListComponent,
     TodoLeafComponent,
-    // LocdbService
   ],
   providers: [ LocdbService, CredentialsService ],
   bootstrap: [ AppComponent ],
