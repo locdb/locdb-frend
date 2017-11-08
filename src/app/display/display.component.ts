@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ViewChildren, ViewChild} from '@angular/core';
+import { Component, OnInit, OnDestroy, OnChanges, Input, Output, EventEmitter, ViewChildren, ViewChild} from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 
 import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, BibliographicResource } from '../locdb';
@@ -27,7 +27,7 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 //     rect: rect;
 // }
 
-export class DisplayComponent implements OnInit, OnChanges {
+export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     private zoomSVG: any;
     @ViewChild('zoomSVG') set content(content: any) {
         this.zoomSVG = content;
@@ -57,14 +57,14 @@ export class DisplayComponent implements OnInit, OnChanges {
             current = current >= this.rects.length ? this.rects.length - 1 : current + 1;
             this.onSelect(this.rects[current]);
             return false;
-        }));
+        }, [], 'one rectangle upward'));
         this._hotkeysService.add(new Hotkey('k', (event: KeyboardEvent): boolean => {
             let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
             if (current === -1) { return false }; // not in array
             current = current <= 0 ? 0 : current - 1;
             this.onSelect(this.rects[current]);
             return false;
-        }));
+        }, [], 'one rectangle downward'));
 
 
     }
@@ -165,6 +165,13 @@ export class DisplayComponent implements OnInit, OnChanges {
             console.log('Image size = 0', realDim);
         }
         this.initSVGZoom();
+    }
+
+    ngOnDestroy() {
+        for (const combo of ['j', 'k']) {
+            const hk = this._hotkeysService.get(combo)
+            this._hotkeysService.remove(hk);
+        }
     }
 }
 

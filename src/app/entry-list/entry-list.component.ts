@@ -1,4 +1,13 @@
-import { Component, SimpleChanges, OnInit, OnChanges, Input, EventEmitter, Output } from '@angular/core';
+import {
+  OnDestroy,
+  Component,
+  SimpleChanges,
+  OnInit,
+  OnChanges,
+  Input,
+  EventEmitter,
+  Output
+} from '@angular/core';
 import { BibliographicEntry } from '../locdb'
 import { Observable } from 'rxjs/Rx';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
@@ -9,7 +18,7 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
   styleUrls: ['../locdb.css', './entry-list.component.css']
 })
 
-export class EntryListComponent implements OnInit, OnChanges {
+export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() entries: BibliographicEntry[];
   selectedEntry: BibliographicEntry;
@@ -25,14 +34,14 @@ export class EntryListComponent implements OnInit, OnChanges {
       current = current >= this.entries.length ? this.entries.length - 1 : current + 1;
       this.onSelect(this.entries[current]);
       return false;
-    }));
+    }, [], 'one entry downward'));
     this._hotkeysService.add(new Hotkey('k', (event: KeyboardEvent): boolean => {
       let current = this.entries.indexOf(this.selectedEntry);
       if (current === -1) { return false }; // not in array
       current = current <= 0 ? 0 : current - 1;
       this.onSelect(this.entries[current]);
       return false;
-    }));
+    }, [], 'one entry upward'));
 
   }
 
@@ -49,6 +58,14 @@ export class EntryListComponent implements OnInit, OnChanges {
       console.log('first unlinked entry emitted', this.selectedEntry)
     });
   }
+
+  ngOnDestroy() {
+    for (const combo of ['j', 'k']) {
+        const hk = this._hotkeysService.get(combo)
+        this._hotkeysService.remove(hk);
+    }
+  }
+
 
   addEntry() {
     const entry = new BibliographicEntry();
