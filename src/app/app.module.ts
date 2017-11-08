@@ -20,6 +20,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 // misc
 import { CredentialsService } from 'angular-with-credentials';
 import { PopoverModule } from 'ngx-popover';
+import {HotkeyModule} from 'angular2-hotkeys';
 
 // own
 import { ScanComponent } from './scan.component';
@@ -44,6 +45,7 @@ import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
     CollapseModule.forRoot(),
+    HotkeyModule.forRoot(),
     BrowserModule,
     FormsModule,
     HttpModule,

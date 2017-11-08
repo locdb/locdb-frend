@@ -25,6 +25,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 // misc
 import { PopoverModule } from 'ngx-popover';
 import { CredentialsService } from 'angular-with-credentials';
+import {HotkeyModule} from 'angular2-hotkeys';
 
 
 // own
@@ -81,6 +82,7 @@ describe('AppComponent with TCB', function () {
           BsDropdownModule.forRoot(),
           ModalModule.forRoot(),
           CollapseModule.forRoot(),
+          HotkeyModule.forRoot(),
           BrowserModule,
           FormsModule,
           HttpModule,

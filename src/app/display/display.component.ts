@@ -9,6 +9,7 @@ import * as d3 from 'd3';
 import { PopoverModule } from 'ngx-popover/index';
 
 import { Observable } from 'rxjs/Observable';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 // Display component consists of file upload, todo item selection and actual
 // display of the scan
@@ -34,8 +35,8 @@ export class DisplayComponent implements OnInit, OnChanges {
 
     // @Input() todo: ToDoScans;
 
-    @Input() img_src: string;
-    @Input() entries: BibliographicEntry[];
+    @Input() img_src = '';
+    @Input() entries: BibliographicEntry[] = [];
 
     selectedEntry: BibliographicEntry = null;
 
@@ -49,7 +50,24 @@ export class DisplayComponent implements OnInit, OnChanges {
 
     @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
 
-    constructor( private locdbService: LocdbService) { }
+    constructor( private locdbService: LocdbService, private _hotkeysService: HotkeysService) {
+        this._hotkeysService.add(new Hotkey('j', (event: KeyboardEvent): boolean => {
+            let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
+            if (current === -1) { return false }; // not in array
+            current = current >= this.rects.length ? this.rects.length - 1 : current + 1;
+            this.onSelect(this.rects[current]);
+            return false;
+        }));
+        this._hotkeysService.add(new Hotkey('k', (event: KeyboardEvent): boolean => {
+            let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
+            if (current === -1) { return false }; // not in array
+            current = current <= 0 ? 0 : current - 1;
+            this.onSelect(this.rects[current]);
+            return false;
+        }));
+
+
+    }
 
     initSVGZoom() {
         const zoom = d3.zoom().on('zoom', function () {
@@ -80,21 +98,6 @@ export class DisplayComponent implements OnInit, OnChanges {
             this.selectedEntry = firstUnprocessed.entry;
             this.entry.next(this.selectedEntry);
         }
-    }
-
-    // these should go over to entry-list.ts
-    newCustomEntry() {
-        // unused but should be used //
-        this.entry.next(new BibliographicEntry());
-    }
-
-    next(diff: number) {
-        // unused //
-        // we could make more use of it, when we check for status = -1
-        this.currentIndex = Math.abs((this.entries.length + this.currentIndex + diff) % this.entries.length);
-        const entry = this.entries[this.currentIndex];
-        console.log('Emission of entry at index ' + this.currentIndex, entry);
-        this.entry.next(entry);
     }
 
     ngOnInit() {

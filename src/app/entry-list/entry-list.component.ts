@@ -1,6 +1,7 @@
 import { Component, SimpleChanges, OnInit, OnChanges, Input, EventEmitter, Output } from '@angular/core';
 import { BibliographicEntry } from '../locdb'
 import { Observable } from 'rxjs/Rx';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 @Component({
   selector: 'app-entry-list',
@@ -17,7 +18,22 @@ export class EntryListComponent implements OnInit, OnChanges {
   @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter(true);
 
 
-  constructor() {
+  constructor(private _hotkeysService: HotkeysService) {
+    this._hotkeysService.add(new Hotkey('j', (event: KeyboardEvent): boolean => {
+      let current = this.entries.indexOf(this.selectedEntry);
+      if (current === -1) { return false }; // not in array
+      current = current >= this.entries.length ? this.entries.length - 1 : current + 1;
+      this.onSelect(this.entries[current]);
+      return false;
+    }));
+    this._hotkeysService.add(new Hotkey('k', (event: KeyboardEvent): boolean => {
+      let current = this.entries.indexOf(this.selectedEntry);
+      if (current === -1) { return false }; // not in array
+      current = current <= 0 ? 0 : current - 1;
+      this.onSelect(this.entries[current]);
+      return false;
+    }));
+
   }
 
   ngOnInit() {
@@ -26,7 +42,7 @@ export class EntryListComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges | any) {
     console.log('ngOnChanges in entry-list');
-    if (!this.entries || !this.entries.length) { return; }
+    if (!this.entries || !this.entries.length) { return; } // guard
     setTimeout(() => {
       this.selectedEntry = this.entries.find(e => !e.references);
       this.entry.emit(this.selectedEntry);
