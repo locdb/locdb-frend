@@ -5,40 +5,38 @@
   <div id="flup" class="panel-body">
       <div class="list-group">
         <div *ngFor="let toDoScansWithMeta of listoffiles">
-          <a href="#flup" class="list-group-item list-group-item-action" [class.list-group-item-danger]="toDoScansWithMeta.err" [class.list-group-item-info]="!toDoScansWithMeta.err" (click)="onSelectFile(toDoScansWithMeta); $event.preventDefault(); $event.stopPropagation()">
+          <a href="#flup" class="list-group-item list-group-item-action" [class.list-group-item-danger]="toDoScansWithMeta.err" [class.list-group-item-warning]="!toDoScansWithMeta.err && !toDoScansWithMeta.allset" [class.list-group-item-success]="!toDoScansWithMeta.err && toDoScansWithMeta.allset" (click)="onSelect(toDoScansWithMeta); $event.preventDefault(); $event.stopPropagation()">
             <h5 class="list-group-item-heading"><b>{{getName(toDoScansWithMeta)}}</b></h5> <!--getname method filter nullfileobjects and return name-->
+            <button type="button" class="close pull-right" (click)="removeItemFromList(toDoScansWithMeta); $event.preventDefault(); $event.stopPropagation()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
             <p class="list-group-item-text">{{getMetadata(toDoScansWithMeta)}}
-              <span class="badge" *ngIf="toDoScansWithMeta.allset">Ready</span>
-              <span class="badge" *ngIf="!toDoScansWithMeta.allset">Enter information</span>
-              <button type="button" class="close pull-right" (click)="removeItemFromList(toDoScansWithMeta, 'button'); $event.preventDefault(); $event.stopPropagation()" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
             </p>
 
           </a>
-          <div *ngIf="active == toDoScansWithMeta && fileIsActive">
+          <div *ngIf="toDoScansWithMeta === selected">
             <br/>
             <form>
               <table class="table table-striped">
                 <tbody>
                   <tr>
-                    <td><select name="idtype" [(ngModel)]="idtype">
+                    <td><select name="idtype" [(ngModel)]="toDoScansWithMeta.identifier.scheme">
                         <option value="ppn">PPN</option>
                         <option value="doi" [disabled]="resourceType !== 'JOURNAL' ">DOI</option>
                     </select></td>
-                    <td><input type="text" name="_id" [(ngModel)]="_id" style="width: 100%;"
+                    <td><input type="text" name="_id" [(ngModel)]="toDoScansWithMeta.identifier.literalValue" style="width: 100%;"
                       class="form-control input-sm pull-right"></td>
                   </tr>
-                  <tr *ngIf="resourceType === 'COLLECTION'">
-                    <td><label>Pages</label> from <input type="number" name="firstpage" [(ngModel)]="firstpage" style="width: 75%;"
+                  <tr *ngIf="toDoScansWithMeta.resourceType === 'COLLECTION'">
+                    <td><label>Pages</label> from <input type="number" name="firstpage" [(ngModel)]="toDoScansWithMeta.firstpage" style="width: 75%;"
                       class="form-control input-sm pull-right"></td>
-                    <td> to <input type="number" name="firstlastpage" [(ngModel)]="lastpage" style="width: 90%;"
+                    <td> to <input type="number" name="firstlastpage" [(ngModel)]="toDoScansWithMeta.lastpage" style="width: 90%;"
                       class="form-control input-sm pull-right"></td>
                   </tr>
                   <tr>
                     <td><label for="typeselect">Resource Type</label></td>
                     <td>
-                      <select [disabled]="!toDoScansWithMeta.file" name="typeselect" [(ngModel)]="resourceType" style="width: 100%;"
+                      <select [disabled]="!toDoScansWithMeta.file" name="typeselect" [(ngModel)]="toDoScansWithMeta.resourceType" style="width: 100%;"
                         class="form-control input-sm pull-right">
                         <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
                       </select>
@@ -47,7 +45,7 @@
                   <tr *ngIf="toDoScansWithMeta.file && toDoScansWithMeta.file.name.toLowerCase().endsWith('.pdf')">
                     <td><label for="istextual">Is textual PDF?</label></td>
                     <td>
-                      <input type="checkbox" name="istextual" [(ngModel)]="textualPdf" style="width: 100%;" class="form-control input-sm pull-right">
+                      <input type="checkbox" name="istextual" [(ngModel)]="toDoScansWithMeta.textualPdf" style="width: 100%;" class="form-control input-sm pull-right">
                     </td>
                   </tr>
                 </tbody>

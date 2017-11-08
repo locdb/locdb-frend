@@ -24,6 +24,10 @@ export class BibliographicResource {
 export class Identifier {
   literalValue: string;
   scheme: string;
+  constructor (scheme: string, literalValue: string ) {
+    this.literalValue = literalValue;
+    this.scheme = scheme;
+  }
 }
 
 export const ROLES = [

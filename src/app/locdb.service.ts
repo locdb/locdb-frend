@@ -8,11 +8,16 @@ import {Observable} from 'rxjs/Rx';
 // import 'rxjs/add/operator/catch';
 // import 'rxjs/add/operator/map';
 
-// types
-import { Citation } from './citation';
-
 // new types
-import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource, ProvenResource, Feed} from './locdb'
+import {
+  Identifier,
+  ToDo,
+  ToDoScans,
+  BibliographicEntry,
+  BibliographicResource,
+  ProvenResource,
+  Feed
+} from './locdb'
 
 import { synCites_ } from './locdb'
 
@@ -110,10 +115,9 @@ export class LocdbService {
     resourceType: string,
     textualPdf: boolean,
     file: File,
-    scan: any,
     firstPage?: string,
     lastPage?: string
-  ): Promise<any> {
+  ): Observable<ToDoScans> {
     // Take FileWithMetadata object instead
     const url = `${this.locdbUrl}/saveScan`;
     const formData: FormData = new FormData();
@@ -125,9 +129,7 @@ export class LocdbService {
     formData.append('textualPdf', textualPdf.toString());
     formData.append('scan', file);
     formData.append('resourceType', resourceType);
-    return this.http.post(url, formData).toPromise(); // , {headers: this.headers})
-    // .map(this.extractData)
-    // .catch(this.handleError);
+    return this.http.post(url, formData).map((s) => s.json() as ToDoScans).catch(this.handleError);
   }
 
   saveScanForElectronicJournal(
@@ -135,24 +137,22 @@ export class LocdbService {
     value: string,
     textualPdf: boolean,
     file: File
-  ): Promise<any> {
-    // SCAN IS UNUSED => NOT NECESSARY AFTER ALL TODO FIXME
-    // Take FileWithMetadata object instead
+  ): Observable<ToDoScans> {
     const url = `${this.locdbUrl}/saveScanForElectronicJournal`;
     const formData: FormData = new FormData();
     formData.append(scheme, value);
     formData.append('textualPdf', textualPdf.toString());
     formData.append('scan', file);
-    return this.http.post(url, formData).toPromise(); // , {headers: this.headers})
+    return this.http.post(url, formData).map((s) => s.json() as ToDoScans).catch(this.handleError);
     // .map(this.extractData)
     // .catch(this.handleError);
   }
 
 
-  saveElectronicJournal(scheme: string, identifier: string): Observable<any> {
+  saveElectronicJournal(identifier: Identifier): Observable<any> {
     const url = `${this.locdbUrl}/saveElectronicJournal`
     const params: URLSearchParams = new URLSearchParams();
-    params.set(scheme, identifier);
+    params.set(identifier.scheme, identifier.literalValue);
     return this.http.get(
       url,
       { search: params}
