@@ -66,8 +66,9 @@ export class DisplayComponent implements OnInit, OnChanges {
     }
 
 
-    ngOnChanges() {
+    ngOnChanges(changes: SimpleChanges | any) {
         // Input todo and this method should replace manual calling of updateDisplay
+        console.log('ngOnChanges in display');
         if (this.entries && this.entries.length) {
             // extract rectanlges and so on
             // this.extractRects(this.entries);

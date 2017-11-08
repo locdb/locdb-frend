@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, EventEmitter, Output } from '@angular/core';
+import { Component, SimpleChanges, OnInit, OnChanges, Input, EventEmitter, Output } from '@angular/core';
 import { BibliographicEntry } from '../locdb'
 import { Observable } from 'rxjs/Rx';
 
@@ -12,19 +12,26 @@ export class EntryListComponent implements OnInit, OnChanges {
 
   @Input() entries: BibliographicEntry[];
   selectedEntry: BibliographicEntry;
-  @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
+  // first argument : true makes event emitter async
+  // necessary to avoid ChangeDetection errors
+  @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter(true);
 
 
   constructor() {
   }
 
   ngOnInit() {
+    console.log('ngOnInit in entry-list');
   }
 
-  ngOnChanges() {
-    if (!this.entries) { return; }
-    this.selectedEntry = this.entries.find(e => !e.references);
-    this.entry.next(this.selectedEntry);
+  ngOnChanges(changes: SimpleChanges | any) {
+    console.log('ngOnChanges in entry-list');
+    if (!this.entries || !this.entries.length) { return; }
+    setTimeout(() => {
+      this.selectedEntry = this.entries.find(e => !e.references);
+      this.entry.emit(this.selectedEntry);
+      console.log('first unlinked entry emitted', this.selectedEntry)
+    });
   }
 
   addEntry() {
@@ -39,7 +46,7 @@ export class EntryListComponent implements OnInit, OnChanges {
   onSelect(entry: BibliographicEntry) {
     this.selectedEntry = entry;
     console.log('entry emitted', entry)
-    this.entry.next(entry)
+    this.entry.emit(entry)
   }
 
 }

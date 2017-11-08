@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
-import { ToDoScans, BibliographicEntry, BibliographicResource } from '../locdb';
+import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import {Observable} from 'rxjs/Rx';
 import { SimpleChanges } from '@angular/core';
@@ -11,9 +11,9 @@ import { SimpleChanges } from '@angular/core';
 })
 export class TodoDetailComponent implements OnInit, OnChanges {
   scanIsVisible = false;
-  @Input() todo: ToDoScans | BibliographicResource;
+  @Input() todo: ToDoScans | ToDo;
   entries: BibliographicEntry[] = [];
-  @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
+  @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter(true);
   @Output() goBack: EventEmitter<null> = new EventEmitter();
   loading = false;
   scanAvailable = true;
@@ -31,7 +31,7 @@ export class TodoDetailComponent implements OnInit, OnChanges {
       // were dealing with a resource, not a scan
       console.log('viewing details for external todo item');
       this.scanAvailable = false;
-      const todoResource = this.todo as BibliographicResource;
+      const todoResource = this.todo as ToDo;
       this.entries = todoResource.parts;
     } else {
       console.log('viewing details for internal todo item');
@@ -62,7 +62,7 @@ export class TodoDetailComponent implements OnInit, OnChanges {
   }
 
   forwardEntry(entry: BibliographicEntry) {
-    this.entry.next(entry);
+    this.entry.emit(entry);
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter} from '@angular/core';
 
 import { BibliographicEntry, BibliographicResource, AgentRole, ResponsibleAgent, ProvenResource } from '../locdb';
 import { LocdbService } from '../locdb.service';
@@ -28,7 +28,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     // make this visible to template
     environment = environment;
 
-    selectedResource: BibliographicResource;
+    selectedResource: ProvenResource;
     query: string;
 
     internalSuggestions: ProvenResource[];
@@ -53,17 +53,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
     constructor(private locdbService: LocdbService) { }
 
     ngOnInit() {
-        const br: BibliographicResource = {
-            //  _id: entry.references,
-            title: 'title',
-            publicationYear: '123',
-                contributors: [],
-                embodiedAs: [],
-                parts: [],
-        }
     }
 
-    ngOnChanges() {
+    ngOnChanges(changes: SimpleChanges | any) {
         if (this.entry) {
           this.query = this.queryFromEntry(this.entry);
           this.refresh();
@@ -75,13 +67,13 @@ export class SuggestionComponent implements OnInit, OnChanges {
               (res) => {
                 const br = new ProvenResource(res);
                 this.currentTarget = br;
-                this.selectedResource = br
+                this.onSelect(br);
               },
               (err) => { console.log('Invalid entry.references pointer', this.entry.references) });
           } else {
             // entry was not linked yet
             this.currentTarget = null;
-            this.selectedResource = this.newResource;
+            this.onSelect(this.newResource);
           }
         } else {
           this.query = '';
@@ -158,21 +150,11 @@ export class SuggestionComponent implements OnInit, OnChanges {
         return br;
     }
 
-    plusPressed() {
-        const newResource: ProvenResource = this.resourceFromEntry(this.entry);
-        this.newResource = newResource;
-        this.selectedResource = newResource;
-        // wait until commit
-        // this.locdbService.pushBibligraphicResource(newResource).subscribe(
-        //   (br) => { this.internalSuggestions.unshift(br); this.selectedResource = br }
-        // );
-    }
-
     onSelect(br?: ProvenResource): void {
         console.log('Suggestion emitted', br);
         this.selectedResource = br;
         this.committed = false;
-        this.suggest.next(br);
+        this.suggest.emit(br);
     }
 
     saveInternal(sgt) {
@@ -201,31 +183,25 @@ export class SuggestionComponent implements OnInit, OnChanges {
     commit() {
       // This the actual linking of entry to resource
       // we could also check for _id
-      if (this.selectedResource.status === ToDoStates.ext) {
+      const pinnedResource = this.selectedResource;
+      const pinnedEntry = this.entry;
+      if (pinnedResource.status === ToDoStates.ext) {
         // selectedResource is either external or NEW
-        this.selectedResource.status = ToDoStates.valid;
-        this.locdbService.pushBibligraphicResource(this.selectedResource).subscribe(
+        pinnedResource.status = ToDoStates.valid;
+        this.locdbService.pushBibligraphicResource(pinnedResource).subscribe(
           (response) => {
-            // this.entry.references = response._id;
-            // this.locdbService.putBibliographicEntry(this.entry).subscribe(
-            //   (second_response) => {
-            //     // push succeeded now commit link
-            //     console.log('Submitted Entry pointing to former external BR', response);
-            //     this.committed = true;
-            //   }
-            // );
-            // POST resource succeeded
-            // remain in consitent state even if linking failed
-            this.currentTarget = new ProvenResource(response); // update view
-            this.selectedResource = this.currentTarget;
             // addTarget
             this.locdbService.addTargetBibliographicResource(this.entry, response).subscribe(
               (success) => {
                 // addTarget succeeded
                 // Update the view
-                this.entry.status = 'VALID';
+                pinnedEntry.status = 'VALID';
                 console.log('Setting entry references to', response._id);
-                this.entry.references = response._id;
+                pinnedEntry.references = response._id;
+                if (Object.is(this.entry, pinnedEntry)) { // guarding entry changes
+                  this.currentTarget = new ProvenResource(response); // update view
+                  this.onSelect(this.currentTarget);
+                }
               },
               // addTarget failed
               (error) => console.log('Could not add target', this.entry, response)
@@ -233,27 +209,26 @@ export class SuggestionComponent implements OnInit, OnChanges {
           },
           (error) => {
             // push failed, so reset state
-            this.selectedResource.status = ToDoStates.ext;
+            pinnedResource.status = ToDoStates.ext;
             console.log('Submitting external resource failed');
           }
         );
       } else { // Resource was an internal suggestion
-        // this.entry.references = this.selectedResource._id;
-        // this.locdbService.putBibliographicEntry(this.entry).subscribe( (result) => {
-        //   this.committed = true;
-        //   console.log('Submitted Entry with result', result)
-        // });
         this.locdbService.addTargetBibliographicResource(this.entry, this.selectedResource).subscribe(
           (success) => {
             // addTarget succeeded
             // update view
-            this.entry.status = 'VALID';
-            this.entry.references = this.selectedResource._id;
-            this.currentTarget = new ProvenResource(this.selectedResource);
+            pinnedEntry.status = 'VALID';
+            pinnedEntry.references = pinnedResource._id;
+            // are the surrounding statements ok if the selected Resource changes?
+            if (Object.is(this.entry, pinnedEntry)) { // guarding entry changes
+              this.currentTarget = pinnedResource; // update view
+              this.onSelect(this.currentTarget);
+            }
           },
           // addTarget failed
           (error) => console.log('Could not add target', this.entry, this.selectedResource)
-        )
+        );
       }
     }
 
