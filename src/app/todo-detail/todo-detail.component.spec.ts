@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TodoDetailComponent } from './todo-detail.component';
+import { EntryListComponent } from '../entry-list/entry-list.component';
+import { DisplayComponent } from '../display/display.component';
 
 describe('TodoDetailComponent', () => {
   let component: TodoDetailComponent;
