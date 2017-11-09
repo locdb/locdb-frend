@@ -51,22 +51,6 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
 
     constructor( private locdbService: LocdbService, private _hotkeysService: HotkeysService) {
-        this._hotkeysService.add(new Hotkey('j', (event: KeyboardEvent): boolean => {
-            let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
-            if (current === -1) { return false }; // not in array
-            current = current >= this.rects.length ? this.rects.length - 1 : current + 1;
-            this.onSelect(this.rects[current]);
-            return false;
-        }, [], 'one rectangle upward'));
-        this._hotkeysService.add(new Hotkey('k', (event: KeyboardEvent): boolean => {
-            let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
-            if (current === -1) { return false }; // not in array
-            current = current <= 0 ? 0 : current - 1;
-            this.onSelect(this.rects[current]);
-            return false;
-        }, [], 'one rectangle downward'));
-
-
     }
 
     initSVGZoom() {
@@ -101,6 +85,20 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
+        this._hotkeysService.add(new Hotkey('j', (event: KeyboardEvent): boolean => {
+            let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
+            if (current === -1) { return false }; // not in array
+            current = current >= this.rects.length ? this.rects.length - 1 : current + 1;
+            this.onSelect(this.rects[current]);
+            return false;
+        }, [], 'one rectangle upward'));
+        this._hotkeysService.add(new Hotkey('k', (event: KeyboardEvent): boolean => {
+            let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
+            if (current === -1) { return false }; // not in array
+            current = current <= 0 ? 0 : current - 1;
+            this.onSelect(this.rects[current]);
+            return false;
+        }, [], 'one rectangle downward'));
 
     }
 

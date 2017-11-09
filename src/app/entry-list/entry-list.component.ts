@@ -28,6 +28,9 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
 
 
   constructor(private _hotkeysService: HotkeysService) {
+  }
+
+  ngOnInit() {
     this._hotkeysService.add(new Hotkey('j', (event: KeyboardEvent): boolean => {
       let current = this.entries.indexOf(this.selectedEntry);
       if (current === -1) { return false }; // not in array
@@ -42,15 +45,9 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
       this.onSelect(this.entries[current]);
       return false;
     }, [], 'one entry upward'));
-
-  }
-
-  ngOnInit() {
-    console.log('ngOnInit in entry-list');
   }
 
   ngOnChanges(changes: SimpleChanges | any) {
-    console.log('ngOnChanges in entry-list');
     if (!this.entries || !this.entries.length) { return; } // guard
     setTimeout(() => {
       this.selectedEntry = this.entries.find(e => !e.references);
