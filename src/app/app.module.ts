@@ -33,7 +33,7 @@ import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { LoginComponent } from './login/login.component';
 import { VisualComponent } from './visual/visual.component';
 import { CommitComponent } from './commit/commit.component';
-import { FeedReaderComponent } from './feed-reader/feed-reader.component';
+import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
 import { EntryListComponent } from './entry-list/entry-list.component';
 import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 import { TodoListComponent } from './todo-list/todo-list.component';
@@ -64,6 +64,7 @@ import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
     VisualComponent,
     CommitComponent,
     FeedReaderComponent,
+    FeedComponent,
     EntryListComponent,
     TodoDetailComponent,
     TodoListComponent,
