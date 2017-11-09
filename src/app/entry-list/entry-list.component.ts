@@ -33,15 +33,16 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this._hotkeysService.add(new Hotkey('j', (event: KeyboardEvent): boolean => {
       let current = this.entries.indexOf(this.selectedEntry);
-      if (current === -1) { return false }; // not in array
-      current = current >= this.entries.length ? this.entries.length - 1 : current + 1;
+      if (current === -1 || current >= this.entries.length - 1) { return false }; // guard
+      console.log('current', current, 'of', this.entries.length);
+      current += 1;
       this.onSelect(this.entries[current]);
       return false;
     }, [], 'one entry downward'));
     this._hotkeysService.add(new Hotkey('k', (event: KeyboardEvent): boolean => {
       let current = this.entries.indexOf(this.selectedEntry);
-      if (current === -1) { return false }; // not in array
-      current = current <= 0 ? 0 : current - 1;
+      if (current === -1 || current <= 0) { return false };  // guard
+      current -= 1;
       this.onSelect(this.entries[current]);
       return false;
     }, [], 'one entry upward'));

@@ -87,15 +87,15 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     ngOnInit() {
         this._hotkeysService.add(new Hotkey('j', (event: KeyboardEvent): boolean => {
             let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
-            if (current === -1) { return false }; // not in array
-            current = current >= this.rects.length ? this.rects.length - 1 : current + 1;
+            if (current === -1 || current >= this.rects.length - 1) { return false }; // not in array or at bounds
+            current += 1
             this.onSelect(this.rects[current]);
             return false;
         }, [], 'one rectangle upward'));
         this._hotkeysService.add(new Hotkey('k', (event: KeyboardEvent): boolean => {
             let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
-            if (current === -1) { return false }; // not in array
-            current = current <= 0 ? 0 : current - 1;
+            if (current === -1 || current <= 0) { return false }; // not in array or at bounds
+            current -= 1
             this.onSelect(this.rects[current]);
             return false;
         }, [], 'one rectangle downward'));
