@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EntryListComponent } from './entry-list.component';
+import { EntryFormComponent } from '../entry-form/entry-form-compnent';
+import { HotkeyModule } from 'angular2-hotkeys';
 
 describe('EntryListComponent', () => {
   let component: EntryListComponent;
@@ -8,7 +10,8 @@ describe('EntryListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EntryListComponent ]
+      declarations: [ EntryListComponent, EntryFormComponent ],
+      imports: [ HotkeyModule ]
     })
     .compileComponents();
   }));
