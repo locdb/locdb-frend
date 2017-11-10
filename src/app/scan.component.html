@@ -22,12 +22,12 @@
                   <tr>
                     <td><select name="idtype" [(ngModel)]="toDoScansWithMeta.identifier.scheme">
                         <option value="ppn">PPN</option>
-                        <option value="doi" [disabled]="resourceType !== 'JOURNAL' ">DOI</option>
+                        <option value="doi" [disabled]="toDoScansWithMeta.resourceType !== ResourceType.journal ">DOI</option>
                     </select></td>
                     <td><input type="text" name="_id" [(ngModel)]="toDoScansWithMeta.identifier.literalValue" style="width: 100%;"
                       class="form-control input-sm pull-right"></td>
                   </tr>
-                  <tr *ngIf="toDoScansWithMeta.resourceType === 'COLLECTION'">
+                  <tr *ngIf="toDoScansWithMeta.resourceType === ResourceType.collection">
                     <td><label>Pages</label> from <input type="number" name="firstpage" [(ngModel)]="toDoScansWithMeta.firstpage" style="width: 75%;"
                       class="form-control input-sm pull-right"></td>
                     <td> to <input type="number" name="firstlastpage" [(ngModel)]="toDoScansWithMeta.lastpage" style="width: 90%;"

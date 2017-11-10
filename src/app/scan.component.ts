@@ -4,7 +4,7 @@ import { REFERENCES, REFERENCES_ALT } from './mock-references';
 
 import { LocdbService } from './locdb.service';
 
-import { RESOURCE_TYPES, ToDoScans, Identifier} from './locdb';
+import { ResourceType, ToDoScans, Identifier} from './locdb';
 
 const URL = '/api/'; // Same Origin Policy
 
@@ -17,21 +17,20 @@ const URL = '/api/'; // Same Origin Policy
 
 export class ScanComponent {
   title = 'File Upload';
-  event: any;
-  files: any;
-
 
   selected: ToDoScansWithMeta;
 
-  resourceTypes = RESOURCE_TYPES;
+  ResourceType = ResourceType;
+  resourceTypes: string[] = [ResourceType.monograph, ResourceType.collection, ResourceType.journal];
 
   uploading = false; // just for disabling the button
 
   listoffiles: ToDoScansWithMeta[] = [];
-  // unused?
 
 
-  constructor ( private locdbService: LocdbService ) { }
+  constructor ( private locdbService: LocdbService ) {
+    // necessary to display select options
+  }
 
   onclickupload() { // check if content is set
     // if (this.fileIsActive) {
@@ -58,34 +57,18 @@ export class ScanComponent {
 
   onclickclear() {
     // file lists
-    this.files = '';
     this.listoffiles = [];
-
-    // active files
-    // this.active = null;
-    // this.fileIsActive = false;
-    // this.isActive = false;
-    // this.activefile = 0;
-
-    // // current data
-    // this.identifier = null;
-    // this.firstpage = null;
-    // this.lastpage = null;
-    // this.resourceType = 'MONOGRAPH'; // needs to be value of select block
-    // this.textualPdf = null;
   }
 
   onChange(event: any) { // file input
-    this.files = '';
-    this.files = event.target.files; // this.uploader.queue;
-    let file: any;
-    for (file of this.files){
+    for (const file of event.target.files){
       const [_id, first, last] = this.extractidandPages(file.name);
-      let rtype = 'MONOGRAPH';
+      let rtype: ResourceType;
       if (first && last) {
-        rtype = 'COLLECTION';
+        rtype = ResourceType.collection;
         console.log('Assuming a collection')
       } else {
+        rtype = ResourceType.monograph;
         console.log('Assuming a monograph')
       }
       this.listoffiles.push(
@@ -105,7 +88,7 @@ export class ScanComponent {
 
   onSelect(item: ToDoScansWithMeta) {
     if (item === this.selected) {
-      this.selected = null;
+      this.selected = null; // closes the 'drop-down'
     }
     this.selected = item;
   }
@@ -150,20 +133,20 @@ export class ScanComponent {
   //   this.active.allset = this.isValid(this.identifier.literalValue, this.resourceType, this.firstpage, this.lastpage);
   // }
 
-  readURL(input, i) {
-    if (input.files && input.files[i]) {
-      const reader = new FileReader();
+  // readURL(input, i) {
+  //   if (input.files && input.files[i]) {
+  //     const reader = new FileReader();
 
-      reader.onload = (e) => {
-        console.log((<IDBOpenDBRequest>e.target).result);
-        // this.src = (<IDBOpenDBRequest>e.target).result;
-      }
+  //     reader.onload = (e) => {
+  //       console.log((<IDBOpenDBRequest>e.target).result);
+  //       // this.src = (<IDBOpenDBRequest>e.target).result;
+  //     }
 
-      reader.readAsDataURL(input.files[i]);
-    } else {
-      console.log('files out of bounds');
-    }
-  }
+  //     reader.readAsDataURL(input.files[i]);
+  //   } else {
+  //     console.log('files out of bounds');
+  //   }
+  // }
 
 
   writefilecontent(listelement: ToDoScansWithMeta) {
@@ -279,7 +262,7 @@ export class ScanComponent {
         firstpage: null,
         lastpage: null,
         file: null,
-        resourceType: 'JOURNAL', // electronic for now is always journal
+        resourceType: ResourceType.journal, // electronic for now is always journal
         uploading: false
       })
     );
@@ -323,7 +306,7 @@ class ToDoScansWithMeta {
   firstpage?: number;
   lastpage?: number;
   file?: File;
-  resourceType: string; // maybe requiered?
+  resourceType: ResourceType;
   uploading: boolean; // to determine button state
   err?: any;
   textualPdf?: boolean; // textual pdf flag. optional since not needed for electronic

@@ -92,6 +92,8 @@ export class TodoListComponent implements OnInit, OnChanges {
   }
 
   guard(t: ToDo) {
+    /* is there anything to display? */
+    if (!t) { return false; }
     if (t.parts && t.parts.length) { return true; }
     if (t.scans && t.scans.length) { return true; }
     if (t.children) {

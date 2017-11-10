@@ -207,6 +207,8 @@ export const RESOURCE_TYPES = [
   'JOURNAL',
 ]
 
+
+
 export enum EmbodimentType {
   digital = 'DIGITAL',
   print = 'PRINT'
