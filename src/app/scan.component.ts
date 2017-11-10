@@ -92,7 +92,8 @@ export class ScanComponent {
         new ToDoScansWithMeta(
           {
             identifier: { literalValue: _id, scheme: 'ppn' },
-            firstpage: first, lastpage: last,
+            firstpage: first,
+            lastpage: last,
             file: file,
             resourceType: rtype, status: null, uploading: false,
             textualPdf: false
@@ -110,9 +111,8 @@ export class ScanComponent {
   }
 
 
-  extractidandPages(name: any) {
+  extractidandPages(name: any): [string, number, number] {
     // do same magic
-    // let re = /(?:\.([^.]+))?$/;
     const re = /([0-9]{8}[0-9X])([-_.+]0*([1-9][0-9]+)([-_.+]0*([1-9][0-9]+))?)?/;
     console.log('extracting id and pages from filename');
     let _id = null, first = null, last = null;
@@ -121,10 +121,10 @@ export class ScanComponent {
       console.log(match)
       _id = match[1];
       // 2 ..
-      first = match[3];
+      first = Number(match[3]);
       // and 4 are grouped to make them optional
-      last = match[5];
-    } catch (err) { console.log('No id found in filename'); }
+      last = Number(match[5]);
+    } catch (err) { console.log(err); }
     // could pick last number of id as we did not remove it
     // const pages_re = /([1-9][0-9]+)[-_+]([1-9][0-9]+)/;
     if (first && !last) {
@@ -213,7 +213,7 @@ export class ScanComponent {
         (err) => this.processError(listelement, err)
       );
     } else if (listelement.resourceType === 'JOURNAL') {
-      // new (needs testing)
+      // Electronic journal.
       this.locdbService.saveScanForElectronicJournal (
         listelement.identifier.scheme,
         listelement.identifier.literalValue,
@@ -238,7 +238,6 @@ export class ScanComponent {
       );
     }
 
-    // rufe scan auf
   }
 
   successHandler(item, response, autotrigger: boolean) {
@@ -321,12 +320,10 @@ export class ScanComponent {
 
 
 class ToDoScansWithMeta {
-  // TODO FIXME the first four properties are redundant with ToDoScans
   identifier: Identifier;
   firstpage?: number;
   lastpage?: number;
   file?: File;
-  // TODO FIXME the filecontent might not be required, but needs testing (see above)
   resourceType: string; // maybe requiered?
   uploading: boolean; // to determine button state
   err?: any;
