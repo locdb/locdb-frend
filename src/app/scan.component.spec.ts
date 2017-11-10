@@ -38,12 +38,12 @@ describe('ScanComponent', () => {
   });
 
   it('should extract', () => {
-    expect(component.extractidandPages('123456789_10-12.pdf')).toBe(['123456789', '10', '12']);
+    expect(component.extractidandPages('123456789_10-12.pdf')).toBe(['123456789', 10, 12]);
     // difficult since delimiter between PPN and firstpage is the same as between pages itself
-    expect(component.extractidandPages('123456789-10-12.pdf')).toBe(['123456789', '10', '12']);
+    expect(component.extractidandPages('123456789-10-12.pdf')).toBe(['123456789', 10, 12]);
     // now single page filenames
-    expect(component.extractidandPages('123456789-10-10.pdf')).toBe(['123456789', '10', '10']);
-    expect(component.extractidandPages('123456789-10.pdf')).toBe(['123456789', '10', '10']);
+    expect(component.extractidandPages('123456789-10-10.pdf')).toBe(['123456789', 10, 10]);
+    expect(component.extractidandPages('123456789-10.pdf')).toBe(['123456789', 10, 10]);
   });
 
 });

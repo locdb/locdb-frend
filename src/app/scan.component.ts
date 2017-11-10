@@ -213,8 +213,8 @@ export class ScanComponent {
         listelement.resourceType,
         listelement.textualPdf,
         listelement.file,
-        listelement.firstpage.toString(),
-        listelement.lastpage.toString()
+        listelement.firstpage.toString(), // toString for transport
+        listelement.lastpage.toString() // toString for transport
       ).subscribe(
         (suc) => this.successHandler(listelement, suc, false),
         (err) => this.processError(listelement, err)
