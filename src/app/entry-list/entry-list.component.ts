@@ -75,6 +75,7 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onSelect(entry: BibliographicEntry) {
+    if (this.selectedEntry === entry) { return; } // guard
     this.selectedEntry = entry;
     console.log('entry emitted', entry)
     this.entry.emit(entry)

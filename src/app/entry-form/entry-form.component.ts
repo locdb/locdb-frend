@@ -118,7 +118,7 @@ export class EntryFormComponent implements OnChanges {
     if (entry._id) {
       this.locdbService.putBibliographicEntry(entry).subscribe(
         (result) => { this.entry = result; this.submitted = true; this.ngOnChanges()},
-        (error) => console.log('Error updating entry', entry)
+        (error) => console.log('Error updating entry', error)
       );
     } else {
       console.log('Post entry not implemented');
@@ -148,7 +148,7 @@ export class EntryFormComponent implements OnChanges {
     const authorsDeepCopy = formModel.authors.map( x => x);
     const identsDeepCopy = formModel.identifiers.map(
       (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
-    );
+    ).filter(i => i.scheme && i.literalValue); // sanity check
     const saveEntry: BibliographicEntry = {
       _id: this.entry._id,
       bibliographicEntryText: formModel.bibliographicEntryText as string || '',

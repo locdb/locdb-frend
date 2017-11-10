@@ -140,11 +140,11 @@ export class SuggestionComponent implements OnInit, OnChanges {
           contributors: this.authors2contributors(ocr.authors),
           embodiedAs: [],
           parts: [],
-          partOf: null, // these two properties are new in ocr data
+          // partOf: null, // these two properties are new in ocr data
           containerTitle: ocr.journal || '',
           number: ocr.volume || '', // hope they work
           status: ToDoStates.ext,
-          identifiers: entry.identifiers,
+          identifiers: entry.identifiers.filter(i => i.scheme && i.literalValue),
           provenance: Provenance.local
         }
         return br;
