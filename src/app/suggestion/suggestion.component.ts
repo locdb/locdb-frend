@@ -139,7 +139,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
           publicationYear: ocr.date || '', // unary + operator makes it a number
           contributors: this.authors2contributors(ocr.authors),
           embodiedAs: [],
-          parts: [],
+          // parts: [],
           // partOf: null, // these two properties are new in ocr data
           containerTitle: ocr.journal || '',
           number: ocr.volume || '', // hope they work

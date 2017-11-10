@@ -104,9 +104,9 @@ export class ScanComponent {
       console.log(match)
       _id = match[1];
       // 2 ..
-      first = Number(match[3]);
+      first = Number(match[3]) || null;
       // and 4 are grouped to make them optional
-      last = Number(match[5]);
+      last = Number(match[5]) || null;
     } catch (err) { console.log(err); }
     // could pick last number of id as we did not remove it
     // const pages_re = /([1-9][0-9]+)[-_+]([1-9][0-9]+)/;
