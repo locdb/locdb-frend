@@ -32,12 +32,11 @@ export class TodoListComponent implements OnInit, OnChanges {
   }
 
 
-  deleteScan(scanIndex: number, parent: ToDo | ToDoParts) {
-    const scan: ToDoScans = parent.scans[scanIndex]
+  deleteScan(scan: ToDoScans, parent: ToDo | ToDoParts) {
     console.log('Deleting scan', scan);
     this.locdbService.deleteScan(scan).subscribe(
       (success) => {
-        parent.scans.splice(scanIndex);
+        parent.scans.splice(parent.scans.indexOf(scan), 1);
         console.log('scan', scan, 'deleted');
       },
       (error) => {
