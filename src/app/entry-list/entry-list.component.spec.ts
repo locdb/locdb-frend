@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EntryListComponent } from './entry-list.component';
-import { EntryFormComponent } from '../entry-form/entry-form-compnent';
+import { EntryFormComponent } from '../entry-form/entry-form.component';
 import { HotkeyModule } from 'angular2-hotkeys';
 
 describe('EntryListComponent', () => {
