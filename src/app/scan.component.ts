@@ -95,7 +95,7 @@ export class ScanComponent {
             firstpage: first,
             lastpage: last,
             file: file,
-            resourceType: rtype, status: null, uploading: false,
+            resourceType: rtype, uploading: false,
             textualPdf: false
           }
         )
@@ -280,7 +280,6 @@ export class ScanComponent {
         lastpage: null,
         file: null,
         resourceType: 'JOURNAL', // electronic for now is always journal
-        status: null,
         uploading: false
       })
     );
@@ -327,7 +326,6 @@ class ToDoScansWithMeta {
   resourceType: string; // maybe requiered?
   uploading: boolean; // to determine button state
   err?: any;
-  status?: string; // for what do we need it again?
   textualPdf?: boolean; // textual pdf flag. optional since not needed for electronic
 
   constructor (other: Partial<ToDoScansWithMeta>) {
