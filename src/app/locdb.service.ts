@@ -144,8 +144,6 @@ export class LocdbService {
     formData.append('textualPdf', textualPdf.toString());
     formData.append('scan', file);
     return this.http.post(url, formData).map((s) => s.json() as ToDoScans).catch(this.handleError);
-    // .map(this.extractData)
-    // .catch(this.handleError);
   }
 
 
