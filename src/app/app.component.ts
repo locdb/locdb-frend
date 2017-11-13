@@ -18,12 +18,19 @@ export class AppComponent implements OnInit {
     todo: ToDoScans | ToDo = null;
     entry: BibliographicEntry = null;
     target: BibliographicResource = null;
+    feeds: any = null;
     environment = environment;
     constructor ( private locdbService: LocdbService ) {}
 
     ngOnInit() {
         // this.visualState = 0;
     }
+
+    updateFeeds(event){
+      console.log("updateFeeds: ", event);
+      this.feeds = event
+    }
+
 
     updateTodo(todo: ToDoScans | BibliographicResource) {
         // this.visualState = 0;
@@ -78,4 +85,3 @@ export class AppComponent implements OnInit {
     //     console.log('pathEditAndSubmit');
     // }
 }
-
