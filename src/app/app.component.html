@@ -9,13 +9,14 @@
 
 <section class="container-fluid">
   <div class="row">
-    <app-login></app-login>
+    <app-login (feeds)=updateFeeds($event)></app-login>
   </div>
   <div class='row' style='margin-top: 10px'>
     <div class='col-xs-12 col-sm-6 col-md-6'>
       <app-todo *ngIf="!todo" (todo)="updateTodo($event)"></app-todo>
       <app-todo-detail *ngIf="todo" [todo]="todo" (goBack)="updateTodo(null)" (entry)="updateEntry($event)"></app-todo-detail>
       <app-scan></app-scan>
+      <app-feed-reader [feeds]="feeds"></app-feed-reader>
     </div>
     <div *ngIf='entry' class="col-xs-12 col-sm-6 col-md-6">
       <!-- suggestion component INPUT: entry, OUTPUT: resource -->
