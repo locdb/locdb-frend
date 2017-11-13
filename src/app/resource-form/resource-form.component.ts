@@ -149,28 +149,14 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         // need to first store locally until saved
         this.submitting = true;
         const resourceCopy = this.prepareSaveResource();
-        // this.resource = this.prepareSaveResource();
-        if (this.resource.status !== 'EXTERNAL') {
-            console.log('Sending resource updates to backend!', this.resource);
-            // resource does not have an internal identifier
-            // only store in memory for now (until commit is called)
-            this.locdbService.putBibliographicResource(resourceCopy).subscribe(
-                (rval) => {
-                    this.resource = rval;
-                    console.log('Yay. submitted', rval)
-                    this.submitted = true; // effectively closes the form
-                    this.submitting = false;
-                },
-                (err) => {
-                    this.submitting = false;
-                    alert('Error submitting resource form, are you logged in?');
-                }
-            );
-        } else {
-            console.log('Saving external resource updates in the frontend');
-            this.resource = resourceCopy;
-        }
-        this.ngOnChanges(); // as suggested by https://angular.io/guide/reactive-forms
+        this.locdbService.maybePutResource(resourceCopy).then(
+            r =>  {
+                this.resource = r;
+                this.ngOnChanges();
+                this.submitting = false;
+                this.submitted = true
+            }
+        ).catch(err => this.submitting = false);
     }
 
     revert() {

@@ -180,6 +180,23 @@ export class SuggestionComponent implements OnInit, OnChanges {
         this.externalInProgress = false;
     }
 
+    async updateReferences(entry: BibliographicEntry, resource: BibliographicResource) {
+      const target = await this.locdbService.maybePostResource(resource);
+      if (entry.references) {
+        await this.locdbService.removeTargetBibliographicResource(entry);
+        entry.status = 'OCR_PROCESSED'; // back-end does it... TODO FIXME
+      }
+      return this.locdbService.addTargetBibliographicResource(entry, target)
+        .subscribe(
+          (success) => {
+          entry.status = 'VALID';
+          entry.references = target._id;
+          },
+          (error) =>  console.log('error adding', target, 'to', entry )
+        );
+      // TODO integrate this in commit method below
+    }
+
     commit() {
       // This the actual linking of entry to resource
       // we could also check for _id

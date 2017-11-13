@@ -236,10 +236,51 @@ export class LocdbService {
     return this.http.get(url, { search: params}).map(this.extractData).catch(this.handleError);
   }
 
+  removeTargetBibliographicResource(entry): Promise<any> {
+    const url = `${this.locdbUrl}/removeTargetBibliographicResource`;
+    const params: URLSearchParams = new URLSearchParams();
+    params.set('bibliographicEntryId', entry._id);
+    return this.http.get(url, { search: params}).map(this.extractData).catch(this.handleError).toPromise();
+  }
+
   bibliographicResource(identifier: string): Observable<BibliographicResource> {
     const url = `${this.locdbUrl}/bibliographicResources/${identifier}`;
     return this.http.get(url).map(this.extractData).catch(this.handleError);
   }
+
+
+
+  maybePutResource(resource: BibliographicResource): Promise<BibliographicResource> {
+    /* Update the resource if it is known to the backend */
+    if (!resource._id) {
+      return Promise.resolve(resource);
+    } else {
+      const url = `${this.locdbUrl}/bibliographicResources/${resource._id}`;
+      return this.http.put(
+        url,
+        resource
+      ).map(
+        resp => resp.json() as BibliographicResource
+      ).catch(this.handleError).toPromise();
+    }
+  }
+
+  maybePostResource(resource: BibliographicResource): Promise<BibliographicResource> {
+    /* Post the resource if it is not stored in back-end yet */
+    if (!resource._id) {
+      const url = `${this.locdbUrl}/bibliographicResources`;
+      return this.http.post(
+        url,
+        resource
+      ).map(
+        resp => resp.json() as BibliographicResource
+      ).catch(this.handleError).toPromise();
+    } else {
+      return Promise.resolve(resource);
+    }
+  }
+
+
 
   putBibliographicResource(resource: BibliographicResource) {
     // we might also need post, to store completely new resources
