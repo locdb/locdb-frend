@@ -2,17 +2,16 @@
   <div class="card-header">
         <h3>{{title}}</h3>
   </div>
-  <div id="flup" class="card-block">
+  <div id="flup" class="card-body">
       <div class="list-group">
         <div *ngFor="let toDoScansWithMeta of listoffiles">
           <a href="#flup" class="list-group-item list-group-item-action" [class.list-group-item-danger]="toDoScansWithMeta.err" [class.list-group-item-warning]="!toDoScansWithMeta.err && !toDoScansWithMeta.allset" [class.list-group-item-success]="!toDoScansWithMeta.err && toDoScansWithMeta.allset" (click)="onSelect(toDoScansWithMeta); $event.preventDefault(); $event.stopPropagation()">
-            <h5 class="list-group-item-heading"><b>{{getName(toDoScansWithMeta)}}</b></h5> <!--getname method filter nullfileobjects and return name-->
+            {{getName(toDoScansWithMeta)}} 
+            <span class="badge badge-primary">{{getMetadata(toDoScansWithMeta)}}
+            </span>
             <button type="button" class="close pull-right" (click)="removeItemFromList(toDoScansWithMeta); $event.preventDefault(); $event.stopPropagation()" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <p class="list-group-item-text">{{getMetadata(toDoScansWithMeta)}}
-            </p>
-
           </a>
           <div *ngIf="toDoScansWithMeta === selected">
             <br/>
@@ -57,9 +56,10 @@
     </div>
     <div class="card-footer">
       <button type="button" class="btn btn-warning" (click)="onclickclear()" [disabled]="uploading || !listoffiles[0]">Clear</button> &nbsp;
-      <label class="btn btn-default">
-        Browse Files <input type="file" multiple (change)= "onChange($event)" hidden style="display: none !important;">
-      </label> &nbsp;
+      <!-- <label class="btn btn-default"> -->
+      <!--   Browse Files <input type="file" multiple (change)= "onChange($event)" hidden style="display: none !important;"> -->
+      <!-- </label> &nbsp; -->
+      <input type="file" multiple (change)="onChange($event)">
       <button type="button" class="btn btn-default" (click)="addId()"> Add Electronic Resource
       </button> &nbsp;
       <button type="button" class="btn btn-primary" (click)="onclickupload()" [disabled]="uploading || !listoffiles[0]">Upload</button>
