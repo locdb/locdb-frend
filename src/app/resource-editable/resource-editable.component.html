@@ -1,4 +1,4 @@
-<accordion-group *ngIf="resource && !submitted" [isOpen]="selected" [panelClass]="true ? 'card-primary' : 'card-default'">
+<accordion-group *ngIf="resource && !submitted" [isOpen]="selected" [panelClass]="selected ? 'border-primary' : 'card-default'">
   <div accordion-heading>
     <p>{{ resource.title }}
       <span *ngIf="resource.type" class="label label-info">{{resource.type}}</span>
@@ -15,7 +15,7 @@
 </accordion-group>
 
 <accordion-group *ngIf="resource && submitted" [isOpen]="selected"
-  [panelClass]="selected ? 'card-primary' : 'card-default'">
+  [panelClass]="selected ? 'border-primary' : 'card-default'">
   <div accordion-heading>
     <p>{{ resource.title }}
       <span *ngIf="resource.type" class="label label-info">{{resource.type}}</span>

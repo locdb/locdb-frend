@@ -32,7 +32,6 @@ export class ResourceEditableComponent implements OnInit {
 showForm(val: boolean) {
     // Display the form or stop displaying it
     this.submitted = !val;
-    console.log("blalbalbla")
     console.log("", this.selected)
 }
 
