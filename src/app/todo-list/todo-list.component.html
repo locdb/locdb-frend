@@ -1,9 +1,9 @@
-<div class="text-right" style="margin-top: 1em;">
+<div class="text-right" style="margin-top: 1rem; margin-left: 1rem;">
   <button (click)="refresh()" type="button" class="btn btn-secondary" aria-label="Refresh">
     Refresh
   </button>
 </div>
-<div style="margin-top: 1em; margin-bottom: 1em;">
+<div style="margin-top: 1rem; margin-bottom: 1rem;">
   <accordion>
     <div *ngIf="loading" class="loader">
     </div>
@@ -47,10 +47,9 @@
       </div>
     </div> <!-- end of outer loop -->
   </accordion>
-  <hr>
 </div>
 <div class="text-right">
-  <button (click)="refresh()" type="button" class="btn btn-secondary" aria-label="Refresh">
+  <button (click)="refresh()" type="button" style="margin-bottom: 1rem; margin-right: 1rem;" class="btn btn-secondary" aria-label="Refresh">
     Refresh
   </button>
 </div>
