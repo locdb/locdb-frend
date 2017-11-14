@@ -129,7 +129,9 @@ export class LocdbService {
     formData.append('textualPdf', textualPdf.toString());
     formData.append('scan', file);
     formData.append('resourceType', resourceType);
-    return this.http.post(url, formData).map((s) => s.json() as ToDoScans).catch(this.handleError);
+    return this.http.post(url, formData).map(
+      (s) => s.json() as ToDoScans
+    ).catch(this.handleError);
   }
 
   saveScanForElectronicJournal(
@@ -143,7 +145,10 @@ export class LocdbService {
     formData.append(scheme, value);
     formData.append('textualPdf', textualPdf.toString());
     formData.append('scan', file);
-    return this.http.post(url, formData).map((s) => s.json() as ToDoScans).catch(this.handleError);
+    return this.http.post(
+      url,
+      formData
+    ).map((s) => s.json() as ToDoScans).catch(this.handleError);
   }
 
 
@@ -151,7 +156,7 @@ export class LocdbService {
     const url = `${this.locdbUrl}/saveElectronicJournal`
     const params: URLSearchParams = new URLSearchParams();
     params.set(identifier.scheme, identifier.literalValue);
-    return this.http.get(
+    return this.http.post(
       url,
       { search: params}
     ).map(this.extractData).catch(this.handleError);

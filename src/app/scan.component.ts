@@ -165,6 +165,7 @@ export class ScanComponent {
       // const r = new FileReader();
       // r.onload = (e) => this.readFileContent(e, listelement);
       // r.readAsBinaryString(listelement.file);
+      console.log('Uploading file');
       this.uploadFile(listelement);
     } else {
       // saveElectronicJournal should go here
