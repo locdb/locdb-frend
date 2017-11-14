@@ -1,4 +1,4 @@
-<accordion-group *ngIf="resource" [isOpen]="selected" [panelClass]="selected ? 'card-primary' : 'card-default'">
+<accordion-group *ngIf="resource" [isOpen]="selected" [panelClass]="selected ? 'border-primary' : 'border-default'">
   <div accordion-heading>
     <p>{{ resource.title }}
       <span *ngIf="resource.type" class="label label-info">{{resource.type}}</span>
@@ -46,9 +46,9 @@
           <td> <p>{{resource.publicationYear}}</p> </td>
         </tr>
         <!-- <tr *ngIf="resource.partOf"> -->
-        <!--   <td> <label>Part of</label> </td> -->
-        <!--   <td> {{resource.partOf}} </td> -->
-        <!-- </tr> -->
+          <!--   <td> <label>Part of</label> </td> -->
+          <!--   <td> {{resource.partOf}} </td> -->
+          <!-- </tr> -->
       </tbody>
     </table>
 

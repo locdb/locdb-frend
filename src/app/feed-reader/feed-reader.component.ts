@@ -10,9 +10,9 @@ import { Http } from '@angular/http';
   <h3>{{data?.feed.title}}</h3>
   <h5>{{data?.feed.url}}</h5>
   <ul>
-    <li *ngFor="let entry of data?.items">
-      <a href="{{entry.link}}">
-        {{entry.title}}
+    <li *ngFor="let item of data?.items">
+      <a href="{{item.link}}">
+        {{item.title}}
       </a>
     </li>
   </ul>
