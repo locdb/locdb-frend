@@ -89,8 +89,9 @@ export class ScanComponent {
   onSelect(item: ToDoScansWithMeta) {
     if (item === this.selected) {
       this.selected = null; // closes the 'drop-down'
+    } else {
+      this.selected = item;
     }
-    this.selected = item;
   }
 
 

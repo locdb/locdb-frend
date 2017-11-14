@@ -2,13 +2,15 @@
   <div class="card-header">
     <h4>{{title}}</h4>
   </div>
-  <div *ngIf="feeds" class="card-block">
-    <div *ngFor="let feed of feeds">
-      <app-feed [url]="feed.url"></app-feed>
+  <div class="card-body">
+    <div *ngIf="feeds">
+      <div class="card-block" *ngFor="let feed of feeds">
+        <app-feed [url]="feed.url"></app-feed>
+      </div>
     </div>
-  </div>
-  <div class="card-block" *ngIf="!feeds">
-    <h4>Please sign in.</h4>
+    <p class="card-text" *ngIf="!feeds">
+      <em>Please sign in.</em>
+    </p>
   </div>
   <div class="card-footer">
     <input #newURL type="text"

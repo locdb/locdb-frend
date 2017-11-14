@@ -21,7 +21,7 @@
               <span aria-hidden="true">&times;</span>
             </button>
             Scan {{ trimHash(s._id) }}
-            <span class="badge badge-default badge-pill">{{ printState(s) }}</span>
+            <span class="badge badge-primary">{{ printState(s) }}</span>
           </a>
           <div *ngFor="let c of t.children" style="margin-left: 1em;">
             <div *ngIf="guard(c)">
@@ -38,7 +38,7 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                   Scan {{ trimHash(s._id) }} on pp. {{s.firstPage}}-{{s.lastPage}}
-                  <span class="badge badge-default badge-pill">{{ printState(s) }}</span>
+                  <span class="badge badge-primary">{{ printState(s) }}</span>
                 </a>
               </div>
             </div>
@@ -49,7 +49,7 @@
   </accordion>
 </div>
 <div class="text-right">
-  <button (click)="refresh()" type="button" style="margin-bottom: 1rem; margin-right: 1rem;" class="btn btn-secondary" aria-label="Refresh">
+  <button (click)="refresh()" type="button" style="margin-bottom: 1rem; margin-left: 1rem;" class="btn btn-secondary" aria-label="Refresh">
     Refresh
   </button>
 </div>
