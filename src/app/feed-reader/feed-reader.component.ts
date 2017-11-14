@@ -32,7 +32,8 @@ export class FeedComponent implements OnInit {
     console.log('Feed says hi', this.http);
     console.log("URL: ", this.rssToJsonServiceBaseUrl + encodeURIComponent(this.url))
     this.http.get(this.rssToJsonServiceBaseUrl + encodeURIComponent("https://"+this.url), { withCredentials: false }).map(
-      res => res.json()).subscribe(
+    //this.http.get("https://" + this.url, { withCredentials: false }).map(
+        res => res.json()).subscribe(
         (res) => this.processFeedJson(res)
       );
 }
@@ -73,6 +74,7 @@ export class FeedReaderComponent implements OnInit {
   }
 
   addFeed(url: string, name?: string) {
+    console.log("add feed: ", url)
     name = name ? name : 'UNK'
     this.locdbService.addFeed(name, url).subscribe(
       (suc) => { this.feeds.push(suc) },

@@ -39,6 +39,8 @@ import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 import { TodoListComponent } from './todo-list/todo-list.component';
 import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
 import { ResourceComponent } from './resource/resource.component';
+import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
+import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
 
 @NgModule({
   imports: [
@@ -71,6 +73,8 @@ import { ResourceComponent } from './resource/resource.component';
     TodoListComponent,
     TodoLeafComponent,
     ResourceComponent,
+    ResourceAccordionGroupComponent,
+    ResourceEditableComponent,
   ],
   providers: [ LocdbService, CredentialsService ],
   bootstrap: [ AppComponent ],

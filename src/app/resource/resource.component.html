@@ -1,3 +1,47 @@
-<p>
-  resource works!
-</p>
+<div *ngIf="submitted">
+    <table class="table table-striped" style="table-layout:fixed;">
+      <tbody>
+        <tr *ngIf="resource.title">
+          <td> <label>Title</label> </td>
+          <td> <p>{{resource.title}}</p> </td>
+        </tr>
+        <tr *ngIf="resource.subtitle">
+          <td> <label>Subtitle</label> </td>
+          <td> <p>{{resource.subtitle}}</p> </td>
+        </tr>
+        <tr *ngIf="resource.type">
+          <td> <label>Type</label> </td>
+          <td> <p>{{resource.type}}</p> </td>
+        </tr>
+        <tr *ngFor="let ident of resource.identifiers">
+          <td> <label>{{ident.scheme}}</label> </td>
+          <td *ngIf="ident.scheme.startsWith('URL_') || ident.scheme === 'URI'"><a [href]="ident.literalValue"><p>{{ident.literalValue}}</p></a></td>
+          <td *ngIf="!(ident.scheme.startsWith('URL_') || ident.scheme == 'URI')"> <p>{{ident.literalValue}}</p> </td>
+        </tr>
+        <tr *ngIf="resource.edition">
+          <td> <label>Edition</label> </td>
+          <td> <p>{{resource.edition}}</p> </td>
+        </tr>
+        <tr *ngIf="resource.containerTitle">
+          <td> <label>Container Title</label> </td>
+          <td> <p>{{resource.containerTitle}}</p> </td>
+        </tr>
+        <tr *ngIf="resource.number">
+          <td> <label>Number</label> </td>
+          <td> <p>{{resource.number}}</p> </td>
+        </tr>
+        <tr *ngFor="let contrib of resource.contributors">
+          <td> <label>{{contrib.roleType}}</label> </td>
+          <td> <p>{{contrib.heldBy.nameString}}</p> </td>
+        </tr>
+        <tr *ngIf="resource.publicationYear">
+          <td> <label>Pub. year</label> </td>
+          <td> <p>{{resource.publicationYear}}</p> </td>
+        </tr>
+        <!-- <tr *ngIf="resource.partOf"> -->
+        <!--   <td> <label>Part of</label> </td> -->
+        <!--   <td> {{resource.partOf}} </td> -->
+        <!-- </tr> -->
+      </tbody>
+    </table>
+  </div>
