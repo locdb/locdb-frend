@@ -180,73 +180,66 @@ export class SuggestionComponent implements OnInit, OnChanges {
         this.externalInProgress = false;
     }
 
-    async updateReferences(entry: BibliographicEntry, resource: BibliographicResource) {
-      const target = await this.locdbService.maybePostResource(resource);
-      if (entry.references) {
-        await this.locdbService.removeTargetBibliographicResource(entry);
-        entry.status = 'OCR_PROCESSED'; // back-end does it... TODO FIXME
-      }
-      return this.locdbService.addTargetBibliographicResource(entry, target)
-        .subscribe(
-          (success) => {
-          entry.status = 'VALID';
-          entry.references = target._id;
-          },
-          (error) =>  console.log('error adding', target, 'to', entry )
-        );
-      // TODO integrate this in commit method below
-    }
-
     commit() {
+      const pinnedResource = this.selectedResource;
+      this.locdbService.safeCommitLink(this.entry, this.selectedResource).then(
+        res => {
+          this.currentTarget = new ProvenResource(res);
+          this.onSelect(this.currentTarget);
+        })
+        .catch(err => alert('Error 418 occurred'));
+
+      /* OLD overly complicated code below TODO remove */
+
       // This the actual linking of entry to resource
       // we could also check for _id
-      const pinnedResource = this.selectedResource;
-      const pinnedEntry = this.entry;
-      if (pinnedResource.status === ToDoStates.ext) {
-        // selectedResource is either external or NEW
-        pinnedResource.status = ToDoStates.valid;
-        this.locdbService.pushBibligraphicResource(pinnedResource).subscribe(
-          (response) => {
-            // addTarget
-            this.locdbService.addTargetBibliographicResource(this.entry, response).subscribe(
-              (success) => {
-                // addTarget succeeded
-                // Update the view
-                pinnedEntry.status = 'VALID';
-                console.log('Setting entry references to', response._id);
-                pinnedEntry.references = response._id;
-                if (Object.is(this.entry, pinnedEntry)) { // guarding entry changes
-                  this.currentTarget = new ProvenResource(response); // update view
-                  this.onSelect(this.currentTarget);
-                }
-              },
-              // addTarget failed
-              (error) => console.log('Could not add target', this.entry, response)
-            );
-          },
-          (error) => {
-            // push failed, so reset state
-            pinnedResource.status = ToDoStates.ext;
-            console.log('Submitting external resource failed');
-          }
-        );
-      } else { // Resource was an internal suggestion
-        this.locdbService.addTargetBibliographicResource(this.entry, this.selectedResource).subscribe(
-          (success) => {
-            // addTarget succeeded
-            // update view
-            pinnedEntry.status = 'VALID';
-            pinnedEntry.references = pinnedResource._id;
-            // are the surrounding statements ok if the selected Resource changes?
-            if (Object.is(this.entry, pinnedEntry)) { // guarding entry changes
-              this.currentTarget = pinnedResource; // update view
-              this.onSelect(this.currentTarget);
-            }
-          },
-          // addTarget failed
-          (error) => console.log('Could not add target', this.entry, this.selectedResource)
-        );
-      }
+      // const pinnedResource = this.selectedResource;
+      // const pinnedEntry = this.entry;
+      // if (pinnedResource.status === ToDoStates.ext) {
+      //   // selectedResource is either external or NEW
+      //   pinnedResource.status = ToDoStates.valid;
+      //   this.locdbService.pushBibligraphicResource(pinnedResource).subscribe(
+      //     (response) => {
+      //       // addTarget
+      //       this.locdbService.addTargetBibliographicResource(this.entry, response).subscribe(
+      //         (success) => {
+      //           // addTarget succeeded
+      //           // Update the view
+      //           pinnedEntry.status = 'VALID';
+      //           console.log('Setting entry references to', response._id);
+      //           pinnedEntry.references = response._id;
+      //           if (Object.is(this.entry, pinnedEntry)) { // guarding entry changes
+      //             this.currentTarget = new ProvenResource(response); // update view
+      //             this.onSelect(this.currentTarget);
+      //           }
+      //         },
+      //         // addTarget failed
+      //         (error) => console.log('Could not add target', this.entry, response)
+      //       );
+      //     },
+      //     (error) => {
+      //       // push failed, so reset state
+      //       pinnedResource.status = ToDoStates.ext;
+      //       console.log('Submitting external resource failed');
+      //     }
+      //   );
+      // } else { // Resource was an internal suggestion
+      //   this.locdbService.addTargetBibliographicResource(this.entry, this.selectedResource).subscribe(
+      //     (success) => {
+      //       // addTarget succeeded
+      //       // update view
+      //       pinnedEntry.status = 'VALID';
+      //       pinnedEntry.references = pinnedResource._id;
+      //       // are the surrounding statements ok if the selected Resource changes?
+      //       if (Object.is(this.entry, pinnedEntry)) { // guarding entry changes
+      //         this.currentTarget = pinnedResource; // update view
+      //         this.onSelect(this.currentTarget);
+      //       }
+      //     },
+      //     // addTarget failed
+      //     (error) => console.log('Could not add target', this.entry, this.selectedResource)
+      //   );
+      // }
     }
 
     toggle_max_ex() {

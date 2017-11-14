@@ -248,9 +248,36 @@ export class LocdbService {
     return this.http.get(url).map(this.extractData).catch(this.handleError);
   }
 
+  async safeCommitLink(
+    entry: BibliographicEntry,
+    resource: BibliographicResource
+  ): Promise<BibliographicResource> {
+    const target = await this.maybePostResource(resource);
+    await this.updateTargetResource(entry, target);
+    return target;
+  }
 
 
-  maybePutResource(resource: BibliographicResource): Promise<BibliographicResource> {
+  async updateTargetResource(
+    entry: BibliographicEntry,
+    resource: BibliographicResource
+  ): Promise<BibliographicEntry> {
+    /* adds or update link from entry to resource */
+    if (entry.references) {
+      await this.removeTargetBibliographicResource(entry);
+      entry.status = 'OCR_PROCESSED'; // back-end does it... TODO FIXME
+    }
+    await this.addTargetBibliographicResource(entry, resource).toPromise();
+    /* to keep view consistent */
+    entry.status = 'VALID';
+    entry.references = resource._id;
+    return entry;
+  }
+
+
+  maybePutResource(
+    resource: BibliographicResource
+  ): Promise<BibliographicResource> {
     /* Update the resource if it is known to the backend */
     if (!resource._id) {
       return Promise.resolve(resource);
