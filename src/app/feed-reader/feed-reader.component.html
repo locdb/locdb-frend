@@ -1,16 +1,16 @@
-<div class="panel panel-default" (click)=ngOnInit()>
-  <div class="panel-heading">
-    <h4><b>{{title}}</b></h4>
+<div class="card" (click)=ngOnInit()>
+  <div class="card-header">
+    <h4>{{title}}</h4>
   </div>
-  <div *ngIf="feeds" class="panel-body">
+  <div *ngIf="feeds" class="card-block">
     <div *ngFor="let feed of feeds">
       <app-feed [url]="feed.url"></app-feed>
     </div>
   </div>
-  <div class="panel-body" *ngIf="!feeds">
+  <div class="card-block" *ngIf="!feeds">
     <h4>Please sign in.</h4>
   </div>
-  <div class="panel-footer">
+  <div class="card-footer">
     <input #newURL type="text"
     (keyup.enter)='addFeed(newURL.value);'
     (blur)="addFeed(newURL.value); newURL.value ='';">
