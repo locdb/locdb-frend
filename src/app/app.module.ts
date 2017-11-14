@@ -38,6 +38,7 @@ import { EntryListComponent } from './entry-list/entry-list.component';
 import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 import { TodoListComponent } from './todo-list/todo-list.component';
 import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
+import { ResourceComponent } from './resource/resource.component';
 
 @NgModule({
   imports: [
@@ -69,6 +70,7 @@ import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
     TodoDetailComponent,
     TodoListComponent,
     TodoLeafComponent,
+    ResourceComponent,
   ],
   providers: [ LocdbService, CredentialsService ],
   bootstrap: [ AppComponent ],

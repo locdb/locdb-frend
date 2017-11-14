@@ -1,4 +1,4 @@
-<accordion-group *ngIf="resource" [isOpen]="selected" [panelClass]="selected ? 'panel-primary' : 'panel-default'">
+<accordion-group *ngIf="resource" [isOpen]="selected" [panelClass]="selected ? 'card-primary' : 'card-default'">
   <div accordion-heading>
     <p>{{ resource.title }}
       <span *ngIf="resource.type" class="label label-info">{{resource.type}}</span>
