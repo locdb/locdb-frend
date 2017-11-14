@@ -1,5 +1,5 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
+<div class="card">
+  <div class="card-header">
     <button type="button" class="btn btn-danger" aria-label="Back" (click)="back()">
       <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
       Back
@@ -14,14 +14,15 @@
     </div>
   </div>
 
+  <div class="card-block">
+    <div *ngIf="todo && scanIsVisible">
+      <app-display [img_src]="locdbService.getScan(todo._id)" [entries]="entries" (entry)="forwardEntry($event)"></app-display>
+    </div>
+    <div *ngIf="!scanIsVisible">
+      <app-entry-list [entries]="entries" (entry)="forwardEntry($event)"></app-entry-list>
+    </div>
+    <div *ngIf="loading" class="loader">
+    </div>
+  </div>
 
-  <div *ngIf="todo && scanIsVisible" class="panel-body">
-    <app-display [img_src]="locdbService.getScan(todo._id)" [entries]="entries" (entry)="forwardEntry($event)"></app-display>
-  </div>
-  <div *ngIf="!scanIsVisible" class="panel-body">
-    <app-entry-list [entries]="entries" (entry)="forwardEntry($event)"></app-entry-list>
-  </div>
-
-  <div *ngIf="loading" class="loader">
-  </div>
 </div>

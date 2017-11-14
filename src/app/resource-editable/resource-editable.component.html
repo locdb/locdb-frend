@@ -1,0 +1,27 @@
+<accordion-group *ngIf="resource && !submitted" [isOpen]="selected" [panelClass]="selected ? 'border-primary' : 'card-default'">
+  <div accordion-heading>
+    <p>{{ resource.title }}
+      <span *ngIf="resource.type" class="label label-info">{{resource.type}}</span>
+      <span *ngIf="resource.provenance" class="label label-warning">{{resource.provenance}}</span>
+    </p>
+  </div>
+  <locdb-resource [resource]="resource">
+  </locdb-resource>
+  <div class="text-right">
+    <button type="button" class="btn btn-warning" aria-label="Edit" (click)="showForm(false)">
+      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+    </button>
+  </div>
+</accordion-group>
+
+<accordion-group *ngIf="resource && submitted" [isOpen]="selected"
+  [panelClass]="selected ? 'border-primary' : 'card-default'">
+  <div accordion-heading>
+    <p>{{ resource.title }}
+      <span *ngIf="resource.type" class="label label-info">{{resource.type}}</span>
+      <span *ngIf="resource.provenance" class="label label-warning">{{resource.provenance}}</span>
+    </p>
+  </div>
+  <locdb-resource-form [resource]="resource" (submitStatus)="showForm($event)">
+</locdb-resource-form>
+</accordion-group>

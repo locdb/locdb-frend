@@ -1,5 +1,5 @@
 <div *ngIf="entry">
-  <accordion-group [heading]=short() [isOpen]="active" [panelClass]="active ? 'panel-primary' : entry.references ? 'panel-success' : 'panel-danger'">
+  <accordion-group [heading]=short() [isOpen]="active" [panelClass]="active ? 'border-primary' : entry.references ? 'border-success' : 'border-danger'">
     <div *ngIf="submitted">
       <table class="table table-striped" style="table-layout:fixed;">
         <tbody>

@@ -10,11 +10,11 @@ import {
     RESOURCE_TYPES
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
 @Component( {
-    selector: 'app-resource-form',
+    selector: 'locdb-resource-form',
     templateUrl: './resource-form.component.html',
     styleUrls: ['./resource-form.component.css']
 })
@@ -24,13 +24,13 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     // if this is a string, we can try to dereference it from the back-end
     @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
 
-
-    @Input() resource_id: string = null;
+    @Input() resource_id: string = null; // but why?
 
     // this should not be here, the resource should only rely on itself and not
     // some entries TODO FIXME
     // @Input() exSuggests: any[];
     @Input() selected = false;
+    @Output() submitStatus: EventEmitter<boolean> = new EventEmitter();
     oldresource: BibliographicResource;
 
     resourceForm: FormGroup;
@@ -166,6 +166,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     cancel() {
         this.submitted = true; // effectively closes the form
+        this.submitStatus.emit(true)
     }
 
     reconstructAgentRole(name: string, role: string): AgentRole {

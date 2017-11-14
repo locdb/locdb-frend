@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { LocdbService } from '../locdb.service';
 import {  Response } from '@angular/http';
+import { Feed } from '../locdb'
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,7 @@ import {  Response } from '@angular/http';
 export class LoginComponent implements OnInit {
   // @Input() instances = [{name: 'LOCDB Dev', url: 'https://locdb.bib.uni-mannheim.de/locdb-dev'},
   //   {name: 'UB Mannheim', url: 'https://locdb.bib.uni-mannheim.de/locdb'}];
-
+  @Output() feeds: EventEmitter<Feed[]> = new EventEmitter();
   @Output() userChanged: EventEmitter<boolean> = new EventEmitter();
   currentUser = null;
   connecting = false;
@@ -25,6 +26,7 @@ export class LoginComponent implements OnInit {
       console.log('Login succeeded', user, msg.json());
       this.currentUser = user;
       this.userChanged.next(true);
+      this.feeds.emit(msg.json().feeds);
     } else {
       console.log('Message not ok');
       alert('Invalid credentials.');

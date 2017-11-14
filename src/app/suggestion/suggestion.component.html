@@ -1,146 +1,135 @@
-<div *ngIf='entry' class="panel panel-default" >
+<div *ngIf='entry' class="card">
   <!-- Panel heading including search bar -->
-  <div class="panel-heading">
-    <div class="row justify-content-between">
-      <div class="col-xs-10 text-left">
-        <div class="form-group">
-          <label class="center-block">Query:
-            <textarea class="form-control" [(ngModel)]="query" rows="3" style="resize: none;"></textarea>
-          </label>
-          <label class="center-block">Confidence threshold for internal Suggestions
-            <input class="form-control" type="number" min=0.0 step=0.1 [(ngModel)]="internalThreshold">
-          </label>
-          <label class="center-block">Confidence threshold for external Suggestions
-            <input class="form-control" type="number" min=0.0 step=0.1 max=1.0 [(ngModel)]="externalThreshold">
-          </label>
+  <div class="card-header">
+    <div class="form-group">
+      <textarea class="form-control" [(ngModel)]="query" rows="3" style="resize: none;"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="center-block">Confidence threshold for internal
+        <input class="form-control" type="number" min=0.0 step=0.1 [(ngModel)]="internalThreshold">
+      </label>
+      <label class="center-block">... and for external Suggestions
+        <input class="form-control" type="number" min=0.0 step=0.1 max=1.0 [(ngModel)]="externalThreshold">
+      </label>
+    </div>
+    <button type="button" class="btn btn-success" aria-label="Search" (click)="refresh()">
+      Search
+    </button>
+  </div>
+
+  <div class="card-body">
+
+    <!-- Panel body providing suggestions -->
+    <div *ngIf="currentTarget" class="card-block">
+      <h4 class="card-title">
+        Currently references
+      </h4>
+      <!-- <accordion>
+        <app-resource-form [resource]="currentTarget" [selected]="currentTarget == selectedResource" (click)="onSelect(currentTarget)">
+        </app-resource-form>
+      </accordion> -->
+      <locdb-resource-accordion-group>
+      </locdb-resource-accordion-group>
+    </div>
+    <div class="card-block">
+      <h4 class="card-title">
+        Suggestions
+      </h4>
+      <!-- <accordion>
+        <div *ngFor="let r of internalSuggestions;let i = index">
+          <app-resource-form *ngIf="max_in <= 0 || i < max_in"
+            [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
+          </app-resource-form>
         </div>
+        <button type="button" *ngIf="max_in == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
+          <p><em>Show all</em></p>
+        </button>
+        <button type="button" *ngIf="max_in == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
+          <p><em>Show less</em></p>
+        </button>
+      </accordion> -->
+      <locdb-resource-accordion-group [resources]="internalSuggestions">
+      </locdb-resource-accordion-group>
+      <div *ngIf="internalInProgress" class="loader">
       </div>
-      <div class="col-xs-2 text-right">
-        <div class="bottom-column">
-          <button type="button" class="btn btn-success" aria-label="Search" (click)="refresh()">
-            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    </div>
+    <div class="card-block">
+      <h4 class="card-title">
+        External suggestions
+      </h4>
+      <!-- <accordion *ngIf="externalSuggestions">
+        <div *ngFor="let r of externalSuggestions;let i = index">
+          <app-resource-form *ngIf="max_ex <= 0 || i < max_ex"
+            [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
+          </app-resource-form>
+        </div>
+        <button type="button" *ngIf="max_ex == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
+          <p><em>Show all</em></p>
+        </button>
+        <button type="button" *ngIf="max_ex == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
+          <p><em>Show less</em></p>
+        </button>
+      </accordion> -->
+      <locdb-resource-accordion-group [resources]="externalSuggestions">
+      </locdb-resource-accordion-group>
+      <div *ngIf="externalInProgress" class="loader">
+      </div>
+    </div>
+    <div class="card-block">
+      <h4 class="card-title">
+        New resource from reference meta-data
+      </h4>
+      <!-- <accordion>
+        <app-resource-form
+          [resource]="newResource" [selected]="newResource == selectedResource" (click)="onSelect(newResource)">
+        </app-resource-form>
+      </accordion> -->
+      <locdb-resource-accordion-group>
+      </locdb-resource-accordion-group>
+    </div>
+    <div class="card-body">
+      <!-- Panel footer allowing actions -->
+      <div class="card-footer">
+        <div class="text-right">
+          <button type="button" class="btn btn-primary" [disabled]="!selectedResource" (click)="commit()">
+            <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Commit Link
           </button>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Panel body providing suggestions -->
-  <div class="panel-body">
-    <div *ngIf="currentTarget">
-      <hr>
-      <h5 class="text-center mb-1">
-        Currently references
-      </h5>
-      <accordion>
-        <app-resource-form [resource]="currentTarget" [selected]="currentTarget == selectedResource" (click)="onSelect(currentTarget)">
-        </app-resource-form>
-      </accordion>
+    <div *ngIf="committed" class="alert alert-success" role="alert">
+      <strong>Link committed.</strong>
     </div>
-    <hr>
-    <h5 class="text-center mb-1">
-      Internal Suggestions
-    </h5>
-    <div *ngIf="internalInProgress" class="loader">
-    </div>
-    <accordion>
-      <div *ngFor="let r of internalSuggestions;let i = index">
-      <!-- <accordion-group heading="{{r.title}} ({{r.publicationYear}})" *ngIf="max_in == 0 || i<max_in" -->
-      <!--     [panelClass]="selectedResource == r ? customClass : ''" -->
-      <!--     (click)="onSelect(r)"> -->
-      <app-resource-form *ngIf="max_in <= 0 || i < max_in"
-        [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
-      </app-resource-form>
-    </div>
-    <button type="button" *ngIf="max_in == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
-      <p><em>Show all</em></p>
-    </button>
-    <button type="button" *ngIf="max_in == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
-      <p><em>Show less</em></p>
-    </button>
-    </accordion>
-    <hr>
-    <h5 class="text-center mb-1">
-      External Suggestions
-    </h5>
-    <accordion *ngIf="externalSuggestions">
-      <div *ngIf="externalInProgress" class="loader">
-      </div>
-      <div *ngFor="let r of externalSuggestions;let i = index">
-        <app-resource-form *ngIf="max_ex <= 0 || i < max_ex"
-          [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
-        </app-resource-form>
-      </div>
-      <button type="button" *ngIf="max_ex == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
-        <p><em>Show all</em></p>
-      </button>
-      <button type="button" *ngIf="max_ex == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
-        <p><em>Show less</em></p>
-      </button>
-    </accordion>
-    <div *ngIf="newResource">
-      <hr>
-      <h5 class="text-center mb-1">
-        New Resource from OCR data
-      </h5>
-      <accordion>
-        <app-resource-form
-          [resource]="newResource" [selected]="newResource == selectedResource" (click)="onSelect(newResource)">
-        </app-resource-form>
-      </accordion>
-    </div>
-  </div>
-
-  <!-- Panel footer allowing actions -->
-  <div class="panel-footer">
-    <!-- <div class="row justify-content-between"> -->
-    <!--   <div class="col-xs-6 text-left"> -->
-    <!--     <button type="button" class="btn btn-info" aria-label="Search" (click)="plusPressed()"> -->
-    <!--       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> -->
-    <!--     </button> -->
-    <!--   </div> -->
-      <!-- <div class="col-xs-6 text-right"> -->
-      <div class="text-right">
-        <button type="button" class="btn btn-primary" [disabled]="!selectedResource" (click)="commit()">
-          <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Commit Link
-        </button>
-      </div>
-    <!-- </div> -->
-  </div>
-</div>
-<div *ngIf="committed" class="alert alert-success" role="alert">
-  <strong>Link committed.</strong>
-</div>
-<!-- ...(click)="lgModal.show()"> -->
-<!-- Do not delete the following code, it will be useful in the edit form. -->
-<!-- <div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"> -->
-<!--   <div class="modal-dialog modal-lg"> -->
-<!--     <div class="modal-content"> -->
-<!--       <div class="modal-header"> -->
-<!--         <h4 class="modal-title pull-left">External Bibliographic Resources</h4> -->
-<!--         <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close"> -->
-<!--           <span aria-hidden="true">&times;</span> -->
-<!--         </button> -->
-<!--       </div> -->
-<!--       <div class="modal-body"> -->
-<!--         <form> -->
-<!--           <div class="checkbox" *ngFor="let r of externalSuggestions"> -->
-<!--             <label> -->
-<!--               <input type="checkbox"> -->
-<!--               <span class="badge">{{ r.identifiers[0].scheme }}</span> -->
-<!--               <b>{{r.ocrData.authors}}</b> <em>{{ r.ocrData.title }}</em>. -->
-<!--               <ul> -->
-<!--                 <li *ngFor="let identifier of r.identifiers"> -->
-<!--                   <span class="badge">{{ identifier.scheme }}</span> {{ identifier.literalValue }} -->
-<!--                 </li> -->
-<!--               </ul> -->
-<!--             </label> -->
-<!--           </div> -->
-<!--           <div align="right"> -->
-<!--             <button type="submit" class="btn btn-primary">Submit</button> -->
-<!--           </div> -->
-<!--         </form> -->
-<!--       </div> -->
-<!--     </div> -->
-<!--   </div> -->
-<!-- </div> -->
+    <!-- ...(click)="lgModal.show()"> -->
+    <!-- Do not delete the following code, it will be useful in the edit form. -->
+    <!-- <div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"> -->
+      <!--   <div class="modal-dialog modal-lg"> -->
+        <!--     <div class="modal-content"> -->
+          <!--       <div class="modal-header"> -->
+            <!--         <h4 class="modal-title pull-left">External Bibliographic Resources</h4> -->
+            <!--         <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close"> -->
+              <!--           <span aria-hidden="true">&times;</span> -->
+              <!--         </button> -->
+            <!--       </div> -->
+          <!--       <div class="modal-body"> -->
+            <!--         <form> -->
+              <!--           <div class="checkbox" *ngFor="let r of externalSuggestions"> -->
+                <!--             <label> -->
+                  <!--               <input type="checkbox"> -->
+                  <!--               <span class="badge">{{ r.identifiers[0].scheme }}</span> -->
+                  <!--               <b>{{r.ocrData.authors}}</b> <em>{{ r.ocrData.title }}</em>. -->
+                  <!--               <ul> -->
+                    <!--                 <li *ngFor="let identifier of r.identifiers"> -->
+                      <!--                   <span class="badge">{{ identifier.scheme }}</span> {{ identifier.literalValue }} -->
+                      <!--                 </li> -->
+                    <!--               </ul> -->
+                  <!--             </label> -->
+                <!--           </div> -->
+              <!--           <div align="right"> -->
+                <!--             <button type="submit" class="btn btn-primary">Submit</button> -->
+                <!--           </div> -->
+              <!--         </form> -->
+            <!--       </div> -->
+          <!--     </div> -->
+        <!--   </div> -->
+      <!-- </div> -->

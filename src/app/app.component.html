@@ -1,15 +1,8 @@
-<!-- <div class="panel panel-default" style="margin-top: 10px"> -->
-<!--   <div class="panel-heading"><h1>{{title}}</h1></div> -->
-<!--   <div class="panel-body"> -->
-
-
 <h1><b>{{title}}</b></h1>
-
-<!-- <app-visual [state]="visualState"></app-visual> -->
 
 <section class="container-fluid">
   <div class="row">
-    <app-login></app-login>
+    <app-login (feeds)=updateFeeds($event)></app-login>
   </div>
   <div class='row' style='margin-top: 10px'>
     <div class='col-xs-12 col-sm-6 col-md-6'>
@@ -17,10 +10,13 @@
       <app-todo-detail *ngIf="todo" [todo]="todo" (goBack)="updateTodo(null)" (entry)="updateEntry($event)"></app-todo-detail>
       <app-scan></app-scan>
     </div>
-    <div *ngIf='entry' class="col-xs-12 col-sm-6 col-md-6">
-      <!-- suggestion component INPUT: entry, OUTPUT: resource -->
-      <app-suggestion [entry]='entry' (suggest)='updateTarget($event)'></app-suggestion>
-      <!-- <app-commit [source]='source' [entry]='entry' [target]='target'></app-commit> -->
+    <div class="col-xs-12 col-sm-6 col-md-6">
+      <div *ngIf='entry'>
+        <app-suggestion [entry]='entry' (suggest)='updateTarget($event)'></app-suggestion>
+      </div>
+      <div *ngIf='!entry'>
+        <app-feed-reader [feeds]="feeds"></app-feed-reader>
+      </div>
     </div>
   </div>
 </section>

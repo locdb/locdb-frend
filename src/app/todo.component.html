@@ -1,42 +1,20 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <div class="row justify-content-between">
-      <div class="col-xs-6 text-left">
-        <h4><b>{{title}}</b></h4>
-      </div>
-      <!-- <div class="col-xs-6 text-right"> -->
-      <!--   <button (click)="fetchTodos()" type="button" class="btn btn-info" aria-label="Refresh"> -->
-      <!--     <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Reload -->
-      <!--   </button> -->
-      <!-- </div> -->
-    </div>
-  </div>
-
-  <!-- close button -->
-  <!-- <button type="button" class="close" aria-label="Close"> -->
-    <!--   <span aria-hidden="true">&times;</span> -->
-    <!-- </button> -->
-
-  <div id="todo" class="panel-body">
-    <ul class="nav nav-tabs">
-      <!-- nav-item is bootstrap 4 and not bootstrap 3.37. Yet it does not harm -->
-      <li class="nav-item" [class.active]="state === states.ext">
-        <a class="nav-link" href="#todo" (click)='setState(states.ext); false'>External</a>
+<div class="card">
+  <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs">
+      <li class="nav-item">
+        <a class="nav-link" [class.active]="state === states.ext" href="#" (click)='setState(states.ext); false'>Electronic Journals</a>
       </li>
-      <li class="nav-item" [class.active]="state === states.ocr">
-        <a class="nav-link" href="#todo" (click)='setState(states.ocr); false'>OCR processed</a>
+      <li class="nav-item">
+        <a class="nav-link" [class.active]="state === states.ocr" href="#" (click)='setState(states.ocr); false'>OCR processed</a>
       </li>
-      <li class="nav-item" [class.active]="state === states.nocr">
-        <a class="nav-link" href="#todo" (click)='setState(states.nocr); false'>OCR unprocessed</a>
+      <li class="nav-item">
+        <a class="nav-link" [class.active]="state === states.nocr" href="#" (click)='setState(states.nocr); false'>OCR unprocessed</a>
       </li>
     </ul>
-  <app-todo-list [state]="state" (todo)="pipe($event)"></app-todo-list>
-  </div> <!--end of panel body -->
-    <!-- <div class="panel-footer"> -->
-    <!--   <div class="text-right"> -->
-    <!--     <button (click)="fetchTodos()" type="button" class="btn btn-info" aria-label="Refresh"> -->
-    <!--       <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Reload -->
-    <!--     </button> -->
-    <!--   </div> -->
-    <!-- </div> -->
+  </div>
+  <div class="card-body">
+    <app-todo-list [state]="states.ext"  [hidden]="state !== states.ext" (todo)="pipe($event)"></app-todo-list>
+    <app-todo-list [state]="states.ocr"  [hidden]="state !== states.ocr" (todo)="pipe($event)"></app-todo-list>
+    <app-todo-list [state]="states.nocr" [hidden]="state !== states.nocr" (todo)="pipe($event)"></app-todo-list>
+  </div>
 </div>
