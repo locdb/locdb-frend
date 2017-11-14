@@ -1,0 +1,7 @@
+<accordion>
+  <!-- editable -->
+  <div *ngFor="let r of resources;let i = index">
+  <locdb-resource-editable [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
+  </locdb-resource-editable>
+</div>
+</accordion>
