@@ -76,7 +76,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             // this.extractRects(this.entries);
             // there can be empty coordinate fields! we need to filter first
             this.rects = this.entries.filter(
-                e => this.validateCoordinates(e.ocrData.coordinates)
+                e => e.ocrData.coordinates && this.validateCoordinates(e.ocrData.coordinates)
             ).map(this.rectFromEntry);
             const firstUnprocessed = this.rects.find(r => !r.entry.references);
             this.selectedEntry = firstUnprocessed.entry;
