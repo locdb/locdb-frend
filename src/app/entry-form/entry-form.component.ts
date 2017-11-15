@@ -180,11 +180,43 @@ export class EntryFormComponent implements OnChanges {
   revert() { this.ngOnChanges(); }
 
   short() {
-    if (!this.entry) { return 'Loading'; }
+    // TODO
+    // this is so complicated it could be an own component
+    if (!this.entry) { return 'Loading...'; }
+
+    const elements: string[] = [];
+    if (this.entry.ocrData.authors && this.entry.ocrData.authors.length) {
+      elements.push(`${this.entry.ocrData.authors.join('; ')}:`)
+    }
+
     if (this.entry.ocrData.title) {
-      return this.entry.ocrData.title;
-    } else {
+      elements.push(this.entry.ocrData.title);
+    }
+
+    if (this.entry.identifiers && this.entry.identifiers.length) {
+      const istring = this.entry.identifiers.filter(ident => ident.literalValue)
+        .map(
+        (ident) => `${ident.scheme}: ${ident.literalValue}`
+      ).join('; ');
+      if (istring) {
+        // could be empty because of missing literal Values
+        elements.push(`${istring}`);
+      }
+    }
+
+    if (this.entry.ocrData.journal) {
+      elements.push(`In: ${this.entry.ocrData.journal} ${this.entry.ocrData.volume}`);
+    }
+
+    if (this.entry.ocrData.date) {
+      elements.push(`${this.entry.ocrData.date}`);
+    }
+
+    if (!elements.length) {
+      // no structured meta data at all, use raw text if present
       return this.entry.bibliographicEntryText;
+    } else {
+      return elements.join(' ');
     }
   }
 
