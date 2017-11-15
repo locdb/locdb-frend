@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SuggestionComponent } from './suggestion.component';
+import { ResourceAccordionGroup } from '../resource-accordion-group/resource-accordion-group.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
 describe('SuggestionComponent', () => {
@@ -11,6 +12,7 @@ describe('SuggestionComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         ModalModule.forRoot(),
+        ResourceAccordionGroup,
       ],
       declarations: [ SuggestionComponent ]
     })
