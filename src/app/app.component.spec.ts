@@ -35,7 +35,6 @@ import { DisplayComponent } from './display/display.component';
 import { EntryFormComponent } from './entry-form/entry-form.component';
 import { LocdbService } from './locdb.service';
 import { SuggestionComponent } from './suggestion/suggestion.component';
-import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { LoginComponent } from './login/login.component';
 import { VisualComponent } from './visual/visual.component';
 import { CommitComponent } from './commit/commit.component';
@@ -45,6 +44,11 @@ import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 import { TodoListComponent } from './todo-list/todo-list.component';
 import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
 
+// resource related
+import { ResourceComponent } from './resource/resource.component';
+import { ResourceFormComponent } from './resource-form/resource-form.component';
+import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
+import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
 ////////  SPECS  /////////////
 
 /// Delete this
@@ -77,6 +81,9 @@ describe('AppComponent with TCB', function () {
           TodoDetailComponent,
           TodoListComponent,
           TodoLeafComponent,
+          ResourceComponent,
+          ResourceAccordionGroupComponent,
+          ResourceEditableComponent,
         ],
         imports: [
           AccordionModule.forRoot(),
