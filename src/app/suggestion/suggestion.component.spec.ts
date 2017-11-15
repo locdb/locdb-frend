@@ -12,9 +12,8 @@ describe('SuggestionComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         ModalModule.forRoot(),
-        ResourceAccordionGroupComponent,
       ],
-      declarations: [ SuggestionComponent ]
+      declarations: [ SuggestionComponent, ResourceAccordionGroupComponent]
     })
     .compileComponents();
   }));
@@ -25,7 +24,7 @@ describe('SuggestionComponent', () => {
     fixture.detectChanges();
   });
 
-  // it('should create', () => {
-  //   expect(component).toBeTruthy();
-  // });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

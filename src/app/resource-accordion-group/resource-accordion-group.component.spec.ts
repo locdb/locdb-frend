@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResourceAccordionGroupComponent } from './resource-accordion-group.component';
+import { ResourceEditableComponent } from '../resource-editable/resource-editable.component';
 
 describe('ResourceAccordionGroupComponent', () => {
   let component: ResourceAccordionGroupComponent;
@@ -8,7 +9,7 @@ describe('ResourceAccordionGroupComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ResourceAccordionGroupComponent ]
+      declarations: [ ResourceAccordionGroupComponent, ResourceEditableComponent ]
     })
     .compileComponents();
   }));

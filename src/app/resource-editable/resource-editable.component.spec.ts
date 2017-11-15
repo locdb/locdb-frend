@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResourceEditableComponent } from './resource-editable.component';
+import { ResourceForm } from '../resource-form/resource-form.component';
+import { Resource } from '../resource/resource.component';
 
 describe('ResourceEditableComponent', () => {
   let component: ResourceEditableComponent;
@@ -8,7 +10,7 @@ describe('ResourceEditableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ResourceEditableComponent ]
+      declarations: [ ResourceEditableComponent, ResourceForm, Resource ]
     })
     .compileComponents();
   }));
