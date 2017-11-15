@@ -1,39 +1,27 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import {
-    BibliographicResource,
-    BibliographicEntry,
-    ProvenResource,
-    AgentRole,
-    ResponsibleAgent,
-    ToDo,
-    ROLES,
-    Identifier,
-    RESOURCE_TYPES
-} from '../locdb';
+import { Component, OnInit, Input } from '@angular/core';
+import { BibliographicResource, ProvenResource, ToDo } from '../locdb';
+
+
+/* What was View Encapsulation for? */
 
 @Component({
-  selector: 'locdb-resource-editable',
+  selector: 'app-resource-editable',
   templateUrl: './resource-editable.component.html',
   styleUrls: ['./resource-editable.component.css'],
-  encapsulation: ViewEncapsulation.None
 })
 export class ResourceEditableComponent implements OnInit {
-
   @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
-  @Input() selected: boolean;
-  submitted = false
+  @Input() editing = false;
 
   constructor() { }
 
-  ngOnInit() {
-    console.log("", this.selected)
-  }
+  ngOnInit(){ }
 
-showForm(val: boolean) {
+
+  showForm(val: boolean) {
     // Display the form or stop displaying it
-    this.submitted = !val;
-    console.log("", this.selected)
-}
+    this.editing = val;
+  }
 
 
 }

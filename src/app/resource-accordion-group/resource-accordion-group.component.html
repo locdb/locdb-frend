@@ -1,7 +1,12 @@
-<accordion>
-  <!-- editable -->
-  <div *ngFor="let r of resources;let i = index">
-  <locdb-resource-editable [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
-  </locdb-resource-editable>
-</div>
-</accordion>
+<accordion-group *ngIf="resource" [isOpen]="selected" [panelClass]="selected ? 'border-primary' : 'border-default'">
+  <div accordion-heading>
+    <p>{{ resource.title }}
+      <span *ngIf="resource.type" class="badge badge-info">{{resource.type}}</span>
+      <span *ngIf="resource.provenance" class="badge badge-warning">{{resource.provenance}}</span>
+    </p>
+  </div>
+  <app-resource-editable [resource]="resource">
+  </app-resource-editable>
+
+  <!-- TODO FIXME put ng-content here -->
+</accordion-group>

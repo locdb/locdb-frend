@@ -1,36 +1,34 @@
 import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
-import {
-    BibliographicResource,
-    BibliographicEntry,
-    ProvenResource,
-    AgentRole,
-    ResponsibleAgent,
-    ToDo,
-    ROLES,
-    Identifier,
-    RESOURCE_TYPES
-} from '../locdb';
+import { BibliographicResource, ProvenResource, ToDo, } from '../locdb';
 
 @Component({
-  selector: 'locdb-resource-accordion-group',
+  selector: 'app-resource-accordion-group',
   templateUrl: './resource-accordion-group.component.html',
   styleUrls: ['./resource-accordion-group.component.css'],
   encapsulation: ViewEncapsulation.None
 })
 export class ResourceAccordionGroupComponent implements OnInit {
 
-  @Input() resources: BibliographicResource[] | ProvenResource[] | ToDo[] = null;
- selectedResource = null
+  @Input() resource: BibliographicResource | ProvenResource | ToDo;
+  @Input() selected: boolean = false;
   constructor() { }
 
   ngOnInit() {
   }
 
-
-  onSelect(br?: ProvenResource): void {
-          console.log('Suggestion emitted', br);
-          this.selectedResource = br;
-          //this.committed = false;
-          //this.suggest.emit(br);
+  short() {
+      // A shorthand name for accordion heading
+      if (this.resource) {
+          // resource already present
+          const br = this.resource;
+          let s = br.title;
+          if (br.publicationYear) {
+              s += ` (${br.publicationYear})`
+          }
+          if (br.status === 'EXTERNAL') {
+              s += ` [${br.type}]`
+          }
+          return s;
       }
+  }
 }

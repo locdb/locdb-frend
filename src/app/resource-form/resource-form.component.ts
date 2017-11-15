@@ -14,7 +14,7 @@ import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angul
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
 @Component( {
-    selector: 'locdb-resource-form',
+    selector: 'app-resource-form',
     templateUrl: './resource-form.component.html',
     styleUrls: ['./resource-form.component.css']
 })
@@ -23,8 +23,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // if this is a string, we can try to dereference it from the back-end
     @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
-
-    @Input() resource_id: string = null; // but why?
 
     // this should not be here, the resource should only rely on itself and not
     // some entries TODO FIXME
@@ -68,14 +66,14 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
 
     ngOnInit()  {
-        if (!this.resource && this.resource_id)  {
-            // if resource is not initialised itself but an id is given
-            // try to retrieve resource by id from the back-end
-            console.log('Fetching resource', this.resource_id, 'from back-end.');
-            this.locdbService.bibliographicResource(this.resource_id).subscribe(
-                (res) =>  { this.resource = res }
-            );
-        }
+        // if (!this.resource && this.resource_id)  {
+        //     // if resource is not initialised itself but an id is given
+        //     // try to retrieve resource by id from the back-end
+        //     console.log('Fetching resource', this.resource_id, 'from back-end.');
+        //     this.locdbService.bibliographicResource(this.resource_id).subscribe(
+        //         (res) =>  { this.resource = res }
+        //     );
+        // }
     }
 
     // clean array treatment
@@ -316,9 +314,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                 s += ` [${br.type}]`
             }
             return s;
-        } else {
-            // maybe only identifier given, resource is getting retrieved
-            return this.resource_id;
         }
     }
 

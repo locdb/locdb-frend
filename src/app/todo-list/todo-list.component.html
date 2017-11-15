@@ -9,7 +9,7 @@
     </div>
     <div *ngFor="let t of todos">
       <div *ngIf="guard(t)">
-        <app-resource-form [resource]="t"></app-resource-form>
+        <app-resource-accordion-group [resource]="t"></app-resource-accordion-group>
         <div class="list-group">
           <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="t.parts && t.parts.length" (click)="onSelectExternal(t); $event.stopPropagation(); $event.preventDefault()">
             <div class="text-center">
@@ -25,7 +25,7 @@
           </a>
           <div *ngFor="let c of t.children" style="margin-left: 1em;">
             <div *ngIf="guard(c)">
-              <app-resource-form [resource]="c"></app-resource-form>
+              <app-resource-accordion-group [resource]="c"></app-resource-accordion-group>
               <!-- scans attached to children of resource -->
               <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="c.parts && c.parts.length" (click)="onSelectExternal(c); $event.stopPropagation(); $event.preventDefault()">
                 <div class="text-center">
