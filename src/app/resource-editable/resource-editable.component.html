@@ -1,9 +1,9 @@
-<app-resource *ngIf="!editing" [resource]="resource">
-</app-resource>
 <div class="text-right">
   <button type="button" class="btn btn-warning" aria-label="Edit" (click)="showForm(true)">
     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
   </button>
 </div>
+<app-resource *ngIf="!editing" [resource]="resource">
+</app-resource>
 <app-resource-form *ngIf="editing" [resource]="resource" (submitStatus)="showForm($event)">
 </app-resource-form>
