@@ -6,7 +6,7 @@
   </div>
   <div class='row' style='margin-top: 10px'>
     <div class='col-xs-12 col-sm-6 col-md-6'>
-      <app-todo *ngIf="!todo" (todo)="updateTodo($event)"></app-todo>
+      <app-todo [hidden]="todo" (todo)="updateTodo($event)"></app-todo>
       <app-todo-detail *ngIf="todo" [todo]="todo" (goBack)="updateTodo(null)" (entry)="updateEntry($event)"></app-todo-detail>
       <app-scan></app-scan>
     </div>
