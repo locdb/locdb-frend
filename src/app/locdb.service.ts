@@ -156,7 +156,7 @@ export class LocdbService {
     const url = `${this.locdbUrl}/saveElectronicJournal`
     const params: URLSearchParams = new URLSearchParams();
     params.set(identifier.scheme, identifier.literalValue);
-    return this.http.post(
+    return this.http.get(
       url,
       { search: params}
     ).map(this.extractData).catch(this.handleError);
