@@ -26,6 +26,7 @@ More specific, two views are provided:
 
 [Source](https://github.com/angular/angular-cli#updating-angular-cli)
 
+
 ### Update angular-cli to the latest version
 
 ```sh
@@ -41,3 +42,9 @@ npm install -g typescript
 npm install
 ```
 
+## Development Resources
+
+- [Angular Docs](https://angular.io/docs)
+- [Bootstrap 4 Introduction]([200~https://getbootstrap.com/docs/4.0/getting-started/introduction/)
+- [Jasmine Introduction](https://jasmine.github.io/edge/introduction.html)
+- [OCC Metadata Model](https://figshare.com/articles/Metadata_for_the_OpenCitations_Corpus/3443876)
