@@ -20,8 +20,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 // misc
 import { CredentialsService } from 'angular-with-credentials';
 import { PopoverModule } from 'ngx-popover';
-import {HotkeyModule} from 'angular2-hotkeys';
-
+import { HotkeyModule } from 'angular2-hotkeys';
 // own
 import { ScanComponent } from './scan.component';
 import { DisplayComponent } from './display/display.component';

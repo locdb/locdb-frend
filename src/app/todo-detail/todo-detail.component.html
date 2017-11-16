@@ -16,8 +16,8 @@
   </div>
 
   <div class="card-body">
-    <div *ngIf="scanAvailable" [hidden]="!scanIsVisible">
-      <app-display [img_src]="locdbService.getScan(todo._id)" [entries]="entries" (entry)="forwardEntry($event)"></app-display>
+    <div *ngIf="todo && scanAvailable" [hidden]="!scanIsVisible">
+      <app-display [img_src]="getScan(todo._id)" [entries]="entries" (entry)="forwardEntry($event)"></app-display>
     </div>
     <div [hidden]="scanIsVisible">
       <app-entry-list [entries]="entries" (entry)="forwardEntry($event)"></app-entry-list>
