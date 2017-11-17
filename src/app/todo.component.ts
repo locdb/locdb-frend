@@ -19,11 +19,16 @@ export class TodoComponent implements OnInit {
   states = ToDoStates;
 
   @Output() todo: EventEmitter<ToDoScans | BibliographicResource> = new EventEmitter(true);
+  @Output() resourceTrack: EventEmitter<BibliographicResource[] | ToDo[]> = new EventEmitter();
 
   constructor ( private locdbService: LocdbService ) {}
 
   pipe(scanOrResource: ToDoScans | BibliographicResource): void {
     this.todo.emit(scanOrResource)
+  }
+
+  tpipe(track:  BibliographicResource[] | ToDo[]){
+      this.resourceTrack.emit(track)
   }
 
   ngOnInit() {

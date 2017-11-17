@@ -152,7 +152,9 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                 this.resource = r;
                 this.ngOnChanges();
                 this.submitting = false;
-                this.submitted = true
+                this.submitted = true;
+                this.submitStatus.emit(false);
+
             }
         ).catch(err => this.submitting = false);
     }
@@ -164,7 +166,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     cancel() {
         this.submitted = true; // effectively closes the form
-        this.submitStatus.emit(true)
+        this.submitStatus.emit(false)
     }
 
     reconstructAgentRole(name: string, role: string): AgentRole {

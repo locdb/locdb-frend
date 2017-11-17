@@ -13,6 +13,7 @@ export class TodoListComponent implements OnInit, OnChanges {
 
   @Input() state: ToDoStates;
   @Output() todo: EventEmitter<ToDoScans | BibliographicResource> = new EventEmitter();
+  @Output() resourceTrack: EventEmitter<BibliographicResource[] | ToDo[]> = new EventEmitter();
   todos: ToDo[];
   states = ToDoStates;
   provenance = Provenance;
@@ -51,7 +52,7 @@ export class TodoListComponent implements OnInit, OnChanges {
   }
 
 
-  onSelectScan(scan: ToDoScans) {
+  onSelectScan(scan: ToDoScans, resource: BibliographicResource[] | ToDo[]) {
     // called when pressing on a scan todo item
     if ( scan.status === ToDoStates.nocr ) {
       console.log('Starting processing');
@@ -63,6 +64,8 @@ export class TodoListComponent implements OnInit, OnChanges {
     } else {
       console.log('Todo item selected', scan);
       this.todo.next(scan);
+      console.log("resourceTrack: ", resource)
+      this.resourceTrack.next(resource)
     }
   }
 

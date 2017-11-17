@@ -16,7 +16,7 @@
               <em>References</em>
             </div>
           </a>
-          <a href='#' class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans; let i = index" (click)="onSelectScan(s); $event.stopPropagation(); $event.preventDefault()">
+          <a href='#' class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans; let i = index" (click)="onSelectScan(s, [t]); $event.stopPropagation(); $event.preventDefault()">
             <button type="button" class="close pull-right" (click)="deleteScan(s, t); $event.preventDefault(); $event.stopPropagation()" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -33,7 +33,7 @@
                 </div>
               </a>
               <div *ngFor="let s of c.scans; let i = index">
-                <a href="#" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectScan(s); $event.stopPropagation(); $event.preventDefault()">
+                <a href="#" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectScan(s, [t, c]); $event.stopPropagation(); $event.preventDefault()">
                   <button type="button" class="close pull-right" (click)="deleteScan(s, c); $event.preventDefault(); $event.stopPropagation()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>

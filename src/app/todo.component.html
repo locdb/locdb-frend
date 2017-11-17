@@ -13,8 +13,8 @@
     </ul>
   </div>
   <div class="card-body">
-    <app-todo-list [state]="states.ext"  [hidden]="state !== states.ext" (todo)="pipe($event)"></app-todo-list>
-    <app-todo-list [state]="states.ocr"  [hidden]="state !== states.ocr" (todo)="pipe($event)"></app-todo-list>
-    <app-todo-list [state]="states.nocr" [hidden]="state !== states.nocr" (todo)="pipe($event)"></app-todo-list>
+    <app-todo-list [state]="states.ext"  [hidden]="state !== states.ext" (todo)="pipe($event)" (resourceTrack)="tpipe($event)"></app-todo-list>
+    <app-todo-list [state]="states.ocr"  [hidden]="state !== states.ocr" (todo)="pipe($event)" (resourceTrack)="tpipe($event)"></app-todo-list>
+    <app-todo-list [state]="states.nocr" [hidden]="state !== states.nocr" (todo)="pipe($event)" (resourceTrack)="tpipe($event)"></app-todo-list>
   </div>
 </div>

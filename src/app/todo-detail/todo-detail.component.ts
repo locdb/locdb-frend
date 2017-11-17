@@ -12,6 +12,7 @@ import { SimpleChanges } from '@angular/core';
 export class TodoDetailComponent implements OnInit, OnChanges {
   scanIsVisible = false;
   @Input() todo: ToDoScans | ToDo;
+  @Input() resourceTrack: BibliographicResource | ToDo;
   entries: BibliographicEntry[] = [];
   @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter(true);
   @Output() goBack: EventEmitter<null> = new EventEmitter();

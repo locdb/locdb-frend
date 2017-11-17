@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
     title = 'LOC-DB Extrapolite';
     source: BibliographicResource = null;
     todo: ToDoScans | ToDo = null;
+    resourceTrack: BibliographicResource[] | ToDo[];
     entry: BibliographicEntry = null;
     target: BibliographicResource = null;
     feeds: any = null;
@@ -37,6 +38,9 @@ export class AppComponent implements OnInit {
         this.todo = todo;
     }
 
+    updateTrack(resources: BibliographicResource[] | ToDo[]){
+        this.resourceTrack = resources;
+    }
 
     updateSource (br: BibliographicResource) {
         // this.enableCitation();
