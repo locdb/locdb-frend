@@ -1,49 +1,54 @@
-<accordion-group *ngIf="resource" [isOpen]="selected" [panelClass]="selected ? 'panel-primary' : 'panel-default'">
-  <div accordion-heading>
+<!-- <accordion-group *ngIf="resource" [isOpen]="selected" [panelClass]="selected ? 'border-primary' : 'border-default'"> -->
+  <!-- <div accordion-heading>
     <p>{{ resource.title }}
       <span *ngIf="resource.type" class="label label-info">{{resource.type}}</span>
       <span *ngIf="resource.provenance" class="label label-warning">{{resource.provenance}}</span>
     </p>
-  </div>
-  <div *ngIf="submitted">
-    <table class="table table-striped">
+  </div> -->
+  <!-- <div *ngIf="submitted">
+    <table class="table table-striped" style="table-layout:fixed;">
       <tbody>
         <tr *ngIf="resource.title">
           <td> <label>Title</label> </td>
-          <td> {{resource.title}} </td>
+          <td> <p>{{resource.title}}</p> </td>
         </tr>
         <tr *ngIf="resource.subtitle">
           <td> <label>Subtitle</label> </td>
-          <td> {{resource.subtitle}} </td>
+          <td> <p>{{resource.subtitle}}</p> </td>
         </tr>
         <tr *ngIf="resource.type">
           <td> <label>Type</label> </td>
-          <td> {{resource.type}} </td>
+          <td> <p>{{resource.type}}</p> </td>
         </tr>
         <tr *ngFor="let ident of resource.identifiers">
           <td> <label>{{ident.scheme}}</label> </td>
-          <td> {{ident.literalValue}} </td>
+          <td *ngIf="ident.scheme.startsWith('URL_') || ident.scheme === 'URI'"><a [href]="ident.literalValue"><p>{{ident.literalValue}}</p></a></td>
+          <td *ngIf="!(ident.scheme.startsWith('URL_') || ident.scheme == 'URI')"> <p>{{ident.literalValue}}</p> </td>
         </tr>
         <tr *ngIf="resource.edition">
           <td> <label>Edition</label> </td>
-          <td> {{resource.edition}} </td>
+          <td> <p>{{resource.edition}}</p> </td>
+        </tr>
+        <tr *ngIf="resource.containerTitle">
+          <td> <label>Container Title</label> </td>
+          <td> <p>{{resource.containerTitle}}</p> </td>
         </tr>
         <tr *ngIf="resource.number">
           <td> <label>Number</label> </td>
-          <td> {{resource.number}} </td>
+          <td> <p>{{resource.number}}</p> </td>
         </tr>
         <tr *ngFor="let contrib of resource.contributors">
           <td> <label>{{contrib.roleType}}</label> </td>
-          <td> {{contrib.heldBy.nameString}} </td>
+          <td> <p>{{contrib.heldBy.nameString}}</p> </td>
         </tr>
         <tr *ngIf="resource.publicationYear">
           <td> <label>Pub. year</label> </td>
-          <td> {{resource.publicationYear}} </td>
+          <td> <p>{{resource.publicationYear}}</p> </td>
         </tr>
-        <tr *ngIf="resource.partOf">
-          <td> <label>Part of</label> </td>
-          <td> {{resource.partOf}} </td>
-        </tr>
+        <!-- <tr *ngIf="resource.partOf"> -->
+          <!--   <td> <label>Part of</label> </td> -->
+          <!--   <td> {{resource.partOf}} </td> -->
+          <!-- </tr>
       </tbody>
     </table>
 
@@ -52,8 +57,8 @@
         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
       </button>
     </div>
-  </div>
-  <div *ngIf="!submitted">
+  </div> -->
+  <div>
     <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
       <table class="table table-striped" style="width: 100%;">
         <tbody>
@@ -100,11 +105,9 @@
             </td>
           </tr>
           <tr>
+            <td> <label>Container Title</label> </td>
             <td>
-              <label>Part of</label>
-            </td>
-            <td>
-              <input class="form-control" formControlName="partof">
+              <input class="form-control" formControlName="containerTitle">
             </td>
           </tr>
           <tr>
@@ -142,8 +145,6 @@
             </tr>
             <tr>
               <td>
-              </td>
-              <td>
                 <button type="button" class="btn btn-success" aria-label="Add Identifier" (click)="addIdentifier()">
                   <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>
@@ -179,8 +180,6 @@
             </tr>
             <tr>
               <td>
-              </td>
-              <td>
                 <button type="button" class="btn btn-success" aria-label="Add Contributor" (click)="addContributor()">
                   <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>
@@ -191,19 +190,22 @@
       </div>
       <div class="row justify-content-between">
         <div class="col-xs-6 text-left">
-          <button type="button" class="btn btn-warning" (click)="revert()">
-            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset
+          <button type="button" class="btn btn-warning" (click)="cancel()" [disabled]="submitting">
+            <span class="glyphicon" aria-hidden="true"></span> Cancel
           </button>
-          <button type="button" class="btn btn-danger" (click)="deleteResource()">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
+          <button type="button" class="btn btn-warning" (click)="revert()" [disabled]="submitting">
+            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset Form
+          </button>
+          <button type="button" class="btn btn-danger" (click)="deleteResource()" [disabled]="submitting">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete Resource
           </button>
         </div>
         <div class="col-xs-6 text-right">
-          <button type="button" class="btn btn-primary" (click)="onSubmit()">
+          <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="submitting">
             <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Submit
           </button>
         </div>
       </div>
     </form>
   </div>
-</accordion-group>
+<!-- </accordion-group> -->

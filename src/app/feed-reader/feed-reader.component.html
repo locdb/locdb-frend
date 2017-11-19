@@ -1,15 +1,20 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3>Feed Reader</h3>
+<div class="card" (click)=ngOnInit()>
+  <div class="card-header">
+    <h4>{{title}}</h4>
   </div>
-  <div class="panel-body">
-    <div *ngFor="let feed of feeds">
-      <app-feed [url]="feed.url"></app-feed>
+  <div class="card-body">
+    <div *ngIf="feeds">
+      <div class="card-block" *ngFor="let feed of feeds">
+        <app-feed [url]="feed.url"></app-feed>
+      </div>
     </div>
+    <p class="card-text" *ngIf="!feeds">
+      <em>Please sign in.</em>
+    </p>
   </div>
-  <div class="panel-footer">
+  <div class="card-footer">
     <input #newURL type="text"
-    (keyup.enter)='addFeed(newURL.value)'
-    (blur)="addFeed(newURL.value); newURL.value =''">
+    (keyup.enter)='addFeed(newURL.value);'
+    (blur)="addFeed(newURL.value); newURL.value ='';">
   </div>
 </div>
