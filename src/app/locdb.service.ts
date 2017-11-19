@@ -8,11 +8,16 @@ import {Observable} from 'rxjs/Rx';
 // import 'rxjs/add/operator/catch';
 // import 'rxjs/add/operator/map';
 
-// types
-import { Citation } from './citation';
-
 // new types
-import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource, ProvenResource, Feed} from './locdb'
+import {
+  Identifier,
+  ToDo,
+  ToDoScans,
+  BibliographicEntry,
+  BibliographicResource,
+  ProvenResource,
+  Feed
+} from './locdb'
 
 import { synCites_ } from './locdb'
 
@@ -108,11 +113,11 @@ export class LocdbService {
   saveScan(
     ppn: string,
     resourceType: string,
+    textualPdf: boolean,
     file: File,
-    scan: any,
     firstPage?: string,
-    lastPage?: string,
-  ): Promise<any> {
+    lastPage?: string
+  ): Observable<ToDoScans> {
     // Take FileWithMetadata object instead
     const url = `${this.locdbUrl}/saveScan`;
     const formData: FormData = new FormData();
@@ -121,34 +126,36 @@ export class LocdbService {
       formData.append('firstPage', firstPage);
       formData.append('lastPage', lastPage);
     }
-
+    formData.append('textualPdf', textualPdf.toString());
     formData.append('scan', file);
     formData.append('resourceType', resourceType);
-    return this.http.post(url, formData).toPromise(); // , {headers: this.headers})
-    // .map(this.extractData)
-    // .catch(this.handleError);
+    return this.http.post(url, formData).map(
+      (s) => s.json() as ToDoScans
+    ).catch(this.handleError);
   }
 
   saveScanForElectronicJournal(
-    ppn: string,
-    file: File,
-  ): Promise<any> {
-    // SCAN IS UNUSED => NOT NECESSARY AFTER ALL TODO FIXME
-    // Take FileWithMetadata object instead
+    scheme: string,
+    value: string,
+    textualPdf: boolean,
+    file: File
+  ): Observable<ToDoScans> {
     const url = `${this.locdbUrl}/saveScanForElectronicJournal`;
     const formData: FormData = new FormData();
-    formData.append('ppn', ppn);
+    formData.append(scheme, value);
+    formData.append('textualPdf', textualPdf.toString());
     formData.append('scan', file);
-    return this.http.post(url, formData).toPromise(); // , {headers: this.headers})
-    // .map(this.extractData)
-    // .catch(this.handleError);
+    return this.http.post(
+      url,
+      formData
+    ).map((s) => s.json() as ToDoScans).catch(this.handleError);
   }
 
 
-  saveElectronicJournal(scheme: string, identifier: string): Observable<any> {
+  saveElectronicJournal(identifier: Identifier): Observable<any> {
     const url = `${this.locdbUrl}/saveElectronicJournal`
     const params: URLSearchParams = new URLSearchParams();
-    params.set(scheme, identifier);
+    params.set(identifier.scheme, identifier.literalValue);
     return this.http.get(
       url,
       { search: params}
@@ -222,10 +229,88 @@ export class LocdbService {
     return this.http.put(url, entry).map(this.extractData).catch(this.handleError);
   }
 
-  bibliographicResource(identifier: string) {
+  addTargetBibliographicResource(entry: BibliographicEntry, resource: BibliographicResource):
+  Observable<BibliographicResource> {
+    console.log('add Target', entry, resource);
+    const url = `${this.locdbUrl}/addTargetBibliographicResource`;
+    const params: URLSearchParams = new URLSearchParams();
+    params.set('bibliographicEntryId', entry._id);
+    params.set('bibliographicResourceId', resource._id);
+    return this.http.get(url, { search: params}).map(this.extractData).catch(this.handleError);
+  }
+
+  removeTargetBibliographicResource(entry): Promise<any> {
+    const url = `${this.locdbUrl}/removeTargetBibliographicResource`;
+    const params: URLSearchParams = new URLSearchParams();
+    params.set('bibliographicEntryId', entry._id);
+    return this.http.get(url, { search: params}).map(this.extractData).catch(this.handleError).toPromise();
+  }
+
+  bibliographicResource(identifier: string): Observable<BibliographicResource> {
     const url = `${this.locdbUrl}/bibliographicResources/${identifier}`;
     return this.http.get(url).map(this.extractData).catch(this.handleError);
   }
+
+  async safeCommitLink(
+    entry: BibliographicEntry,
+    resource: BibliographicResource
+  ): Promise<BibliographicResource> {
+    const target = await this.maybePostResource(resource);
+    await this.updateTargetResource(entry, target);
+    return target;
+  }
+
+
+  async updateTargetResource(
+    entry: BibliographicEntry,
+    resource: BibliographicResource
+  ): Promise<BibliographicEntry> {
+    /* adds or update link from entry to resource */
+    if (entry.references) {
+      await this.removeTargetBibliographicResource(entry);
+      entry.status = 'OCR_PROCESSED'; // back-end does it... TODO FIXME
+    }
+    await this.addTargetBibliographicResource(entry, resource).toPromise();
+    /* to keep view consistent */
+    entry.status = 'VALID';
+    entry.references = resource._id;
+    return entry;
+  }
+
+
+  maybePutResource(
+    resource: BibliographicResource
+  ): Promise<BibliographicResource> {
+    /* Update the resource if it is known to the backend */
+    if (!resource._id) {
+      return Promise.resolve(resource);
+    } else {
+      const url = `${this.locdbUrl}/bibliographicResources/${resource._id}`;
+      return this.http.put(
+        url,
+        resource
+      ).map(
+        resp => resp.json() as BibliographicResource
+      ).catch(this.handleError).toPromise();
+    }
+  }
+
+  maybePostResource(resource: BibliographicResource): Promise<BibliographicResource> {
+    /* Post the resource if it is not stored in back-end yet */
+    if (!resource._id) {
+      const url = `${this.locdbUrl}/bibliographicResources`;
+      return this.http.post(
+        url,
+        resource
+      ).map(
+        resp => resp.json() as BibliographicResource
+      ).catch(this.handleError).toPromise();
+    } else {
+      return Promise.resolve(resource);
+    }
+  }
+
+
 
   putBibliographicResource(resource: BibliographicResource) {
     // we might also need post, to store completely new resources
@@ -295,10 +380,6 @@ export class LocdbService {
     );
   }
 
-  instance(instance?: string) {
-    if (instance) { this.locdbUrl = instance } ;
-    return this;
-  }
 
   //
   addFeed(name: string, url: string): Observable<Feed> {

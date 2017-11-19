@@ -1,20 +1,16 @@
 <div class='panel panel-default text-right'>
   <div class='panel-heading' *ngIf='currentUser'>
     <span>
-      <strong>{{ currentUser }}</strong>@<em>{{ currentInstance }}</em>
+      Logged in as <strong>{{ currentUser }}</strong>
     </span> 
     <button class='btn btn-danger' (click)='onLogout()'>Logout</button>
   </div>
   <div class="panel-body" *ngIf='!currentUser'>
-    <b>Instance:</b>
-    <select #instance [disabled]='connecting'>
-      <option *ngFor='let inst of instances' [value]='inst.url'>{{inst.name}}</option>
-    </select>
     <b>Username:</b>
     <input #user [disabled]='connecting' value='name'>
     <b>Password:</b>
     <input #pass [disabled]='connecting' type='password' value='pass'>
     <!-- <button class='btn btn-default' [disabled]='connecting' (click)='onSignUp(instance.value, user.value, pass.value)'>Sign up</button> -->
-    <button class='btn btn-primary' [disabled]='connecting' (click)='onSignIn(instance.value, user.value, pass.value)'>Sign in</button>
+    <button class='btn btn-primary' [disabled]='connecting' (click)='onSignIn(user.value, pass.value)'>Sign in</button>
   </div>
 </div>

@@ -31,19 +31,19 @@ describe('ScanComponent', () => {
 
   it('should extract', () => {
     // just ppn
-    expect(component.extractPPNandPages('123456789.pdf')[0]).toBe('123456789');
-    expect(component.extractPPNandPages('12345678X.pdf')[0]).toBe('12345678X');
-    expect(component.extractPPNandPages('02345678X.pdf')[0]).toBe('02345678X');
+    expect(component.extractidandPages('123456789.pdf')[0]).toBe('123456789');
+    expect(component.extractidandPages('12345678X.pdf')[0]).toBe('12345678X');
+    expect(component.extractidandPages('02345678X.pdf')[0]).toBe('02345678X');
     // with page numbers
   });
 
   it('should extract', () => {
-    expect(component.extractPPNandPages('123456789_10-12.pdf')).toBe(['123456789', '10', '12']);
+    expect(component.extractidandPages('123456789_10-12.pdf')).toEqual(['123456789', 10, 12]);
     // difficult since delimiter between PPN and firstpage is the same as between pages itself
-    expect(component.extractPPNandPages('123456789-10-12.pdf')).toBe(['123456789', '10', '12']);
+    expect(component.extractidandPages('123456789-10-12.pdf')).toEqual(['123456789', 10, 12]);
     // now single page filenames
-    expect(component.extractPPNandPages('123456789-10-10.pdf')).toBe(['123456789', '10', '10']);
-    expect(component.extractPPNandPages('123456789-10.pdf')).toBe(['123456789', '10', '10']);
+    expect(component.extractidandPages('123456789-10-10.pdf')).toEqual(['123456789', 10, 10]);
+    expect(component.extractidandPages('123456789-10.pdf')).toEqual(['123456789', 10, 10]);
   });
 
 });

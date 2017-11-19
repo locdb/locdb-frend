@@ -1,4 +1,5 @@
 /** A Bibliographic Resource */
+// actually a partial resource
 export class BibliographicResource {
   _id?: string;
   identifiers?: Identifier[];
@@ -11,7 +12,8 @@ export class BibliographicResource {
   publicationYear?: string;
   status?: string;
   parts?: BibliographicEntry[];
-  partOf?: string;
+  partOf?: string; // _id of other resource
+  containerTitle?: string;
   embodiedAs?: ResourceEmbodiment[];
   /* should be aggregate of parts.references */
   cites?: string[];
@@ -22,6 +24,10 @@ export class BibliographicResource {
 export class Identifier {
   literalValue: string;
   scheme: string;
+  constructor (scheme: string, literalValue: string ) {
+    this.literalValue = literalValue;
+    this.scheme = scheme;
+  }
 }
 
 export const ROLES = [
@@ -82,6 +88,7 @@ export class BibliographicEntry {
   scanId?: string;
   status?: string;
   ocrData?: OCRData;
+  identifiers?: Identifier[];
 }
 
 /** Addition to the OCC Metadata model to support OCR data */
@@ -199,6 +206,8 @@ export const RESOURCE_TYPES = [
   'COLLECTION',
   'JOURNAL',
 ]
+
+
 
 export enum EmbodimentType {
   digital = 'DIGITAL',

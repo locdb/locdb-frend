@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
-import { ToDoScans, BibliographicEntry, BibliographicResource } from '../locdb';
+import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import {Observable} from 'rxjs/Rx';
 import { SimpleChanges } from '@angular/core';
@@ -11,9 +11,10 @@ import { SimpleChanges } from '@angular/core';
 })
 export class TodoDetailComponent implements OnInit, OnChanges {
   scanIsVisible = false;
-  @Input() todo: ToDoScans | BibliographicResource;
+  @Input() todo: ToDoScans | ToDo;
+  @Input() resourceTrack: BibliographicResource | ToDo;
   entries: BibliographicEntry[] = [];
-  @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
+  @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter(true);
   @Output() goBack: EventEmitter<null> = new EventEmitter();
   loading = false;
   scanAvailable = true;
@@ -26,11 +27,13 @@ export class TodoDetailComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges | any) {
     // fetch entries for todo item (cold observable, call in template with async)
+    if (!this.todo) { return; }
     if (this.todo.hasOwnProperty('parts')) {
+      // this could be problematic TODO FIXME if parts and scans are present
       // were dealing with a resource, not a scan
       console.log('viewing details for external todo item');
       this.scanAvailable = false;
-      const todoResource = this.todo as BibliographicResource;
+      const todoResource = this.todo as ToDo;
       this.entries = todoResource.parts;
     } else {
       console.log('viewing details for internal todo item');
@@ -45,6 +48,10 @@ export class TodoDetailComponent implements OnInit, OnChanges {
     }
   }
 
+  getScan(id: string) {
+    this.locdbService.getScan(id);
+  }
+
 
   showScan() {
     this.scanIsVisible = true;
@@ -55,13 +62,13 @@ export class TodoDetailComponent implements OnInit, OnChanges {
   }
 
   back() {
-    this.entry.next(null);
+    this.entry.emit(null);
     this.todo = null;
-    this.goBack.next(null);
+    this.goBack.emit(null);
   }
 
   forwardEntry(entry: BibliographicEntry) {
-    this.entry.next(entry);
+    this.entry.emit(entry);
   }
 
 }

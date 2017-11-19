@@ -5,41 +5,49 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 
-// import { ImageUploadModule } from 'ng2-imageupload';
-// exported to uploader
-
-// ng2-bootstrap
-import { ModalModule } from 'ngx-bootstrap/modal';
-// ng2-fileupload
-// import { FileSelectDirective } from 'ng2-file-upload';
 
 import { AppComponent } from './app.component';
-import { ScanComponent } from './scan.component';
-import { TodoComponent } from './todo.component';
-import { DisplayComponent } from './display/display.component';
-import { EntryFormComponent } from './entry-form/entry-form.component';
-import { LocdbService } from './locdb.service';
-import { SuggestionComponent } from './suggestion/suggestion.component';
-import { ResourceFormComponent } from './resource-form/resource-form.component';
 
+// d3
+import * as d3 from 'd3';
 
+// ngx-bootstrap
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
-import { PopoverModule } from 'ngx-popover';
 
+// misc
 import { CredentialsService } from 'angular-with-credentials';
-
-
-import * as d3 from 'd3';
+import { PopoverModule } from 'ngx-popover';
+import { HotkeyModule } from 'angular2-hotkeys';
+// own
+import { ScanComponent } from './scan.component';
+import { DisplayComponent } from './display/display.component';
+import { LocdbService } from './locdb.service';
+import { SuggestionComponent } from './suggestion/suggestion.component';
 import { LoginComponent } from './login/login.component';
 import { VisualComponent } from './visual/visual.component';
 import { CommitComponent } from './commit/commit.component';
-import { FeedReaderComponent } from './feed-reader/feed-reader.component';
-import { EntryListComponent } from './entry-list/entry-list.component';
+
+// todo related
+import { TodoComponent } from './todo.component';
 import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 import { TodoListComponent } from './todo-list/todo-list.component';
 import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
+
+// feeds
+import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
+
+// entries
+import { EntryListComponent } from './entry-list/entry-list.component';
+import { EntryFormComponent } from './entry-form/entry-form.component';
+
+// resource related
+import { ResourceComponent } from './resource/resource.component';
+import { ResourceFormComponent } from './resource-form/resource-form.component';
+import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
+import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
 
 @NgModule({
   imports: [
@@ -47,6 +55,7 @@ import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
     CollapseModule.forRoot(),
+    HotkeyModule.forRoot(),
     BrowserModule,
     FormsModule,
     HttpModule,
@@ -65,11 +74,14 @@ import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
     VisualComponent,
     CommitComponent,
     FeedReaderComponent,
+    FeedComponent,
     EntryListComponent,
     TodoDetailComponent,
     TodoListComponent,
     TodoLeafComponent,
-    // LocdbService
+    ResourceComponent,
+    ResourceAccordionGroupComponent,
+    ResourceEditableComponent,
   ],
   providers: [ LocdbService, CredentialsService ],
   bootstrap: [ AppComponent ],
