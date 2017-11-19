@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, Input } from '@angular/core';
 
 @Component({
   selector: 'app-visual',
@@ -6,7 +6,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./visual.component.css']
 })
 
-export class VisualComponent implements OnInit {
+export class VisualComponent implements OnInit, OnChanges {
 
   @Input() state = 0; // 0-2
   @Input() width = 300;
@@ -24,6 +24,11 @@ export class VisualComponent implements OnInit {
   ngOnInit() {
     console.log(this.state);
   }
+
+  ngOnChanges(changes: SimpleChanges | any) {
+
+  }
+
 
   pathStart() {
       console.log('pathStart', this.state);
