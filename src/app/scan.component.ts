@@ -1,11 +1,10 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
-import { Citation } from './citation';
 import { REFERENCES, REFERENCES_ALT } from './mock-references';
 // import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
 
 import { LocdbService } from './locdb.service';
 
-import { RESOURCE_TYPES, ToDoScans} from './locdb';
+import { ResourceType, ToDoScans, Identifier} from './locdb';
 
 const URL = '/api/'; // Same Origin Policy
 
@@ -18,43 +17,26 @@ const URL = '/api/'; // Same Origin Policy
 
 export class ScanComponent {
   title = 'File Upload';
-  event: any;
-  files: any; // TODO deprecated
 
-  _id: string;
-  idtype: string;
-  firstpage: number;
-  lastpage: number;
-  resourceType = 'MONOGRAPH'; // needs to be value of select block
+  selected: ToDoScansWithMeta;
 
-  resourceTypes = RESOURCE_TYPES;
-
+  ResourceType = ResourceType;
+  resourceTypes: string[] = [ResourceType.monograph, ResourceType.collection, ResourceType.journal];
 
   uploading = false; // just for disabling the button
 
   listoffiles: ToDoScansWithMeta[] = [];
-  // unused?
-  listoffilescontents = [];
 
-  active: ToDoScansWithMeta;
-  fileIsActive = false;
-  isActive = false;
-  activefile = 0;
 
-  constructor ( private locdbService: LocdbService ) { }
-
-  toggle() {
-    this.isActive = !this.isActive;
-  }
-
-  togglefile() {
-    this.fileIsActive = !this.fileIsActive;
+  constructor ( private locdbService: LocdbService ) {
+    // necessary to display select options
   }
 
   onclickupload() { // check if content is set
-    if (this.fileIsActive) {
-      this.saveentries();
-    }
+    // if (this.fileIsActive) {
+    //   this.saveentries();
+    // }
+    this.onSelect(null) // to check open file
     let ready = true;
     if (this.listoffiles !== []) {
       for (const file of this.listoffiles){
@@ -75,88 +57,46 @@ export class ScanComponent {
 
   onclickclear() {
     // file lists
-    this.files = '';
     this.listoffiles = [];
-
-    // active files
-    this.active = null;
-    this.fileIsActive = false;
-    this.isActive = false;
-    this.activefile = 0;
-
-    // current data
-    this._id = null;
-    this.idtype = null;
-    this.firstpage = null;
-    this.lastpage = null;
-    this.resourceType = 'MONOGRAPH'; // needs to be value of select block
   }
 
   onChange(event: any) { // file input
-    this.files = '';
-    this.files = event.target.files; // this.uploader.queue;
-    let file: any;
-    for (file of this.files){
+    for (const file of event.target.files){
       const [_id, first, last] = this.extractidandPages(file.name);
-      let rtype = 'MONOGRAPH';
+      let rtype: ResourceType;
       if (first && last) {
-        rtype = 'COLLECTION';
+        rtype = ResourceType.collection;
         console.log('Assuming a collection')
       } else {
+        rtype = ResourceType.monograph;
         console.log('Assuming a monograph')
       }
       this.listoffiles.push(
-        { _id: _id, idtype: 'PPN',
-          firstpage: first, lastpage: last,
-          file: file, filecontent : null,
-          allset: this.isValid(
-          _id,
-          rtype,
-          first,
-          last
-        ), resourceType: rtype, status: null, uploading: false}
+        new ToDoScansWithMeta(
+          {
+            identifier: { literalValue: _id, scheme: 'ppn' },
+            firstpage: first,
+            lastpage: last,
+            file: file,
+            resourceType: rtype, uploading: false,
+            textualPdf: false
+          }
+        )
       );
     }
   }
 
-  isValid(_id: string, rtype: string, first: number, last: number): boolean {
-    if (!_id) {
-      return false;
-    }
-    if (rtype === 'MONOGRAPH') {
-      return true;
+  onSelect(item: ToDoScansWithMeta) {
+    if (item === this.selected) {
+      this.selected = null; // closes the 'drop-down'
     } else {
-      if (first && last) {
-        return true;
-      }
+      this.selected = item;
     }
-    // default
-    return false;
-  }
-
-  onSelectFile(item: ToDoScansWithMeta) {
-    if (this.fileIsActive) {
-      this.saveentries();
-      this.fileIsActive = true;
-    }
-
-    if (item === this.active || !this.fileIsActive) {
-      this.togglefile();
-    }
-
-    this.active = item;
-
-    this._id = item._id;
-    this.idtype = item.idtype;
-    this.firstpage = item.firstpage;
-    this.lastpage = item.lastpage;
-    this.resourceType = item.resourceType;
   }
 
 
-  extractidandPages(name: any) {
+  extractidandPages(name: any): [string, number, number] {
     // do same magic
-    // let re = /(?:\.([^.]+))?$/;
     const re = /([0-9]{8}[0-9X])([-_.+]0*([1-9][0-9]+)([-_.+]0*([1-9][0-9]+))?)?/;
     console.log('extracting id and pages from filename');
     let _id = null, first = null, last = null;
@@ -165,10 +105,10 @@ export class ScanComponent {
       console.log(match)
       _id = match[1];
       // 2 ..
-      first = match[3];
+      first = Number(match[3]) || null;
       // and 4 are grouped to make them optional
-      last = match[5];
-    } catch (err) { console.log('No id found in filename'); }
+      last = Number(match[5]) || null;
+    } catch (err) { console.log(err); }
     // could pick last number of id as we did not remove it
     // const pages_re = /([1-9][0-9]+)[-_+]([1-9][0-9]+)/;
     if (first && !last) {
@@ -181,47 +121,33 @@ export class ScanComponent {
   }
 
   // nicht mehr als onclick genutzt
-  // oh yes it is called by onSelectFile
-  saveentries() {
-    console.log('idtype sav;eentries;: ' + this.idtype)
-    this.fileIsActive = false;
-    this.active.idtype = this.idtype;
-    this.active.firstpage = this.firstpage;
-    this.active.lastpage = this.lastpage;
-    this.active._id = this._id ;
-    this.active.resourceType = this.resourceType;
-    // can we do this check elsewhere? it is only triggered when the file is collapsed
-    this.active.allset = this.isValid(this._id, this.resourceType, this.firstpage, this.lastpage);
-    // if (this.listoffiles[this.active].id && this.listoffiles[this.active].resourceType) {
-    //   if (this.listoffiles[this.active].resourceType === 'MONOGRAPH') {
-    //     // hard coded enum value TODO FIXME (long-term)
-    //     //
-    //     this.listoffiles[this.active].allset = true;
+  // oh yes it is called by onclickupload and onSelectFile
+  // saveentries() {
+  //   console.log('idtype saveentries ' + this.identifier.scheme)
+  //   this.fileIsActive = false;
+  //   this.active.firstpage = this.firstpage;
+  //   this.active.lastpage = this.lastpage;
+  //   this.active.identifier = new Identifier(this.identifier); // true copy
+  //   this.active.resourceType = this.resourceType;
+  //   this.active.textualPdf = this.textualPdf;
+  //   // can we do this check elsewhere? it is only triggered when the file is collapsed
+  //   this.active.allset = this.isValid(this.identifier.literalValue, this.resourceType, this.firstpage, this.lastpage);
+  // }
 
-    //   } else if (this.listoffiles[this.active].firstpage && this.listoffiles[this.active].lastpage) {
-    //       this.listoffiles[this.active].allset = true;
-    //   } else {
-    //     this.listoffiles[this.active].allset = false;
-    //   }
-    // } else {
-    //   this.listoffiles[this.active].allset = false;
-    // }
-  }
+  // readURL(input, i) {
+  //   if (input.files && input.files[i]) {
+  //     const reader = new FileReader();
 
-  readURL(input, i) {
-    if (input.files && input.files[i]) {
-      const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       console.log((<IDBOpenDBRequest>e.target).result);
+  //       // this.src = (<IDBOpenDBRequest>e.target).result;
+  //     }
 
-      reader.onload = (e) => {
-        console.log((<IDBOpenDBRequest>e.target).result);
-        // this.src = (<IDBOpenDBRequest>e.target).result;
-      }
-
-      reader.readAsDataURL(input.files[i]);
-    } else {
-      console.log('files out of bounds');
-    }
-  }
+  //     reader.readAsDataURL(input.files[i]);
+  //   } else {
+  //     console.log('files out of bounds');
+  //   }
+  // }
 
 
   writefilecontent(listelement: ToDoScansWithMeta) {
@@ -229,94 +155,130 @@ export class ScanComponent {
     console.log(this.listoffiles.indexOf(listelement))
     console.log(listelement.file)
     listelement.uploading = true;
+    listelement.err = null;
     if (listelement.file) {
-      console.log('Trying to Read');
-      const r = new FileReader();
-
-      r.onload = (e) => this.readFileContent(e, listelement);
-      r.readAsBinaryString(listelement.file);
+      // it is obviously enough to just provide the file metadata
+      // as formdata push will then load the file on server side
+      // do not test it before workshop
+      // -- after ws
+      // the contents are not needed for submission!!!!
+      // console.log('Trying to Read');
+      // const r = new FileReader();
+      // r.onload = (e) => this.readFileContent(e, listelement);
+      // r.readAsBinaryString(listelement.file);
+      console.log('Uploading file');
+      this.uploadFile(listelement);
     } else {
       // saveElectronicJournal should go here
       console.log('Empty file. Uploading as Journal');
-      this.locdbService.saveElectronicJournal(listelement._id).subscribe(
-        (result) => this.removeItemFromList(listelement, result),
+      this.locdbService.saveElectronicJournal(listelement.identifier).subscribe(
+        (res) => this.successHandler(listelement, res, false), // no auto-trigger in this case
         (err) => this.processError(listelement, err)
       );
     }
   }
 
-  readFileContent(e, listelement: ToDoScansWithMeta) {
-    const contents = (<IDBOpenDBRequest>e.target).result;
+  uploadFile(listelement: ToDoScansWithMeta) {
+    // const contents = (<IDBOpenDBRequest>e.target).result;
 
-    listelement.filecontent = contents;
+    // listelement.filecontent = contents;
     console.log('Pushing: ', listelement);
+    // turn third arguments to true to enable auto-trigger
+    // depends on back-end returning the correct scan
 
     if (listelement.resourceType === 'MONOGRAPH') {
+      // no page numbers necessary
       this.locdbService.saveScan(
-        listelement._id,
+        listelement.identifier.literalValue,
         listelement.resourceType,
+        listelement.textualPdf,
         listelement.file,
-        listelement.filecontent,
-      ).then((suc) => this.removeItemFromList(listelement, suc))
-       .catch((err) => this.processError(listelement, err));
+      ).subscribe(
+        (suc) => this.successHandler(listelement, suc, false),
+        (err) => this.processError(listelement, err)
+      );
+    } else if (listelement.resourceType === 'JOURNAL') {
+      // Electronic journal.
+      this.locdbService.saveScanForElectronicJournal (
+        listelement.identifier.scheme,
+        listelement.identifier.literalValue,
+        listelement.textualPdf,
+        listelement.file
+      ).subscribe(
+        (suc) => this.successHandler(listelement, suc, false),
+        (err) => this.processError(listelement, err)
+      );
     } else {
+      // collection...
       this.locdbService.saveScan(
-        listelement._id,
+        listelement.identifier.literalValue,
         listelement.resourceType,
+        listelement.textualPdf,
         listelement.file,
-        listelement.filecontent,
-        listelement.firstpage.toString(),
-        listelement.lastpage.toString()
-      ).then((suc) => this.removeItemFromList(listelement, suc))
-       .catch((err) => this.processError(listelement, err));
+        listelement.firstpage.toString(), // toString for transport
+        listelement.lastpage.toString() // toString for transport
+      ).subscribe(
+        (suc) => this.successHandler(listelement, suc, false),
+        (err) => this.processError(listelement, err)
+      );
     }
 
-    // rufe scan auf
   }
 
-  removeItemFromList(item: ToDoScansWithMeta, suc) {
+  successHandler(item, response, autotrigger: boolean) {
     item.uploading = false;
-    console.log('Send item: ', suc)
+    console.log('Response item: ', response)
     // clear after upload
+    this.removeItemFromList(item);
+    this.checkUploading(); // check if there is any element still uploading
+
+    // direct trigger OCR processing
+    if (autotrigger) {
+      console.log('Auto-triggering ocr processing for', response);
+      this.locdbService.triggerOcrProcessing(response._id).subscribe(
+        (res) => console.log('Successfully processed scan', response),
+        (err) => console.log('Error in auto OCR processing', response.message),
+      );
+    }
+  }
+
+  removeItemFromList(item: ToDoScansWithMeta) {
+    // used by button and successhandler
     const index = this.listoffiles.indexOf(item)
     if (index !== -1) {
       this.listoffiles.splice(index, 1);
     }
-    this.checkUploading();
   }
 
   processError(elem: ToDoScansWithMeta, err: any) {
     elem.uploading = false;
+    elem.err = err; // first assigned this property
     this.checkUploading();
-    console.log('Send Scans failed: ', err)
-    // set item error
+    console.log('Send Scans failed: ', elem, err)
   }
 
   addId() {
-    this.listoffiles.push(
+    this.listoffiles.push(new ToDoScansWithMeta(
       {
-        _id: null,
-        idtype: 'DOI',
+        identifier: { scheme: 'doi', literalValue: null },
         firstpage: null,
         lastpage: null,
         file: null,
-        filecontent : null,
-        allset: false,
-        resourceType: 'JOURNAL',
-        status: null,
+        resourceType: ResourceType.journal, // electronic for now is always journal
         uploading: false
-      }
+      })
     );
     console.log('added empty to listoffiles: ', this.listoffiles)
   }
 
+    /* the two method below could go to the class */
   getName(item: ToDoScansWithMeta) {
     if (item.file) {
-      return item.file.name
-    } else if (item._id == null) {
+      return item.file.name;
+    } else if (item.identifier == null) {
       return 'Electronic Resource';
     } else {
-      return item.idtype + ': ' + item._id;
+      return item.identifier.scheme + ': ' + item.identifier.literalValue;
     }
   }
 
@@ -325,7 +287,7 @@ export class ScanComponent {
       return (item.file.size / 1024 / 1024).toFixed(3) + ' MB, '
         + item.file.type;
     } else {
-      return '';
+      return 'Web Journal';
     }
   }
 
@@ -341,14 +303,34 @@ export class ScanComponent {
 
 
 
-interface ToDoScansWithMeta extends ToDoScans {
-  _id: string;
-  idtype: string;
+class ToDoScansWithMeta {
+  identifier: Identifier;
   firstpage?: number;
   lastpage?: number;
   file?: File;
-  filecontent?: any;
-  resourceType?: string; // maybe requiered?
-  allset?: boolean; // maybe save to assume?
+  resourceType: ResourceType;
   uploading: boolean; // to determine button state
+  err?: any;
+  textualPdf?: boolean; // textual pdf flag. optional since not needed for electronic
+
+  constructor (other: Partial<ToDoScansWithMeta>) {
+    Object.assign(this, other);
+  }
+
+  get allset() {
+    console.log('allset getter called');
+    if (!this.identifier.literalValue) {
+      return false;
+    } // else it has an identifier
+    if (this.resourceType === 'MONOGRAPH' || this.resourceType === 'JOURNAL') {
+      return true;
+    } else {
+      // currently only collection since (electronic) journals moved above
+      if (this.firstpage && this.lastpage) {
+        return true;
+      }
+    }
+    // default
+    return false;
+  }
 }

@@ -1,43 +1,48 @@
 <div *ngIf="entry">
-  <accordion-group [heading]=short() [isOpen]="active" [panelClass]="active ? 'panel-primary' : 'panel-default'">
+  <accordion-group [heading]=short() [isOpen]="active" [panelClass]="active ? 'border-primary' : entry.references ? 'border-success' : 'border-danger'">
     <div *ngIf="submitted">
-      <table class="table table-striped">
+      <table class="table table-striped" style="table-layout:fixed;">
         <tbody>
-          <tr>
+          <tr *ngIf="entry.bibliographicEntryText">
             <td> <label>Text</label> </td>
-            <td> {{entry.bibliographicEntryText}} </td>
+            <td> <p>{{entry.bibliographicEntryText}}</p> </td>
           </tr>
-          <tr>
+          <tr *ngIf="entry.references">
             <td> <label>References</label> </td>
-            <td> {{entry.references}} </td>
+            <td> <p>{{entry.references}}</p> </td>
           </tr>
-          <tr>
+          <tr *ngIf="entry.ocrData.title">
             <td> <label>Title</label> </td>
-            <td> {{entry.ocrData.title}} </td>
+            <td> <p>{{entry.ocrData.title}}</p> </td>
           </tr>
-          <tr>
+          <tr *ngIf="entry.ocrData.date">
             <td> <label>Date</label> </td>
-            <td> {{entry.ocrData.date}} </td>
+            <td> <p>{{entry.ocrData.date}}</p> </td>
           </tr>
           <tr *ngFor="let author of entry.ocrData.authors; let i=index">
             <td> <label> Author #{{i + 1}}</label> </td>
-            <td> {{author}} </td>
+            <td> <p>{{author}}</p> </td>
+          </tr>
+          <tr *ngFor="let ident of entry.identifiers; let i=index">
+            <td> <label> {{ident.scheme}} </label> </td>
+            <td> <p>{{ident.literalValue}}</p> </td>
           </tr>
           <tr>
+          <tr *ngIf="entry.ocrData.marker">
             <td> <label>Marker</label> </td>
-            <td> {{entry.ocrData.marker}} </td>
+            <td> <p>{{entry.ocrData.marker}}</p> </td>
           </tr>
-          <tr>
+          <tr *ngIf="entry.ocrData.comments">
             <td> <label>Comments</label> </td>
-            <td> {{entry.ocrData.comments}} </td>
+            <td> <p>{{entry.ocrData.comments}}</p> </td>
           </tr>
-          <tr>
+          <tr *ngIf="entry.ocrData.journal">
             <td> <label>Journal</label> </td>
-            <td> {{entry.ocrData.journal}} </td>
+            <td> <p>{{entry.ocrData.journal}}</p> </td>
           </tr>
-          <tr>
+          <tr *ngIf="entry.ocrData.volume">
             <td> <label>Volume</label> </td>
-            <td> {{entry.ocrData.volume}} </td>
+            <td> <p>{{entry.ocrData.volume}}</p> </td>
           </tr>
         </tbody>
       </table>
@@ -95,6 +100,38 @@
             <input class="form-control" formControlName="volume">
           </label>
         </div>
+        <div formArrayName="identifiers" class="well well-sm">
+        <table class="table-condensed" style="width: 100%;">
+          <tbody>
+            <tr>
+              <td>
+                <label>Identifiers</label> </td> <td>
+              </td>
+            </tr>
+            <tr *ngFor="let identifier of identifiers.controls; let j = index" [formGroupName]="j">
+              <td>
+                <!-- <button type="button" class="btn btn-warning" (click)="delContributorField(j)">Delete</button> -->
+                <button type="button" class="btn btn-danger" aria-label="Remove Identifier" (click)="removeIdentifier(j)">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
+              </td>
+              <td>
+                <input class="form-control" formControlName="scheme">
+              </td>
+              <td>
+                <input class="form-control" formControlName="literalValue">
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <button type="button" class="btn btn-success" aria-label="Add Identifier" (click)="addIdentifier()">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
         <div class="form-group">
           <label class="center-block">Marker:
             <input class="form-control" formControlName="marker">
@@ -107,7 +144,7 @@
         </div>
         <div class="form-group">
           <label class="center-block">References:
-            <input class="form-control" formControlName="references">
+            <input type="search" class="form-control" formControlName="references">
           </label>
         </div>
 
@@ -115,8 +152,8 @@
           <button type="button" class="btn btn-default" (click)="showForm(false)">
             Cancel
           </button> &nbsp;
-          <button type="reset" (click)="revert()"
-            [disabled]="entryForm.pristine" class="btn btn-danger">Revert</button> &nbsp;
+          <button type="button" (click)="revert()"
+            [disabled]="entryForm.pristine" class="btn btn-warning">Revert</button> &nbsp;
           <button type="submit"
             [disabled]="entryForm.pristine" class="btn btn-success">Save</button>
         </div>
