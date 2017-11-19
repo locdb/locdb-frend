@@ -1,6 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TodoDetailComponent } from './todo-detail.component';
+import { EntryListComponent } from '../entry-list/entry-list.component';
+import { EntryFormComponent } from '../entry-form/entry-form.component';
+import { DisplayComponent } from '../display/display.component';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
+import { ReactiveFormsModule } from '@angular/forms';
+import { LocdbService } from '../locdb.service';
+import { HttpModule } from '@angular/http';
+import { CredentialsService } from 'angular-with-credentials';
+
 
 describe('TodoDetailComponent', () => {
   let component: TodoDetailComponent;
@@ -8,7 +18,9 @@ describe('TodoDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TodoDetailComponent ]
+      imports: [ AccordionModule.forRoot(), HotkeyModule.forRoot(), ReactiveFormsModule, HttpModule],
+      declarations: [ TodoDetailComponent, EntryListComponent, EntryFormComponent, DisplayComponent ],
+      providers: [LocdbService, CredentialsService, HotkeysService]
     })
     .compileComponents();
   }));

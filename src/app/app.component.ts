@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { Citation } from './citation';
+import { Component, OnInit} from '@angular/core';
 
 import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, BibliographicResource } from './locdb';
 import { LocdbService } from './locdb.service';
@@ -13,54 +12,51 @@ import { environment } from 'environments/environment';
 })
 
 /** Main App Component for whole LOCDB Frontend */
-export class AppComponent {
+export class AppComponent implements OnInit {
     title = 'LOC-DB Extrapolite';
-    source: BibliographicResource;
-    todo: ToDoScans | BibliographicResource = null;
-    entries: BibliographicEntry[];
-    entry: BibliographicEntry;
-    target: BibliographicResource;
-    entryForSuggestion: BibliographicEntry;
+    source: BibliographicResource = null;
+    todo: ToDoScans | ToDo = null;
+    resourceTrack: BibliographicResource[] | ToDo[];
+    entry: BibliographicEntry = null;
+    target: BibliographicResource = null;
+    feeds: any = null;
     environment = environment;
-    visualState = 0;
-
-    /*
-     *    updatedEntry : BibliographicEntry = {
-     *      _id: this.entry._id,
-     *      scanId: this.entry.scanId,
-     *      status: this.entry.status,
-     *      coordinates: this.entry.coordinates,
-     *      marker: this.entry.marker,
-     *      bibliographicEntryText: this.entry.bibliographicEntryText,
-     *      title: title,
-     *      date: date,
-     *      authors: authors,
-     *      references: references
-    };
-    this.entry = updatedEntry;
-    */
     constructor ( private locdbService: LocdbService ) {}
 
+    ngOnInit() {
+        // this.visualState = 0;
+    }
+
+    updateFeeds(event){
+      console.log("updateFeeds: ", event);
+      this.feeds = event
+    }
+
+
     updateTodo(todo: ToDoScans | BibliographicResource) {
-        this.visualState = 0;
+        // this.visualState = 0;
         this.todo = todo;
     }
 
+    updateTrack(resources: BibliographicResource[] | ToDo[]){
+        this.resourceTrack = resources;
+    }
 
     updateSource (br: BibliographicResource) {
         // this.enableCitation();
-        this.visualState = 2;
+        // this.visualState = 2;
         console.log('Updating source', br);
-        this.target = br;
+        this.source = br;
     }
 
     updateEntry (entry: BibliographicEntry) {
+        // the check on entry causes the infamous ExpressionChangedAfterItWasSet exception
         // this.showCitation()
-        if (entry) {
-            this.visualState = 1;
-        } else {
-            this.visualState = 0;
-        }
+        // if (entry) {
+        //     this.visualState = 1;
+        // } else {
+        //     this.visualState = 0;
+        // }
         console.log('Updating with new entry', entry);
         this.entry = entry;
         // reset resource, since we selected a different entry
@@ -69,7 +65,7 @@ export class AppComponent {
 
     updateTarget (br: BibliographicResource) {
         // this.enableCitation();
-        this.visualState = 2;
+        // this.visualState = 2;
         console.log('Updating target', br);
         this.target = br;
     }
@@ -93,4 +89,3 @@ export class AppComponent {
     //     console.log('pathEditAndSubmit');
     // }
 }
-
