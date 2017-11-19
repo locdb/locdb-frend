@@ -22,6 +22,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { CredentialsService } from './locdb.service';
 import { PopoverModule } from 'ngx-popover';
 import { HotkeyModule } from 'angular2-hotkeys';
+
 // own
 import { ScanComponent } from './scan.component';
 import { DisplayComponent } from './display/display.component';
