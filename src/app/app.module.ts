@@ -18,7 +18,8 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 
 // misc
-import { CredentialsService } from 'angular-with-credentials';
+// import { CredentialsService } from 'angular-with-credentials';
+import { CredentialsService } from './locdb.service';
 import { PopoverModule } from 'ngx-popover';
 import { HotkeyModule } from 'angular2-hotkeys';
 // own
@@ -83,7 +84,10 @@ import { ResourceAccordionGroupComponent } from './resource-accordion-group/reso
     ResourceAccordionGroupComponent,
     ResourceEditableComponent,
   ],
-  providers: [ LocdbService, CredentialsService ],
+  providers: [
+    LocdbService,
+    CredentialsService
+  ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })

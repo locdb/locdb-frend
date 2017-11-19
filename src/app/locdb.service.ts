@@ -22,7 +22,7 @@ import {
 import { synCites_ } from './locdb'
 
 // Local testing with credentials
-import { CredentialsService } from 'angular-with-credentials';
+// import { CredentialsService } from 'angular-with-credentials';
 
 // dummy data
 import { MOCK_TODOBRS } from './mock-todos';
@@ -32,6 +32,28 @@ import 'rxjs/add/operator/toPromise';
 
 
 import { environment } from 'environments/environment';
+
+@Injectable()
+export class CredentialsService {
+  private http: any;
+  private _augmentFunctions = <any>[];
+
+  constructor( http: Http) {
+    this.http = <any>http;
+    const build = this.http._backend._browserXHR.build;
+    this.http._backend._browserXHR.build = () => {
+      const xhr = build();
+      this._augmentFunctions.forEach( (f: any) => {
+        f(xhr);
+      });
+      return xhr;
+    };
+  }
+
+  public augmentXhrBuild(f: any) {
+    this._augmentFunctions.push(f);
+  }
+}
 
 @Injectable()
 export class LocdbService {
@@ -147,7 +169,7 @@ export class LocdbService {
     formData.append('scan', file);
     return this.http.post(
       url,
-      formData
+      formData,
     ).map((s) => s.json() as ToDoScans).catch(this.handleError);
   }
 
@@ -205,7 +227,7 @@ export class LocdbService {
     params.set('id', scanId.toString());
     // const headers = new Headers({ 'Content-Type': 'application/json' });
     // const options = new RequestOptions(
-    //   { headers: headers, withCredentials: true, search: params }
+    //   { headers: headers, search: params }
     // );
     const url = `${this.locdbUrl}/triggerOcrProcessing`;
     return this.http.get(
@@ -347,7 +369,7 @@ export class LocdbService {
 
   login(user: string, pass: string): Observable<any> {
     // const headers = new Headers({'Content-Type': 'application/json', 'Accept' : 'application/json' });
-    const options = new RequestOptions({ headers: this.headers, withCredentials: true });
+    const options = new RequestOptions({ headers: this.headers });
     const url = `${this.locdbUrl}/login`
     // console.log(options)
     // return this.http.post(url, JSON.stringify({username: user, password: pass}), options).catch(this.fail);
@@ -362,7 +384,7 @@ export class LocdbService {
     // const headers = new Headers({ 'Content-Type': 'application/json' });
     // const options = new RequestOptions({ headers: headers, withCredentials: true });
     const url = `${this.locdbUrl}/signup`
-    const options = new RequestOptions({ headers: this.headers, withCredentials: true  });
+    const options = new RequestOptions({ headers: this.headers  });
     // return this.http.post(url, {username: user, password: pass}, options).catch(this.fail);
     return this.http.post(
       url,
@@ -373,7 +395,7 @@ export class LocdbService {
 
   logout(): Observable<any> {
     const url = `${this.locdbUrl}/logout`
-    const options = new RequestOptions({ headers: this.headers, withCredentials: true  });
+    const options = new RequestOptions({ headers: this.headers  });
     return this.http.get(
       url,
       options
@@ -387,7 +409,7 @@ export class LocdbService {
     return this.http.post(
       reqUrl,
       {name: name, url},
-      {headers: this.headers, withCredentials: true}
+      {headers: this.headers}
     ).map(res => res.json() as Feed);
   }
 
@@ -395,7 +417,7 @@ export class LocdbService {
     const url = `${this.locdbUrl}/fetchFeeds`;
     return this.http.get(
       url,
-      {headers: this.headers, withCredentials: true}
+      {headers: this.headers}
     ).map(res => res.json() as Feed[]);
   }
 
@@ -403,7 +425,7 @@ export class LocdbService {
     const url = `${this.locdbUrl}/deleteFeed/${identifier}`;
     return this.http.get(
       url,
-      {headers: this.headers, withCredentials: true}
+      {headers: this.headers}
     ).map(res => res.json()['feeds'] as Feed[])
   }
 } // LocdbService
