@@ -10,7 +10,7 @@ import {
     RESOURCE_TYPES
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
 @Component( {
@@ -24,18 +24,18 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     // if this is a string, we can try to dereference it from the back-end
     @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
 
-
-    @Input() resource_id: string = null;
-
     // this should not be here, the resource should only rely on itself and not
     // some entries TODO FIXME
     // @Input() exSuggests: any[];
     @Input() selected = false;
+    @Output() submitStatus: EventEmitter<boolean> = new EventEmitter();
     oldresource: BibliographicResource;
 
     resourceForm: FormGroup;
     embodiments: FormGroup[] = [];
     submitted = true;
+
+    submitting = false; // tracks submission status to disable button
     parts: FormGroup[] = [];
 
 
@@ -58,21 +58,22 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             edition: '',
             resourcenumber: '',
             publicationyear: '',
-            partof: '',
+            // partof: '',
+            containerTitle: '',
             contributors: this.fb.array([]),
             identifiers: this.fb.array([]),
         });
     }
 
     ngOnInit()  {
-        if (!this.resource && this.resource_id)  {
-            // if resource is not initialised itself but an id is given
-            // try to retrieve resource by id from the back-end
-            console.log('Fetching resource', this.resource_id, 'from back-end.');
-            this.locdbService.bibliographicResource(this.resource_id).subscribe(
-                (res) =>  { this.resource = res }
-            );
-        }
+        // if (!this.resource && this.resource_id)  {
+        //     // if resource is not initialised itself but an id is given
+        //     // try to retrieve resource by id from the back-end
+        //     console.log('Fetching resource', this.resource_id, 'from back-end.');
+        //     this.locdbService.bibliographicResource(this.resource_id).subscribe(
+        //         (res) =>  { this.resource = res }
+        //     );
+        // }
     }
 
     // clean array treatment
@@ -135,8 +136,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             edition: this.resource.edition,
             resourcenumber: this.resource.number,
             publicationyear: this.resource.publicationYear,
-            partof: this.resource.partOf,
-                // ...
+            containerTitle: this.resource.containerTitle
         });
         // new clean set contribs
         this.setContributors(this.resource.contributors);
@@ -144,21 +144,29 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
 
     onSubmit() {
-        this.resource = this.prepareSaveResource();
-        this.submitted = true;
-        if (this.resource.status !== 'EXTERNAL') {
-            console.log('Sending resource updates to backend!', this.resource);
-            // resource does not have an internal identifier
-            // only store in memory for now (until commit is called)
-            this.locdbService.putBibliographicResource(this.resource).subscribe((rval) => console.log('Yay. submitted', rval));
-        } else {
-            console.log('Saving external resource updates in the frontend');
-        }
-        this.ngOnChanges(); // as suggested by https://angular.io/guide/reactive-forms
+        // need to first store locally until saved
+        this.submitting = true;
+        const resourceCopy = this.prepareSaveResource();
+        this.locdbService.maybePutResource(resourceCopy).then(
+            r =>  {
+                this.resource = r;
+                this.ngOnChanges();
+                this.submitting = false;
+                this.submitted = true;
+                this.submitStatus.emit(false);
+
+            }
+        ).catch(err => this.submitting = false);
     }
 
     revert() {
         this.ngOnChanges()
+    }
+
+
+    cancel() {
+        this.submitted = true; // effectively closes the form
+        this.submitStatus.emit(false)
     }
 
     reconstructAgentRole(name: string, role: string): AgentRole {
@@ -201,11 +209,14 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             title: formModel.title as string || '',
             subtitle: formModel.subtitle as string || '',
             edition: formModel.edition as string || '',
+            containerTitle: formModel.containerTitle as string || '',
             number: formModel.resourcenumber as string || '',
             contributors: contribsDeepCopy,
             publicationYear: formModel.publicationyear as string || '',
-            partOf: formModel.partof as string || '',
-            // warning: no deep copy (but this ok as long as not editable)
+            // partOf: formModel.partof as string || '',
+            // warning: retain internal identifiers (dont show primary keys to the user)
+            // not editable, but copied values
+            partOf: this.resource.partOf,
             embodiedAs: this.resource.embodiedAs,
             parts: this.resource.parts,
             cites: this.resource.cites,
@@ -305,9 +316,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                 s += ` [${br.type}]`
             }
             return s;
-        } else {
-            // maybe only identifier given, resource is getting retrieved
-            return this.resource_id;
         }
     }
 

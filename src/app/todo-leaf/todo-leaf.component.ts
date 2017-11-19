@@ -21,6 +21,7 @@ export class TodoLeafComponent implements OnInit {
   }
 
   printState(scan: ToDoScans) {
+    if (!scan) { return '' };
     if (scan.status === ToDoStates.ocr) { return 'OCR processed' } ;
     if (scan.status === ToDoStates.nocr) { return  'not OCR processed '};
     if (scan.status === ToDoStates.iocr) { return 'OCR processing' };

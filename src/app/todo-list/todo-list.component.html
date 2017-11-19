@@ -1,46 +1,55 @@
-<div class="text-right" style="margin-top: 1em;">
+<div class="text-right" style="margin-top: 1rem; margin-left: 1rem;">
   <button (click)="refresh()" type="button" class="btn btn-secondary" aria-label="Refresh">
-    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+    Refresh
   </button>
 </div>
-<div style="margin-top: 1em; margin-bottom: 1em;">
+<div style="margin-top: 1rem; margin-bottom: 1rem;">
   <accordion>
     <div *ngIf="loading" class="loader">
     </div>
     <div *ngFor="let t of todos">
-      <app-resource-form [resource]="t"></app-resource-form>
-      <div class="list-group">
-        <a href='#' class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans; let i = index" (click)="onSelectScan(s); false">
-          <button type="button" class="close pull-right" (click)="deleteScan(i, t); $event.stopPropagation()" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          Scan {{ trimHash(s._id) }}
-          <span class="badge badge-default badge-pill">{{ printState(s) }}</span>
-        </a>
-        <div *ngFor="let c of t.children" style="margin-left: 1em;">
-          <app-resource-form [resource]="c"></app-resource-form>
-          <!-- scans attached to children of resource -->
-          <a href="#" class="list-group-item list-group-item-action list-group-item-info" *ngIf="state === states.ext" (click)="onSelectExternal(c); false">
-            External References
-            <span class="label label-danger">{{provenance.crossref}}</span>
+      <div *ngIf="guard(t)">
+        <app-resource-accordion-group [resource]="t"></app-resource-accordion-group>
+        <div class="list-group">
+          <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="t.parts && t.parts.length" (click)="onSelectExternal(t); $event.stopPropagation(); $event.preventDefault()">
+            <div class="text-center">
+              <em>References</em>
+            </div>
           </a>
-          <div *ngFor="let s of c.scans; let i = index">
-            <a href="" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectScan(s); false">
-              <button type="button" class="close pull-right" (click)="deleteScan(i, c); $event.stopPropagation()" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              Scan {{ trimHash(s._id) }} on pp. {{s.firstPage}}-{{s.lastPage}}
-              <span class="badge badge-default badge-pill">{{ printState(s) }}</span>
-            </a>
-          </div>
+          <a href='#' class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans; let i = index" (click)="onSelectScan(s, [t]); $event.stopPropagation(); $event.preventDefault()">
+            <button type="button" class="close pull-right" (click)="deleteScan(s, t); $event.preventDefault(); $event.stopPropagation()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            Scan {{ trimHash(s._id) }}
+            <span class="badge badge-primary">{{ printState(s) }}</span>
+          </a>
+          <div *ngFor="let c of t.children" style="margin-left: 1em;">
+            <div *ngIf="guard(c)">
+              <app-resource-accordion-group [resource]="c"></app-resource-accordion-group>
+              <!-- scans attached to children of resource -->
+              <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="c.parts && c.parts.length" (click)="onSelectExternal(c); $event.stopPropagation(); $event.preventDefault()">
+                <div class="text-center">
+                  <em>References</em>
+                </div>
+              </a>
+              <div *ngFor="let s of c.scans; let i = index">
+                <a href="#" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectScan(s, [t, c]); $event.stopPropagation(); $event.preventDefault()">
+                  <button type="button" class="close pull-right" (click)="deleteScan(s, c); $event.preventDefault(); $event.stopPropagation()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  Scan {{ trimHash(s._id) }} on pp. {{s.firstPage}}-{{s.lastPage}}
+                  <span class="badge badge-primary">{{ printState(s) }}</span>
+                </a>
+              </div>
+            </div>
+          </div> <!-- end of inner loop -->
         </div>
       </div>
-    </div> <!-- end of for loop -->
+    </div> <!-- end of outer loop -->
   </accordion>
-  <hr>
 </div>
 <div class="text-right">
-  <button (click)="refresh()" type="button" class="btn btn-secondary" aria-label="Refresh">
-    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+  <button (click)="refresh()" type="button" style="margin-bottom: 1rem; margin-left: 1rem;" class="btn btn-secondary" aria-label="Refresh">
+    Refresh
   </button>
 </div>

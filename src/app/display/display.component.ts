@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ViewChildren, ViewChild} from '@angular/core';
+import { Component, OnInit, OnDestroy, OnChanges, Input, Output, EventEmitter, ViewChildren, ViewChild} from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 
 import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, BibliographicResource } from '../locdb';
@@ -9,6 +9,7 @@ import * as d3 from 'd3';
 import { PopoverModule } from 'ngx-popover/index';
 
 import { Observable } from 'rxjs/Observable';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 // Display component consists of file upload, todo item selection and actual
 // display of the scan
@@ -26,7 +27,7 @@ import { Observable } from 'rxjs/Observable';
 //     rect: rect;
 // }
 
-export class DisplayComponent implements OnInit, OnChanges {
+export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     private zoomSVG: any;
     @ViewChild('zoomSVG') set content(content: any) {
         this.zoomSVG = content;
@@ -34,8 +35,8 @@ export class DisplayComponent implements OnInit, OnChanges {
 
     // @Input() todo: ToDoScans;
 
-    @Input() img_src: string;
-    @Input() entries: BibliographicEntry[];
+    @Input() img_src = '';
+    @Input() entries: BibliographicEntry[] = [];
 
     selectedEntry: BibliographicEntry = null;
 
@@ -49,7 +50,8 @@ export class DisplayComponent implements OnInit, OnChanges {
 
     @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
 
-    constructor( private locdbService: LocdbService) { }
+    constructor( private locdbService: LocdbService, private _hotkeysService: HotkeysService) {
+    }
 
     initSVGZoom() {
         const zoom = d3.zoom().on('zoom', function () {
@@ -66,34 +68,37 @@ export class DisplayComponent implements OnInit, OnChanges {
     }
 
 
-    ngOnChanges() {
+    ngOnChanges(changes: SimpleChanges | any) {
         // Input todo and this method should replace manual calling of updateDisplay
+        console.log('ngOnChanges in display');
         if (this.entries && this.entries.length) {
             // extract rectanlges and so on
             // this.extractRects(this.entries);
             // there can be empty coordinate fields! we need to filter first
             this.rects = this.entries.filter(
-                e => this.validateCoordinates(e.ocrData.coordinates)
+                e => e.ocrData.coordinates && this.validateCoordinates(e.ocrData.coordinates)
             ).map(this.rectFromEntry);
+            const firstUnprocessed = this.rects.find(r => !r.entry.references);
+            this.selectedEntry = firstUnprocessed.entry;
+            this.entry.next(this.selectedEntry);
         }
     }
 
-    // these should go over to entry-list.ts
-    newCustomEntry() {
-        // unused but should be used //
-        this.entry.next(new BibliographicEntry());
-    }
-
-    next(diff: number) {
-        // unused //
-        // we could make more use of it, when we check for status = -1
-        this.currentIndex = Math.abs((this.entries.length + this.currentIndex + diff) % this.entries.length);
-        const entry = this.entries[this.currentIndex];
-        console.log('Emission of entry at index ' + this.currentIndex, entry);
-        this.entry.next(entry);
-    }
-
     ngOnInit() {
+        this._hotkeysService.add(new Hotkey('j', (event: KeyboardEvent): boolean => {
+            let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
+            if (current === -1 || current >= this.rects.length - 1) { return false }; // not in array or at bounds
+            current += 1
+            this.onSelect(this.rects[current]);
+            return false;
+        }, [], 'one rectangle upward'));
+        this._hotkeysService.add(new Hotkey('k', (event: KeyboardEvent): boolean => {
+            let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
+            if (current === -1 || current <= 0) { return false }; // not in array or at bounds
+            current -= 1
+            this.onSelect(this.rects[current]);
+            return false;
+        }, [], 'one rectangle downward'));
 
     }
 
@@ -158,6 +163,13 @@ export class DisplayComponent implements OnInit, OnChanges {
             console.log('Image size = 0', realDim);
         }
         this.initSVGZoom();
+    }
+
+    ngOnDestroy() {
+        for (const combo of ['j', 'k']) {
+            const hk = this._hotkeysService.get(combo)
+            this._hotkeysService.remove(hk);
+        }
     }
 }
 

@@ -31,6 +31,7 @@ export class EntryFormComponent implements OnChanges {
       title: '',
       date: '',
       authors: this.fb.array([]),
+      identifiers: this.fb.array([]),
       marker: '',
       comments: '',
       journal: '',
@@ -44,10 +45,10 @@ export class EntryFormComponent implements OnChanges {
       return;
     }
     this.entryForm.reset({
-      title: this.entry.ocrData.title,
-      references: this.entry.references,
-      date: this.entry.ocrData.date,
       bibliographicEntryText: this.entry.bibliographicEntryText,
+      references: this.entry.references,
+      title: this.entry.ocrData.title,
+      date: this.entry.ocrData.date,
       // not reflected yet TODO FIXME
       marker: this.entry.ocrData.marker,
       comments: this.entry.ocrData.comments,
@@ -55,6 +56,7 @@ export class EntryFormComponent implements OnChanges {
       volume: this.entry.ocrData.volume,
     });
     this.setAuthors(this.entry.ocrData.authors);
+    this.setIdentifiers(this.entry.identifiers);
   }
 
   setAuthors(authors: string[]) {
@@ -72,6 +74,11 @@ export class EntryFormComponent implements OnChanges {
     this.authors.push(this.fb.control(''));
   }
 
+  clearReference() {
+    // for the future
+    this.entryForm.setValue({references: ''});
+  }
+
   removeAuthor(idx: number) {
     this.authors.removeAt(idx);
   }
@@ -80,16 +87,53 @@ export class EntryFormComponent implements OnChanges {
       // Display the form or stop displaying it
       this.submitted = !val;
   }
+  setIdentifiers(ids: Identifier[]) {
+    const identsFGs = ids ? ids.map(
+      identifier => this.fb.group(
+        {literalValue: identifier.literalValue,
+          scheme: identifier.scheme }
+      )
+    ) : [];
+    const idsFormArray = this.fb.array(identsFGs);
+    this.entryForm.setControl('identifiers', idsFormArray);
+  }
+
+  get identifiers(): FormArray {
+    return this.entryForm.get('identifiers') as FormArray;
+  }
+
+  addIdentifier() {
+    // reference from getter above
+    this.identifiers.push(this.fb.group({scheme: '', literalValue: ''}));
+  }
+
+  removeIdentifier(index: number) {
+    this.identifiers.removeAt(index);
+  }
 
   onSubmit() {
-    this.entry = this.prepareSaveEntry();
+    const entry = this.prepareSaveEntry();
     console.log('Submitting entry', this.entry);
 
-    this.locdbService.putBibliographicEntry(this.entry).subscribe(
-      (result) => console.log('Submitted Entry with result', result)
-    );
-    this.submitted = true;
-    this.ngOnChanges();
+    if (entry._id) {
+      this.locdbService.putBibliographicEntry(entry).subscribe(
+        (result) => { this.entry = result; this.submitted = true; this.ngOnChanges()},
+        (error) => console.log('Error updating entry', error)
+      );
+    } else {
+      console.log('Post entry not implemented');
+      // this.locdbService.posthBibliographicEntry(entry).subscribe(
+      //   (result) => { this.entry = result; this.submitted = true; this.ngOnChanges()},
+      //   (error) => console.log('Error putting new entry')
+      // )
+    }
+  }
+  reconstructIdentifier(scheme: string, value: string): Identifier {
+    const identifier = {
+      scheme: scheme,
+      literalValue: value,
+    }
+    return identifier;
   }
 
   prepareSaveEntry(): BibliographicEntry {
@@ -97,15 +141,19 @@ export class EntryFormComponent implements OnChanges {
     // deep copy of form model lairs
     // const authorsDeepCopy: string[] = formModel.authors.map(
     //   (author: string) => Object.assign({}, author)
-    // );
     // const authorsDeepCopy = Object.create(formModel.authors);
-    const authorsDeepCopy = this.copyArray<string>(formModel.authors);
+    // const authorsDeepCopy = this.copyArray<string>(formModel.authors);
     // return new `BibliographicEntry` object containing a combination of original entry value(s)
     // and deep copies of changed form model values
+    const authorsDeepCopy = formModel.authors.map( x => x);
+    const identsDeepCopy = formModel.identifiers.map(
+      (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
+    ).filter(i => i.scheme && i.literalValue); // sanity check
     const saveEntry: BibliographicEntry = {
       _id: this.entry._id,
       bibliographicEntryText: formModel.bibliographicEntryText as string || '',
       references: formModel.references as string || '',
+      identifiers: identsDeepCopy || [],
       ocrData: {
         title: formModel.title as string || '',
         date: formModel.date as string || '',
@@ -121,6 +169,7 @@ export class EntryFormComponent implements OnChanges {
   }
 
   copyArray<T>(array: T[]): T[] {
+    // not really deep
     const copy = []
     for (const elem of array) {
       copy.push(elem);
@@ -131,11 +180,46 @@ export class EntryFormComponent implements OnChanges {
   revert() { this.ngOnChanges(); }
 
   short() {
-    if (!this.entry) { return 'Loading'; }
+    // TODO
+    // this is so complicated it could be an own component
+    if (!this.entry) { return 'Loading...'; }
+
+    const elements: string[] = [];
+    if (this.entry.ocrData.authors && this.entry.ocrData.authors.length) {
+      const authorsString = this.entry.ocrData.authors.join('; ')
+      if (authorsString) {
+        elements.push(`${authorsString}:`)
+      }
+    }
+
     if (this.entry.ocrData.title) {
-      return this.entry.ocrData.title;
-    } else {
+      elements.push(this.entry.ocrData.title);
+    }
+
+    if (this.entry.identifiers && this.entry.identifiers.length) {
+      const istring = this.entry.identifiers.filter(ident => ident.literalValue)
+        .map(
+        (ident) => `${ident.scheme}: ${ident.literalValue}`
+      ).join('; ');
+      if (istring) {
+        // could be empty because of missing literal Values
+        elements.push(`${istring}`);
+      }
+    }
+
+    if (this.entry.ocrData.journal) {
+      elements.push(`In: ${this.entry.ocrData.journal} ${this.entry.ocrData.volume}`);
+    }
+
+    if (this.entry.ocrData.date) {
+      elements.push(`${this.entry.ocrData.date}`);
+    }
+
+    if (!elements.length) {
+      // no structured meta data at all, use raw text if present
       return this.entry.bibliographicEntryText;
+    } else {
+      return elements.join(' ');
     }
   }
 
