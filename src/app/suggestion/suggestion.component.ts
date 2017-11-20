@@ -11,6 +11,8 @@ import { environment } from 'environments/environment';
 
 import { ToDoStates, Provenance } from '../locdb';
 
+import {PopoverModule} from "ngx-popover";
+
 
 @Component({
     selector: 'app-suggestion',

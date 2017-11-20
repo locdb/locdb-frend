@@ -15,6 +15,10 @@
     <button type="button" class="btn btn-success" aria-label="Search" (click)="refresh()">
       Search
     </button>
+    <popover-content #searchPopover [closeOnClickOutside]="true">
+      <a href="{{'https://scholar.google.com/scholar?q='+query}}" target="_blank" style="target-new: tab;" class="btn btn-info float-right" role="button">Google Scolar</a>
+    </popover-content>
+    <button [popover]="searchPopover" class="btn btn-info float-right">external Search ...</button>
   </div>
 
   <div class="card-body" style="height: 800px; overflow-x: hidden;">
