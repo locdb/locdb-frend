@@ -1,9 +1,10 @@
 <div *ngIf="!entries" class="loader">
 </div>
 <accordion *ngIf="entries">
+  <div style="height: 1000px; overflow-x: hidden;">
   <div *ngFor="let e of entries">
     <app-entry-form [entry]="e" [active]="e == selectedEntry" (click)="onSelect(e)">
     </app-entry-form>
   </div>
+</div>
 </accordion>
-
