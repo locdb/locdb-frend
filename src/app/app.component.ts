@@ -13,7 +13,7 @@ import { environment } from 'environments/environment';
 
 /** Main App Component for whole LOCDB Frontend */
 export class AppComponent implements OnInit {
-    title = 'LOC-DB Extrapolite';
+    title = 'LOC-DB Frontend';
     source: BibliographicResource = null;
     todo: ToDoScans | ToDo = null;
     resourceTrack: BibliographicResource[] | ToDo[];
