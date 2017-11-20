@@ -15,7 +15,7 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 @Component({
   selector: 'app-entry-list',
   templateUrl: './entry-list.component.html',
-  styleUrls: ['../locdb.css', './entry-list.component.css']
+  styleUrls: ['./entry-list.component.css']
 })
 
 export class EntryListComponent implements OnInit, OnChanges, OnDestroy {

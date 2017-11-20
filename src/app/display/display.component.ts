@@ -85,6 +85,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
+        console.log('oninit:', this.img_src)
         this._hotkeysService.add(new Hotkey('j', (event: KeyboardEvent): boolean => {
             let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
             if (current === -1 || current >= this.rects.length - 1) { return false }; // not in array or at bounds

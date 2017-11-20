@@ -7,7 +7,7 @@ import { Provenance } from '../locdb';
 @Component({
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html',
-  styleUrls: ['../locdb.css', './todo-list.component.css']
+  styleUrls: ['./todo-list.component.css']
 })
 export class TodoListComponent implements OnInit, OnChanges {
 

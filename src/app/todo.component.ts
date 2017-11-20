@@ -10,7 +10,7 @@ import { LocdbService } from './locdb.service';
   selector: 'app-todo',
   templateUrl: 'todo.component.html',
   providers: [ LocdbService ],
-  styleUrls: ['./locdb.css']
+  styleUrls: []
 })
 
 export class TodoComponent implements OnInit {

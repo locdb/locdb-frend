@@ -49,7 +49,7 @@ export class TodoDetailComponent implements OnInit, OnChanges {
   }
 
   getScan(id: string) {
-    this.locdbService.getScan(id);
+    return this.locdbService.getScan(id);
   }
 
 

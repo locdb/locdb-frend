@@ -15,7 +15,7 @@ import { ToDoStates, Provenance } from '../locdb';
 @Component({
     selector: 'app-suggestion',
     templateUrl: './suggestion.component.html',
-    styleUrls: ['../locdb.css', './suggestion.component.css']
+    styleUrls: ['./suggestion.component.css']
 })
 
 export class SuggestionComponent implements OnInit, OnChanges {
