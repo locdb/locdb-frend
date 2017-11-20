@@ -197,7 +197,7 @@ export enum IdentifierScheme {
 
 export enum ResourceType {
   monograph = 'MONOGRAPH',
-  collection = 'COLLECTION',
+  collection = 'BOOK_CHAPTER',
   journal = 'JOURNAL'
 }
 
