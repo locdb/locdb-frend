@@ -56,94 +56,79 @@
       <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" novalidate>
         <!-- Hero Detail Controls -->
         <div class="form-group">
-          <label class="center-block">Raw text:
+          <label>Raw text:
             <input class="form-control" formControlName="bibliographicEntryText">
           </label>
         </div>
         <div class="form-group">
-          <label class="center-block">Title:
+          <label>Title:
             <input class="form-control" formControlName="title">
           </label>
         </div>
-        <div formArrayName="authors" class="well well-lg">
+        <div formArrayName="authors">
           <div *ngFor="let author of authors.controls; let i=index">
-            <!-- The repeated author template -->
-            <h4>Author #{{i + 1}}</h4>
-            <div style="margin-left: 1em;">
-              <div class="form-group">
-                <label class="center-block"> Name:
-                  <!-- <input class="form-control" formControlName="author"> -->
-                  <input class="form-control" [formControlName]="i">
-                  <button (click)="removeAuthor(i)" type="button" class="btn btn-default" aria-label="Remove Author">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            <div class="form-group">
+              <div class="row">
+                <div class="col">
+                  <button (click)="removeAuthor(i)" type="button" class="close" aria-label="Remove Author">
+                    <span aria-hidden="true">&times;</span>
                   </button>
-                </label>
+                  <label> Author #{{i + 1}}:</label>
+                </div>
+                <div class="col">
+                  <input class="form-control" [formControlName]="i">
+                </div>
               </div>
             </div>
-            <br>
-            <!-- End of the repeated author template -->
           </div>
-          <button (click)="addAuthor()" type="button">Add author</button>
+          <button (click)="addAuthor()" class="btn btn-success" style="margin: 1rem;" type="button">Add Author</button>
         </div>
         <div class="form-group">
-          <label class="center-block">Year:
-            <input class="form-control" formControlName="date">
+          <label for="date">Year:
+            <input id="date" class="form-control" formControlName="date">
           </label>
         </div>
         <div class="form-group">
-          <label class="center-block">Journal:
-            <input class="form-control" formControlName="journal">
+          <label for="journal">Journal:
+            <input id="journal" class="form-control" formControlName="journal">
           </label>
         </div>
         <div class="form-group">
-          <label class="center-block">Volume:
-            <input class="form-control" formControlName="volume">
+          <label for="journal">Volume:
+            <input id="volume" class="form-control" formControlName="volume">
           </label>
         </div>
-        <div formArrayName="identifiers" class="well well-sm">
-        <table class="table-condensed" style="width: 100%;">
-          <tbody>
-            <tr>
-              <td>
-                <label>Identifiers</label> </td> <td>
-              </td>
-            </tr>
-            <tr *ngFor="let identifier of identifiers.controls; let j = index" [formGroupName]="j">
-              <td>
-                <!-- <button type="button" class="btn btn-warning" (click)="delContributorField(j)">Delete</button> -->
-                <button type="button" class="btn btn-danger" aria-label="Remove Identifier" (click)="removeIdentifier(j)">
-                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        <div formArrayName="identifiers">
+          <label>Identifiers</label>
+            <div *ngFor="let identifier of identifiers.controls; let j = index" [formGroupName]="j">
+              <div class="row">
+                <button type="button" class="close" aria-label="Remove Identifier" (click)="removeIdentifier(j)">
+                  <span aria-hidden="true">&times;</span>
                 </button>
-              </td>
-              <td>
-                <input class="form-control" formControlName="scheme">
-              </td>
-              <td>
-                <input class="form-control" formControlName="literalValue">
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <button type="button" class="btn btn-success" aria-label="Add Identifier" (click)="addIdentifier()">
-                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+                <div class="col">
+                  <input class="form-control" formControlName="scheme">
+                </div>
+                <div class="col">
+                  <input class="form-control" formControlName="literalValue">
+                </div>
+              </div>
+          </div>
+          <button style="margin: 1rem;" type="button" class="btn btn-success" aria-label="Add Identifier" (click)="addIdentifier()">
+            Add Identifier
+          </button>
+        </div>
         <div class="form-group">
-          <label class="center-block">Marker:
+          <label>Marker:
             <input class="form-control" formControlName="marker">
           </label>
         </div>
         <div class="form-group">
-          <label class="center-block">Comments:
+          <label>Comments:
             <input class="form-control" formControlName="comments">
           </label>
         </div>
         <div class="form-group">
-          <label class="center-block">References:
+          <label>References:
             <input type="search" class="form-control" formControlName="references">
           </label>
         </div>

@@ -4,7 +4,7 @@ import { REFERENCES, REFERENCES_ALT } from './mock-references';
 
 import { LocdbService } from './locdb.service';
 
-import { ResourceType, ToDoScans, Identifier} from './locdb';
+import { ResourceType, ToDoScans, Identifier, BibliographicEntry } from './locdb';
 
 const URL = '/api/'; // Same Origin Policy
 
@@ -186,18 +186,18 @@ export class ScanComponent {
     // turn third arguments to true to enable auto-trigger
     // depends on back-end returning the correct scan
 
-    if (listelement.resourceType === 'MONOGRAPH') {
-      // no page numbers necessary
+    if (listelement.resourceType === ResourceType.monograph) {
+      // Monograph no page numbers necessary
       this.locdbService.saveScan(
         listelement.identifier.literalValue,
         listelement.resourceType,
         listelement.textualPdf,
         listelement.file,
       ).subscribe(
-        (suc) => this.successHandler(listelement, suc, false),
+        (suc) => this.successHandler(listelement, suc, true), // auto trigger ocr
         (err) => this.processError(listelement, err)
       );
-    } else if (listelement.resourceType === 'JOURNAL') {
+    } else if (listelement.resourceType === ResourceType.journal) {
       // Electronic journal.
       this.locdbService.saveScanForElectronicJournal (
         listelement.identifier.scheme,
@@ -208,8 +208,7 @@ export class ScanComponent {
         (suc) => this.successHandler(listelement, suc, false),
         (err) => this.processError(listelement, err)
       );
-    } else {
-      // collection...
+    } else { // Collection
       this.locdbService.saveScan(
         listelement.identifier.literalValue,
         listelement.resourceType,
@@ -218,7 +217,7 @@ export class ScanComponent {
         listelement.firstpage.toString(), // toString for transport
         listelement.lastpage.toString() // toString for transport
       ).subscribe(
-        (suc) => this.successHandler(listelement, suc, false),
+        (suc) => this.successHandler(listelement, suc, true), // auto trigger ocr
         (err) => this.processError(listelement, err)
       );
     }
@@ -227,6 +226,7 @@ export class ScanComponent {
 
   successHandler(item, response, autotrigger: boolean) {
     item.uploading = false;
+    const entry: BibliographicEntry = response[response.length - 1];
     console.log('Response item: ', response)
     // clear after upload
     this.removeItemFromList(item);
@@ -234,10 +234,10 @@ export class ScanComponent {
 
     // direct trigger OCR processing
     if (autotrigger) {
-      console.log('Auto-triggering ocr processing for', response);
-      this.locdbService.triggerOcrProcessing(response._id).subscribe(
-        (res) => console.log('Successfully processed scan', response),
-        (err) => console.log('Error in auto OCR processing', response.message),
+      console.log('Auto-triggering ocr processing for', entry);
+      this.locdbService.triggerOcrProcessing(entry._id).subscribe(
+        (res) => console.log('Successfully processed scan', entry),
+        (err) => console.log('Error in auto OCR processing', err.message),
       );
     }
   }
@@ -318,14 +318,14 @@ class ToDoScansWithMeta {
   }
 
   get allset() {
-    console.log('allset getter called');
     if (!this.identifier.literalValue) {
+      // identifier always required
       return false;
     } // else it has an identifier
-    if (this.resourceType === 'MONOGRAPH' || this.resourceType === 'JOURNAL') {
+    if (this.resourceType === ResourceType.monograph || this.resourceType === ResourceType.journal) {
       return true;
     } else {
-      // currently only collection since (electronic) journals moved above
+      // currently only collection requires pages numbers 
       if (this.firstpage && this.lastpage) {
         return true;
       }
