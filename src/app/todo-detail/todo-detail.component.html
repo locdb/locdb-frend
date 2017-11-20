@@ -1,7 +1,10 @@
+<nav aria-label="breadcrumb" role="navigation">
+  <ol class="breadcrumb" style="font-size: 75%;">
+    <li *ngFor="let r of resourceTrack" class="breadcrumb-item active" aria-current="page">{{r.title}}</li>
+  </ol>
+</nav>
 <div class="card">
   <div class="card-header">
-    <div class="row">
-      <div class="col-md-5 col-sm-5 col-xs-5">
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar">
       <div class="btn-group mr-2" role="group" aria-label="Back" >
         <button type="button" class="btn btn-danger" (click)="back()">Back</button>
@@ -16,16 +19,6 @@
       </div>
     </div>
   </div>
-    <div class="col-md-7 col-sm-7 col-xs-7">
-    <nav aria-label="breadcrumb" role="navigation">
-      <ol class="breadcrumb">
-        <li *ngFor="let r of resourceTrack" class="breadcrumb-item active" aria-current="page">{{r.title}}</li>
-      </ol>
-    </nav>
-  </div>
-  </div>
-  </div>
-
   <div class="card-body">
     <div *ngIf="todo && scanAvailable" [hidden]="!scanIsVisible">
       <app-display [img_src]="getScan(todo._id)" [entries]="entries" (entry)="forwardEntry($event)"></app-display>
