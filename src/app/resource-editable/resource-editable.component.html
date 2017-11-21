@@ -1,6 +1,6 @@
-<div class="text-right">
-  <button *ngIf="!editing" type="button" class="btn btn-warning" aria-label="Edit" (click)="showForm(true)">
-    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+<div class="text-right" style="margin-bot: 1rem;">
+  <button type="button" class="btn btn-warning" aria-label="Edit" (click)="showForm(!editing)">
+    {{ !editing ? "Edit" : "Cancel" }}
   </button>
 </div>
 <app-resource *ngIf="!editing" [resource]="resource">

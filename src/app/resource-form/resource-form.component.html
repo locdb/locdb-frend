@@ -121,7 +121,7 @@
         </tbody>
       </table>
       <!--   Idents   -->
-      <div formArrayName="identifiers" class="well well-sm">
+      <div formArrayName="identifiers">
         <table class="table-condensed" style="width: 100%;">
           <tbody>
             <tr>
@@ -132,9 +132,9 @@
             <tr *ngFor="let identifier of identifiers.controls; let j = index" [formGroupName]="j">
               <td>
                 <!-- <button type="button" class="btn btn-warning" (click)="delContributorField(j)">Delete</button> -->
-                <button type="button" class="btn btn-danger" aria-label="Remove Identifier" (click)="removeIdentifier(j)">
-                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                </button>
+                  <button (click)="removeIndeitifer(j)" type="button" class="close" aria-label="Remove Identifier">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
               </td>
               <td>
                 <input class="form-control" formControlName="scheme">
@@ -146,7 +146,7 @@
             <tr>
               <td>
                 <button type="button" class="btn btn-success" aria-label="Add Identifier" (click)="addIdentifier()">
-                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                  Add Identifier
                 </button>
               </td>
             </tr>
@@ -154,7 +154,7 @@
         </table>
       </div>
       <!--   contribs   -->
-      <div formArrayName="contributors" class="well well-sm">
+      <div formArrayName="contributors">
         <table class="table-condensed" style="width: 100%;">
           <tbody>
             <tr>
@@ -165,8 +165,8 @@
             <tr *ngFor="let contributor of contributors.controls; let j = index" [formGroupName]="j">
               <td>
                 <!-- <button type="button" class="btn btn-warning" (click)="delContributorField(j)">Delete</button> -->
-                <button type="button" class="btn btn-danger" aria-label="Remove Contributor" (click)="removeContributor(j)">
-                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                <button (click)="removeContributor(j)" type="button" class="close" aria-label="Remove Contributor">
+                  <span aria-hidden="true">&times;</span>
                 </button>
               </td>
               <td>
@@ -181,7 +181,7 @@
             <tr>
               <td>
                 <button type="button" class="btn btn-success" aria-label="Add Contributor" (click)="addContributor()">
-                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                  Add Contributor
                 </button>
               </td>
             </tr>
@@ -190,9 +190,9 @@
       </div>
       <div class="row justify-content-between">
         <div class="col-xs-6 text-left">
-          <button type="button" class="btn btn-warning" (click)="cancel()" [disabled]="submitting">
-            <span class="glyphicon" aria-hidden="true"></span> Cancel
-          </button>
+          <!-- <button type="button" class="btn btn-warning" (click)="cancel()" [disabled]="submitting"> -->
+          <!--   <span class="glyphicon" aria-hidden="true"></span> Cancel -->
+          <!-- </button> -->
           <button type="button" class="btn btn-warning" (click)="revert()" [disabled]="submitting">
             <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset Form
           </button>
