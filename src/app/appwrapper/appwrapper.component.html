@@ -1,0 +1,25 @@
+<!-- <h1><b>{{title}}</b></h1> -->
+
+<!-- <section class="container-fluid"> -->
+  <!-- <div class="row">
+    <app-login (feeds)=updateFeeds($event)></app-login>
+  </div> -->
+  <div class='row' style='margin-top: 1rem;'>
+    <div class='col-xs-12 col-sm-6 col-md-6'>
+      <app-todo [hidden]="todo" (todo)="updateTodo($event)" (resourceTrack)="updateTrack($event)"></app-todo>
+      <app-todo-detail *ngIf="todo" [todo]="todo" [resourceTrack]="resourceTrack" (goBack)="updateTodo(null); updateTrack(null)" (entry)="updateEntry($event)"></app-todo-detail>
+      <div style="margin-top: 1rem;">
+      </div>
+      <!-- <app-scan></app-scan> -->
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-6">
+      <div *ngIf='entry'>
+        <app-suggestion [entry]='entry' (suggest)='updateTarget($event)'></app-suggestion>
+      </div>
+      <div *ngIf='!entry'>
+        <app-feed-reader [feeds]="feeds"></app-feed-reader>
+      </div>
+    </div>
+  </div>
+<!-- </section> -->
+<hotkeys-cheatsheet></hotkeys-cheatsheet>
