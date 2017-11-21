@@ -50,6 +50,7 @@ import { ResourceComponent } from './resource/resource.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
 import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
+import { ResourceShortComponent } from './resource-short/resource-short.component';
 
 @NgModule({
   imports: [
@@ -84,6 +85,7 @@ import { ResourceAccordionGroupComponent } from './resource-accordion-group/reso
     ResourceComponent,
     ResourceAccordionGroupComponent,
     ResourceEditableComponent,
+    ResourceShortComponent,
   ],
   providers: [
     LocdbService,

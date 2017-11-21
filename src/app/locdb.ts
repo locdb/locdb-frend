@@ -17,6 +17,18 @@ export class BibliographicResource {
   embodiedAs?: ResourceEmbodiment[];
   /* should be aggregate of parts.references */
   cites?: string[];
+  constructor(br: Partial<BibliographicResource>) {
+    Object.assign(this, br);
+    // TODO do this properly, recursively call subconstructors
+  }
+
+  get authors() {
+    return this.contributors.filter(c => c.roleType === 'AUTHOR').map(authrole => authrole.heldBy.nameString);
+  }
+
+  identifierValues(forScheme: string): string[] {
+    return this.identifiers.filter(ident => ident.scheme === forScheme).map(ident => ident.literalValue);
+  }
 }
 
 
@@ -27,6 +39,9 @@ export class Identifier {
   constructor (scheme: string, literalValue: string ) {
     this.literalValue = literalValue;
     this.scheme = scheme;
+  }
+  toString(): string {
+    return `${this.scheme}=${this.literalValue}`;
   }
 }
 
@@ -145,8 +160,7 @@ export class ToDoScans {
 
 export class ProvenResource extends BibliographicResource {
   constructor(br: BibliographicResource) {
-    super();
-    Object.assign(this, br);
+    super(br);
   }
   get provenance(): Provenance {
     // could cache
