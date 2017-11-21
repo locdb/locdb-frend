@@ -141,12 +141,20 @@ export class ResponsibleAgent {
 export class ToDo extends BibliographicResource {
   children?: ToDoParts[];
   scans?: ToDoScans[]; // for monographs, scans are directly attached to the BR
+  constructor(t: Partial<ToDo>) {
+    super(t);
+    this.children = t.children.map(c => new ToDoParts(c));
+    this.scans = t.scans;
+  }
 }
 
 /** A possible child of a ToDo item */
 export class ToDoParts extends BibliographicResource {
-  _id: string;
   scans?: ToDoScans[];
+  constructor(tp: Partial<ToDoParts>) {
+    super(tp);
+    this.scans = tp.scans;
+  }
 }
 
 /** Wrapping a Scan image by its identifier that can be accessed by /scans/<identifier> */

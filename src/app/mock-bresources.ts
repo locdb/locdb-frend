@@ -1,7 +1,7 @@
 import { BibliographicResource, ProvenResource } from './locdb'
 
 export const MOCK_INTERNAL: BibliographicResource[] = [
-  { 
+  new BibliographicResource({ 
     _id: '42',
     title: 'Learned helplessness in humans: Critique and reformula',
     type: 'journal',
@@ -18,8 +18,8 @@ export const MOCK_INTERNAL: BibliographicResource[] = [
       {roleType: 'author', identifiers: [], heldBy: {nameString: 'Seligman, M.E.P', identifiers: []}},
       {roleType: 'author', identifiers: [], heldBy: {nameString: 'Teasdale, J.D.', identifiers: []}},
     ]
-  },
-  { 
+  }),
+  new BibliographicResource({ 
     _id: '43',
     title: 'Studien zum autoritären Charakter',
     type: 'Article',
@@ -31,5 +31,5 @@ export const MOCK_INTERNAL: BibliographicResource[] = [
       {roleType: 'author', identifiers: [],  heldBy: {nameString: 'Adorno, T.W.', identifiers: []}},
       {roleType: 'publisher', identifiers: [], heldBy: {nameString: 'Suhrkamp (Frankfurt)', identifiers: []}},
     ]
-  }
+  })
 ];
