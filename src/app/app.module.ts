@@ -2,11 +2,12 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
 
 
 import { AppComponent } from './app.component';
+
 
 // d3
 import * as d3 from 'd3';
@@ -50,6 +51,24 @@ import { ResourceComponent } from './resource/resource.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
 import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
+import { AppwrapperComponent } from './appwrapper/appwrapper.component';
+
+const appRoutes: Routes = [
+  { path: 'main', component: AppwrapperComponent },
+  { path: 'upload', component: ScanComponent},
+  { path: 'feedreader', component: FeedReaderComponent},
+  // { path: 'hero/:id',      component: HeroDetailComponent },
+  // {
+  //   path: 'heroes',
+  //   component: HeroListComponent,
+  //   data: { title: 'Heroes List' }
+  // },
+  { path: '',
+    redirectTo: '/main',
+    pathMatch: 'full'
+   },
+  // { path: '**', component: PageNotFoundComponent }
+];
 
 @NgModule({
   imports: [
@@ -62,7 +81,11 @@ import { ResourceAccordionGroupComponent } from './resource-accordion-group/reso
     FormsModule,
     HttpModule,
     ReactiveFormsModule,
-    PopoverModule
+    PopoverModule,
+    RouterModule.forRoot(
+      appRoutes,
+      { enableTracing: true } // <-- debugging purposes only
+    )
     ],
   declarations: [
     AppComponent,
@@ -84,6 +107,7 @@ import { ResourceAccordionGroupComponent } from './resource-accordion-group/reso
     ResourceComponent,
     ResourceAccordionGroupComponent,
     ResourceEditableComponent,
+    AppwrapperComponent,
   ],
   providers: [
     LocdbService,
