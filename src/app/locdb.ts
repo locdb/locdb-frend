@@ -17,9 +17,23 @@ export class BibliographicResource {
   embodiedAs?: ResourceEmbodiment[];
   /* should be aggregate of parts.references */
   cites?: string[];
+
   constructor(br: Partial<BibliographicResource>) {
-    Object.assign(this, br);
     // TODO do this properly, recursively call subconstructors
+    this._id = br._id;
+    this.identifiers = br.identifiers.map(id => new Identifier(id))
+    this.type = br.type;
+    this.title = br.title;
+    this.subtitle = br.subtitle;
+    this.edition = br.edition;
+    this.number = number;
+    this.contributors = br.contributors.map(c => new AgentRole(c));
+    this.publicationYear = br.publicationYear;
+    this.status = br.status;
+    this.parts = br.parts.map(br => new BibliographicEntry(br));
+    this.partOf = br.partof;
+    this.containerTitle = br.containerTitle;
+    this.cites = br.cites;
   }
 
   get authors() {
@@ -36,10 +50,12 @@ export class BibliographicResource {
 export class Identifier {
   literalValue: string;
   scheme: string;
-  constructor (scheme: string, literalValue: string ) {
+
+  constructor (identifier: Partial<Identifier> ) {
     this.literalValue = literalValue;
     this.scheme = scheme;
   }
+
   toString(): string {
     return `${this.scheme}=${this.literalValue}`;
   }
@@ -90,6 +106,13 @@ export class AgentRole {
   roleType: string;
   heldBy: ResponsibleAgent;
 
+  constructor(role: Partial<AgentRole>) {
+    this._id = role._id;
+    this.identifiers = role.identifiers.map(id => new Identifier(id));
+    this.roleType = role.roleType;
+    this.heldBy = new ResponsibleAgent(role.heldBy);
+  }
+
   // extracted from http://www.sparontologies.net/ontologies/pro/source.html#d4e361
   // as referenced by OCC metadata model
   // could be an enum
@@ -104,6 +127,15 @@ export class BibliographicEntry {
   status?: string;
   ocrData?: OCRData;
   identifiers?: Identifier[];
+  constructor (be: Partial<BibliographicEntry>) {
+    this._id = be._id;
+    this.bibliographicEntryText = be.bibliographicEntryText;
+    this.references = be.references;
+    this.scanId = be.scanId;
+    this.status = be.status;
+    this.ocrData = be.ocrData;
+    this.identifiers = be.identifiers.map(id => new Identifier(id));
+  }
 }
 
 /** Addition to the OCC Metadata model to support OCR data */
@@ -135,6 +167,15 @@ export class ResponsibleAgent {
   nameString: string;
   givenName?: string;
   familyName?: string;
+  constructor(agent: Partial<ResponsibleAgent>) {
+    this.identifiers = agent.identifiers.map(id => new Identifier(id));
+    this.nameString = agent.nameString;
+    this.givenName = agent.givenName;
+    this.familyName = agent.familyName;
+  }
+  toString() {
+    return this.nameString;
+  }
 }
 
 /** Apart from the children property, todo items are basically resource */
@@ -153,6 +194,7 @@ export class ToDoParts extends BibliographicResource {
   scans?: ToDoScans[];
   constructor(tp: Partial<ToDoParts>) {
     super(tp);
+    // does not have children
     this.scans = tp.scans;
   }
 }
