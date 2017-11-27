@@ -7,6 +7,7 @@ import {
     ToDo,
     ROLES,
     Identifier,
+    ToDoResource,
     RESOURCE_TYPES
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
@@ -22,7 +23,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // if this is a string, we can try to dereference it from the back-end
-    @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
+    @Input() resource: BibliographicResource | ProvenResource | ToDoResource = null;
 
     // this should not be here, the resource should only rely on itself and not
     // some entries TODO FIXME
@@ -202,7 +203,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         const identsDeepCopy = formModel.identifiers.map(
           (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
         );
-        const resource: BibliographicResource =  {
+        const resource: BibliographicResource =  new BibliographicResource({
             _id: this.resource._id,
             identifiers: identsDeepCopy,
             type: formModel.resourcetype as string || '',
@@ -221,7 +222,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             parts: this.resource.parts,
             cites: this.resource.cites,
             status: this.resource.status
-        }
+        });
         return resource;
     }
 

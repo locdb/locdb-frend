@@ -26,12 +26,12 @@ export class BibliographicResource {
     this.title = br.title;
     this.subtitle = br.subtitle;
     this.edition = br.edition;
-    this.number = number;
+    this.number = br.number;
     this.contributors = br.contributors.map(c => new AgentRole(c));
     this.publicationYear = br.publicationYear;
     this.status = br.status;
     this.parts = br.parts.map(br => new BibliographicEntry(br));
-    this.partOf = br.partof;
+    this.partOf = br.partOf;
     this.containerTitle = br.containerTitle;
     this.cites = br.cites;
   }
@@ -45,15 +45,17 @@ export class BibliographicResource {
   }
 }
 
+type PartialResource = Partial<BibliographicResource>;
+
 
 /** Generic identifier */
 export class Identifier {
   literalValue: string;
   scheme: string;
 
-  constructor (identifier: Partial<Identifier> ) {
-    this.literalValue = literalValue;
-    this.scheme = scheme;
+  constructor (id: Partial<Identifier> ) {
+    this.literalValue = id.literalValue;
+    this.scheme = id.scheme;
   }
 
   toString(): string {
@@ -178,26 +180,29 @@ export class ResponsibleAgent {
   }
 }
 
-/** Apart from the children property, todo items are basically resource */
-export class ToDo extends BibliographicResource {
-  children?: ToDoParts[];
+/** Apart from the children and scan properties, todo items are basically resource */
+export class ToDoResource extends BibliographicResource {
+  children?: Partial<ToDoParts>[]; // childs does not need to be full resource
   scans?: ToDoScans[]; // for monographs, scans are directly attached to the BR
-  constructor(t: Partial<ToDo>) {
+  constructor(t: Partial<ToDoResource>) {
     super(t);
-    this.children = t.children.map(c => new ToDoParts(c));
-    this.scans = t.scans;
+    this.children = t.children.map(c => new ToDoPartsResource(c));
+    this.scans = t.scans as ToDoScans[];
   }
 }
 
+export type ToDo = Partial<ToDoResource>
+
 /** A possible child of a ToDo item */
-export class ToDoParts extends BibliographicResource {
+export class ToDoPartsResource extends BibliographicResource {
   scans?: ToDoScans[];
-  constructor(tp: Partial<ToDoParts>) {
+  constructor(tp: Partial<ToDoPartsResource>) {
     super(tp);
     // does not have children
-    this.scans = tp.scans;
+    this.scans = tp.scans as ToDoScans[];
   }
 }
+export type ToDoParts = Partial<ToDoPartsResource>;
 
 /** Wrapping a Scan image by its identifier that can be accessed by /scans/<identifier> */
 export class ToDoScans {
@@ -209,7 +214,7 @@ export class ToDoScans {
 
 
 export class ProvenResource extends BibliographicResource {
-  constructor(br: BibliographicResource) {
+  constructor(br: Partial<ProvenResource>) {
     super(br);
   }
   get provenance(): Provenance {

@@ -136,7 +136,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     resourceFromEntry(entry): ProvenResource {
         const ocr = entry.ocrData;
-        const br: ProvenResource = {
+        const br: ProvenResource = new ProvenResource({
           title: ocr.title || entry.bibliographicEntryText,
           publicationYear: ocr.date || '', // unary + operator makes it a number
           contributors: this.authors2contributors(ocr.authors),
@@ -148,7 +148,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
           status: ToDoStates.ext,
           identifiers: entry.identifiers.filter(i => i.scheme && i.literalValue),
           provenance: Provenance.local
-        }
+        });
         return br;
     }
 

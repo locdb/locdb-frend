@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { BibliographicResource, ToDo, ToDoParts, ToDoScans, ToDoStates } from '../locdb';
+import { BibliographicResource, ToDoResource, ToDo, ToDoParts, ToDoScans, ToDoStates } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Provenance } from '../locdb';
 
@@ -12,7 +12,7 @@ import { Provenance } from '../locdb';
 export class TodoListComponent implements OnInit, OnChanges {
 
   @Input() state: ToDoStates;
-  @Output() todo: EventEmitter<ToDoScans | BibliographicResource> = new EventEmitter();
+  @Output() todo: EventEmitter<ToDoScans | ToDo> = new EventEmitter();
   @Output() resourceTrack: EventEmitter<BibliographicResource[] | ToDo[]> = new EventEmitter();
   todos: ToDo[];
   states = ToDoStates;
@@ -94,14 +94,14 @@ export class TodoListComponent implements OnInit, OnChanges {
     return identifier.slice(0, 7);
   }
 
-  guard(t: ToDo) {
+  guard(t: ToDo | ToDoParts) {
     /* is there anything to display? */
     if (!t) { return false; }
     if (t.parts && t.parts.length) { return true; }
     if (t.scans && t.scans.length) { return true; }
-    if (t.children) {
+    if (t instanceof ToDoResource) { // has children?
       // any children satisfies condition above?
-      return !t.children.every((child) => !this.guard(child));
+      return !<ToDo>t.children.every((child) => !this.guard(child));
     }
     return false;
   }

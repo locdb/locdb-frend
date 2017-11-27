@@ -1,7 +1,7 @@
-import { ToDo, ToDoStates } from './locdb';
+import { ToDo, ToDoStates, ToDoResource } from './locdb';
 
 export const MOCK_TODOBRS: ToDo[] =
-  [new ToDo(
+  [new ToDoResource(
   {
     '_id': '58d26b94a285f10778669ff5',
     'scans': [
@@ -22,7 +22,7 @@ export const MOCK_TODOBRS: ToDo[] =
       }
     ]
       }),
-      new ToDo({
+      new ToDoResource({
         '_id': '58e03947d6c893087e17d1a3',
         'children': [
           {
@@ -36,5 +36,4 @@ export const MOCK_TODOBRS: ToDo[] =
           }
         ]
       })
-]
-;
+];

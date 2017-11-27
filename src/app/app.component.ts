@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
     }
 
 
-    updateTodo(todo: ToDoScans | BibliographicResource) {
+    updateTodo(todo: ToDoScans | ToDo) {
         // this.visualState = 0;
         this.todo = todo;
     }
