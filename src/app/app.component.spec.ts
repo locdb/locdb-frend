@@ -53,6 +53,25 @@ import { AppwrapperComponent } from './appwrapper/appwrapper.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 ////////  SPECS  /////////////
 
+const appRoutes: Routes = [
+  { path: 'disambiguate', component: AppwrapperComponent },
+  { path: 'ingest', component: ScanComponent},
+  { path: 'browse', component: SuggestionComponent},
+  { path: 'frontpage', component: FrontpageComponent},
+  // { path: 'feedreader', component: FeedReaderComponent},
+  // { path: 'hero/:id',      component: HeroDetailComponent },
+  // {
+  //   path: 'heroes',
+  //   component: HeroListComponent,
+  //   data: { title: 'Heroes List' }
+  // },
+  { path: '',
+    redirectTo: '/frontpage',
+    pathMatch: 'full'
+   },
+  // { path: '**', component: PageNotFoundComponent }
+];
+
 /// Delete this
 describe('Smoke test', () => {
   it('should run a passing test', () => {
