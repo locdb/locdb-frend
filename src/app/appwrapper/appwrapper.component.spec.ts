@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import AppwrapperComponent from './appwrapper.component'
+
 
 describe('AppwrapperComponent', () => {
   let component: AppwrapperComponent;
