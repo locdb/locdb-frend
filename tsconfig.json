@@ -8,14 +8,12 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es6",
-    "lib": [
-      "es2016",
-      "dom"
-    ],
     "typeRoots": [
-      "../node_modules/@types"
-      ],
-      "types" : [ "core-js", "node" ]
-  },
-  "exclude" : [ "node_modules"]
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ]
+  }
 }
