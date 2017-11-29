@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AppwrapperComponent } from './appwrapper.component';
 import { ToDoComponent} from '../todo.component';
+import { ToDoDetailComponent} from '../todo-detail/todo-detail.component';
 import { SuggestionComponent } from '../suggestion/suggestion.component';
 
 describe('AppwrapperComponent', () => {
