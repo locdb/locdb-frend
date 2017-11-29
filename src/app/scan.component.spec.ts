@@ -1,10 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { CredentialsService } from 'angular-with-credentials';
 
 import { ScanComponent } from './scan.component';
-import { LocdbService } from './locdb.service'
+import { LocdbService, CredentialsService } from './locdb.service'
+
+import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
+import { FeedService } from './feed.service';
 
 describe('ScanComponent', () => {
   let component: ScanComponent;
@@ -12,9 +14,9 @@ describe('ScanComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ScanComponent ],
+      declarations: [ ScanComponent, FeedReaderComponent, FeedComponent ],
       imports: [ FormsModule, HttpModule ],
-      providers: [ LocdbService, HttpModule, CredentialsService ]
+      providers: [ LocdbService, HttpModule, CredentialsService, FeedService]
     })
     .compileComponents();
   }));

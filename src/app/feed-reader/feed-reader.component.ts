@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { LocdbService } from '../locdb.service';
+import { FeedService } from '../feed.service';
 import { Feed } from '../locdb'
 import { Http } from '@angular/http';
 
@@ -52,15 +53,20 @@ export class FeedComponent implements OnInit {
 @Component({
   selector: 'app-feed-reader',
   templateUrl: './feed-reader.component.html',
-  styleUrls: ['./feed-reader.component.css']
+  styleUrls: ['./feed-reader.component.css'],
 })
 export class FeedReaderComponent implements OnInit {
-  @Input() feeds: Feed[]
+  @Input() feeds: Feed[] = []
   title = "Feed Reader"
 
-  constructor(
-    private locdbService: LocdbService
-  ) { }
+  constructor(private feedService: FeedService, private locdbService: LocdbService) {
+    feedService.emittedFeeds$.subscribe(
+      feed => {
+        console.log("recieved feed ", feed)
+        //this.feeds.push(feed);
+      });
+    this.feeds = feedService.fetchFeeds()
+  }
 
   ngOnInit() {
     console.log('Feedreader says hi');

@@ -7,9 +7,8 @@ import { DisplayComponent } from '../display/display.component';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { ReactiveFormsModule } from '@angular/forms';
-import { LocdbService } from '../locdb.service';
+import { LocdbService, CredentialsService } from '../locdb.service';
 import { HttpModule } from '@angular/http';
-import { CredentialsService } from 'angular-with-credentials';
 
 
 describe('TodoDetailComponent', () => {

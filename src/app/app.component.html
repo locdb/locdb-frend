@@ -1,25 +1,61 @@
-<h1><b>{{title}}</b></h1>
+<!-- <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+  <a class="navbar-brand" href="#">Navbar</a>
 
-<section class="container-fluid">
-  <div class="row">
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/main" routerLinkActive="active">main</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/upload" routerLinkActive="active">upload</a>
+      </li>
+    </ul>
+  </div>
+</nav> -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" routerLink="/frontpage"
+    routerLinkActive="active">LOC-DB Frontend <span class="sr-only">(current)</span></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/ingest" routerLinkActive="active">Ingest</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/disambiguate" routerLinkActive="active">Disambiguate</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" routerLink="/browse" routerLinkActive="active">Browse</a>
+      </li>
+      <!-- <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li> -->
+    <!--  <li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+      </li> -->
+    </ul>
+    <!-- <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form> -->
     <app-login (feeds)=updateFeeds($event)></app-login>
   </div>
-  <div class='row' style='margin-top: 1rem;'>
-    <div class='col-xs-12 col-sm-6 col-md-6'>
-      <app-todo [hidden]="todo" (todo)="updateTodo($event)" (resourceTrack)="updateTrack($event)"></app-todo>
-      <app-todo-detail *ngIf="todo" [todo]="todo" [resourceTrack]="resourceTrack" (goBack)="updateTodo(null); updateTrack(null)" (entry)="updateEntry($event)"></app-todo-detail>
-      <div style="margin-top: 1rem;">
-      </div>
-      <app-scan></app-scan>
-    </div>
-    <div class="col-xs-12 col-sm-6 col-md-6">
-      <div *ngIf='entry'>
-        <app-suggestion [entry]='entry' (suggest)='updateTarget($event)'></app-suggestion>
-      </div>
-      <div *ngIf='!entry'>
-        <app-feed-reader [feeds]="feeds"></app-feed-reader>
-      </div>
-    </div>
-  </div>
+</nav>
+<section class="container-fluid mt-3">
+  <router-outlet></router-outlet>
 </section>
 <hotkeys-cheatsheet></hotkeys-cheatsheet>
