@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
-
+import { APP_BASE_HREF } from '@angular/common';
 
 import { AppComponent } from './app.component';
-
+import { environment } from 'environments/environment';
 
 // d3
 import * as d3 from 'd3';
@@ -73,6 +73,8 @@ const appRoutes: Routes = [
   // { path: '**', component: PageNotFoundComponent }
 ];
 
+const bhref = environment.production ? '/extrapolate/' : '/extrapolate-dev/'
+
 @NgModule({
   imports: [
     AccordionModule.forRoot(),
@@ -115,7 +117,8 @@ const appRoutes: Routes = [
   ],
   providers: [
     LocdbService,
-    CredentialsService
+    CredentialsService,
+    {provide: APP_BASE_HREF, useValue : bhref}
   ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
