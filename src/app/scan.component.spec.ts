@@ -14,7 +14,7 @@ describe('ScanComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ScanComponent ],
+      declarations: [ ScanComponent, FeedReaderComponent, FeedComponent ],
       imports: [ FormsModule, HttpModule ],
       providers: [ LocdbService, HttpModule, CredentialsService, FeedService]
     })

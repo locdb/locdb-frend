@@ -12,7 +12,7 @@ import { environment } from 'environments/environment';
     providers: [ FeedService ]
 })
 
-/** Main App Component for whole LOCDB Frontend */
+/* Main App Component for whole LOCDB Frontend */
 export class AppComponent implements OnInit {
   feeds: Feed[]
 

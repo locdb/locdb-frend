@@ -11,6 +11,7 @@ import { ResourceFormComponent } from '../resource-form/resource-form.component'
 import { ResourceComponent } from '../resource/resource.component';
 import { HttpModule } from '@angular/http';
 import { LocdbService, CredentialsService } from '../locdb.service';
+import { PopoverModule } from 'ngx-popover';
 
 describe('SuggestionComponent', () => {
   let component: SuggestionComponent;
@@ -20,13 +21,14 @@ describe('SuggestionComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         ModalModule.forRoot(),
+        AccordionModule.forRoot(),
         ReactiveFormsModule,
         FormsModule,
-        AccordionModule,
         HttpModule,
+        PopoverModule,
       ],
       declarations: [
-        SuggestionComponent, ResourceAccordionGroupComponent,
+        SuggestionComponent,
         ResourceComponent,
         ResourceFormComponent,
         ResourceEditableComponent,
