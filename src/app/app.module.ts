@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
-import { APP_BASE_HREF } from '@angular/common';
+// import { APP_BASE_HREF } from '@angular/common';
 
 import { AppComponent } from './app.component';
 import { environment } from 'environments/environment';
@@ -73,7 +73,7 @@ const appRoutes: Routes = [
   // { path: '**', component: PageNotFoundComponent }
 ];
 
-const bhref = environment.production ? '/extrapolate/' : '/extrapolate-dev/'
+// const bhref = environment.production ? '/extrapolate/' : '/extrapolate-dev/'
 
 @NgModule({
   imports: [
@@ -118,7 +118,7 @@ const bhref = environment.production ? '/extrapolate/' : '/extrapolate-dev/'
   providers: [
     LocdbService,
     CredentialsService,
-    {provide: APP_BASE_HREF, useValue : bhref}
+    // {provide: APP_BASE_HREF, useValue : bhref}
   ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

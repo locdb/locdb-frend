@@ -3,7 +3,7 @@
     Citation Link
   </div>
   <div class='card-block'>
-    <p class='card-text' >{{ source ? source._id : None }}[{{ entry ? entry._id : None }}] = {{ target ? target._id : None}}</p>
+    <p class='card-text' >{{ source ? source._id : '' }}[{{ entry ? entry._id : '' }}] = {{ target ? target._id : ''}}</p>
       <button class='btn btn-primary' [disabled]='!source || !entry || !target'>
         <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Commit
       </button>

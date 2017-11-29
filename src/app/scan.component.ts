@@ -3,6 +3,7 @@ import { REFERENCES, REFERENCES_ALT } from './mock-references';
 // import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
 
 import { LocdbService } from './locdb.service';
+import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
 
 import { ResourceType, ToDoScans, Identifier, BibliographicEntry } from './locdb';
 

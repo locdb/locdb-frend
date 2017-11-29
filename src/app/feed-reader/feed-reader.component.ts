@@ -7,11 +7,11 @@ import { Http } from '@angular/http';
 @Component({
   selector: 'app-feed',
   template: `
-<div class="feed">
-  <h3>{{data?.feed.title}}</h3>
-  <h5>{{data?.feed.url}}</h5>
+<div>
+  <h5>{{data?.title}}</h5>
+  <h6>{{data?.url}}</h6>
   <ul>
-    <li *ngFor="let item of data?.items">
+    <li *ngFor="let item of data?.entries">
       <a href="{{item.link}}">
         {{item.title}}
       </a>
