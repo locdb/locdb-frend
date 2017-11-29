@@ -114,7 +114,6 @@ const appRoutes: Routes = [
     ResourceEditableComponent,
     AppwrapperComponent,
     FrontpageComponent,
-    SafeHtmlPipe,
   ],
   providers: [
     LocdbService,
