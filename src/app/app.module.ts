@@ -53,7 +53,6 @@ import { ResourceEditableComponent } from './resource-editable/resource-editable
 import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
 import { AppwrapperComponent } from './appwrapper/appwrapper.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
-import { SafeHtmlPipe } from './safe-html.pipe';
 
 const appRoutes: Routes = [
   { path: 'disambiguate', component: AppwrapperComponent },
