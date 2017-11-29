@@ -126,9 +126,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
 
     ngOnChanges()  {
-        if (!this.resource) {
-            return; // only resource identifier given for now
-        }
+        console.log("ngOnChanges", this.resource);
         this.resourceForm.reset( {
             title: this.resource.title,
             subtitle: this.resource.subtitle,
@@ -149,14 +147,15 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         const resourceCopy = this.prepareSaveResource();
         this.locdbService.maybePutResource(resourceCopy).then(
             r =>  {
-                this.resource = r;
+                // here better than this.resource = r, since reference is retained
+                Object.assign(this.resource, r);
                 this.ngOnChanges();
                 this.submitting = false;
                 this.submitted = true;
                 this.submitStatus.emit(false);
 
             }
-        ).catch(err => this.submitting = false);
+        ).catch( err => { console.log('error submitting resource', err) ; this.submitting = false} );
     }
 
     revert() {
@@ -195,7 +194,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     prepareSaveResource(): BibliographicResource  {
         // Form values need deep copy, else shallow copy is enough
         const formModel = this.resourceForm.value;
-        const contributors: AgentRole[] = []
         const contribsDeepCopy = formModel.contributors.map(
             (elem: {name: string, role: string }) => this.reconstructAgentRole(elem.name, elem.role)
         );
