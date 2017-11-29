@@ -1,6 +1,7 @@
 <div class="card-deck">
   <div class="card">
     <!-- <img class="card-img-top" src=""> -->
+    <!-- <img class="card-img-top" src="node_modules/octicons/build/svg/diff-added.svg"> -->
     <div class="card-body">
       <h2 class="card-title">
         Ingest
@@ -9,12 +10,15 @@
         Ingest data by uploading scanned images, pdfs or supplying a web
         identifier of an electronic journal article. 
       </p>
-      <a class="btn btn-primary" routerLink="/ingest">Start data ingestion</a>
+      <a class="btn btn-primary" routerLink="/ingest">
+        <i class="fa fa-upload" aria-hidden="true"></i>
+        Start data ingestion
+      </a>
     </div>
   </div>
 
   <div class="card">
-    <!-- <img class="card-img-top" src=""> -->
+    <!-- <img class="card-img-top" src="node_modules/octicons/build/svg/diff-added.svg"> -->
     <div class="card-body">
       <h2 class="card-title">
         Disambiguate
@@ -22,8 +26,9 @@
       <p class="card-text">
         Link references to the correct target resources.
       </p>
-      <a class="btn btn-primary" routerLink="/disambiguate">Start linking references</a>
-    </div>
+      <a class="btn btn-primary" routerLink="/disambiguate">
+        <i class="fa fa-magic" aria-hidden="true"></i>
+        Start linking references</a> </div>
   </div>
 
   <div class="card">
@@ -35,7 +40,10 @@
       <p class="card-text">
         Browse and explore the database.
       </p>
-      <a class="btn btn-primary" routerLink="/browse">Start browsing</a>
+      <a class="btn btn-primary" routerLink="/browse">
+        <i class="fa fa-database" aria-hidden="true"></i>
+        Start browsing
+      </a>
     </div>
   </div>
 </div>
