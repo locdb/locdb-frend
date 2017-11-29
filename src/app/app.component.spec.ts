@@ -49,6 +49,8 @@ import { ResourceComponent } from './resource/resource.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
 import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
+import { AppwrapperComponent } from './appwrapper/appwrapper.component';
+import { FrontpageComponent } from './frontpage/frontpage.component';
 ////////  SPECS  /////////////
 
 /// Delete this
@@ -84,6 +86,8 @@ describe('AppComponent with TCB', function () {
           ResourceComponent,
           ResourceAccordionGroupComponent,
           ResourceEditableComponent,
+          AppwrapperComponent,
+          FrontpageComponent,
         ],
         imports: [
           AccordionModule.forRoot(),
@@ -95,7 +99,11 @@ describe('AppComponent with TCB', function () {
           FormsModule,
           HttpModule,
           ReactiveFormsModule,
-          PopoverModule
+          PopoverModule,
+          RouterModule.forRoot(
+            appRoutes,
+            { enableTracing: true } // <-- debugging purposes only
+          )
         ]
       }
     );
