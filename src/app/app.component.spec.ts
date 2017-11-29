@@ -86,7 +86,11 @@ describe('AppComponent with TCB', function () {
   beforeEach(() => {
     TestBed.configureTestingModule(
       {
-        providers: [ LocdbService, CredentialsService, {provide: APP_BASE_HREF, useValue : '/' ],
+        providers: [
+          LocdbService,
+          CredentialsService,
+          {provide: APP_BASE_HREF, useValue : '/'}
+        ],
         declarations: [
           AppComponent,
           ScanComponent,
