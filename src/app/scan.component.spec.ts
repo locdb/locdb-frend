@@ -5,6 +5,9 @@ import { HttpModule } from '@angular/http';
 import { ScanComponent } from './scan.component';
 import { LocdbService, CredentialsService } from './locdb.service'
 
+import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
+import { FeedService } from './feed.service';
+
 describe('ScanComponent', () => {
   let component: ScanComponent;
   let fixture: ComponentFixture<ScanComponent>;
@@ -13,7 +16,7 @@ describe('ScanComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ScanComponent ],
       imports: [ FormsModule, HttpModule ],
-      providers: [ LocdbService, HttpModule, CredentialsService ]
+      providers: [ LocdbService, HttpModule, CredentialsService, FeedService]
     })
     .compileComponents();
   }));
