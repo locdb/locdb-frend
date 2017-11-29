@@ -56,7 +56,7 @@ export class FeedComponent implements OnInit {
   styleUrls: ['./feed-reader.component.css'],
 })
 export class FeedReaderComponent implements OnInit {
-  @Input() feeds: Feed[] = []
+  feeds: Feed[] = []
   title = "Feed Reader"
 
   constructor(private feedService: FeedService, private locdbService: LocdbService) {

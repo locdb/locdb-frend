@@ -29,7 +29,8 @@ export class ScanComponent {
   listoffiles: ToDoScansWithMeta[] = [];
 
 
-  constructor ( private locdbService: LocdbService ) {
+
+  constructor ( private locdbService: LocdbService) {
     // necessary to display select options
   }
 
