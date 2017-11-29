@@ -10,8 +10,7 @@ import { ResourceEditableComponent } from '../resource-editable/resource-editabl
 import { ResourceFormComponent } from '../resource-form/resource-form.component';
 import { ResourceComponent } from '../resource/resource.component';
 import { HttpModule } from '@angular/http';
-import { LocdbService } from '../locdb.service';
-import { CredentialsService } from 'angular-with-credentials';
+import { LocdbService, CredentialsService } from '../locdb.service';
 
 describe('SuggestionComponent', () => {
   let component: SuggestionComponent;

@@ -1,10 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { CredentialsService } from 'angular-with-credentials';
 
 import { ScanComponent } from './scan.component';
-import { LocdbService } from './locdb.service'
+import { LocdbService, CredentialsService } from './locdb.service'
 
 describe('ScanComponent', () => {
   let component: ScanComponent;

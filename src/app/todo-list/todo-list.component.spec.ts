@@ -7,8 +7,7 @@ import { ResourceAccordionGroupComponent } from '../resource-accordion-group/res
 import { ResourceFormComponent } from '../resource-form/resource-form.component';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ReactiveFormsModule } from '@angular/forms';
-import { LocdbService } from '../locdb.service';
-import { CredentialsService } from 'angular-with-credentials';
+import { LocdbService, CredentialsService } from '../locdb.service';
 import { HttpModule } from '@angular/http';
 
 describe('TodoListComponent', () => {
