@@ -52,7 +52,7 @@ export class TodoListComponent implements OnInit, OnChanges {
   }
 
 
-  onSelectScan(scan: ToDoScans, resource: BibliographicResource[] | ToDo[]) {
+  onSelectScan(scan: ToDoScans, trace: BibliographicResource[] | ToDo[]) {
     // called when pressing on a scan todo item
     if ( scan.status === ToDoStates.nocr ) {
       console.log('Starting processing');
@@ -64,15 +64,16 @@ export class TodoListComponent implements OnInit, OnChanges {
     } else {
       console.log('Todo item selected', scan);
       this.todo.next(scan);
-      console.log("resourceTrack: ", resource)
-      this.resourceTrack.next(resource)
+      console.log("resourceTrack: ", trace)
+      this.resourceTrack.next(trace)
     }
   }
 
-  onSelectExternal(resource: ToDo) {
+  onSelectExternal(resource: ToDo, trace: BibliographicResource[]) {
     // called when pressing on an external todo item
-    console.log('onselect external')
+    console.log('onselect external');
     this.todo.next(resource);
+    this.resourceTrack.next(trace);
   }
 
 

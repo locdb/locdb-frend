@@ -1,96 +1,96 @@
-<div *ngIf='entry' class="card">
-  <!-- Panel heading including search bar -->
-  <div class="card-header">
-    <div class="form-group">
-      <textarea class="form-control" [(ngModel)]="query" rows="3" style="resize: none;"></textarea>
-    </div>
-    <div class="form-group">
-      <label class="center-block">Confidence threshold for internal
-        <input class="form-control" type="number" min=0.0 step=0.1 [(ngModel)]="internalThreshold">
-      </label>
-      <label class="center-block">... and for external Suggestions
-        <input class="form-control" type="number" min=0.0 step=0.1 max=1.0 [(ngModel)]="externalThreshold">
-      </label>
-    </div>
-    <button type="button" class="btn btn-success" aria-label="Search" (click)="refresh()">
-      Search
-    </button>
-    <popover-content #searchPopover [closeOnClickOutside]="true">
-      <a href="{{'https://scholar.google.com/scholar?q='+query}}" target="_blank" style="target-new: tab;" class="btn float-right" role="button">Google Scolar</a>
-    </popover-content>
-    <button type="button" [popover]="searchPopover" class="btn float-right">Ask Others</button>
+<!-- Panel heading including search bar -->
+<div class="card">
+<div class="card-header">
+  <div class="form-group">
+    <textarea class="form-control" [(ngModel)]="query" rows="3" style="resize: none;"></textarea>
   </div>
+  <div class="form-group">
+    <label class="center-block">Confidence threshold for internal
+      <input class="form-control" type="number" min=0.0 step=0.1 [(ngModel)]="internalThreshold">
+    </label>
+    <label class="center-block">... and for external Suggestions
+      <input class="form-control" type="number" min=0.0 step=0.1 max=1.0 [(ngModel)]="externalThreshold">
+    </label>
+  </div>
+  <button type="button" class="btn btn-success" aria-label="Search" (click)="refresh()">
+    Search
+  </button>
+  <popover-content #searchPopover [closeOnClickOutside]="true">
+    <a href="{{'https://scholar.google.com/scholar?q='+query}}" target="_blank" style="target-new: tab;" class="btn float-right" role="button">Google Scolar</a>
+  </popover-content>
+  <button type="button" [popover]="searchPopover" class="btn float-right">Ask Others</button>
+</div>
 
-  <div class="card-body" style="height: 800px; overflow-y: scroll;">
-    <!-- Panel body providing suggestions -->
-    <div *ngIf="currentTarget" class="card-block">
-      <h5 class="card-title">
-        Currently references
-      </h5>
-      <accordion>
-        <app-resource-accordion-group [resource]="currentTarget" [selected]="currentTarget == selectedResource" (click)="onSelect(currentTarget)">
-        </app-resource-accordion-group>
-      </accordion>
-    </div>
-    <div class="card-block">
-      <h5 class="card-title">
-        Suggestions
-      </h5>
-      <accordion>
-        <div *ngFor="let r of internalSuggestions;let i = index">
-          <app-resource-accordion-group *ngIf="max_in <= 0 || i < max_in"
-            [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
-          </app-resource-accordion-group>
-        </div>
-        <button type="button" *ngIf="max_in == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
-          <p><em>Show all</em></p>
-        </button>
-        <button type="button" *ngIf="max_in == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
-          <p><em>Show less</em></p>
-        </button>
-      </accordion>
-      <div *ngIf="internalInProgress" class="loader">
-      </div>
-    </div>
-    <div class="card-block">
-      <h5 class="card-title">
-        External suggestions
-      </h5>
-      <accordion *ngIf="externalSuggestions">
-        <div *ngFor="let r of externalSuggestions;let i = index">
-          <app-resource-accordion-group *ngIf="max_ex <= 0 || i < max_ex"
-            [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
-          </app-resource-accordion-group>
-        </div>
-        <button type="button" *ngIf="max_ex == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
-          <p><em>Show all</em></p>
-        </button>
-        <button type="button" *ngIf="max_ex == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
-          <p><em>Show less</em></p>
-        </button>
-      </accordion>
-      <div *ngIf="externalInProgress" class="loader">
-      </div>
-    </div>
-    <div class="card-block">
-      <h5 class="card-title">
-        New resource from reference metadata
-      </h5>
-      <accordion>
-      <app-resource-accordion-group [resource]="newResource" [selected]="newResource === selectedResource" (click)="onSelect(newResource)">
+<div class="card-body" style="height: 800px; overflow-y: scroll;">
+  <!-- Panel body providing suggestions -->
+  <div *ngIf="currentTarget" class="card-block">
+    <h5 class="card-title">
+      Currently references
+    </h5>
+    <accordion>
+    <app-resource-accordion-group [resource]="currentTarget" [selected]="currentTarget == selectedResource" (click)="onSelect(currentTarget)">
+    </app-resource-accordion-group>
+    </accordion>
+  </div>
+  <div class="card-block">
+    <h5 class="card-title">
+      Suggestions
+    </h5>
+    <accordion>
+    <div *ngFor="let r of internalSuggestions;let i = index">
+      <app-resource-accordion-group *ngIf="max_in <= 0 || i < max_in"
+        [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
       </app-resource-accordion-group>
-      </accordion>
+    </div>
+    <button type="button" *ngIf="max_in == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
+      <p><em>Show all</em></p>
+    </button>
+    <button type="button" *ngIf="max_in == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
+      <p><em>Show less</em></p>
+    </button>
+    </accordion>
+    <div *ngIf="internalInProgress" class="loader">
     </div>
   </div>
-  <!-- Panel footer allowing actions -->
-  <div class="card-footer">
-    <div class="text-right">
-      <button type="button" class="btn btn-primary" [disabled]="!selectedResource" (click)="commit()">
-        <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Commit Link
-      </button>
+  <div class="card-block">
+    <h5 class="card-title">
+      External suggestions
+    </h5>
+    <accordion *ngIf="externalSuggestions">
+    <div *ngFor="let r of externalSuggestions;let i = index">
+      <app-resource-accordion-group *ngIf="max_ex <= 0 || i < max_ex"
+        [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
+      </app-resource-accordion-group>
     </div>
+    <button type="button" *ngIf="max_ex == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
+      <p><em>Show all</em></p>
+    </button>
+    <button type="button" *ngIf="max_ex == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
+      <p><em>Show less</em></p>
+    </button>
+    </accordion>
+    <div *ngIf="externalInProgress" class="loader">
+    </div>
+  </div>
+  <div class="card-block">
+    <h5 class="card-title">
+      New resource from reference metadata
+    </h5>
+    <accordion>
+    <app-resource-accordion-group [resource]="newResource" [selected]="newResource === selectedResource" (click)="onSelect(newResource)">
+    </app-resource-accordion-group>
+    </accordion>
+  </div>
+</div>
+<!-- Panel footer allowing actions -->
+<div class="card-footer">
+  <div class="text-right">
+    <button type="button" class="btn btn-primary" [disabled]="!selectedResource" (click)="commit()">
+      <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Commit Link
+    </button>
   </div>
 </div>
 <div *ngIf="committed" class="alert alert-success" role="alert">
   <strong>Link committed.</strong>
+</div>
 </div>

@@ -52,11 +52,14 @@ import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
 import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
 import { AppwrapperComponent } from './appwrapper/appwrapper.component';
+import { FrontpageComponent } from './frontpage/frontpage.component';
 
 const appRoutes: Routes = [
-  { path: 'main', component: AppwrapperComponent },
-  { path: 'upload', component: ScanComponent},
-  { path: 'feedreader', component: FeedReaderComponent},
+  { path: 'disambiguate', component: AppwrapperComponent },
+  { path: 'ingest', component: ScanComponent},
+  { path: 'browse', component: SuggestionComponent},
+  { path: 'frontpage', component: FrontpageComponent},
+  // { path: 'feedreader', component: FeedReaderComponent},
   // { path: 'hero/:id',      component: HeroDetailComponent },
   // {
   //   path: 'heroes',
@@ -64,7 +67,7 @@ const appRoutes: Routes = [
   //   data: { title: 'Heroes List' }
   // },
   { path: '',
-    redirectTo: '/main',
+    redirectTo: '/frontpage',
     pathMatch: 'full'
    },
   // { path: '**', component: PageNotFoundComponent }
@@ -108,6 +111,7 @@ const appRoutes: Routes = [
     ResourceAccordionGroupComponent,
     ResourceEditableComponent,
     AppwrapperComponent,
+    FrontpageComponent,
   ],
   providers: [
     LocdbService,

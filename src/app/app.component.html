@@ -16,21 +16,22 @@
   </div>
 </nav> -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" routerLink="/main" routerLinkActive="active">LOC-DB Frontend</a>
+  <a class="navbar-brand" routerLink="/frontpage"
+    routerLinkActive="active">LOC-DB Frontend <span class="sr-only">(current)</span></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" routerLink="/main" routerLinkActive="active">Home <span class="sr-only">(current)</span></a>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/ingest" routerLinkActive="active">Ingest</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/upload" routerLinkActive="active">Upload</a>
+        <a class="nav-link" routerLink="/disambiguate" routerLinkActive="active">Disambiguate</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/feedreader" routerLinkActive="active">Feedreader</a>
+        <a class="nav-link disabled" routerLink="/browse" routerLinkActive="active">Browse</a>
       </li>
       <!-- <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -54,6 +55,7 @@
     <app-login (feeds)=updateFeeds($event)></app-login>
   </div>
 </nav>
-<section class="container-fluid">
+<section class="container-fluid mt-3">
   <router-outlet></router-outlet>
 </section>
+<hotkeys-cheatsheet></hotkeys-cheatsheet>
