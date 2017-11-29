@@ -2,90 +2,33 @@ import { Component, OnInit} from '@angular/core';
 
 import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, BibliographicResource } from './locdb';
 import { LocdbService } from './locdb.service';
-
+import { FeedService } from './feed.service';
+import { Feed } from './locdb'
 import { environment } from 'environments/environment';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    providers: [ LocdbService ]
+    providers: [ FeedService ]
 })
 
-/** Main App Component for whole LOCDB Frontend */
+/* Main App Component for whole LOCDB Frontend */
 export class AppComponent implements OnInit {
-    title = 'LOC-DB Frontend';
-    source: BibliographicResource = null;
-    todo: ToDoScans | ToDo = null;
-    resourceTrack: BibliographicResource[] | ToDo[];
-    entry: BibliographicEntry = null;
-    target: BibliographicResource = null;
-    feeds: any = null;
-    environment = environment;
-    constructor ( private locdbService: LocdbService ) {}
+  feeds: Feed[]
 
-    ngOnInit() {
-        // this.visualState = 0;
-    }
+  constructor(private feedService: FeedService){
+  }
 
-    updateFeeds(event){
-      console.log("updateFeeds: ", event);
-      this.feeds = event
-    }
+  ngOnInit(){
+  }
 
+  updateFeeds(event: Feed[]){
+    console.log("updateFeeds: ", event[1]);
+    let f: any
+    for(f of event){
+      console.log("send feed ", f)
+      this.feedService.pushFeed(f)
+  }
+}
 
-    updateTodo(todo: ToDoScans | ToDo) {
-        // this.visualState = 0;
-        this.todo = todo;
-    }
-
-    updateTrack(resources: BibliographicResource[] | ToDo[]){
-        this.resourceTrack = resources;
-    }
-
-    updateSource (br: BibliographicResource) {
-        // this.enableCitation();
-        // this.visualState = 2;
-        console.log('Updating source', br);
-        this.source = br;
-    }
-
-    updateEntry (entry: BibliographicEntry) {
-        // the check on entry causes the infamous ExpressionChangedAfterItWasSet exception
-        // this.showCitation()
-        // if (entry) {
-        //     this.visualState = 1;
-        // } else {
-        //     this.visualState = 0;
-        // }
-        console.log('Updating with new entry', entry);
-        this.entry = entry;
-        // reset resource, since we selected a different entry
-        this.target = null;
-    }
-
-    updateTarget (br: BibliographicResource) {
-        // this.enableCitation();
-        // this.visualState = 2;
-        console.log('Updating target', br);
-        this.target = br;
-    }
-
-
-    /* Are the functions below used? */
-
-    // roundUp(num, precision) {
-    //     return Math.ceil(num * precision) / precision;
-    // }
-
-    // pathStart() {
-    //     console.log('pathStart');
-    // }
-
-    // pathSelectResource() {
-    //     console.log('pathSelectResource');
-    // }
-
-    // pathEditAndSubmit() {
-    //     console.log('pathEditAndSubmit');
-    // }
 }

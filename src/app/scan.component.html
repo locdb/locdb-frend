@@ -1,3 +1,6 @@
+<div class="container-fluid">
+<div class="row">
+  <div class="col-xs-12 col-md-6">
 <div class="card">
   <div class="card-header">
         <h3>{{title}}</h3>
@@ -64,4 +67,11 @@
       </button> &nbsp;
       <button type="button" class="btn btn-primary" (click)="onclickupload()" [disabled]="uploading || !listoffiles[0]">Upload</button>
     </div>
+</div>
+<!-- end of col -->
+  </div>
+  <div class="col-xs-12 col-md-6">
+    <app-feed-reader></app-feed-reader>
+  </div>
+</div>
 </div>

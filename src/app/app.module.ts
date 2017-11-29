@@ -2,11 +2,12 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
-
+// import { APP_BASE_HREF } from '@angular/common';
 
 import { AppComponent } from './app.component';
+import { environment } from 'environments/environment';
 
 // d3
 import * as d3 from 'd3';
@@ -51,6 +52,29 @@ import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
 import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
 import { ResourceShortComponent } from './resource-short/resource-short.component';
+import { AppwrapperComponent } from './appwrapper/appwrapper.component';
+import { FrontpageComponent } from './frontpage/frontpage.component';
+
+const appRoutes: Routes = [
+  { path: 'disambiguate', component: AppwrapperComponent },
+  { path: 'ingest', component: ScanComponent},
+  { path: 'browse', component: SuggestionComponent},
+  { path: 'frontpage', component: FrontpageComponent},
+  // { path: 'feedreader', component: FeedReaderComponent},
+  // { path: 'hero/:id',      component: HeroDetailComponent },
+  // {
+  //   path: 'heroes',
+  //   component: HeroListComponent,
+  //   data: { title: 'Heroes List' }
+  // },
+  { path: '',
+    redirectTo: '/frontpage',
+    pathMatch: 'full'
+   },
+  // { path: '**', component: PageNotFoundComponent }
+];
+
+// const bhref = environment.production ? '/extrapolate/' : '/extrapolate-dev/'
 
 @NgModule({
   imports: [
@@ -63,7 +87,11 @@ import { ResourceShortComponent } from './resource-short/resource-short.componen
     FormsModule,
     HttpModule,
     ReactiveFormsModule,
-    PopoverModule
+    PopoverModule,
+    RouterModule.forRoot(
+      appRoutes,
+      { enableTracing: true } // <-- debugging purposes only
+    )
     ],
   declarations: [
     AppComponent,
@@ -86,10 +114,13 @@ import { ResourceShortComponent } from './resource-short/resource-short.componen
     ResourceAccordionGroupComponent,
     ResourceEditableComponent,
     ResourceShortComponent,
+    AppwrapperComponent,
+    FrontpageComponent,
   ],
   providers: [
     LocdbService,
-    CredentialsService
+    CredentialsService,
+    // {provide: APP_BASE_HREF, useValue : bhref}
   ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

@@ -1,16 +1,17 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { LocdbService } from '../locdb.service';
+import { FeedService } from '../feed.service';
 import { Feed } from '../locdb'
 import { Http } from '@angular/http';
 
 @Component({
   selector: 'app-feed',
   template: `
-<div class="feed">
-  <h3>{{data?.feed.title}}</h3>
-  <h5>{{data?.feed.url}}</h5>
+<div>
+  <h5>{{data?.title}}</h5>
+  <h6>{{data?.url}}</h6>
   <ul>
-    <li *ngFor="let item of data?.items">
+    <li *ngFor="let item of data?.entries">
       <a href="{{item.link}}">
         {{item.title}}
       </a>
@@ -52,15 +53,20 @@ export class FeedComponent implements OnInit {
 @Component({
   selector: 'app-feed-reader',
   templateUrl: './feed-reader.component.html',
-  styleUrls: ['./feed-reader.component.css']
+  styleUrls: ['./feed-reader.component.css'],
 })
 export class FeedReaderComponent implements OnInit {
-  @Input() feeds: Feed[]
+  feeds: Feed[] = []
   title = "Feed Reader"
 
-  constructor(
-    private locdbService: LocdbService
-  ) { }
+  constructor(private feedService: FeedService, private locdbService: LocdbService) {
+    feedService.emittedFeeds$.subscribe(
+      feed => {
+        console.log("recieved feed ", feed)
+        //this.feeds.push(feed);
+      });
+    this.feeds = feedService.fetchFeeds()
+  }
 
   ngOnInit() {
     console.log('Feedreader says hi');

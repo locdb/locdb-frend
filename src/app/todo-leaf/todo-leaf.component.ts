@@ -20,13 +20,13 @@ export class TodoLeafComponent implements OnInit {
   ngOnInit() {
   }
 
-  printState(scan: ToDoScans) {
-    if (!scan) { return '' };
-    if (scan.status === ToDoStates.ocr) { return 'OCR processed' } ;
-    if (scan.status === ToDoStates.nocr) { return  'not OCR processed '};
-    if (scan.status === ToDoStates.iocr) { return 'OCR processing' };
-    if (scan.status === ToDoStates.ext)  { return 'external' };
-    return scan.status
+  printState() {
+    if (!this.leaf) { return '' };
+    if (this.leaf.status === ToDoStates.ocr) { return 'OCR processed' } ;
+    if (this.leaf.status === ToDoStates.nocr) { return  'not OCR processed '};
+    if (this.leaf.status === ToDoStates.iocr) { return 'OCR processing' };
+    if (this.leaf.status === ToDoStates.ext)  { return 'External' };
+    return this.leaf.status
   }
 
   trimHash(identifier: string) {
