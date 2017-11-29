@@ -16,17 +16,19 @@ import { environment } from 'environments/environment';
 export class AppComponent implements OnInit {
   feeds: Feed[]
 
-  constructor(private feedService: FeedService){
+  constructor(private feedService: FeedService) {
+
   }
 
-  ngOnInit(){
+  ngOnInit() {
+
   }
 
-  updateFeeds(event: Feed[]){
-    console.log("updateFeeds: ", event[1]);
+  updateFeeds(event: Feed[]) {
+    console.log('updateFeeds: ', event[1]);
     let f: any
-    for(f of event){
-      console.log("send feed ", f)
+    for (f of event) {
+      console.log('send feed ', f)
       this.feedService.pushFeed(f)
   }
 }
