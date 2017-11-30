@@ -57,7 +57,7 @@ import { AppwrapperComponent } from './appwrapper/appwrapper.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 
 const appRoutes: Routes = [
-  { path: 'disambiguate', component: AppwrapperComponent },
+  { path: 'resolve', component: AppwrapperComponent },
   { path: 'ingest', component: ScanComponent},
   { path: 'browse', component: SuggestionComponent},
   { path: 'frontpage', component: FrontpageComponent},
@@ -72,7 +72,7 @@ const appRoutes: Routes = [
     redirectTo: '/frontpage',
     pathMatch: 'full'
    },
-  // { path: '**', component: PageNotFoundComponent }
+  { path: '**', redirectTo: '/frontpage' }
 ];
 
 // const bhref = environment.production ? '/extrapolate/' : '/extrapolate-dev/'
