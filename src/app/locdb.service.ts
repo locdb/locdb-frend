@@ -277,6 +277,8 @@ export class LocdbService {
     entry: BibliographicEntry,
     resource: BibliographicResource
   ): Promise<BibliographicResource> {
+    /* if necessary, creates target resource before updating the reference of the entry */
+    /* 1-3 requests */
     const target = await this.maybePostResource(resource);
     await this.updateTargetResource(entry, target);
     return target;
@@ -287,7 +289,8 @@ export class LocdbService {
     entry: BibliographicEntry,
     resource: BibliographicResource
   ): Promise<BibliographicEntry> {
-    /* adds or update link from entry to resource */
+    /* adds or update link from entry to resource
+     * 1-2 requests */
     if (entry.references) {
       await this.removeTargetBibliographicResource(entry);
       entry.status = 'OCR_PROCESSED'; // back-end does it... TODO FIXME
@@ -303,7 +306,8 @@ export class LocdbService {
   maybePutResource(
     resource: BibliographicResource
   ): Promise<BibliographicResource> {
-    /* Update the resource if it is known to the backend */
+    /* Update the resource if it is known to the backend
+     * 0-1 */
     if (!resource._id) {
       return Promise.resolve(resource);
     } else {
@@ -318,7 +322,8 @@ export class LocdbService {
   }
 
   maybePostResource(resource: BibliographicResource): Promise<BibliographicResource> {
-    /* Post the resource if it is not stored in back-end yet */
+    /* Post the resource if it is not stored in back-end yet
+     * 0-1 backend requests */
     if (!resource._id) {
       const url = `${this.locdbUrl}/bibliographicResources`;
       return this.http.post(
