@@ -292,8 +292,13 @@ export class LocdbService {
     /* adds or update link from entry to resource
      * 1-2 requests */
     if (entry.references) {
-      await this.removeTargetBibliographicResource(entry);
-      entry.status = 'OCR_PROCESSED'; // back-end does it... TODO FIXME
+      try {
+        await this.removeTargetBibliographicResource(entry);
+        entry.status = 'OCR_PROCESSED'; // back-end does it... TODO FIXME
+      } catch (e) {
+        console.log("References pointer was invalid. Pass...")
+      }
+      entry.references = '';
     }
     await this.addTargetBibliographicResource(entry, resource).toPromise();
     /* to keep view consistent */

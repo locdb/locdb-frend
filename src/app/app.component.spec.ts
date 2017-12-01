@@ -56,7 +56,7 @@ import { FrontpageComponent } from './frontpage/frontpage.component';
 ////////  SPECS  /////////////
 
 const appRoutes: Routes = [
-  { path: 'disambiguate', component: AppwrapperComponent },
+  { path: 'resolve', component: AppwrapperComponent },
   { path: 'ingest', component: ScanComponent},
   { path: 'browse', component: SuggestionComponent},
   { path: 'frontpage', component: FrontpageComponent},
@@ -71,7 +71,7 @@ const appRoutes: Routes = [
     redirectTo: '/frontpage',
     pathMatch: 'full'
    },
-  // { path: '**', component: PageNotFoundComponent }
+  { path: '**', redirectTo: '/frontpage' }
 ];
 
 /// Delete this
