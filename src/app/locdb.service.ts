@@ -419,24 +419,21 @@ export class LocdbService {
     const reqUrl = `${this.locdbUrl}/addFeed`;
     return this.http.post(
       reqUrl,
-      {name: name, url},
-      {headers: this.headers}
+      {name: name, url}
     ).map(res => res.json() as Feed);
   }
 
   fetchFeeds(): Observable<Feed[]> {
     const url = `${this.locdbUrl}/fetchFeeds`;
     return this.http.get(
-      url,
-      {headers: this.headers}
+      url
     ).map(res => res.json() as Feed[]);
   }
 
   deleteFeed(identifier: string): Observable<Feed[]> {
     const url = `${this.locdbUrl}/deleteFeed/${identifier}`;
     return this.http.get(
-      url,
-      {headers: this.headers}
+      url
     ).map(res => res.json()['feeds'] as Feed[])
   }
 } // LocdbService
