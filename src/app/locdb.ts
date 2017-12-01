@@ -153,11 +153,11 @@ export class ProvenResource extends BibliographicResource {
     let prov = Provenance.unknown;
     if (this._id) {
       prov = Provenance.locdb;
-    } else if (this.identifiers.find(id => id.scheme === ExternalSource.swb)) {
+    } else if (this.identifiers && this.identifiers.find(id => id.scheme === ExternalSource.swb)) {
       prov =  Provenance.swb;
-    } else if (this.identifiers.find(id => id.scheme === ExternalSource.crossref )) {
+    } else if (this.identifiers && this.identifiers.find(id => id.scheme === ExternalSource.crossref )) {
       prov = Provenance.crossref
-    } else if (this.identifiers.find(id => id.scheme === ExternalSource.gScholar)) {
+    } else if (this.identifiers && this.identifiers.find(id => id.scheme === ExternalSource.gScholar)) {
       prov = Provenance.gScholar;
     }
 
