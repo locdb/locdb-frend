@@ -328,6 +328,7 @@ export class LocdbService {
 
   maybePostResource(resource: BibliographicResource): Promise<BibliographicResource> {
     /* Post the resource if it is not stored in back-end yet
+     * TODO a problem here, when resource is incomplete
      * 0-1 backend requests */
     if (!resource._id) {
       const url = `${this.locdbUrl}/bibliographicResources`;

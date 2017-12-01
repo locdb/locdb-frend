@@ -23,6 +23,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // if this is a string, we can try to dereference it from the back-end
     @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
+    @Output() resourceChange = new EventEmitter<BibliographicResource | ProvenResource | ToDo>();
 
     // this should not be here, the resource should only rely on itself and not
     // some entries TODO FIXME
@@ -223,75 +224,13 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         return resource;
     }
 
-    // ** THE FOLLOWING CODE MIGHT GO TO SUGGESTIONS **
-    // loadExtenalSuggestions() {
-    //     // search for external Suggestions with entry emitted by app-display (current active entry)
-    //     console.log('[ResourceForm] loadExtenalSuggestions(): ', this.entry);
-    //     const searchentry = JSON.parse(JSON.stringify(this.entry));
-    //     // set new title to search with
-    //     searchentry.ocrData.title = this.resourceForm.value.title;
-    //     console.log('[ResourceForm] loadExtenalSuggestions(): ',
-    //         this.resourceForm.value.title, '; searchentry.ocrData.title',
-    //         searchentry);
-    //     this.locdbService.suggestions(searchentry, true).subscribe( (sgt) => this.saveExternal(sgt) );
-    // }
-    // inMerge(r: any) {
-    //     // empty fields are filled with information from selected external resource if possible
-    //     console.log('[ResourceForm] inMerge(): ', this.resource, '; Clicked External Entry: ',  r);
-    //     /* ---------------------*/
-    //     // depending on import type (BibResource/ocrData) two differend imports
-    //     // BibResource
-    //     const title = r.title;
-    //     const authors = [];
-    //     for (const contributor of r.contributors) {
-    //         const name = contributor.heldBy.nameString;
-    //         let role = contributor.roleType;
-    //         if (ROLES.indexOf(role) >= 0) {
-    //             console.log('Role of external Resource found');
-    //         } else {
-    //             role = 'author';
-    //         }
-    //         authors.push( {name: name, role: role});
-    //     }
-
-    //     if (this.resourceForm.value.title === '') {
-    //         this.resourceForm.patchValue( {
-    //             title: title,
-    //         });
-    //     }
-    //     // add authors if not in list already
-    //     for (const author of authors) {
-    //         const name = author.name; // author for ocrData.authors
-    //         const role = author.role; // dummy for ocrData
-
-    //         let isListed = false;
-
-    //         for (const con of this.contributorsForms) {
-    //             if (con.value.name === name) {
-    //                 isListed = true;
-    //                 break;
-    //             }
-    //         }
-    //         if (!isListed) {
-    //             // this.resourceForm.patchValue( {});
-    //             const conForm: FormGroup =  this.fb.group( {
-    //                 role: role,
-    //                 name: name,
-    //             })
-    //             this.contributorsForms.push(conForm);
-    //         }
-    //     }
-    // }
-    // onSelect()  {
-    //     console.log('[ResourceForm] inMerge(): ', 'onSelect select');
-
-    // }
-
     deleteResource() {
         // Deletes the whole currently selected resouces
         if (confirm('Are you sure to delete resource ' + this.resource._id)) {
-            this.locdbService.deleteBibliographicResource(this.resource).subscribe((res) => console.log('Deleted'));
-            this.resource = null;
+            this.locdbService.deleteBibliographicResource(this.resource).subscribe(
+                (res) => {console.log('Deleted'); this.resource = null; this.resourceChange.emit(this.resource)},
+                (err) => {alert("Error deleting resource " + this.resource._id)}
+            );
         }
 
     }
