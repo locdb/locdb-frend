@@ -189,7 +189,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
           this.currentTarget = new ProvenResource(res);
           this.onSelect(this.currentTarget);
         })
-        .catch(err => alert('Error 418 occurred'));
+        .catch(err => alert('Something went wrong during commit: ' + err));
 
       /* OLD overly complicated code below TODO remove */
 
