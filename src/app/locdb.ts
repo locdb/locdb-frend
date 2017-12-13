@@ -171,9 +171,13 @@ export class ResponsibleAgent {
   familyName?: string;
   constructor(agent: Partial<ResponsibleAgent>) {
     this.identifiers = agent.identifiers.map(id => new Identifier(id));
-    this.nameString = agent.nameString;
     this.givenName = agent.givenName;
     this.familyName = agent.familyName;
+    if (agent.nameString) {
+      this.nameString = agent.nameString;
+    } else {
+      this.nameString = `${agent.givenName} ${agent.familyName}`;
+    }
   }
   toString() {
     return this.nameString;
@@ -197,7 +201,7 @@ export type ToDo = Partial<ToDoResource>
 export class ToDoPartsResource extends BibliographicResource {
   scans?: ToDoScans[];
   constructor(tp: Partial<ToDoPartsResource>) {
-    super(tp);
+    super(tp); // problem here since it has no parts
     // does not have children
     this.scans = tp.scans as ToDoScans[];
   }

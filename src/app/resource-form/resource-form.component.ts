@@ -23,8 +23,8 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // if this is a string, we can try to dereference it from the back-end
-    @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
-    @Output() resourceChange = new EventEmitter<BibliographicResource | ProvenResource | ToDo>();
+    @Input() resource: BibliographicResource = null;
+    @Output() resourceChange = new EventEmitter<BibliographicResource>();
 
     // this should not be here, the resource should only rely on itself and not
     // some entries TODO FIXME
