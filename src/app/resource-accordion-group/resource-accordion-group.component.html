@@ -5,7 +5,7 @@
       <span *ngIf="resource.provenance" class="badge badge-warning">{{resource.provenance}}</span>
     </p>
   </div>
-  <app-resource-editable [resource]="resource">
+  <app-resource-editable [resource]="resource" (resourceChange)="resource=$event; resourceChange.emit($event)">
   </app-resource-editable>
 
   <!-- TODO FIXME put ng-content here -->

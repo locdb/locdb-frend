@@ -28,7 +28,7 @@
       Currently references
     </h5>
     <accordion>
-    <app-resource-accordion-group [resource]="currentTarget" [selected]="currentTarget == selectedResource" (click)="onSelect(currentTarget)">
+    <app-resource-accordion-group [(resource)]="currentTarget" [selected]="currentTarget == selectedResource" (click)="onSelect(currentTarget)">
     </app-resource-accordion-group>
     </accordion>
   </div>

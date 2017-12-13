@@ -277,6 +277,8 @@ export class LocdbService {
     entry: BibliographicEntry,
     resource: BibliographicResource
   ): Promise<BibliographicResource> {
+    /* if necessary, creates target resource before updating the reference of the entry */
+    /* 1-3 requests */
     const target = await this.maybePostResource(resource);
     await this.updateTargetResource(entry, target);
     return target;
@@ -287,10 +289,16 @@ export class LocdbService {
     entry: BibliographicEntry,
     resource: BibliographicResource
   ): Promise<BibliographicEntry> {
-    /* adds or update link from entry to resource */
+    /* adds or update link from entry to resource
+     * 1-2 requests */
     if (entry.references) {
-      await this.removeTargetBibliographicResource(entry);
-      entry.status = 'OCR_PROCESSED'; // back-end does it... TODO FIXME
+      try {
+        await this.removeTargetBibliographicResource(entry);
+        entry.status = 'OCR_PROCESSED'; // back-end does it... TODO FIXME
+      } catch (e) {
+        console.log("References pointer was invalid. Pass...")
+      }
+      entry.references = '';
     }
     await this.addTargetBibliographicResource(entry, resource).toPromise();
     /* to keep view consistent */
@@ -303,7 +311,8 @@ export class LocdbService {
   maybePutResource(
     resource: BibliographicResource
   ): Promise<BibliographicResource> {
-    /* Update the resource if it is known to the backend */
+    /* Update the resource if it is known to the backend
+     * 0-1 */
     if (!resource._id) {
       return Promise.resolve(resource);
     } else {
@@ -318,7 +327,9 @@ export class LocdbService {
   }
 
   maybePostResource(resource: BibliographicResource): Promise<BibliographicResource> {
-    /* Post the resource if it is not stored in back-end yet */
+    /* Post the resource if it is not stored in back-end yet
+     * TODO a problem here, when resource is incomplete
+     * 0-1 backend requests */
     if (!resource._id) {
       const url = `${this.locdbUrl}/bibliographicResources`;
       return this.http.post(
@@ -408,24 +419,21 @@ export class LocdbService {
     const reqUrl = `${this.locdbUrl}/addFeed`;
     return this.http.post(
       reqUrl,
-      {name: name, url},
-      {headers: this.headers}
+      {name: name, url}
     ).map(res => res.json() as Feed);
   }
 
   fetchFeeds(): Observable<Feed[]> {
     const url = `${this.locdbUrl}/fetchFeeds`;
     return this.http.get(
-      url,
-      {headers: this.headers}
+      url
     ).map(res => res.json() as Feed[]);
   }
 
   deleteFeed(identifier: string): Observable<Feed[]> {
     const url = `${this.locdbUrl}/deleteFeed/${identifier}`;
     return this.http.get(
-      url,
-      {headers: this.headers}
+      url
     ).map(res => res.json()['feeds'] as Feed[])
   }
 } // LocdbService

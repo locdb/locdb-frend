@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
+import { EventEmitter, Component, OnInit, ViewEncapsulation, Input, Output } from '@angular/core';
 import { BibliographicResource, ProvenResource, ToDo, } from '../locdb';
 
 @Component({
@@ -10,11 +10,14 @@ import { BibliographicResource, ProvenResource, ToDo, } from '../locdb';
 export class ResourceAccordionGroupComponent implements OnInit {
 
   @Input() resource: BibliographicResource | ProvenResource | ToDo;
+  @Output() resourceChange = new EventEmitter<BibliographicResource | ProvenResource | ToDo>();
   @Input() selected: boolean = false;
   constructor() { }
 
   ngOnInit() {
   }
+
+
 
   short() {
       // A shorthand name for accordion heading
