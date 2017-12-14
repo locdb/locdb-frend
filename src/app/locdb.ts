@@ -10,7 +10,7 @@ export class BibliographicResource {
   number?: string;
   contributors?: AgentRole[];
   publicationYear?: string;
-  status?: string;
+  status?: ResourceStatus;
   parts?: BibliographicEntry[];
   partOf?: string; // _id of other resource
   containerTitle?: string;
@@ -136,7 +136,7 @@ export class ToDoParts extends BibliographicResource {
 
 /** Wrapping a Scan image by its identifier that can be accessed by /scans/<identifier> */
 export class ToDoScans {
-  status: Status;
+  status: ToDoStatus;
   _id: string;
   firstpage?: number;
   lastpage?: number;
@@ -180,11 +180,16 @@ export function synCites_(br: BibliographicResource) {
 }
 
 /** ENUMS */
-export enum Status {
+export enum ToDoStatus {
   ocr = 'OCR_PROCESSED',
   nocr = 'NOT_OCR_PROCESSED',
   iocr = 'OCR_PROCESSING',
   ext = 'EXTERNAL',
+  valid = 'VALID',
+}
+
+export enum ResourceStatus {
+  external = 'EXTERNAL',
   valid = 'VALID',
 }
 
@@ -202,9 +207,30 @@ export enum ResourceType {
 }
 
 export const RESOURCE_TYPES = [
-  'MONOGRAPH',
-  'COLLECTION',
-  'JOURNAL',
+  'Book',
+  'Book chapter',
+  'Book part',
+  'Book section',
+  'Book series',
+  'Book set',
+  'Book track',
+  'Component',
+  'Dataset',
+  'Dissertation',
+  'Edited book',
+  'Journal article',
+  'Journal Issue',
+  'Journal Volume',
+  'Journal',
+  'Monograph',
+  'Proceedings article',
+  'Proceedings',
+  'Reference book',
+  'Reference entry',
+  'Report series',
+  'Report',
+  'Standard series',
+  'Standard',
 ]
 
 

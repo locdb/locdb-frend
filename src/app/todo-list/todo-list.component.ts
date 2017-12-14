@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { BibliographicResource, ToDo, ToDoParts, ToDoScans, Status } from '../locdb';
+import { BibliographicResource, ToDo, ToDoParts, ToDoScans, ToDoStatus } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Provenance } from '../locdb';
 
@@ -11,11 +11,11 @@ import { Provenance } from '../locdb';
 })
 export class TodoListComponent implements OnInit, OnChanges {
 
-  @Input() state: Status;
+  @Input() state: ToDoStatus;
   @Output() todo: EventEmitter<ToDoScans | BibliographicResource> = new EventEmitter();
   @Output() resourceTrack: EventEmitter<BibliographicResource[] | ToDo[]> = new EventEmitter();
   todos: ToDo[];
-  states = Status;
+  states = ToDoStatus;
   provenance = Provenance;
   loading = false;
   constructor(private locdbService: LocdbService) { }
@@ -54,11 +54,11 @@ export class TodoListComponent implements OnInit, OnChanges {
 
   onSelectScan(scan: ToDoScans, trace: BibliographicResource[] | ToDo[]) {
     // called when pressing on a scan todo item
-    if ( scan.status === Status.nocr ) {
+    if ( scan.status === ToDoStatus.nocr ) {
       console.log('Starting processing');
-      scan.status = Status.iocr;
+      scan.status = ToDoStatus.iocr;
       this.locdbService.triggerOcrProcessing(scan._id).subscribe(
-        (success) => scan.status = Status.ocr,
+        (success) => scan.status = ToDoStatus.ocr,
         (err) => console.log(err)
       )
     } else {
@@ -83,10 +83,10 @@ export class TodoListComponent implements OnInit, OnChanges {
 
   // 2 methods to delete after chagnes
   printState(scan: ToDoScans) {
-    if (scan.status === Status.ocr) { return 'OCR processed' } ;
-    if (scan.status === Status.nocr) { return  'not OCR processed '};
-    if (scan.status === Status.iocr) { return 'OCR processing' };
-    if (scan.status === Status.ext)  { return 'external' };
+    if (scan.status === ToDoStatus.ocr) { return 'OCR processed' } ;
+    if (scan.status === ToDoStatus.nocr) { return  'not OCR processed '};
+    if (scan.status === ToDoStatus.iocr) { return 'OCR processing' };
+    if (scan.status === ToDoStatus.ext)  { return 'external' };
     return scan.status
   }
 

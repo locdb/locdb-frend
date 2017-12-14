@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 
 
-import { BibliographicResource, ToDo, ToDoParts, ToDoScans, Status} from './locdb';
+import { BibliographicResource, ToDo, ToDoParts, ToDoScans, ToDoStatus} from './locdb';
 // import { MOCK_TODOBRS } from './mock-todos';
 
 import { LocdbService } from './locdb.service';
@@ -15,8 +15,8 @@ import { LocdbService } from './locdb.service';
 
 export class TodoComponent implements OnInit {
   title = 'Todo Management';
-  state: Status = Status.ocr;
-  states = Status;
+  state: ToDoStatus = ToDoStatus.ocr;
+  states = ToDoStatus;
 
   @Output() todo: EventEmitter<ToDoScans | BibliographicResource> = new EventEmitter(true);
   @Output() resourceTrack: EventEmitter<BibliographicResource[] | ToDo[]> = new EventEmitter();
@@ -35,7 +35,7 @@ export class TodoComponent implements OnInit {
     // console.log('Retrieving TODOs from backend');
   }
 
-  setState(state: Status) {
+  setState(state: ToDoStatus) {
     this.state = state;
   }
 

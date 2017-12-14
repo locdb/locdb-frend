@@ -30,7 +30,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     // @Input() exSuggests: any[];
     @Input() selected = false;
     @Output() submitStatus: EventEmitter<boolean> = new EventEmitter();
-    oldresource: BibliographicResource;
 
     resourceForm: FormGroup;
     embodiments: FormGroup[] = [];
