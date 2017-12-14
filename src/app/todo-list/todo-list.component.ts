@@ -64,7 +64,7 @@ export class TodoListComponent implements OnInit, OnChanges {
     } else {
       console.log('Todo item selected', scan);
       this.todo.next(scan);
-      console.log("resourceTrack: ", trace)
+      console.log('resourceTrack: ', trace)
       this.resourceTrack.next(trace)
     }
   }

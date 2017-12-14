@@ -27,7 +27,7 @@ export class TodoComponent implements OnInit {
     this.todo.emit(scanOrResource)
   }
 
-  tpipe(track:  BibliographicResource[] | ToDo[]){
+  tpipe(track:  BibliographicResource[] | ToDo[]) {
       this.resourceTrack.emit(track)
   }
 
