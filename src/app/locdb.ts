@@ -10,56 +10,23 @@ export class BibliographicResource {
   number?: string;
   contributors?: AgentRole[];
   publicationYear?: string;
-  status?: string;
+  status?: ResourceStatus;
   parts?: BibliographicEntry[];
   partOf?: string; // _id of other resource
   containerTitle?: string;
   embodiedAs?: ResourceEmbodiment[];
   /* should be aggregate of parts.references */
   cites?: string[];
-
-  constructor(br: Partial<BibliographicResource>) {
-    // TODO do this properly, recursively call subconstructors
-    this._id = br._id;
-    this.identifiers = br.identifiers.map(id => new Identifier(id))
-    this.type = br.type;
-    this.title = br.title;
-    this.subtitle = br.subtitle;
-    this.edition = br.edition;
-    this.number = br.number;
-    this.contributors = br.contributors.map(c => new AgentRole(c));
-    this.publicationYear = br.publicationYear;
-    this.status = br.status;
-    this.parts = br.parts.map(br => new BibliographicEntry(br));
-    this.partOf = br.partOf;
-    this.containerTitle = br.containerTitle;
-    this.cites = br.cites;
-  }
-
-  get authors() {
-    return this.contributors.filter(c => c.roleType === 'AUTHOR').map(authrole => authrole.heldBy.nameString);
-  }
-
-  identifierValues(forScheme: string): string[] {
-    return this.identifiers.filter(ident => ident.scheme === forScheme).map(ident => ident.literalValue);
-  }
 }
-
-type PartialResource = Partial<BibliographicResource>;
 
 
 /** Generic identifier */
 export class Identifier {
   literalValue: string;
   scheme: string;
-
-  constructor (id: Partial<Identifier> ) {
-    this.literalValue = id.literalValue;
-    this.scheme = id.scheme;
-  }
-
-  toString(): string {
-    return `${this.scheme}=${this.literalValue}`;
+  constructor (scheme: string, literalValue: string ) {
+    this.literalValue = literalValue;
+    this.scheme = scheme;
   }
 }
 
@@ -108,13 +75,6 @@ export class AgentRole {
   roleType: string;
   heldBy: ResponsibleAgent;
 
-  constructor(role: Partial<AgentRole>) {
-    this._id = role._id;
-    this.identifiers = role.identifiers.map(id => new Identifier(id));
-    this.roleType = role.roleType;
-    this.heldBy = new ResponsibleAgent(role.heldBy);
-  }
-
   // extracted from http://www.sparontologies.net/ontologies/pro/source.html#d4e361
   // as referenced by OCC metadata model
   // could be an enum
@@ -129,15 +89,6 @@ export class BibliographicEntry {
   status?: string;
   ocrData?: OCRData;
   identifiers?: Identifier[];
-  constructor (be: Partial<BibliographicEntry>) {
-    this._id = be._id;
-    this.bibliographicEntryText = be.bibliographicEntryText;
-    this.references = be.references;
-    this.scanId = be.scanId;
-    this.status = be.status;
-    this.ocrData = be.ocrData;
-    this.identifiers = be.identifiers.map(id => new Identifier(id));
-  }
 }
 
 /** Addition to the OCC Metadata model to support OCR data */
@@ -169,48 +120,23 @@ export class ResponsibleAgent {
   nameString: string;
   givenName?: string;
   familyName?: string;
-  constructor(agent: Partial<ResponsibleAgent>) {
-    this.identifiers = agent.identifiers.map(id => new Identifier(id));
-    this.givenName = agent.givenName;
-    this.familyName = agent.familyName;
-    if (agent.nameString) {
-      this.nameString = agent.nameString;
-    } else {
-      this.nameString = `${agent.givenName} ${agent.familyName}`;
-    }
-  }
-  toString() {
-    return this.nameString;
-  }
 }
 
-/** Apart from the children and scan properties, todo items are basically resource */
-export class ToDoResource extends BibliographicResource {
-  children?: Partial<ToDoParts>[]; // childs does not need to be full resource
+/** Apart from the children property, todo items are basically resource */
+export class ToDo extends BibliographicResource {
+  children?: ToDoParts[];
   scans?: ToDoScans[]; // for monographs, scans are directly attached to the BR
-  constructor(t: Partial<ToDoResource>) {
-    super(t);
-    this.children = t.children.map(c => new ToDoPartsResource(c));
-    this.scans = t.scans as ToDoScans[];
-  }
 }
-
-export type ToDo = Partial<ToDoResource>
 
 /** A possible child of a ToDo item */
-export class ToDoPartsResource extends BibliographicResource {
+export class ToDoParts extends BibliographicResource {
+  _id: string;
   scans?: ToDoScans[];
-  constructor(tp: Partial<ToDoPartsResource>) {
-    super(tp); // problem here since it has no parts
-    // does not have children
-    this.scans = tp.scans as ToDoScans[];
-  }
 }
-export type ToDoParts = Partial<ToDoPartsResource>;
 
 /** Wrapping a Scan image by its identifier that can be accessed by /scans/<identifier> */
 export class ToDoScans {
-  status: ToDoStates;
+  status: ToDoStatus;
   _id: string;
   firstpage?: number;
   lastpage?: number;
@@ -218,8 +144,9 @@ export class ToDoScans {
 
 
 export class ProvenResource extends BibliographicResource {
-  constructor(br: Partial<ProvenResource>) {
-    super(br);
+  constructor(br: BibliographicResource) {
+    super();
+    Object.assign(this, br);
   }
   get provenance(): Provenance {
     // could cache
@@ -253,11 +180,16 @@ export function synCites_(br: BibliographicResource) {
 }
 
 /** ENUMS */
-export enum ToDoStates {
+export enum ToDoStatus {
   ocr = 'OCR_PROCESSED',
   nocr = 'NOT_OCR_PROCESSED',
   iocr = 'OCR_PROCESSING',
   ext = 'EXTERNAL',
+  valid = 'VALID',
+}
+
+export enum ResourceStatus {
+  external = 'EXTERNAL',
   valid = 'VALID',
 }
 
@@ -275,9 +207,30 @@ export enum ResourceType {
 }
 
 export const RESOURCE_TYPES = [
-  'MONOGRAPH',
-  'COLLECTION',
-  'JOURNAL',
+  'Book',
+  'Book chapter',
+  'Book part',
+  'Book section',
+  'Book series',
+  'Book set',
+  'Book track',
+  'Component',
+  'Dataset',
+  'Dissertation',
+  'Edited book',
+  'Journal article',
+  'Journal Issue',
+  'Journal Volume',
+  'Journal',
+  'Monograph',
+  'Proceedings article',
+  'Proceedings',
+  'Reference book',
+  'Reference entry',
+  'Report series',
+  'Report',
+  'Standard series',
+  'Standard',
 ]
 
 

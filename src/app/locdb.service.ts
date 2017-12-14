@@ -16,7 +16,9 @@ import {
   BibliographicEntry,
   BibliographicResource,
   ProvenResource,
-  Feed
+  Feed,
+  ToDoStatus,
+  ResourceStatus,
 } from './locdb'
 
 import { synCites_ } from './locdb'
@@ -332,6 +334,7 @@ export class LocdbService {
      * 0-1 backend requests */
     if (!resource._id) {
       const url = `${this.locdbUrl}/bibliographicResources`;
+      resource.status = ResourceStatus.valid; // they should never be external
       return this.http.post(
         url,
         resource

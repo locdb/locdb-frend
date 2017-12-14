@@ -9,7 +9,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 
 import { environment } from 'environments/environment';
 
-import { ToDoStates, Provenance } from '../locdb';
+import { ResourceStatus, Provenance } from '../locdb';
 
 import { PopoverModule } from 'ngx-popover';
 
@@ -136,19 +136,19 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     resourceFromEntry(entry): ProvenResource {
         const ocr = entry.ocrData;
-        const br: ProvenResource = new ProvenResource({
+        const br: ProvenResource = {
           title: ocr.title || entry.bibliographicEntryText,
           publicationYear: ocr.date || '', // unary + operator makes it a number
           contributors: this.authors2contributors(ocr.authors),
           embodiedAs: [],
-          parts: [],
-          partOf: '', // these two properties are new in ocr data
+          // parts: [],
+          // partOf: null, // these two properties are new in ocr data
           containerTitle: ocr.journal || '',
           number: ocr.volume || '', // hope they work
-          status: ToDoStates.ext,
+          status: ResourceStatus.external,
           identifiers: entry.identifiers.filter(i => i.scheme && i.literalValue),
           provenance: Provenance.local
-        });
+        }
         return br;
     }
 
@@ -190,58 +190,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
           this.onSelect(this.currentTarget);
         })
         .catch(err => alert('Something went wrong during commit: ' + err));
-
-      /* OLD overly complicated code below TODO remove */
-
-      // This the actual linking of entry to resource
-      // we could also check for _id
-      // const pinnedResource = this.selectedResource;
-      // const pinnedEntry = this.entry;
-      // if (pinnedResource.status === ToDoStates.ext) {
-      //   // selectedResource is either external or NEW
-      //   pinnedResource.status = ToDoStates.valid;
-      //   this.locdbService.pushBibligraphicResource(pinnedResource).subscribe(
-      //     (response) => {
-      //       // addTarget
-      //       this.locdbService.addTargetBibliographicResource(this.entry, response).subscribe(
-      //         (success) => {
-      //           // addTarget succeeded
-      //           // Update the view
-      //           pinnedEntry.status = 'VALID';
-      //           console.log('Setting entry references to', response._id);
-      //           pinnedEntry.references = response._id;
-      //           if (Object.is(this.entry, pinnedEntry)) { // guarding entry changes
-      //             this.currentTarget = new ProvenResource(response); // update view
-      //             this.onSelect(this.currentTarget);
-      //           }
-      //         },
-      //         // addTarget failed
-      //         (error) => console.log('Could not add target', this.entry, response)
-      //       );
-      //     },
-      //     (error) => {
-      //       // push failed, so reset state
-      //       pinnedResource.status = ToDoStates.ext;
-      //       console.log('Submitting external resource failed');
-      //     }
-      //   );
-      // } else { // Resource was an internal suggestion
-      //   this.locdbService.addTargetBibliographicResource(this.entry, this.selectedResource).subscribe(
-      //     (success) => {
-      //       // addTarget succeeded
-      //       // update view
-      //       pinnedEntry.status = 'VALID';
-      //       pinnedEntry.references = pinnedResource._id;
-      //       // are the surrounding statements ok if the selected Resource changes?
-      //       if (Object.is(this.entry, pinnedEntry)) { // guarding entry changes
-      //         this.currentTarget = pinnedResource; // update view
-      //         this.onSelect(this.currentTarget);
-      //       }
-      //     },
-      //     // addTarget failed
-      //     (error) => console.log('Could not add target', this.entry, this.selectedResource)
-      //   );
-      // }
     }
 
     toggle_max_ex() {
@@ -259,13 +207,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
           this.max_in = 0;
       }
     }
-
-
-  // contributors2authors(roles: AgentRole[]) {
-  //   const authors = roles.map( (role) => role.heldBy.nameString);
-  //   const names = authors.join(' ');
-  //   return names
-  // }
 
   queryFromEntry(entry: BibliographicEntry): string {
     if (entry.ocrData.title) {

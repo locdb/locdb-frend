@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { BibliographicResource, ToDoResource, ToDo, ToDoParts, ToDoScans, ToDoStates } from '../locdb';
+import { BibliographicResource, ToDo, ToDoParts, ToDoScans, ToDoStatus } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Provenance } from '../locdb';
 
@@ -11,11 +11,11 @@ import { Provenance } from '../locdb';
 })
 export class TodoListComponent implements OnInit, OnChanges {
 
-  @Input() state: ToDoStates;
-  @Output() todo: EventEmitter<ToDoScans | ToDo> = new EventEmitter();
+  @Input() state: ToDoStatus;
+  @Output() todo: EventEmitter<ToDoScans | BibliographicResource> = new EventEmitter();
   @Output() resourceTrack: EventEmitter<BibliographicResource[] | ToDo[]> = new EventEmitter();
   todos: ToDo[];
-  states = ToDoStates;
+  states = ToDoStatus;
   provenance = Provenance;
   loading = false;
   constructor(private locdbService: LocdbService) { }
@@ -54,11 +54,11 @@ export class TodoListComponent implements OnInit, OnChanges {
 
   onSelectScan(scan: ToDoScans, trace: BibliographicResource[] | ToDo[]) {
     // called when pressing on a scan todo item
-    if ( scan.status === ToDoStates.nocr ) {
+    if ( scan.status === ToDoStatus.nocr ) {
       console.log('Starting processing');
-      scan.status = ToDoStates.iocr;
+      scan.status = ToDoStatus.iocr;
       this.locdbService.triggerOcrProcessing(scan._id).subscribe(
-        (success) => scan.status = ToDoStates.ocr,
+        (success) => scan.status = ToDoStatus.ocr,
         (err) => console.log(err)
       )
     } else {
@@ -83,10 +83,10 @@ export class TodoListComponent implements OnInit, OnChanges {
 
   // 2 methods to delete after chagnes
   printState(scan: ToDoScans) {
-    if (scan.status === ToDoStates.ocr) { return 'OCR processed' } ;
-    if (scan.status === ToDoStates.nocr) { return  'not OCR processed '};
-    if (scan.status === ToDoStates.iocr) { return 'OCR processing' };
-    if (scan.status === ToDoStates.ext)  { return 'external' };
+    if (scan.status === ToDoStatus.ocr) { return 'OCR processed' } ;
+    if (scan.status === ToDoStatus.nocr) { return  'not OCR processed '};
+    if (scan.status === ToDoStatus.iocr) { return 'OCR processing' };
+    if (scan.status === ToDoStatus.ext)  { return 'external' };
     return scan.status
   }
 
@@ -95,14 +95,14 @@ export class TodoListComponent implements OnInit, OnChanges {
     return identifier.slice(0, 7);
   }
 
-  guard(t: ToDo | ToDoParts) {
+  guard(t: ToDo) {
     /* is there anything to display? */
     if (!t) { return false; }
     if (t.parts && t.parts.length) { return true; }
     if (t.scans && t.scans.length) { return true; }
-    if (t instanceof ToDoResource) { // has children?
+    if (t.children) {
       // any children satisfies condition above?
-      return !<ToDo>t.children.every((child) => !this.guard(child));
+      return !t.children.every((child) => !this.guard(child));
     }
     return false;
   }
