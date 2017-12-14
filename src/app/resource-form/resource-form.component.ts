@@ -22,8 +22,8 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // if this is a string, we can try to dereference it from the back-end
-    @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
-    @Output() resourceChange = new EventEmitter<BibliographicResource | ProvenResource | ToDo>();
+    @Input() resource: BibliographicResource = null;
+    @Output() resourceChange = new EventEmitter<BibliographicResource>();
 
     // this should not be here, the resource should only rely on itself and not
     // some entries TODO FIXME
@@ -200,7 +200,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         const identsDeepCopy = formModel.identifiers.map(
           (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
         );
-        const resource: BibliographicResource =  {
+        const resource: BibliographicResource =  new BibliographicResource({
             _id: this.resource._id,
             identifiers: identsDeepCopy,
             type: formModel.resourcetype as string || '',
@@ -219,7 +219,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             parts: this.resource.parts,
             cites: this.resource.cites,
             status: this.resource.status
-        }
+        });
         return resource;
     }
 
@@ -228,7 +228,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         if (confirm('Are you sure to delete resource ' + this.resource._id)) {
             this.locdbService.deleteBibliographicResource(this.resource).subscribe(
                 (res) => {console.log('Deleted'); this.resource = null; this.resourceChange.emit(this.resource)},
-                (err) => {alert("Error deleting resource " + this.resource._id)}
+                (err) => {alert('Error deleting resource ' + this.resource._id)}
             );
         }
 

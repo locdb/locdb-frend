@@ -136,19 +136,19 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     resourceFromEntry(entry): ProvenResource {
         const ocr = entry.ocrData;
-        const br: ProvenResource = {
+        const br: ProvenResource = new ProvenResource({
           title: ocr.title || entry.bibliographicEntryText,
           publicationYear: ocr.date || '', // unary + operator makes it a number
           contributors: this.authors2contributors(ocr.authors),
           embodiedAs: [],
-          // parts: [],
-          // partOf: null, // these two properties are new in ocr data
+          parts: [],
+          partOf: '', // these two properties are new in ocr data
           containerTitle: ocr.journal || '',
           number: ocr.volume || '', // hope they work
           status: ResourceStatus.external,
           identifiers: entry.identifiers.filter(i => i.scheme && i.literalValue),
           provenance: Provenance.local
-        }
+        });
         return br;
     }
 
