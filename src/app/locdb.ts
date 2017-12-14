@@ -136,7 +136,7 @@ export class ToDoParts extends BibliographicResource {
 
 /** Wrapping a Scan image by its identifier that can be accessed by /scans/<identifier> */
 export class ToDoScans {
-  status: ToDoStates;
+  status: Status;
   _id: string;
   firstpage?: number;
   lastpage?: number;

@@ -9,7 +9,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 
 import { environment } from 'environments/environment';
 
-import { ToDoStates, Provenance } from '../locdb';
+import { Status, Provenance } from '../locdb';
 
 import { PopoverModule } from 'ngx-popover';
 
@@ -145,7 +145,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
           // partOf: null, // these two properties are new in ocr data
           containerTitle: ocr.journal || '',
           number: ocr.volume || '', // hope they work
-          status: ToDoStates.ext,
+          status: Status.ext,
           identifiers: entry.identifiers.filter(i => i.scheme && i.literalValue),
           provenance: Provenance.local
         }
@@ -197,9 +197,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
       // we could also check for _id
       // const pinnedResource = this.selectedResource;
       // const pinnedEntry = this.entry;
-      // if (pinnedResource.status === ToDoStates.ext) {
+      // if (pinnedResource.status === Status.ext) {
       //   // selectedResource is either external or NEW
-      //   pinnedResource.status = ToDoStates.valid;
+      //   pinnedResource.status = Status.valid;
       //   this.locdbService.pushBibligraphicResource(pinnedResource).subscribe(
       //     (response) => {
       //       // addTarget
@@ -221,7 +221,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       //     },
       //     (error) => {
       //       // push failed, so reset state
-      //       pinnedResource.status = ToDoStates.ext;
+      //       pinnedResource.status = Status.ext;
       //       console.log('Submitting external resource failed');
       //     }
       //   );

@@ -1,4 +1,4 @@
-import { ToDo, ToDoStates } from './locdb';
+import { ToDo, Status } from './locdb';
 
 export const MOCK_TODOBRS: ToDo[] =
   [
@@ -7,7 +7,7 @@ export const MOCK_TODOBRS: ToDo[] =
     'scans': [
       {
         '_id': '54d26b85a285f10778669ffc',
-        'status': ToDoStates.ocr
+        'status': Status.ocr
       }
     ],
     'children': [
@@ -16,7 +16,7 @@ export const MOCK_TODOBRS: ToDo[] =
         'scans': [
           {
             '_id': '58d26b94a285f10778669ffc',
-            'status': ToDoStates.ocr
+            'status': Status.ocr
           }
         ]
       }
@@ -30,7 +30,7 @@ export const MOCK_TODOBRS: ToDo[] =
             'scans': [
               {
                 '_id': '58e03947d6c893087e17d1a7',
-                'status': ToDoStates.nocr
+                'status': Status.nocr
               }
             ]
           }
