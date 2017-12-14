@@ -180,7 +180,7 @@ export function synCites_(br: BibliographicResource) {
 }
 
 /** ENUMS */
-export enum ToDoStates {
+export enum Status {
   ocr = 'OCR_PROCESSED',
   nocr = 'NOT_OCR_PROCESSED',
   iocr = 'OCR_PROCESSING',
