@@ -32,7 +32,6 @@ import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
 
 import 'rxjs/add/operator/toPromise';
 
-
 import { environment } from 'environments/environment';
 
 @Injectable()
@@ -199,6 +198,7 @@ export class LocdbService {
 
   suggestionsByQuery(query: string, external: boolean, threshold?: string): Observable<BibliographicResource[] | ProvenResource> {
     const params: URLSearchParams = new URLSearchParams();
+    // we could also use `escape()` here instead of encodeURI
     params.set('query', encodeURI(query));
     if (threshold) {
       params.set('threshold', encodeURI(threshold));
@@ -298,7 +298,7 @@ export class LocdbService {
         await this.removeTargetBibliographicResource(entry);
         entry.status = 'OCR_PROCESSED'; // back-end does it... TODO FIXME
       } catch (e) {
-        console.log("References pointer was invalid. Pass...")
+        console.log('References pointer was invalid. Pass...');
       }
       entry.references = '';
     }
