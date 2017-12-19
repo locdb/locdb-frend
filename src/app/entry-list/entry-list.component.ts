@@ -11,6 +11,7 @@ import {
 import { BibliographicEntry } from '../locdb'
 import { Observable } from 'rxjs/Rx';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { LoggingService } from '../logging.service'
 
 @Component({
   selector: 'app-entry-list',
@@ -27,7 +28,7 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
   @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter(true);
 
 
-  constructor(private _hotkeysService: HotkeysService) {
+  constructor(private _hotkeysService: HotkeysService, private loggingService: LoggingService) {
   }
 
   ngOnInit() {
@@ -36,14 +37,14 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
       if (current === -1 || current >= this.entries.length - 1) { return false }; // guard
       console.log('current', current, 'of', this.entries.length);
       current += 1;
-      this.onSelect(this.entries[current]);
+      this.onSelectReference(this.entries[current]);
       return false;
     }, [], 'one entry downward'));
     this._hotkeysService.add(new Hotkey('k', (event: KeyboardEvent): boolean => {
       let current = this.entries.indexOf(this.selectedEntry);
       if (current === -1 || current <= 0) { return false };  // guard
       current -= 1;
-      this.onSelect(this.entries[current]);
+      this.onSelectReference(this.entries[current]);
       return false;
     }, [], 'one entry upward'));
   }
@@ -67,15 +68,16 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
 
   addEntry() {
     const entry = new BibliographicEntry();
-    this.onSelect(entry);
+    this.onSelectReference(entry);
   }
 
   deleteEntry() {
 
   }
 
-  onSelect(entry: BibliographicEntry) {
+  onSelectReference(entry: BibliographicEntry) {
     if (this.selectedEntry === entry) { return; } // guard
+    this.loggingService.logReferenceSelected(entry)
     this.selectedEntry = entry;
     console.log('entry emitted', entry)
     this.entry.emit(entry)

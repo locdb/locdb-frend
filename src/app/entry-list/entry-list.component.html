@@ -3,7 +3,7 @@
 <accordion *ngIf="entries">
   <div style="height: 1000px; overflow-y: scroll;">
   <div *ngFor="let e of entries">
-    <app-entry-form [entry]="e" [active]="e == selectedEntry" (click)="onSelect(e)">
+    <app-entry-form [entry]="e" [active]="e == selectedEntry" (click)="onSelectReference(e)">
     </app-entry-form>
   </div>
 </div>

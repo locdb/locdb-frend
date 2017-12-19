@@ -54,6 +54,8 @@ import { ResourceAccordionGroupComponent } from './resource-accordion-group/reso
 import { AppwrapperComponent } from './appwrapper/appwrapper.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 
+import { LoggingService } from './logging.service'
+
 const appRoutes: Routes = [
   { path: 'resolve', component: AppwrapperComponent },
   { path: 'ingest', component: ScanComponent},
@@ -119,6 +121,7 @@ const appRoutes: Routes = [
     LocdbService,
     CredentialsService,
     // {provide: APP_BASE_HREF, useValue : bhref}
+    LoggingService,
   ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

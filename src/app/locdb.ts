@@ -254,3 +254,9 @@ export enum Provenance {
   locdb = 'LOC-DB',
   local = 'Local'
 }
+
+export enum Origin {
+  ocr = 'OCR',
+  internal = 'INTERNAL',
+  external = 'EXTERNAL'
+}

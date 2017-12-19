@@ -2,6 +2,7 @@ import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitte
 
 import { BibliographicEntry, BibliographicResource, AgentRole, ResponsibleAgent, ProvenResource } from '../locdb';
 import { LocdbService } from '../locdb.service';
+import { LoggingService } from '../logging.service'
 
 import { MOCK_INTERNAL } from '../mock-bresources'
 
@@ -9,7 +10,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 
 import { environment } from 'environments/environment';
 
-import { ResourceStatus, Provenance } from '../locdb';
+import { ResourceStatus, Provenance, Origin } from '../locdb';
 
 import { PopoverModule } from 'ngx-popover';
 
@@ -52,7 +53,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
 
 
-    constructor(private locdbService: LocdbService) { }
+    constructor(private locdbService: LocdbService, private loggingService: LoggingService) { }
 
     ngOnInit() {
     }
@@ -84,6 +85,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     refresh() {
       // when search button is triggered
+      this.loggingService.logSearchIssued(this.entry, this.selectedResource, this.query, [0,1])
       this.fetchInternalSuggestions();
       this.fetchExternalSuggestions();
     }
@@ -95,7 +97,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
       console.log('Fetching internal suggestions for', this.query, 'with threshold', this.internalThreshold);
       // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
       this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold.toString()).subscribe(
-        (sug) => { Object.is(this.entry, oldEntry) ? this.saveInternal(sug) : console.log('discarded suggestions') },
+        (sug) => { Object.is(this.entry, oldEntry) ? this.saveInternal(sug) : console.log('discarded suggestions')
+                    this.loggingService.logSuggestionsArrived(this.entry, sug, true) },
         (err) => { this.internalInProgress = false }
       );
     }
@@ -107,7 +110,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
       console.log('Fetching external suggestions for', this.query, 'with threshold', this.externalThreshold);
       // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
       this.locdbService.suggestionsByQuery(this.query, true, this.externalThreshold.toString()).subscribe(
-        (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions') },
+        (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions')
+                    this.loggingService.logSuggestionsArrived(this.entry, sug, false) },
         (err) => { this.externalInProgress = false }
       );
     }
@@ -154,6 +158,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     onSelect(br?: ProvenResource): void {
         console.log('Suggestion emitted', br);
+        this.loggingService.logReferenceTargetSelected(this.entry, br)
+        // <------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         this.selectedResource = br;
         this.committed = false;
         this.suggest.emit(br);
@@ -183,11 +189,24 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     commit() {
+      let pr = new ProvenResource(this.selectedResource);
+      let provenance = pr.provenance;
+      let origin = Origin.external
+      if (provenance == Provenance.locdb){
+        origin = Origin.internal
+      }
+
+      if (provenance == Provenance.unknown){
+          origin = Origin.external
+      }
+
+      this.loggingService.logCommitPressed(this.entry, this.selectedResource, origin)
       const pinnedResource = this.selectedResource;
       this.locdbService.safeCommitLink(this.entry, this.selectedResource).then(
         res => {
           this.currentTarget = new ProvenResource(res);
           this.onSelect(this.currentTarget);
+
         })
         .catch(err => alert('Something went wrong during commit: ' + err));
     }
