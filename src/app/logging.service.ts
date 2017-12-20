@@ -143,7 +143,14 @@ export class LoggingService {
 
   }
 
-  sendLog(logObject:any): Observable<any> {
+  sendLog(logobject){
+    this.uploadLog(logobject).subscribe(
+        (res) => {console.log("Success", res)},
+        (err) => {console.log("Success", err)}
+    );
+  }
+
+  uploadLog(logObject:any): Observable<any> {
     console.log("send log")
     let body = JSON.stringify(logObject);
     let headers = new Headers({ 'Content-Type': 'application/json' });
