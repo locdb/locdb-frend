@@ -158,29 +158,29 @@ export class LoggingService {
 
     console.log(body,headers,options)
     return this.http.post(this.url_, body, options)
-        .map(this.extractData)
-        .catch(this.handleError);
-    }
+    .map(this.extractData)
+    .catch(this.handleError);
+  }
 
-    private extractData(res: Response) {
-      console.log('Response', res);
-      const body = res.json();
-      return body;
-    }
+  private extractData(res: Response) {
+    console.log('Response', res);
+    const body = res.json();
+    return body;
+  }
 
-    private handleError (error: Response | any) {
-      // In a real world app, you might use a remote logging infrastructure
-      let errMsg: string;
-      if (error instanceof Response) {
-        const body = error.json() || '';
-        const err = body.error || JSON.stringify(body);
-        errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-      } else {
-        errMsg = error.message ? error.message : error.toString();
-      }
-      console.error(errMsg);
-      return Observable.throw(errMsg);
+  private handleError (error: Response | any) {
+    // In a real world app, you might use a remote logging infrastructure
+    let errMsg: string;
+    if (error instanceof Response) {
+      const body = error.json() || '';
+      const err = body.error || JSON.stringify(body);
+      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+    } else {
+      errMsg = error.message ? error.message : error.toString();
     }
+    console.error(errMsg);
+    return Observable.throw(errMsg);
+  }
 
 
 }
