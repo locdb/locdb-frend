@@ -6,6 +6,7 @@ import { EntryFormComponent } from './entry-form.component';
 import { HotkeyModule } from 'angular2-hotkeys';
 import { AccordionModule} from 'ngx-bootstrap/accordion';
 import { LocdbService, CredentialsService } from '../locdb.service';
+import { LoggingService } from '../logging.service';
 import { HttpModule } from '@angular/http';
 
 describe('EntryFormComponent', () => {
@@ -16,7 +17,7 @@ describe('EntryFormComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule, HotkeyModule, AccordionModule, HttpModule],
       declarations: [ EntryFormComponent ],
-      providers: [ LocdbService, CredentialsService ]
+      providers: [ LocdbService, CredentialsService, LoggingService ]
     })
     .compileComponents();
   }));

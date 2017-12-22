@@ -12,6 +12,7 @@ import { ResourceComponent } from '../resource/resource.component';
 import { HttpModule } from '@angular/http';
 import { LocdbService, CredentialsService } from '../locdb.service';
 import { PopoverModule } from 'ngx-popover';
+import { LoggingService } from '../logging.service';
 
 describe('SuggestionComponent', () => {
   let component: SuggestionComponent;
@@ -34,7 +35,7 @@ describe('SuggestionComponent', () => {
         ResourceEditableComponent,
         ResourceAccordionGroupComponent
       ],
-      providers: [ LocdbService, CredentialsService ]
+      providers: [ LocdbService, CredentialsService, LoggingService ]
     })
     .compileComponents();
   }));

@@ -5,6 +5,7 @@ import { ResourceFormComponent } from '../resource-form/resource-form.component'
 import { ResourceComponent } from '../resource/resource.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
+import { LoggingService } from '../logging.service';
 
 describe('ResourceEditableComponent', () => {
   let component: ResourceEditableComponent;
@@ -13,7 +14,8 @@ describe('ResourceEditableComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports : [ ReactiveFormsModule ],
-      declarations: [ ResourceEditableComponent, ResourceFormComponent, ResourceComponent ]
+      declarations: [ ResourceEditableComponent, ResourceFormComponent, ResourceComponent ],
+      providers: [ LoggingService ]
     })
     .compileComponents();
   }));
