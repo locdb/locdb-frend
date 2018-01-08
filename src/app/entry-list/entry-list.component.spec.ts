@@ -5,6 +5,7 @@ import { EntryFormComponent } from '../entry-form/entry-form.component';
 import { HotkeyModule, Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 describe('EntryListComponent', () => {
   let component: EntryListComponent;
@@ -13,7 +14,7 @@ describe('EntryListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ EntryListComponent, EntryFormComponent ],
-      imports: [ HotkeyModule.forRoot(), AccordionModule, ReactiveFormsModule],
+      imports: [ HotkeyModule.forRoot(), AccordionModule, ReactiveFormsModule, HttpModule],
       providers: [ HotkeysService ]
     })
     .compileComponents();
