@@ -9,6 +9,7 @@ import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LocdbService, CredentialsService } from '../locdb.service';
 import { HttpModule } from '@angular/http';
+import { LoggingService } from '../logging.service';
 
 
 describe('TodoDetailComponent', () => {
@@ -19,7 +20,7 @@ describe('TodoDetailComponent', () => {
     TestBed.configureTestingModule({
       imports: [ AccordionModule.forRoot(), HotkeyModule.forRoot(), ReactiveFormsModule, HttpModule],
       declarations: [ TodoDetailComponent, EntryListComponent, EntryFormComponent, DisplayComponent ],
-      providers: [LocdbService, CredentialsService, HotkeysService]
+      providers: [LocdbService, CredentialsService, HotkeysService, LoggingService]
     })
     .compileComponents();
   }));
