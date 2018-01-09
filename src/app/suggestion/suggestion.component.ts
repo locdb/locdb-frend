@@ -189,19 +189,19 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     commit() {
-      console.log("Start commit", this.selectedResource)
-      let pr = this.selectedResource;
-      let provenance = pr.provenance;
-      console.log("Call Logging")
-      this.loggingService.logCommitPressed(this.entry, this.selectedResource, provenance)
+      console.log('Start commit', this.selectedResource)
+      const pr = this.selectedResource;
+      const provenance = pr.provenance;
+      console.log('Call Logging');
+      this.loggingService.logCommitPressed(this.entry, this.selectedResource, provenance);
       const pinnedResource = this.selectedResource;
-      console.log("Commit")
+      console.log('Commit');
       this.locdbService.safeCommitLink(this.entry, this.selectedResource).then(
         res => {
           this.currentTarget = new ProvenResource(res);
           this.onSelect(this.currentTarget);
-          console.log("Log after commit")
-          this.loggingService.logCommited(this.entry, this.currentTarget, provenance)
+          console.log('Log after commit');
+          this.loggingService.logCommited(this.entry, this.currentTarget, provenance);
         })
         .catch(err => alert('Something went wrong during commit: ' + err));
     }
