@@ -3,7 +3,7 @@ import { environment } from 'environments/environment';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
 
-import { BibliographicEntry, BibliographicResource, ProvenResource, Origin } from './locdb';
+import { BibliographicEntry, BibliographicResource, ProvenResource, Origin, Provenance } from './locdb';
 
 
 import {Observable} from 'rxjs/Rx';
@@ -103,7 +103,7 @@ export class LoggingService {
   }
 
 
-  logCommitPressed(entry: BibliographicEntry, target: BibliographicResource, from_where: Origin) {
+  logCommitPressed(entry: BibliographicEntry, target: BibliographicResource, from_where: Provenance) {
     const logobject = {
       msg: 'COMMIT PRESSED',
       entry_id: entry._id,
@@ -116,9 +116,9 @@ export class LoggingService {
 
   }
 
-  logCommited(entry: BibliographicEntry, newtarget: ProvenResource, from_where: Origin) {
+  logCommited(entry: BibliographicEntry, newtarget: ProvenResource, from_where: Provenance) {
     const logobject = {
-      msg: 'COMMIT PRESSED',
+      msg: 'COMMIT SUCCEEDED',
       entry_id: entry._id,
       newtarget: newtarget._id,
       from_where: from_where
@@ -129,7 +129,7 @@ export class LoggingService {
 
   }
 
-  logStartEditing(resource: BibliographicResource | ProvenResource, from_where?: Origin) {
+  logStartEditing(resource: BibliographicResource | ProvenResource, from_where?: Provenance) {
     const logobject = {
       msg: 'START EDITING',
       resource_id: resource.identifiers,
@@ -142,7 +142,7 @@ export class LoggingService {
       this.sendLog(logobject);}
 
   }
-  logEndEditing(resource: BibliographicResource | ProvenResource, from_where?: Origin) {
+  logEndEditing(resource: BibliographicResource | ProvenResource, from_where?: Provenance) {
     const logobject = {
       msg: 'STOP EDITING',
       resource_id: resource.identifiers,

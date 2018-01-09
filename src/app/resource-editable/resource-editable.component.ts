@@ -24,18 +24,10 @@ export class ResourceEditableComponent implements OnInit {
     // Display the form or stop displaying it
     if (this.resource instanceof ProvenResource){
       let provenance = this.resource.provenance;
-      let origin = Origin.external
-        if (provenance == Provenance.locdb){
-          origin = Origin.internal
-        }
-
-        if (provenance == Provenance.unknown){
-            origin = Origin.external
-        }
-        if (this.editing){
-          this.loggingService.logStartEditing(this.resource, origin)
+      if (this.editing){
+          this.loggingService.logStartEditing(this.resource, provenance)
         } else{
-          this.loggingService.logEndEditing(this.resource, origin)
+          this.loggingService.logEndEditing(this.resource, provenance)
         }
     }
 
