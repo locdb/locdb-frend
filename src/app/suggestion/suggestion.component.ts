@@ -188,7 +188,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
         this.externalInProgress = false;
     }
 
-    ccommit() {
+    commit() {
       console.log("Start commit", this.selectedResource)
       // let pr = new ProvenResource(this.selectedResource);
       //   console.log("1")
