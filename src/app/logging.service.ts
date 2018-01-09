@@ -30,13 +30,17 @@ export class LoggingService {
 
   /* Rationale: always log entry ID so that events can be grouped together more easily */
 
-
   logReferenceTargetSelected(entry: BibliographicEntry, selectedRessource: BibliographicResource) {
-    const logobject = { msg: 'REFERENCE TARGET LINKED', title: selectedRessource.title,
-    entry_id: entry._id, current_selected_ids: selectedRessource.identifiers };
+    const logobject = {
+      msg: 'REFERENCE TARGET SELECTED',
+      title: selectedRessource.title,
+      entry_id: entry._id,
+      current_selected_ids: selectedRessource.identifiers
+    };
     console.log(logobject);
     if(this.log_active){
-      this.sendLog(logobject);}
+      this.sendLog(logobject);
+    }
   }
 
   logReferenceSelected(selectedEntry: BibliographicEntry) {
@@ -132,7 +136,7 @@ export class LoggingService {
   logStartEditing(resource: BibliographicResource | ProvenResource, from_where?: Provenance) {
     const logobject = {
       msg: 'START EDITING',
-      resource_id: resource.identifiers,
+      resource_id: resource._id,
       title: resource.title,
       // target: BibliographicResource,
       from_where: from_where
@@ -145,7 +149,7 @@ export class LoggingService {
   logEndEditing(resource: BibliographicResource | ProvenResource, from_where?: Provenance) {
     const logobject = {
       msg: 'STOP EDITING',
-      resource_id: resource.identifiers,
+      resource_id: resource._id,
       title: resource.title,
       // target: BibliographicResource,
       from_where: from_where
