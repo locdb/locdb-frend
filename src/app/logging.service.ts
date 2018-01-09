@@ -116,6 +116,19 @@ export class LoggingService {
 
   }
 
+  logCommited(entry: BibliographicEntry, newtarget: ProvenResource, from_where: Origin) {
+    const logobject = {
+      msg: 'COMMIT PRESSED',
+      entry_id: entry._id,
+      newtarget: newtarget._id,
+      from_where: from_where
+    };
+    console.log(logobject);
+    if(this.log_active){
+      this.sendLog(logobject);}
+
+  }
+
   logStartEditing(resource: BibliographicResource | ProvenResource, from_where?: Origin) {
     const logobject = {
       msg: 'START EDITING',
