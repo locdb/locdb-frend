@@ -189,15 +189,27 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     commit() {
-      let pr = new ProvenResource(this.selectedResource);
-      let provenance = pr.provenance;
-      let origin = Origin.external
-      if (provenance == Provenance.locdb){
-        origin = Origin.internal
-      }
+      // problem if this.selected Resource is already 'proven'
+      console.log(this.selectedResource);
+      // this breaks creating a resource from OCR
+      // let pr = new ProvenResource(this.selectedResource);
+      // let provenance = pr.provenance;
+      // let origin = Origin.external
+      // if (provenance == Provenance.locdb){
+      //   origin = Origin.internal
+      // }
 
-      if (provenance == Provenance.unknown){
-          origin = Origin.external
+      // if (provenance == Provenance.unknown){
+      //     origin = Origin.external
+      // }
+      let origin: Origin = null;
+      const prov = this.selectedResource.provenance;
+      if (prov == Provenance.local) {
+        origin = Origin.ocr;
+      } else if (prov == Provenance.locdb) {
+        origin = Origin.internal;
+      } else {
+        origin = Origin.external;
       }
 
       this.loggingService.logCommitPressed(this.entry, this.selectedResource, origin)
