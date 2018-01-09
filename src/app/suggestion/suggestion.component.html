@@ -16,7 +16,7 @@
     Search
   </button>
   <popover-content #searchPopover [closeOnClickOutside]="true">
-    <a href="{{'https://scholar.google.com/scholar?q='+query}}" target="_blank" style="target-new: tab;" class="btn float-right" role="button">Google Scolar</a>
+    <a href="{{'https://scholar.google.com/scholar?q='+query}}" target="_blank" style="target-new: tab;" class="btn float-right" role="button" (click)="logAskOthers()">Google Scolar</a>
   </popover-content>
   <button type="button" [popover]="searchPopover" class="btn float-right">Ask Others</button>
 </div>
