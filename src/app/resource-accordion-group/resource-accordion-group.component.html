@@ -1,4 +1,4 @@
-<accordion-group *ngIf="resource" [isOpen]="selected" [panelClass]="selected ? 'border-primary' : 'border-default'">
+<accordion-group *ngIf="resource" [isOpen]="selected" [panelClass]="selected ? 'text-white bg-primary' : 'border-default'">
   <div accordion-heading>
     <p>{{ resource.title }}
       <span *ngIf="resource.type" class="badge badge-info">{{resource.type}}</span>

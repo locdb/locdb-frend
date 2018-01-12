@@ -1,18 +1,13 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter} from '@angular/core';
-
 import { BibliographicEntry, BibliographicResource, AgentRole, ResponsibleAgent, ProvenResource } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { LoggingService } from '../logging.service'
-
 import { MOCK_INTERNAL } from '../mock-bresources'
-
 import { AccordionModule } from 'ngx-bootstrap/accordion';
-
 import { environment } from 'environments/environment';
-
 import { ResourceStatus, Provenance, Origin } from '../locdb';
-
 import { PopoverModule } from 'ngx-popover';
+import { Http } from '@angular/http';
 
 
 @Component({
@@ -231,6 +226,10 @@ export class SuggestionComponent implements OnInit, OnChanges {
       // authors typically included in entry text already
       return `${entry.bibliographicEntryText}`
     }
+  }
+
+  encodeURI(uri: string){
+    return encodeURIComponent(uri)
   }
 
 }

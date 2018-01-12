@@ -15,7 +15,8 @@ export class EntryFormComponent implements OnChanges {
   @Input() active: false;
   entryForm: FormGroup;
   submitted = true;
-
+  disabled = true;
+  open = false;
   @Output() state: EventEmitter<BibliographicEntry> = new EventEmitter()
 
 
@@ -221,6 +222,13 @@ export class EntryFormComponent implements OnChanges {
     } else {
       return elements.join(' ');
     }
+  }
+
+  toggleDisabled(){
+    this.disabled = !this.disabled
+    this.open = !this.disabled
+    console.log("Toggle", this.disabled, this.open)
+
   }
 
 }

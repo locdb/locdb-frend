@@ -1,5 +1,8 @@
 <div *ngIf="entry">
-  <accordion-group [heading]=short() [isOpen]="active" [panelClass]="active ? 'border-primary' : entry.references ? 'border-success' : 'border-danger'">
+  <accordion-group #group [isOpen]="open && active" [isDisabled]="disabled" [panelClass]="active ? 'text-white bg-primary' : entry.references ? 'border-success' : 'border-danger'">
+    <div accordion-heading class="clearfix">
+      {{short()}}<button type="button" class="btn btn-warning pull-right" (click)="toggleDisabled()">{{disabled ? 'details' : 'close'}}</button>
+    </div>
     <div *ngIf="submitted">
       <table class="table table-striped" style="table-layout:fixed;">
         <tbody>
