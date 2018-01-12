@@ -189,6 +189,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     commit() {
+<<<<<<< HEAD
       console.log("Start commit", this.selectedResource)
       // let pr = new ProvenResource(this.selectedResource);
       //   console.log("1")
@@ -212,19 +213,36 @@ export class SuggestionComponent implements OnInit, OnChanges {
       this.loggingService.logCommitPressed(this.entry, this.selectedResource, origin)
       const pinnedResource = this.selectedResource;
       console.log("Commit")
+=======
+      console.log('Start commit', this.selectedResource)
+      const pr = this.selectedResource;
+      const provenance = pr.provenance;
+      console.log('Call Logging');
+      this.loggingService.logCommitPressed(this.entry, this.selectedResource, provenance);
+      const pinnedResource = this.selectedResource;
+      console.log('Commit');
+>>>>>>> master
       this.locdbService.safeCommitLink(this.entry, this.selectedResource).then(
         res => {
           this.currentTarget = new ProvenResource(res);
           this.onSelect(this.currentTarget);
+<<<<<<< HEAD
           console.log("Log after commit")
           this.loggingService.logCommited(this.entry, this.currentTarget, origin)
+=======
+          console.log('Log after commit');
+          this.loggingService.logCommited(this.entry, this.currentTarget, provenance);
+>>>>>>> master
         })
         .catch(err => alert('Something went wrong during commit: ' + err));
     }
 
+<<<<<<< HEAD
     logAskOthers(){
       this.loggingService.logAskOthersPressed(this.entry, this.query)
     }
+=======
+>>>>>>> master
 
     toggle_max_ex() {
       if (this.max_ex === 0) {
