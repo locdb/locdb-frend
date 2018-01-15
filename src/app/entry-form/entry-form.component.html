@@ -55,9 +55,11 @@
         </button>
       </div>
     </div>
+
+    <!-- -------------------------------------------------------------------------------------- -->
+
     <div *ngIf="!submitted">
       <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" novalidate>
-        <!-- Hero Detail Controls -->
         <div class="form-group">
           <label>Raw text:
             <input class="form-control" formControlName="bibliographicEntryText">

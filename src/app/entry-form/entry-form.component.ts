@@ -6,7 +6,7 @@ import { LocdbService } from '../locdb.service';
 
 @Component({
   selector: 'app-entry-form',
-  templateUrl: './entry-form.component.html',
+  templateUrl: './entry-form0.component.html',
   styleUrls: ['./entry-form.component.css']
 })
 
