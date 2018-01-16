@@ -13,7 +13,7 @@ export class LoggingService {
   private http: any;
   private _augmentFunctions = <any>[];
   private url_ = `${environment.locdbUrl}/log`;
-  private log_active = false
+  private log_active = true
 
   constructor(http: Http) {
     this.http = <any>http;
