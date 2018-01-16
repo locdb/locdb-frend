@@ -180,6 +180,8 @@ export class EntryFormComponent implements OnChanges {
 
   revert() { this.ngOnChanges(); }
 
+  delete(entry) {  this.locdbService.deleteBibliographicEntry(entry) }
+
   short() {
     // TODO
     // this is so complicated it could be an own component
