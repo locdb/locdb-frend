@@ -12,7 +12,7 @@ import { LoggingService } from '../logging.service'
 })
 export class ResourceEditableComponent implements OnInit {
   @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
-  @Input() editing = false;
+  @Input() editing = true;
 
   constructor(private loggingService: LoggingService) { }
 
@@ -22,7 +22,7 @@ export class ResourceEditableComponent implements OnInit {
   showForm(val: boolean) {
     this.resource = <BibliographicResource> this.resource
     // Display the form or stop displaying it
-    this.editing = val;
+    // this.editing = val;
     if (this.resource instanceof ProvenResource){
       let provenance = this.resource.provenance;
 
@@ -33,12 +33,12 @@ export class ResourceEditableComponent implements OnInit {
         }
     }
     else {
-    if (this.editing){
-      this.loggingService.logStartEditing(this.resource)
-    } else{
+    // if (this.editing){
+    //  this.loggingService.logStartEditing(this.resource)
+    // } else{
       this.loggingService.logEndEditing(this.resource)
 
-    }
+    // }
   }
 }
 
