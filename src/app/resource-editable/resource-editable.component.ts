@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BibliographicResource, ProvenResource, ToDo, Origin, Provenance } from '../locdb';
 import { LoggingService } from '../logging.service'
 
@@ -13,6 +13,8 @@ import { LoggingService } from '../logging.service'
 export class ResourceEditableComponent implements OnInit {
   @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
   @Input() editing = true;
+
+  @Output() submitStatus: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private loggingService: LoggingService) { }
 

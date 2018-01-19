@@ -152,6 +152,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                 this.ngOnChanges();
                 this.submitting = false;
                 this.submitted = true;
+                console.log("submitteg", false)
                 this.submitStatus.emit(false);
 
             }

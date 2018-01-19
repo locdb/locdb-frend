@@ -1,11 +1,17 @@
-<accordion-group *ngIf="resource" [isOpen]="selected" [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">
+<div> open: </div>{{open}}, active:{{active}}, {{open && active}}, disabled:{{disabled}}
+<button type="button" class="btn btn-secondary pull-right" *ngIf="disabled"
+(click)="toggleDisabled()"> {{disabled ? 'details' : 'close'}}</button>
+<accordion-group *ngIf="resource" [isOpen]="open" [isDisabled]="disabled" [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">
   <div accordion-heading>
     <p>{{ resource.title }}
       <span *ngIf="resource.type" class="badge badge-info">{{resource.type}}</span>
       <span *ngIf="resource.provenance" class="badge badge-warning">{{resource.provenance}}</span>
     </p>
+
   </div>
-  <app-resource-editable [resource]="resource" (resourceChange)="resource=$event; resourceChange.emit($event)">
+
+  <app-resource-editable [resource]="resource" (resourceChange)="resource=$event; resourceChange.emit($event)"
+      (submitStatus)="disabled=!$event; open = $event">
   </app-resource-editable>
 
   <!-- TODO FIXME put ng-content here -->
