@@ -1,0 +1,39 @@
+<!-- Panel heading including search bar -->
+<div class="card">
+<div class="card-header">
+  <div class="form-group">
+    <textarea class="form-control" [(ngModel)]="query" rows="3" style="resize: none;"></textarea>
+  </div>
+  <div class="form-group">
+    <label class="center-block">Confidence threshold for internal
+      <input class="form-control" type="number" min=0.0 step=0.1 [(ngModel)]="internalThreshold">
+    </label>
+  </div>
+  <button type="button" class="btn btn-success" aria-label="Search" (click)="refresh()">
+    Search
+  </button>
+</div>
+
+<div class="card-body" style="height: 800px; overflow-y: scroll;">
+  <!-- Panel body providing suggestions -->
+  <div class="card-block">
+    <accordion>
+    <div *ngFor="let r of internalSuggestions;let i = index">
+      <app-resource-accordion-group *ngIf="max_in <= 0 || i < max_in"
+        [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
+      </app-resource-accordion-group>
+    </div>
+    <button type="button" *ngIf="max_in == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
+      <p><em>Show all</em></p>
+    </button>
+    <button type="button" *ngIf="max_in == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
+      <p><em>Show less</em></p>
+    </button>
+    </accordion>
+    <div *ngIf="internalInProgress" class="loader">
+    </div>
+  </div>
+</div>
+<!-- Panel footer allowing actions -->
+<div class="card-footer">
+</div>

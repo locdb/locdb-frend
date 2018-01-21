@@ -54,12 +54,13 @@ import { ResourceAccordionGroupComponent } from './resource-accordion-group/reso
 import { AppwrapperComponent } from './appwrapper/appwrapper.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 
-import { LoggingService } from './logging.service'
+import { LoggingService } from './logging.service';
+import { BrowseComponent } from './browse/browse.component'
 
 const appRoutes: Routes = [
   { path: 'resolve', component: AppwrapperComponent },
   { path: 'ingest', component: ScanComponent},
-  { path: 'browse', component: SuggestionComponent},
+  { path: 'browse', component: BrowseComponent},
   { path: 'frontpage', component: FrontpageComponent},
   // { path: 'feedreader', component: FeedReaderComponent},
   // { path: 'hero/:id',      component: HeroDetailComponent },
@@ -116,6 +117,7 @@ const appRoutes: Routes = [
     ResourceEditableComponent,
     AppwrapperComponent,
     FrontpageComponent,
+    BrowseComponent,
   ],
   providers: [
     LocdbService,
