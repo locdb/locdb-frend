@@ -14,7 +14,7 @@ export class EntryFormComponent implements OnChanges {
   @Input() entry: BibliographicEntry;
   @Input() active: false;
   entryForm: FormGroup;
-  submitted = true;
+  submitted = false;
   disabled = true;
   open = false;
   @Output() state: EventEmitter<BibliographicEntry> = new EventEmitter()
@@ -118,7 +118,7 @@ export class EntryFormComponent implements OnChanges {
 
     if (entry._id) {
       this.locdbService.putBibliographicEntry(entry).subscribe(
-        (result) => { this.entry = result; this.submitted = true; this.ngOnChanges()},
+        (result) => { this.entry = result; this.toggleDisabled(); this.ngOnChanges()},
         (error) => console.log('Error updating entry', error)
       );
     } else {

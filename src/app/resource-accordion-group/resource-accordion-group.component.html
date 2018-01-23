@@ -1,4 +1,4 @@
-<div> open: </div>{{open}}, active:{{active}}, {{open && active}}, disabled:{{disabled}}
+<!-- <div> open: </div>{{open}}, active:{{active}}, {{open && active}}, disabled:{{disabled}} -->
 <button type="button" class="btn btn-secondary pull-right" *ngIf="disabled"
 (click)="toggleDisabled()"> {{disabled ? 'details' : 'close'}}</button>
 <accordion-group *ngIf="resource" [isOpen]="open" [isDisabled]="disabled" [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">
