@@ -12,7 +12,7 @@ export class ResourceAccordionGroupComponent implements OnInit {
   @Input() resource: BibliographicResource | ProvenResource | ToDo;
   @Output() resourceChange = new EventEmitter<BibliographicResource | ProvenResource | ToDo>();
   @Input() selected: boolean = false;
-  disabled = true;
+  disabled = false;
   open = false;
   constructor() { }
 
@@ -38,8 +38,10 @@ export class ResourceAccordionGroupComponent implements OnInit {
   }
 
   toggleDisabled(){
-    this.disabled = !this.disabled
-    this.open = !this.disabled
+    // this.disabled = !this.disabled
+    this.disabled = false;
+    this.open = !this.open;
+    this.disabled = true;
     console.log("Toggle", this.disabled, this.open)
 
   }

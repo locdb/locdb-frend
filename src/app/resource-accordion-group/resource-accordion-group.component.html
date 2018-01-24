@@ -1,6 +1,4 @@
 <!-- <div> open: </div>{{open}}, active:{{active}}, {{open && active}}, disabled:{{disabled}} -->
-<button type="button" class="btn btn-secondary pull-right" *ngIf="disabled"
-(click)="toggleDisabled()"> {{disabled ? 'details' : 'close'}}</button>
 <accordion-group *ngIf="resource" [isOpen]="open" [isDisabled]="disabled" [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">
   <div accordion-heading>
     <p>{{ resource.title }}
@@ -8,6 +6,8 @@
       <span *ngIf="resource.provenance" class="badge badge-warning">{{resource.provenance}}</span>
     </p>
 
+<button type="button" class="btn btn-secondary pull-right"
+(click)="toggleDisabled(); $event.stopPropagation()"> {{!open ? 'Edit' : 'Cancel'}}</button>
   </div>
 
   <app-resource-editable [resource]="resource" (resourceChange)="resource=$event; resourceChange.emit($event)"
