@@ -54,7 +54,9 @@ import { ResourceAccordionGroupComponent } from './resource-accordion-group/reso
 import { AppwrapperComponent } from './appwrapper/appwrapper.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 
-import { LoggingService } from './logging.service'
+import { LoggingService } from './logging.service';
+import { ResourceCardGroupComponent } from './resource-card-group/resource-card-group.component';
+import { EntryCardGroupComponent } from './entry-card-group/entry-card-group.component'
 
 const appRoutes: Routes = [
   { path: 'resolve', component: AppwrapperComponent },
@@ -116,6 +118,8 @@ const appRoutes: Routes = [
     ResourceEditableComponent,
     AppwrapperComponent,
     FrontpageComponent,
+    ResourceCardGroupComponent,
+    EntryCardGroupComponent,
   ],
   providers: [
     LocdbService,

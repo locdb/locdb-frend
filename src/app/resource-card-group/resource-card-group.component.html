@@ -1,0 +1,27 @@
+<!-- <div> open: </div>{{open}}, active:{{active}}, {{open && active}}, disabled:{{disabled}} -->
+<div class="card" *ngIf="resource"> <!-- [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">-->
+  <div class="card-header" [class]="selected ? 'card-header text-white bg-dark' : 'card-header border-default'">
+    <div class="row">
+      <div class="col-11">
+    <p>{{ resource.title }}
+      <span *ngIf="resource.type" class="badge badge-info">{{resource.type}}</span>
+      <span *ngIf="resource.provenance" class="badge badge-warning">{{resource.provenance}}</span>
+    </p>
+  </div>
+
+    <div class="col-1">
+    <button type="button" class="btn btn-secondary float-right"
+    (click)="toggleOpen()"> {{open ? 'Cancel': 'Edit' }}</button>
+</div>
+  </div>
+</div>
+  <div class="card-body" *ngIf="open && selected" >
+  <app-resource-editable [resource]="resource" (resourceChange)="resource=$event; resourceChange.emit($event)"
+      (submitStatus)="disabled=!$event; open = $event">
+  </app-resource-editable>
+
+  <!-- TODO FIXME put ng-content here -->
+  <ng-content>
+  </ng-content>
+</div>
+</div>

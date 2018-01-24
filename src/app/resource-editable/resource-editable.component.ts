@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BibliographicResource, ProvenResource, ToDo, Origin, Provenance } from '../locdb';
 import { LoggingService } from '../logging.service'
+import { LocdbService } from '../locdb.service';
 
 
 /* What was View Encapsulation for? */
@@ -16,7 +17,7 @@ export class ResourceEditableComponent implements OnInit {
 
   @Output() submitStatus: EventEmitter<boolean> = new EventEmitter();
 
-  constructor(private loggingService: LoggingService) { }
+  constructor(private loggingService: LoggingService, private locdbService: LocdbService) { }
 
   ngOnInit(){ }
 
