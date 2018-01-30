@@ -375,8 +375,9 @@ export class LocdbService {
 
   deleteBibliographicEntry(entry: BibliographicEntry) {
     const url = `${this.locdbUrl}/bibliographicEntry/${entry._id}`;
-    console.log('TODO Deleting', entry, url);
-    // return this.http.delete(url).map(this.extractData).catch(this.handleError);
+    console.log('Deleting', entry, url);
+    return this.http.delete(url).map(
+      resp => console.log("response: ", resp)).catch(this.handleError);
 
     }
   newBibliographicEntry(): BibliographicEntry {
@@ -390,7 +391,7 @@ export class LocdbService {
     entry.ocrData = new OCRData()
     entry.ocrData.authors = ["dummy"]
     // had to mock identifiers for new ressource suggestion in suggestion.component.html
-    entry.identifiers = [{scheme: "PPP", literalValue: "011235813"}]
+    entry.identifiers = [{scheme: "PPP", literalValue: "2444666668888888"}]
 
     return entry
 

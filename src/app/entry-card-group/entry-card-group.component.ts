@@ -196,14 +196,22 @@ export class EntryCardGroupComponent implements OnChanges {
       if (this.entry.ocrData.authors && this.entry.ocrData.authors.length) {
         const authorsString = this.entry.ocrData.authors.join('; ')
         if (authorsString) {
-          elements.push(`${authorsString}:`)
+          elements.push(`${authorsString}`)
         }
+      }
+
+      if (this.entry.ocrData.date) {
+        elements.push(`${this.entry.ocrData.date}`);
       }
 
       if (this.entry.ocrData.title) {
         elements.push(this.entry.ocrData.title);
       }
 
+      if (this.entry.ocrData.journal) {
+        elements.push(`In: ${this.entry.ocrData.journal} ${this.entry.ocrData.volume}`);
+      }
+      
       if (this.entry.identifiers && this.entry.identifiers.length) {
         const istring = this.entry.identifiers.filter(ident => ident.literalValue)
           .map(
@@ -215,19 +223,12 @@ export class EntryCardGroupComponent implements OnChanges {
         }
       }
 
-      if (this.entry.ocrData.journal) {
-        elements.push(`In: ${this.entry.ocrData.journal} ${this.entry.ocrData.volume}`);
-      }
-
-      if (this.entry.ocrData.date) {
-        elements.push(`${this.entry.ocrData.date}`);
-      }
 
       if (!elements.length) {
         // no structured meta data at all, use raw text if present
         return this.entry.bibliographicEntryText;
       } else {
-        return elements.join(' ');
+        return elements.join('. ');
       }
     }
 

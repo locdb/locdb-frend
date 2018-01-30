@@ -1,6 +1,7 @@
 <!-- <div> open: </div>{{open}}, active:{{active}}, {{open && active}}, disabled:{{disabled}} -->
-<div class="card" *ngIf="resource"> <!-- [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">-->
-  <div class="card-header" [class]="selected ? 'card-header text-white bg-dark' : 'card-header border-default'">
+<div class="card" *ngIf="resource" [class]="selected && selectable ? 'card bg-dark' : 'card bg-light'"
+    style="padding-left: 10px"> <!-- [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">-->
+  <div class="card-header" [class]="selected && selectable ? 'card-header bg-light' : 'card-header border-default  bg-light'">
     <div class="row">
       <div class="col-11">
     <p>{{ resource.title }}
@@ -15,7 +16,7 @@
 </div>
   </div>
 </div>
-  <div class="card-body" *ngIf="open && selected" >
+  <div class="card-body bg-light" *ngIf="open && selected" >
   <app-resource-editable [resource]="resource" (resourceChange)="resource=$event; resourceChange.emit($event)"
       (submitStatus)="disabled=!$event; open = $event">
   </app-resource-editable>

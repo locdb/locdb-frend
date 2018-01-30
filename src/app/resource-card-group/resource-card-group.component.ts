@@ -13,6 +13,7 @@ export class ResourceCardGroupComponent implements OnInit {
     @Input() resource: BibliographicResource | ProvenResource | ToDo;
     @Output() resourceChange = new EventEmitter<BibliographicResource | ProvenResource | ToDo>();
     @Input() selected: boolean = false;
+    @Input() selectable: boolean = true;
     open = false;
     constructor() { }
 

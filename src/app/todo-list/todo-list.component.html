@@ -9,7 +9,7 @@
     </div>
     <div *ngFor="let t of todos">
       <div *ngIf="guard(t)">
-        <app-resource-card-group [resource]="t" [selected]="t == selectedResource" (click)="onSelect(t)"></app-resource-card-group>
+        <app-resource-card-group [resource]="t" [selected]="t == selectedResource" (click)="onSelect(t)" [selectable]="false"></app-resource-card-group>
         <div class="list-group">
           <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="t.parts && t.parts.length" (click)="onSelectExternal(t, [t]); $event.stopPropagation(); $event.preventDefault()">
             <div class="text-center">
@@ -25,7 +25,7 @@
           </a>
           <div *ngFor="let c of t.children" style="margin-left: 1em;">
             <div *ngIf="guard(c)">
-              <app-resource-card-group [resource]="c" [selected]="c == selectedResource" (click)="onSelect(c)"></app-resource-card-group>
+              <app-resource-card-group [resource]="c" [selected]="c == selectedResource" (click)="onSelect(c)" [selectable]="false"></app-resource-card-group>
               <!-- scans attached to children of resource -->
               <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="c.parts && c.parts.length" (click)="onSelectExternal(c, [t, c]); $event.stopPropagation(); $event.preventDefault()">
                 <div class="text-center">
