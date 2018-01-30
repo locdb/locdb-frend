@@ -85,6 +85,7 @@ export class LocdbService {
   }
 
   private handleError (error: Response | any) {
+    console.log(error)
     // In a real world app, you might use a remote logging infrastructure
     let errMsg: string;
     if (error instanceof Response) {
@@ -374,11 +375,9 @@ export class LocdbService {
   }
 
   deleteBibliographicEntry(entry: BibliographicEntry) {
-    const url = `${this.locdbUrl}/bibliographicEntry/${entry._id}`;
+    const url = `${this.locdbUrl}/bibliographicEntries/${entry._id}`;
     console.log('Deleting', entry, url);
-    return this.http.delete(url).map(
-      resp => console.log("response: ", resp)).catch(this.handleError);
-
+    return this.http.delete(url).map(this.extractData).catch(this.handleError);
     }
   newBibliographicEntry(): BibliographicEntry {
     const url = `${this.locdbUrl}/newBibliographicEntry/`;

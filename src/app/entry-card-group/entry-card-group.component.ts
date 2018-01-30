@@ -185,7 +185,14 @@ export class EntryCardGroupComponent implements OnChanges {
 
     revert() { this.ngOnChanges(); }
 
-    delete(entry) {  this.locdbService.deleteBibliographicEntry(entry) }
+    delete(entry) {
+      if (confirm('Are you sure to delete resource ' + entry._id)) {
+           this.locdbService.deleteBibliographicEntry(entry).subscribe(
+              (res) => {console.log('Deleted'); this.entry = null;},
+              (err) => {alert("Error deleting resource " + entry._id); console.log("Error", err)}
+          );
+      }
+     }
 
     short() {
       // TODO
@@ -211,7 +218,7 @@ export class EntryCardGroupComponent implements OnChanges {
       if (this.entry.ocrData.journal) {
         elements.push(`In: ${this.entry.ocrData.journal} ${this.entry.ocrData.volume}`);
       }
-      
+
       if (this.entry.identifiers && this.entry.identifiers.length) {
         const istring = this.entry.identifiers.filter(ident => ident.literalValue)
           .map(

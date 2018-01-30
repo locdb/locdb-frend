@@ -14,6 +14,7 @@ export class ResourceCardGroupComponent implements OnInit {
     @Output() resourceChange = new EventEmitter<BibliographicResource | ProvenResource | ToDo>();
     @Input() selected: boolean = false;
     @Input() selectable: boolean = true;
+    @Output() externalReferences: any = new EventEmitter();
     open = false;
     constructor() { }
 
@@ -23,6 +24,11 @@ export class ResourceCardGroupComponent implements OnInit {
     ngOnChanges(){
       this.open = false;
     }
+
+      onSelectExternal() {
+        console.log("whoop")
+        this.externalReferences.next(true)
+      }
 
 
     short() {

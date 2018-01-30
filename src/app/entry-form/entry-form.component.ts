@@ -180,7 +180,14 @@ export class EntryFormComponent implements OnChanges {
 
   revert() { this.ngOnChanges(); }
 
-  delete(entry) {  this.locdbService.deleteBibliographicEntry(entry) }
+  delete(entry) {
+    if (confirm('Are you sure to delete entry ' + entry._id)) {
+         this.locdbService.deleteBibliographicEntry(entry).subscribe(
+            (res) => {console.log('Deleted');},
+            (err) => {alert("Error deleting entry " + entry._id)}
+        );
+    }
+   }
 
   short() {
     // TODO
