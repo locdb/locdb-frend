@@ -39,7 +39,7 @@
     "@angular/cli": "^1.5.2",
     "@angular/compiler-cli": "^5.1.1",
     "@types/core-js": "^0.9.41",
-    "@types/jasmine": "2.6.3",
+    "@types/jasmine": "2.8.3",
     "@types/node": "^8.0.5",
     "angular-ide": "^0.9.18",
     "codelyzer": "~4.1.0",
