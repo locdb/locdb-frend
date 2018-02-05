@@ -3,7 +3,7 @@ import { environment } from 'environments/environment';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
 
-import { BibliographicEntry, BibliographicResource, ProvenResource, Origin } from './locdb';
+import { BibliographicEntry, BibliographicResource, ProvenResource, Origin, Provenance } from './locdb';
 
 
 import {Observable} from 'rxjs/Rx';
@@ -30,13 +30,17 @@ export class LoggingService {
 
   /* Rationale: always log entry ID so that events can be grouped together more easily */
 
-
   logReferenceTargetSelected(entry: BibliographicEntry, selectedRessource: BibliographicResource) {
-    const logobject = { msg: 'REFERENCE TARGET SELECTED', title: selectedRessource.title,
-    root_resource_id: entry._id, current_selected_ids: selectedRessource.identifiers };
+    const logobject = {
+      msg: 'REFERENCE TARGET SELECTED',
+      title: selectedRessource.title,
+      entry_id: entry._id,
+      current_selected_ids: selectedRessource.identifiers
+    };
     console.log(logobject);
     if(this.log_active){
-      this.sendLog(logobject);}
+      this.sendLog(logobject);
+    }
   }
 
   logReferenceSelected(selectedEntry: BibliographicEntry) {
@@ -51,7 +55,7 @@ export class LoggingService {
     if (selectedRessource){
       const logobject = {
         msg: 'SEARCH ISSUED',
-        root_resource_id: entry._id,
+        entry_id: entry._id,
         current_selected_ids: selectedRessource.identifiers,
         queryString: queryString,
         confidences_values: confidences_values
@@ -63,7 +67,7 @@ export class LoggingService {
     else{
       const logobject = {
         msg: 'SEARCH ISSUED',
-        root_resource_id: entry._id,
+        entry_id: entry._id,
         current_selected_ids: 'undefined',
         queryString: queryString,
         confidences_values: confidences_values
@@ -79,7 +83,7 @@ export class LoggingService {
     if(!(sugs instanceof ProvenResource) && sugs.length>0){
       const logobject = {
         msg: 'SUGGESTIONS ARRIVED',
-        root_resource_id: entry._id,
+        entry_id: entry._id,
         internal: internal,
         n_suggestions: sugs.length,
       };
@@ -91,7 +95,7 @@ export class LoggingService {
     else{
       const logobject = {
         msg: 'SUGGESTIONS ARRIVED',
-        root_resource_id: entry._id,
+        entry_id: entry._id,
         internal: internal,
         n_suggestions: 0,
       };
@@ -103,10 +107,10 @@ export class LoggingService {
   }
 
 
-  logCommitPressed(entry: BibliographicEntry, target: BibliographicResource, from_where: Origin) {
+  logCommitPressed(entry: BibliographicEntry, target: BibliographicResource, from_where: Provenance) {
     const logobject = {
       msg: 'COMMIT PRESSED',
-      root_ressource_id: entry._id,
+      entry_id: entry._id,
       target: target._id,
       from_where: from_where
     };
@@ -116,10 +120,23 @@ export class LoggingService {
 
   }
 
-  logStartEditing(resource: BibliographicResource | ProvenResource, from_where?: Origin) {
+  logCommited(entry: BibliographicEntry, newtarget: ProvenResource, from_where: Provenance) {
+    const logobject = {
+      msg: 'COMMIT SUCCEEDED',
+      entry_id: entry._id,
+      newtarget: newtarget._id,
+      from_where: from_where
+    };
+    console.log(logobject);
+    if(this.log_active){
+      this.sendLog(logobject);}
+
+  }
+
+  logStartEditing(resource: BibliographicResource | ProvenResource, from_where?: Provenance) {
     const logobject = {
       msg: 'START EDITING',
-      id: resource.identifiers,
+      resource_id: resource._id,
       title: resource.title,
       // target: BibliographicResource,
       from_where: from_where
@@ -129,10 +146,10 @@ export class LoggingService {
       this.sendLog(logobject);}
 
   }
-  logEndEditing(resource: BibliographicResource | ProvenResource, from_where?: Origin) {
+  logEndEditing(resource: BibliographicResource | ProvenResource, from_where?: Provenance) {
     const logobject = {
       msg: 'STOP EDITING',
-      id: resource.identifiers,
+      resource_id: resource._id,
       title: resource.title,
       // target: BibliographicResource,
       from_where: from_where
