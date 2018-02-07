@@ -9,6 +9,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LocdbService, CredentialsService } from '../locdb.service';
 import { HttpModule } from '@angular/http';
+import { ResourceCardGroupComponent } from '../resource-card-group/resource-card-group.component'
 
 describe('TodoListComponent', () => {
   let component: TodoListComponent;

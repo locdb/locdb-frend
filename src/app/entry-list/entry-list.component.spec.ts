@@ -7,6 +7,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { LoggingService } from '../logging.service';
+import { AppEntryCardGroup } from '../entry-card-group/entry-card-group.component';
 
 describe('EntryListComponent', () => {
   let component: EntryListComponent;

@@ -10,6 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LocdbService, CredentialsService } from '../locdb.service';
 import { HttpModule } from '@angular/http';
 import { LoggingService } from '../logging.service';
+import { EntryCardGroup } from '../entry-card-group/entry-card-group.component'
 
 
 describe('TodoDetailComponent', () => {
@@ -19,7 +20,8 @@ describe('TodoDetailComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ AccordionModule.forRoot(), HotkeyModule.forRoot(), ReactiveFormsModule, HttpModule],
-      declarations: [ TodoDetailComponent, EntryListComponent, EntryFormComponent, DisplayComponent ],
+      declarations: [ TodoDetailComponent, EntryListComponent, EntryFormComponent, DisplayComponent,
+      EntryCardGroup ],
       providers: [LocdbService, CredentialsService, HotkeysService, LoggingService]
     })
     .compileComponents();
