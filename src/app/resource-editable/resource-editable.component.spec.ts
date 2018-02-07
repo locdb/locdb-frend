@@ -19,7 +19,7 @@ describe('ResourceEditableComponent', () => {
     TestBed.configureTestingModule({
       imports : [ ReactiveFormsModule, HttpModule ],
       declarations: [ ResourceEditableComponent, ResourceFormComponent, ResourceComponent ],
-      providers: [ LoggingService, LocdbServic, CredentialsService ]
+      providers: [ LoggingService, LocdbService, CredentialsService ]
     })
     .compileComponents();
   }));
