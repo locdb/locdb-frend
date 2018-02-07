@@ -53,6 +53,12 @@ import { ResourceEditableComponent } from './resource-editable/resource-editable
 import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
 import { AppwrapperComponent } from './appwrapper/appwrapper.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
+
+// New
+import { LoggingService } from './logging.service';
+import { ResourceCardGroupComponent } from './resource-card-group/resource-card-group.component';
+import { EntryCardGroupComponent } from './entry-card-group/entry-card-group.component'
+import { BrowseComponent } from './browse/browse.component'
 ////////  SPECS  /////////////
 
 const appRoutes: Routes = [
@@ -89,6 +95,7 @@ describe('AppComponent with TCB', function () {
         providers: [
           LocdbService,
           CredentialsService,
+          LoggingService,
           {provide: APP_BASE_HREF, useValue : '/'}
         ],
         declarations: [
@@ -113,6 +120,9 @@ describe('AppComponent with TCB', function () {
           ResourceEditableComponent,
           AppwrapperComponent,
           FrontpageComponent,
+          ResourceCardGroupComponent,
+          EntryCardGroupComponent,
+          BrowseComponent,
         ],
         imports: [
           AccordionModule.forRoot(),
