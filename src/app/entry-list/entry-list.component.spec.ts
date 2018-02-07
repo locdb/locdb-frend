@@ -7,7 +7,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { LoggingService } from '../logging.service';
-import { AppEntryCardGroup } from '../entry-card-group/entry-card-group.component';
+import { EntryCardGroupComponent } from '../entry-card-group/entry-card-group.component';
 
 describe('EntryListComponent', () => {
   let component: EntryListComponent;
@@ -15,7 +15,7 @@ describe('EntryListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EntryListComponent, EntryFormComponent ],
+      declarations: [ EntryListComponent, EntryFormComponent, EntryCardGroupComponent ],
       imports: [ HotkeyModule.forRoot(), AccordionModule, ReactiveFormsModule, HttpModule],
       providers: [ HotkeysService, LoggingService ]
     })
