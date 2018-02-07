@@ -1,4 +1,4 @@
-echo "Building for Production"
+echo "Building for Demo"
 ng build --base-href /demo-frontend/ --env=demo
 cat dist/index.html
 echo "Copying files to remote web server"
