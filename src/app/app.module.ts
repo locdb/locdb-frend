@@ -57,11 +57,12 @@ import { FrontpageComponent } from './frontpage/frontpage.component';
 import { LoggingService } from './logging.service';
 import { ResourceCardGroupComponent } from './resource-card-group/resource-card-group.component';
 import { EntryCardGroupComponent } from './entry-card-group/entry-card-group.component'
+import { BrowseComponent } from './browse/browse.component'
 
 const appRoutes: Routes = [
   { path: 'resolve', component: AppwrapperComponent },
   { path: 'ingest', component: ScanComponent},
-  { path: 'browse', component: SuggestionComponent},
+  { path: 'browse', component: BrowseComponent},
   { path: 'frontpage', component: FrontpageComponent},
   // { path: 'feedreader', component: FeedReaderComponent},
   // { path: 'hero/:id',      component: HeroDetailComponent },
@@ -120,6 +121,7 @@ const appRoutes: Routes = [
     FrontpageComponent,
     ResourceCardGroupComponent,
     EntryCardGroupComponent,
+    BrowseComponent,
   ],
   providers: [
     LocdbService,
