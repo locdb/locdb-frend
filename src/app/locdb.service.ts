@@ -19,6 +19,7 @@ import {
   Feed,
   ToDoStatus,
   ResourceStatus,
+  OCRData
 } from './locdb'
 
 import { synCites_ } from './locdb'
@@ -84,6 +85,7 @@ export class LocdbService {
   }
 
   private handleError (error: Response | any) {
+    console.log(error)
     // In a real world app, you might use a remote logging infrastructure
     let errMsg: string;
     if (error instanceof Response) {
@@ -370,6 +372,28 @@ export class LocdbService {
     const url = `${this.locdbUrl}/bibliographicResources/${resource._id}`;
     console.log('Deleting', resource);
     return this.http.delete(url).map(this.extractData).catch(this.handleError);
+  }
+
+  deleteBibliographicEntry(entry: BibliographicEntry) {
+    const url = `${this.locdbUrl}/bibliographicEntries/${entry._id}`;
+    console.log('Deleting', entry, url);
+    return this.http.delete(url).map(this.extractData).catch(this.handleError);
+    }
+  newBibliographicEntry(): BibliographicEntry {
+    const url = `${this.locdbUrl}/newBibliographicEntry/`;
+    console.log('TODO requesting new Entry');
+    // TODO get returned Entry and pass it in return -> entry._id necessary
+    // return this.http.get(url).map(this.extractData).catch(this.handleError);
+
+    // had to mock these information for todo-detail.component.html
+    let entry = new BibliographicEntry()
+    entry.ocrData = new OCRData()
+    entry.ocrData.authors = ["dummy"]
+    // had to mock identifiers for new ressource suggestion in suggestion.component.html
+    entry.identifiers = [{scheme: "PPP", literalValue: "2444666668888888"}]
+
+    return entry
+
   }
 
   /* The following needs to be reconsidered, actually we could store login status here */

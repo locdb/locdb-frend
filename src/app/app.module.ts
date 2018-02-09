@@ -55,6 +55,8 @@ import { AppwrapperComponent } from './appwrapper/appwrapper.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 
 import { LoggingService } from './logging.service';
+import { ResourceCardGroupComponent } from './resource-card-group/resource-card-group.component';
+import { EntryCardGroupComponent } from './entry-card-group/entry-card-group.component'
 import { BrowseComponent } from './browse/browse.component'
 
 const appRoutes: Routes = [
@@ -117,6 +119,8 @@ const appRoutes: Routes = [
     ResourceEditableComponent,
     AppwrapperComponent,
     FrontpageComponent,
+    ResourceCardGroupComponent,
+    EntryCardGroupComponent,
     BrowseComponent,
   ],
   providers: [

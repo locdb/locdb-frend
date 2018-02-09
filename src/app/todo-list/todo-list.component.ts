@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { BibliographicResource, ToDo, ToDoParts, ToDoScans, ToDoStatus } from '../locdb';
+import { BibliographicResource, ToDo, ToDoParts, ToDoScans, ToDoStatus, ProvenResource} from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Provenance } from '../locdb';
 
@@ -18,6 +18,8 @@ export class TodoListComponent implements OnInit, OnChanges {
   states = ToDoStatus;
   provenance = Provenance;
   loading = false;
+  selectedResource : ProvenResource;
+
   constructor(private locdbService: LocdbService) { }
 
   ngOnInit() {
@@ -80,6 +82,10 @@ export class TodoListComponent implements OnInit, OnChanges {
   emit(scanOrResource: ToDoScans | ToDo) {
     this.todo.next(scanOrResource);
   }
+
+  onSelect(br?: ProvenResource): void {
+      this.selectedResource = br;
+    }
 
   // 2 methods to delete after chagnes
   printState(scan: ToDoScans) {

@@ -71,4 +71,8 @@ export class TodoDetailComponent implements OnInit, OnChanges {
     this.entry.emit(entry);
   }
 
+  newEntry() {
+    this.entries.push(this.locdbService.newBibliographicEntry())
+  }
+
 }

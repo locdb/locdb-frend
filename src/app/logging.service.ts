@@ -13,7 +13,7 @@ export class LoggingService {
   private http: any;
   private _augmentFunctions = <any>[];
   private url_ = `${environment.locdbUrl}/log`;
-  private log_active = true
+  private log_active = false
 
   constructor(http: Http) {
     this.http = <any>http;
@@ -159,6 +159,19 @@ export class LoggingService {
       this.sendLog(logobject);}
 
   }
+
+  logAskOthersPressed(entry: BibliographicEntry, query: String) {
+    const logobject = {
+      msg: 'ASK OTHERS CLICKED',
+      entry_id: entry._id,
+      query: query
+    };
+    console.log(logobject);
+    if(this.log_active){
+      this.sendLog(logobject);}
+
+  }
+
 
   sendLog(logobject){
     this.uploadLog(logobject).subscribe(

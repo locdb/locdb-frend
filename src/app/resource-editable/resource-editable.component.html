@@ -1,9 +1,20 @@
-<div class="text-right" style="margin-bottom: 1rem;">
-  <button type="button" class="btn btn-warning" aria-label="Edit" (click)="showForm(!editing)">
+<!-- <div class="text-right" style="margin-bottom: 1rem;" *ngIf="editing">
+  <button type="button" class="btn btn-secondary" aria-label="Edit" (click)="showForm(!editing)">
     {{ !editing ? "Edit" : "Cancel" }}
   </button>
-</div>
+</div> -->
 <app-resource *ngIf="!editing" [resource]="resource">
 </app-resource>
-<app-resource-form *ngIf="editing" [resource]="resource" (submitStatus)="showForm($event)">
+<app-resource-form *ngIf="editing" [resource]="resource" (submitStatus)="showForm($event); submitStatus.emit($event)">
 </app-resource-form>
+<div style="margin: 1rem; margin-bottom: 0rem;" *ngIf="!editing">
+  <div class="row justify-content-between" style="margin-top: 1rem;">
+    <div class="col-xs-6 text-left">
+    </div>
+    <div class="col-xs-6 text-right">
+      <!-- <button type="button" class="btn btn-warning" aria-label="Edit" (click)="showForm(true)">
+      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+    </button> -->
+  </div>
+</div>
+</div>

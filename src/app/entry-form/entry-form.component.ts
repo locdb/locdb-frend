@@ -6,7 +6,7 @@ import { LocdbService } from '../locdb.service';
 
 @Component({
   selector: 'app-entry-form',
-  templateUrl: './entry-form.component.html',
+  templateUrl: './entry-form0.component.html',
   styleUrls: ['./entry-form.component.css']
 })
 
@@ -14,8 +14,9 @@ export class EntryFormComponent implements OnChanges {
   @Input() entry: BibliographicEntry;
   @Input() active: false;
   entryForm: FormGroup;
-  submitted = true;
-
+  submitted = false;
+  disabled = true;
+  open = false;
   @Output() state: EventEmitter<BibliographicEntry> = new EventEmitter()
 
 
@@ -117,7 +118,7 @@ export class EntryFormComponent implements OnChanges {
 
     if (entry._id) {
       this.locdbService.putBibliographicEntry(entry).subscribe(
-        (result) => { this.entry = result; this.submitted = true; this.ngOnChanges()},
+        (result) => { this.entry = result; this.toggleDisabled(); this.ngOnChanges()},
         (error) => console.log('Error updating entry', error)
       );
     } else {
@@ -179,6 +180,15 @@ export class EntryFormComponent implements OnChanges {
 
   revert() { this.ngOnChanges(); }
 
+  delete(entry) {
+    if (confirm('Are you sure to delete entry ' + entry._id)) {
+         this.locdbService.deleteBibliographicEntry(entry).subscribe(
+            (res) => {console.log('Deleted');},
+            (err) => {alert("Error deleting entry " + entry._id)}
+        );
+    }
+   }
+
   short() {
     // TODO
     // this is so complicated it could be an own component
@@ -221,6 +231,13 @@ export class EntryFormComponent implements OnChanges {
     } else {
       return elements.join(' ');
     }
+  }
+
+  toggleDisabled(){
+    this.disabled = !this.disabled
+    this.open = !this.disabled
+    console.log("Toggle", this.disabled, this.open)
+
   }
 
 }

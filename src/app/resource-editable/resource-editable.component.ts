@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BibliographicResource, ProvenResource, ToDo, Origin, Provenance } from '../locdb';
 import { LoggingService } from '../logging.service'
+import { LocdbService } from '../locdb.service';
 
 
 /* What was View Encapsulation for? */
@@ -12,9 +13,11 @@ import { LoggingService } from '../logging.service'
 })
 export class ResourceEditableComponent implements OnInit {
   @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
-  @Input() editing = false;
+  @Input() editing = true;
 
-  constructor(private loggingService: LoggingService) { }
+  @Output() submitStatus: EventEmitter<boolean> = new EventEmitter();
+
+  constructor(private loggingService: LoggingService, private locdbService: LocdbService) { }
 
   ngOnInit(){ }
 
@@ -22,7 +25,7 @@ export class ResourceEditableComponent implements OnInit {
   showForm(val: boolean) {
     this.resource = <BibliographicResource> this.resource
     // Display the form or stop displaying it
-    this.editing = val;
+    // this.editing = val;
     if (this.resource instanceof ProvenResource){
       let provenance = this.resource.provenance;
 
@@ -33,12 +36,12 @@ export class ResourceEditableComponent implements OnInit {
         }
     }
     else {
-    if (this.editing){
-      this.loggingService.logStartEditing(this.resource)
-    } else{
+    // if (this.editing){
+    //  this.loggingService.logStartEditing(this.resource)
+    // } else{
       this.loggingService.logEndEditing(this.resource)
 
-    }
+    // }
   }
 }
 

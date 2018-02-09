@@ -4,18 +4,17 @@
   </button>
 </div>
 <div style="margin-top: 1rem; margin-bottom: 1rem; height: 1000px; overflow-y: scroll;">
-  <accordion>
     <div *ngIf="loading" class="loader">
     </div>
     <div *ngFor="let t of todos">
       <div *ngIf="guard(t)">
-        <app-resource-accordion-group [resource]="t"></app-resource-accordion-group>
+        <app-resource-card-group [resource]="t" [selected]="t == selectedResource" (click)="onSelect(t)" [selectable]="false" (externalReferences)="onSelectExternal(t, [t]);"></app-resource-card-group>
         <div class="list-group">
-          <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="t.parts && t.parts.length" (click)="onSelectExternal(t, [t]); $event.stopPropagation(); $event.preventDefault()">
+          <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="t.parts && t.parts.length" (click)="onSelectExternal(t, [t]); $event.stopPropagation(); $event.preventDefault()">
             <div class="text-center">
               <em>References</em>
             </div>
-          </a>
+          </a> -->
           <a href='#' class="list-group-item list-group-item-action list-group-item-info" *ngFor="let s of t.scans; let i = index" (click)="onSelectScan(s, [t]); $event.stopPropagation(); $event.preventDefault()">
             <button type="button" class="close pull-right" (click)="deleteScan(s, t); $event.preventDefault(); $event.stopPropagation()" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -25,13 +24,13 @@
           </a>
           <div *ngFor="let c of t.children" style="margin-left: 1em;">
             <div *ngIf="guard(c)">
-              <app-resource-accordion-group [resource]="c"></app-resource-accordion-group>
+              <app-resource-card-group [resource]="c" [selected]="c == selectedResource" (click)="onSelect(c)" [selectable]="false" (externalReferences)="onSelectExternal(c, [t, c]);"></app-resource-card-group>
               <!-- scans attached to children of resource -->
-              <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="c.parts && c.parts.length" (click)="onSelectExternal(c, [t, c]); $event.stopPropagation(); $event.preventDefault()">
+              <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-success" *ngIf="c.parts && c.parts.length" (click)="onSelectExternal(c, [t, c]); $event.stopPropagation(); $event.preventDefault()">
                 <div class="text-center">
                   <em>References</em>
                 </div>
-              </a>
+              </a> -->
               <div *ngFor="let s of c.scans; let i = index">
                 <a href="#" class="list-group-item list-group-item-action list-group-item-info" (click)="onSelectScan(s, [t, c]); $event.stopPropagation(); $event.preventDefault()">
                   <button type="button" class="close pull-right" (click)="deleteScan(s, c); $event.preventDefault(); $event.stopPropagation()" aria-label="Close">
@@ -46,7 +45,6 @@
         </div>
       </div>
     </div> <!-- end of outer loop -->
-  </accordion>
 </div>
 <div class="text-right">
   <button (click)="refresh()" type="button" style="margin-bottom: 1rem; margin-left: 1rem;" class="btn btn-secondary" aria-label="Refresh">
