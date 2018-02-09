@@ -23,7 +23,8 @@ describe('TodoListComponent', () => {
         ResourceComponent,
         ResourceFormComponent,
         ResourceEditableComponent,
-        ResourceAccordionGroupComponent
+        ResourceAccordionGroupComponent,
+        ResourceCardGroupComponent,
       ],
       providers: [ LocdbService, CredentialsService ],
     })

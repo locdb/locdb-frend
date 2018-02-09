@@ -14,7 +14,7 @@ import { environment } from 'environments/environment';
 
 /* Main App Component for whole LOCDB Frontend */
 export class AppComponent implements OnInit {
-  feeds: Feed[]
+  feeds: Feed[];
 
   constructor(private feedService: FeedService) {
 
