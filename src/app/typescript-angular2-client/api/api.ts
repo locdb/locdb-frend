@@ -1,0 +1,11 @@
+export * from './BibliographicEntryApi';
+import { BibliographicEntryApi } from './BibliographicEntryApi';
+export * from './BibliographicResourceApi';
+import { BibliographicResourceApi } from './BibliographicResourceApi';
+export * from './ScanApi';
+import { ScanApi } from './ScanApi';
+export * from './UserApi';
+import { UserApi } from './UserApi';
+export * from './UtilsApi';
+import { UtilsApi } from './UtilsApi';
+export const APIS = [BibliographicEntryApi, BibliographicResourceApi, ScanApi, UserApi, UtilsApi];

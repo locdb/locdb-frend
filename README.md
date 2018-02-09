@@ -24,7 +24,6 @@ More specific, two views are provided:
 
 ## Development setup
 
-[Source](https://github.com/angular/angular-cli#updating-angular-cli)
 
 
 ### Update angular-cli to the latest version
@@ -34,6 +33,8 @@ npm remove -g angular-cli
 npm install -g @angular/cli@latest
 ```
 
+[Source](https://github.com/angular/angular-cli#updating-angular-cli)
+
 ### Install dependencies
 
 ```sh
@@ -42,9 +43,40 @@ npm install -g typescript
 npm install
 ```
 
+## Rebuild back-end client
+
+1. Go to [Swagger Code Generator](http://generator.swagger.io/)
+2. Select `POST /gen/clients/{language}` 'Generates a client library' and press 'Try it out' button
+3. Select `typescript-angular2` as the target language for the client library and insert the following snippet as body:
+
+  ```json
+  {
+    "spec": {},
+    "options": {
+      "additionalProp1": "string",
+      "additionalProp2": "string",
+      "additionalProp3": "string"
+    },
+    "swaggerUrl": "https://locdb.bib.uni-mannheim.de/locdb-dev/swagger",
+    "authorizationValue": {
+      "value": "string",
+      "type": "string",
+      "keyName": "string"
+    },
+    "securityDefinition": {
+      "type": "string",
+      "description": "string"
+    }
+  }
+  ```
+
+4. Press `Execute` button and inspect the response body for the `link`.
+5. Unzip the downloaded code and place `typescript-angular2-client` as subdirectory in `src/app`.
+
+
 ## Development Resources
 
 - [Angular Docs](https://angular.io/docs)
-- [Bootstrap 4 Introduction]([200~https://getbootstrap.com/docs/4.0/getting-started/introduction/)
+- [Bootstrap 4 Introduction]([https://getbootstrap.com/docs/4.0/getting-started/introduction/)
 - [Jasmine Introduction](https://jasmine.github.io/edge/introduction.html)
 - [OCC Metadata Model](https://figshare.com/articles/Metadata_for_the_OpenCitations_Corpus/3443876)
