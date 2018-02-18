@@ -59,6 +59,14 @@ import { ResourceCardGroupComponent } from './resource-card-group/resource-card-
 import { EntryCardGroupComponent } from './entry-card-group/entry-card-group.component'
 import { BrowseComponent } from './browse/browse.component'
 
+
+import {
+  BibliographicEntryApi, BibliographicResourceApi,
+  ScanApi, UserApi
+} from './typescript-angular2-client/api/api';
+
+import { BASE_PATH } from './typescript-angular2-client/variables'
+
 const appRoutes: Routes = [
   { path: 'resolve', component: AppwrapperComponent },
   { path: 'ingest', component: ScanComponent},
@@ -124,10 +132,15 @@ const appRoutes: Routes = [
     BrowseComponent,
   ],
   providers: [
+    { provide: BASE_PATH, useValue: environment.locdbUrl},
     LocdbService,
     CredentialsService,
     // {provide: APP_BASE_HREF, useValue : bhref}
     LoggingService,
+    BibliographicEntryApi,
+    BibliographicResourceApi,
+    ScanApi,
+    UserApi
   ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

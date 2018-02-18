@@ -2,12 +2,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angular/http';
 
-
-import {
-  BibliographicEntryApi, BibliographicResourceApi,
-  ScanApi, UserApi
-} from './typescript-angular2-client/api/api';
-
 // advanced rxjs async handling;
 import {Observable} from 'rxjs/Rx';
 // import { Observable } from 'rxjs/Observable';
@@ -21,10 +15,14 @@ import {
   ToDoScans,
   BibliographicEntry,
   BibliographicResource,
+  ProvenResource,
   Feed,
+  ToDoStatus,
+  ResourceStatus,
   OCRData
 } from './locdb'
 
+import { synCites_ } from './locdb'
 
 // Local testing with credentials
 // import { CredentialsService } from 'angular-with-credentials';
@@ -69,10 +67,6 @@ export class LocdbService {
 
   constructor(
     private http: Http,
-    private scanApi: ScanApi,
-    private userApi: UserApi,
-    private bibliographicEntryApi: BibliographicEntryApi,
-    private bibliographicResourceApi: BibliographicResourceApi,
     private credentials: CredentialsService
   ) {
     if (this.credentials) { // This is here to help with testing so you can pass in null for CredentialsService
@@ -107,22 +101,39 @@ export class LocdbService {
 
   getToDo(status_: string): Observable<ToDo[]> {
     // acquire todo items and scans
-    return this.scanApi.getToDo(status_);
+    const url = `${this.locdbUrl}/getToDo`
+    const params: URLSearchParams = new URLSearchParams();
+    params.set('status', status_);
+    return this.http.get(
+      url,
+      { search: params } // options?
+    ).map(this.extractData).catch(this.handleError);
   }
 
   getToDoBibliographicEntries(scan_id: string): Observable<BibliographicEntry[]> {
     // fetches list of entries for a scan id
-    return this.bibliographicEntryApi.getToDoBibliographicEntries(scan_id);
+    const params: URLSearchParams = new URLSearchParams();
+    params.set('scanId', scan_id);
+    const url = `${this.locdbUrl}/getToDoBibliographicEntries`
+    return this.http.get(url, { search: params } )
+    .map(this.extractData)
+    .catch(this.handleError);
   }
 
- public saveResource(identifierScheme: string, identifierLiteralValue: string,
- resourceType: string, firstPage?: number, lastPage?: number, textualPdf?:
- boolean, binaryFile?: any, stringFile?: string, embodimentType?: string,
- extraHttpRequestParams?: any) {
-   return this.scanApi.saveResource(identifierScheme, identifierLiteralValue,
-   resourceType, firstPage, lastPage, textualPdf, binaryFile, stringFile,
-   embodimentType);
- }
+  getToDoBibliographicResources(scan_id: string): Observable<BibliographicResource[]> {
+    // UNUSED //
+    //
+    // fetches list of entries for a scan id
+    const params: URLSearchParams = new URLSearchParams();
+    params.set('scanId', scan_id);
+    console.log('');
+    const url = `${this.locdbUrl}/getToDoBibliographicResources`
+    const res =  this.http.get(url, { search: params } )
+    .map(this.extractData)
+    .catch(this.handleError);
+    console.log('resources: ', res);
+    return res;
+  }
 
   saveScan(
     ppn: string,
@@ -132,7 +143,6 @@ export class LocdbService {
     firstPage?: string,
     lastPage?: string
   ): Observable<ToDoScans> {
-    // DEPRECATED
     // Take FileWithMetadata object instead
     const url = `${this.locdbUrl}/saveScan`;
     const formData: FormData = new FormData();
@@ -150,7 +160,6 @@ export class LocdbService {
   }
 
   saveScanForElectronicJournal(
-    // DEPRECATED
     scheme: string,
     value: string,
     textualPdf: boolean,
@@ -169,7 +178,6 @@ export class LocdbService {
 
 
   saveElectronicJournal(identifier: Identifier): Observable<any> {
-    // DEPRECATED
     const url = `${this.locdbUrl}/saveElectronicJournal`
     const params: URLSearchParams = new URLSearchParams();
     params.set(identifier.scheme, identifier.literalValue);
@@ -348,6 +356,7 @@ export class LocdbService {
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
     const url = `${this.locdbUrl}/bibliographicResources/${resource._id}`;
+    // synCites_(resource) TODO FIXME might be incomplete so it is dangerous to invoke here
     console.log('JUST BEFORE SUBMISSION:', resource);
     return this.http.put(url, resource, options).map(this.extractData).catch(this.handleError);
   }
