@@ -21,8 +21,10 @@ import {
   ToDoScans,
   BibliographicEntry,
   BibliographicResource,
-  Feed,
-  OCRData
+  Feed, FeedEntry,
+  OCRData,
+  User,
+  SuccessResponse
 } from './locdb'
 
 
@@ -124,6 +126,7 @@ export class LocdbService {
    embodimentType);
  }
 
+  /* SHOULD NOT BE NEEDED because of saveResource above */
   saveScan(
     ppn: string,
     resourceType: string,
@@ -178,6 +181,7 @@ export class LocdbService {
       { search: params}
     ).map(this.extractData).catch(this.handleError);
   }
+  /* SHOULD NOT BE NEEDED because of saveResource above */
 
   suggestionsByEntry(be: BibliographicEntry, external?: boolean): Observable<BibliographicResource[]> {
     const headers = new Headers({ 'Content-Type': 'application/json' });
@@ -190,46 +194,18 @@ export class LocdbService {
       .catch(this.handleError);
   }
 
-  suggestionsByQuery(query: string, external: boolean, threshold?: string): Observable<BibliographicResource[] | ProvenResource> {
-    const params: URLSearchParams = new URLSearchParams();
-    // we could also use `escape()` here instead of encodeURI
-    params.set('query', encodeURI(query));
-    if (threshold) {
-      params.set('threshold', encodeURI(threshold));
-    }
-
-    console.log(params);
-    const options = new RequestOptions({ search: params });
-
+  suggestionsByQuery(query: string, external: boolean, threshold?: number): Observable<BibliographicResource[]> {
     if (external) {
-      const url = `${this.locdbUrl}/getExternalSuggestionsByQueryString`;
-      return this.http.get(url, options)
-        .map(response => (response.json() as BibliographicResource[])
-          .map(x => new ProvenResource(x)))
-        .catch(this.handleError);
+      return this.bibliographicEntryApi.getExternalSuggestionsByQueryString(query, threshold);
     } else {
-      const url = `${this.locdbUrl}/getInternalSuggestionsByQueryString`;
-      return this.http.get(url, options)
-        .map(response => (response.json() as BibliographicResource[])
-          .map(x => new ProvenResource(x)))
-        .catch(this.handleError);
+      return this.bibliographicEntryApi.getInternalSuggestionsByQueryString(query, threshold);
     }
 
   }
 
 
   triggerOcrProcessing(scanId: string) {
-    const params: URLSearchParams = new URLSearchParams();
-    params.set('id', scanId.toString());
-    // const headers = new Headers({ 'Content-Type': 'application/json' });
-    // const options = new RequestOptions(
-    //   { headers: headers, search: params }
-    // );
-    const url = `${this.locdbUrl}/triggerOcrProcessing`;
-    return this.http.get(
-      url,
-      { search: params }
-    ).map(this.extractData).catch(this.handleError);
+    return this.scanApi.triggerOcrProcessing(scanId);
   }
 
   getScan(identifier: string) {
@@ -237,49 +213,23 @@ export class LocdbService {
   }
 
   deleteScan(scan: ToDoScans) {
-    const url = `${this.locdbUrl}/scans/${scan._id}`
-    return this.http.delete(url).map(this.extractData).catch(this.handleError);
+    return this.bibliographicEntryApi.remove(scan.id);
   }
 
   putBibliographicEntry(entry: BibliographicEntry) {
     // obsolete by addTarget
-    const url = `${this.locdbUrl}/bibliographicEntries/${entry._id}`;
-    return this.http.put(url, entry).map(this.extractData).catch(this.handleError);
+    return this.bibliographicEntryApi.update(entry.id, entry);
   }
 
-  addTargetBibliographicResource(entry: BibliographicEntry, resource: BibliographicResource):
-  Observable<BibliographicResource> {
-    console.log('add Target', entry, resource);
-    const url = `${this.locdbUrl}/addTargetBibliographicResource`;
-    const params: URLSearchParams = new URLSearchParams();
-    params.set('bibliographicEntryId', entry._id);
-    params.set('bibliographicResourceId', resource._id);
-    return this.http.get(url, { search: params}).map(this.extractData).catch(this.handleError);
+
+  /* Resources API end */
+  addTargetBibliographicResource(entry: BibliographicEntry, resource: BibliographicResource): Observable<BibliographicResource> {
+    return this.bibliographicEntryApi.addTargetBibliographicResource(entry.id, resource.id);
   }
 
-  removeTargetBibliographicResource(entry): Promise<any> {
-    const url = `${this.locdbUrl}/removeTargetBibliographicResource`;
-    const params: URLSearchParams = new URLSearchParams();
-    params.set('bibliographicEntryId', entry._id);
-    return this.http.get(url, { search: params}).map(this.extractData).catch(this.handleError).toPromise();
+  removeTargetBibliographicResource(entry): Observable<BibliographicResource> {
+    return this.bibliographicEntryApi.removeTargetBibliographicResource(entry.id);
   }
-
-  bibliographicResource(identifier: string): Observable<BibliographicResource> {
-    const url = `${this.locdbUrl}/bibliographicResources/${identifier}`;
-    return this.http.get(url).map(this.extractData).catch(this.handleError);
-  }
-
-  async safeCommitLink(
-    entry: BibliographicEntry,
-    resource: BibliographicResource
-  ): Promise<BibliographicResource> {
-    /* if necessary, creates target resource before updating the reference of the entry */
-    /* 1-3 requests */
-    const target = await this.maybePostResource(resource);
-    await this.updateTargetResource(entry, target);
-    return target;
-  }
-
 
   async updateTargetResource(
     entry: BibliographicEntry,
@@ -296,94 +246,78 @@ export class LocdbService {
       }
       entry.references = '';
     }
-    await this.addTargetBibliographicResource(entry, resource).toPromise();
+    await this.addTargetBibliographicResource(entry, resource);
     /* to keep view consistent */
     entry.status = 'VALID';
-    entry.references = resource._id;
-    return entry;
+    entry.references = resource.id;
+    return Promise.resolve(entry);
   }
+
+  bibliographicResource(identifier: string): Observable<BibliographicResource> {
+    return this.bibliographicResourceApi.get(identifier);
+  }
+
+  async safeCommitLink(
+    entry: BibliographicEntry,
+    resource: BibliographicResource
+  ): Promise<BibliographicResource> {
+    /* if necessary, creates target resource before updating the reference of the entry */
+    /* 1-3 requests */
+    const target = await this.maybePostResource(resource).toPromise();
+    await this.updateTargetResource(entry, target);
+    return target;
+  }
+
+
 
 
   maybePutResource(
     resource: BibliographicResource
-  ): Promise<BibliographicResource> {
+  ): Observable<BibliographicResource> {
     /* Update the resource if it is known to the backend
      * 0-1 */
-    if (!resource._id) {
-      return Promise.resolve(resource);
+    if (!resource.id) {
+      return Observable.of(resource);
     } else {
-      const url = `${this.locdbUrl}/bibliographicResources/${resource._id}`;
-      return this.http.put(
-        url,
-        resource
-      ).map(
-        resp => resp.json() as BibliographicResource
-      ).catch(this.handleError).toPromise();
+      return this.bibliographicResourceApi.update(resource.id, resource);
     }
   }
 
-  maybePostResource(resource: BibliographicResource): Promise<BibliographicResource> {
+  maybePostResource(resource: BibliographicResource): Observable<BibliographicResource> {
     /* Post the resource if it is not stored in back-end yet
      * TODO a problem here, when resource is incomplete
      * 0-1 backend requests */
-    if (!resource._id) {
+    if (!resource.id) {
       const url = `${this.locdbUrl}/bibliographicResources`;
-      resource.status = ResourceStatus.valid; // they should never be external
-      return this.http.post(
-        url,
-        resource
-      ).map(
-        resp => resp.json() as BibliographicResource
-      ).catch(this.handleError).toPromise();
+      resource.status = 'VALID'; // they should never be external
+      return this.bibliographicResourceApi.save(resource);
     } else {
-      return Promise.resolve(resource);
+      return Observable.of(resource);
     }
   }
 
 
 
-  putBibliographicResource(resource: BibliographicResource) {
-    // we might also need post, to store completely new resources
-    console.log('Put BR for', resource._id);
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
-    const url = `${this.locdbUrl}/bibliographicResources/${resource._id}`;
-    console.log('JUST BEFORE SUBMISSION:', resource);
-    return this.http.put(url, resource, options).map(this.extractData).catch(this.handleError);
+  putBibliographicResource(resource: BibliographicResource): Observable<BibliographicResource> {
+    return this.bibliographicResourceApi.update(resource.id, resource);
   }
 
-  pushBibligraphicResource(resource: BibliographicResource) {
-    // we could merge this with the method above, first try put then push.
-    console.log('Push BR', resource);
-    const url = `${this.locdbUrl}/bibliographicResources`;
-    return this.http.post(url, resource).map(this.extractData).catch(this.handleError);
+  pushBibligraphicResource(resource: BibliographicResource): Observable<BibliographicResource> {
+    return this.bibliographicResourceApi.save(resource);
   }
 
   deleteBibliographicResource(resource: BibliographicResource) {
-    const url = `${this.locdbUrl}/bibliographicResources/${resource._id}`;
-    console.log('Deleting', resource);
-    return this.http.delete(url).map(this.extractData).catch(this.handleError);
+    return this.bibliographicResourceApi.deleteSingle(resource.id);
   }
+  /* Resources API end */
 
   deleteBibliographicEntry(entry: BibliographicEntry) {
-    const url = `${this.locdbUrl}/bibliographicEntries/${entry._id}`;
-    console.log('Deleting', entry, url);
-    return this.http.delete(url).map(this.extractData).catch(this.handleError);
+    return this.bibliographicEntryApi.remove(entry.id);
     }
   newBibliographicEntry(): BibliographicEntry {
-    const url = `${this.locdbUrl}/newBibliographicEntry/`;
-    console.log('TODO requesting new Entry');
-    // TODO get returned Entry and pass it in return -> entry._id necessary
-    // return this.http.get(url).map(this.extractData).catch(this.handleError);
-
-    // had to mock these information for todo-detail.component.html
-    let entry = new BibliographicEntry()
-    entry.ocrData = new OCRData()
-    entry.ocrData.authors = ["dummy"]
-    // had to mock identifiers for new ressource suggestion in suggestion.component.html
-    entry.identifiers = [{scheme: "PPP", literalValue: "2444666668888888"}]
-
-    return entry
+    // TODO FIXME Mock
+    let entry = {identifiers:[{scheme: "PPP", literalValue: "2444666668888888"}]};
+    return entry;
 
   }
 
@@ -396,62 +330,33 @@ export class LocdbService {
 
   /** User and Instance Management */
 
-  login(user: string, pass: string): Observable<any> {
-    // const headers = new Headers({'Content-Type': 'application/json', 'Accept' : 'application/json' });
-    const options = new RequestOptions({ headers: this.headers });
-    const url = `${this.locdbUrl}/login`
-    // console.log(options)
-    // return this.http.post(url, JSON.stringify({username: user, password: pass}), options).catch(this.fail);
-    return this.http.post(
-      url,
-      JSON.stringify({username: user, password: pass}),
-      options
-    ).catch(this.fail);
+  login(username: string, password: string): Observable<User> {
+    const user: User = {username: username, password: password};
+    return this.userApi.login(user);
   }
 
-  register(user: string, pass: string): Observable<any> {
+  register(username: string, password: string): Observable<User> {
     // const headers = new Headers({ 'Content-Type': 'application/json' });
     // const options = new RequestOptions({ headers: headers, withCredentials: true });
-    const url = `${this.locdbUrl}/signup`
-    const options = new RequestOptions({ headers: this.headers  });
-    // return this.http.post(url, {username: user, password: pass}, options).catch(this.fail);
-    return this.http.post(
-      url,
-      {username: user, password: pass},
-      options,
-    ).catch(this.fail);
+    const user: User = {username: username, password: password};
+    return this.userApi.signup(user);
   }
 
-  logout(): Observable<any> {
-    const url = `${this.locdbUrl}/logout`
-    const options = new RequestOptions({ headers: this.headers  });
-    return this.http.get(
-      url,
-      options
-    );
+  logout(): Observable<SuccessResponse> {
+    return this.userApi.logout();
   }
 
 
   //
-  addFeed(name: string, url: string): Observable<Feed> {
-    const reqUrl = `${this.locdbUrl}/addFeed`;
-    return this.http.post(
-      reqUrl,
-      {name: name, url}
-    ).map(res => res.json() as Feed);
+  addFeed(feed: Feed): Observable<User> {
+    return this.userApi.addFeed(feed);
   }
 
-  fetchFeeds(): Observable<Feed[]> {
-    const url = `${this.locdbUrl}/fetchFeeds`;
-    return this.http.get(
-      url
-    ).map(res => res.json() as Feed[]);
+  fetchFeeds(): Observable<FeedEntry[][]> {
+    return this.userApi.fetchFeeds();
   }
 
-  deleteFeed(identifier: string): Observable<Feed[]> {
-    const url = `${this.locdbUrl}/deleteFeed/${identifier}`;
-    return this.http.get(
-      url
-    ).map(res => res.json()['feeds'] as Feed[])
+  deleteFeed(identifier: string): Observable<User> {
+    return this.userApi.deleteFeed(identifier);
   }
 } // LocdbService
