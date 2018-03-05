@@ -1,0 +1,3 @@
+[submodule "src/app/backend"]
+	path = src/app/backend
+	url = https://github.com/locdb/loc-db

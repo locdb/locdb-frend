@@ -1,11 +1,11 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter} from '@angular/core';
-import { BibliographicEntry, BibliographicResource, AgentRole, ResponsibleAgent, ProvenResource } from '../locdb';
+import { BibliographicEntry, BibliographicResource, AgentRole, ResponsibleAgent } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { LoggingService } from '../logging.service'
 import { MOCK_INTERNAL } from '../mock-bresources'
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { environment } from 'environments/environment';
-import { ResourceStatus, Provenance, Origin } from '../locdb';
+// import { ResourceStatus, Provenance, Origin } from '../locdb';
 import { PopoverModule } from 'ngx-popover';
 
 @Component({
@@ -56,7 +56,7 @@ export class BrowseComponent implements OnInit {
         this.internalInProgress = true; // loading icon
         this.internalSuggestions = [];
         console.log('Fetching internal suggestions for', this.query, 'with threshold', this.internalThreshold);
-        this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold.toString()).subscribe(
+        this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold).subscribe(
           (sug) => {this.saveInternal(sug)
                         this.loggingService.logSuggestionsArrived(this.searchentry, sug, true) },
           (err) => { this.internalInProgress = false }
@@ -83,24 +83,6 @@ export class BrowseComponent implements OnInit {
               contributors.push(role);
           }
           return contributors;
-      }
-
-      resourceFromEntry(entry): ProvenResource {
-          const ocr = entry.ocrData;
-          const br: ProvenResource = {
-            title: ocr.title || entry.bibliographicEntryText,
-            publicationYear: ocr.date || '', // unary + operator makes it a number
-            contributors: this.authors2contributors(ocr.authors),
-            embodiedAs: [],
-            parts: [],
-            partOf: '', // these two properties are new in ocr data
-            containerTitle: ocr.journal || '',
-            number: ocr.volume || '', // hope they work
-            status: ResourceStatus.external,
-            identifiers: entry.identifiers.filter(i => i.scheme && i.literalValue),
-            provenance: Provenance.local
-          }
-          return br;
       }
 
       onSelect(br?: ProvenResource): void {

@@ -4,7 +4,10 @@ import { LocdbService } from '../locdb.service';
 import { FeedService } from '../feed.service';
 //import { environment } from 'environments/environment';
 
-
+interface Track {
+  todo: ToDo,
+  part: ToDoParts,
+}
 @Component({
   selector: 'app-wrap',
   templateUrl: './appwrapper.component.html',
@@ -16,7 +19,7 @@ export class AppwrapperComponent implements OnInit {
   title = 'LOC-DB Frontend';
   source: BibliographicResource = null;
   todo: ToDoScans | ToDo = null;
-  resourceTrack: BibliographicResource[] | ToDo[];
+  resourceTrack: Track;
   entry: BibliographicEntry = null;
   target: BibliographicResource = null;
   constructor (private locdbService: LocdbService ) {}
@@ -25,13 +28,13 @@ export class AppwrapperComponent implements OnInit {
     // this.visualState = 0;
   }
 
-  updateTodo(todo: ToDoScans | BibliographicResource) {
+  updateTodo(todo: ToDoScans | ToDo) {
     // this.visualState = 0;
     this.todo = todo;
   }
 
-  updateTrack(resources: BibliographicResource[] | ToDo[]){
-    this.resourceTrack = resources;
+  updateTrack(resources: any[]){
+    this.resourceTrack = { todo: resources[0], part: resources[1] };
   }
 
   updateSource (br: BibliographicResource) {
