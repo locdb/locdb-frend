@@ -12,7 +12,7 @@ names. `TypedResource`
 
 ## Further Necessary Changes
 
-## Interface
+### Interface
 
 In `locbd.service.ts`, cast all returned Bibliographic Resources to
 `TypedResource`.
