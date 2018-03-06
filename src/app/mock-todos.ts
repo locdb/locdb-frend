@@ -1,4 +1,4 @@
-import { ToDo, ToDoStatus } from './locdb';
+import { ToDo, ToDoStatus, Identifier } from './locdb';
 
 export const MOCK_TODOBRS: ToDo[] =
   [
@@ -18,9 +18,18 @@ export const MOCK_TODOBRS: ToDo[] =
             '_id': '58d26b94a285f10778669ffc',
             'status': ToDoStatus.ocr
           }
-        ]
-      }
-    ]
+        ],
+        'authors': [],
+        'doi': [],
+        'identifierValues':
+          (forScheme => this.identifiers.filter(ident => ident.scheme === forScheme).map(ident => ident.literalValue))
+
+      },
+    ],
+    'authors': [],
+    'doi': [],
+    'identifierValues':
+      (forScheme => this.identifiers.filter(ident => ident.scheme === forScheme).map(ident => ident.literalValue))
       },
       {
         '_id': '58e03947d6c893087e17d1a3',
@@ -32,9 +41,18 @@ export const MOCK_TODOBRS: ToDo[] =
                 '_id': '58e03947d6c893087e17d1a7',
                 'status': ToDoStatus.nocr
               }
-            ]
+            ],
+            'authors': [],
+            'doi': [],
+            'identifierValues':
+              (forScheme => this.identifiers.filter(ident => ident.scheme === forScheme).map(ident => ident.literalValue))
+
           }
-        ]
+        ],
+        'authors': [],
+        'doi': [],
+        'identifierValues':
+          (forScheme => this.identifiers.filter(ident => ident.scheme === forScheme).map(ident => ident.literalValue))
       }
 ]
 ;

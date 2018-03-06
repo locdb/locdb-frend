@@ -1,6 +1,6 @@
 /** A Bibliographic Resource */
 // actually a partial resource
-export class BibliographicResource {
+export class BibliographicResourceAbs {
   _id?: string;
   identifiers?: Identifier[];
   type?: string;
@@ -18,7 +18,22 @@ export class BibliographicResource {
   /* should be aggregate of parts.references */
   cites?: string[];
 
+    get authors() {
+      return this.contributors.filter(c => c.roleType === 'AUTHOR').map(authrole => authrole.heldBy.nameString);
+    }
+    get doi() {
+      return this.identifiers.filter(i => i.scheme === 'DOI').map(identifier => identifier.literalValue);
+    }
+
+    identifierValues(forScheme: string): string[] {
+      return this.identifiers.filter(ident => ident.scheme === forScheme).map(ident => ident.literalValue);
+  }
+
+}
+export class BibliographicResource extends BibliographicResourceAbs {
+
   constructor(br: Partial<BibliographicResource>) {
+    super();
     // TODO do this properly, recursively call subconstructors
     this._id = br._id;
     this.identifiers = [] // br.identifiers.map(id => new Identifier(id))
@@ -45,16 +60,6 @@ export class BibliographicResource {
     this.cites = br.cites;
   }
 
-  get authors() {
-    return this.contributors.filter(c => c.roleType === 'AUTHOR').map(authrole => authrole.heldBy.nameString);
-  }
-  get doi() {
-    return this.identifiers.filter(i => i.scheme === 'DOI').map(identifier => identifier.literalValue);
-  }
-
-  identifierValues(forScheme: string): string[] {
-    return this.identifiers.filter(ident => ident.scheme === forScheme).map(ident => ident.literalValue);
-}
 }
 
 
@@ -166,13 +171,13 @@ export class ResponsibleAgent {
 }
 
 /** Apart from the children property, todo items are basically resource */
-export class ToDo extends BibliographicResource {
+export class ToDo extends BibliographicResourceAbs {
   children?: ToDoParts[];
   scans?: ToDoScans[]; // for monographs, scans are directly attached to the BR
 }
 
 /** A possible child of a ToDo item */
-export class ToDoParts extends BibliographicResource {
+export class ToDoParts extends BibliographicResourceAbs {
   _id: string;
   scans?: ToDoScans[];
 }

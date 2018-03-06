@@ -201,7 +201,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         const identsDeepCopy = formModel.identifiers.map(
           (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
         );
-        const resource: BibliographicResource =  {
+        const resource: BibliographicResource =  new BibliographicResource({
             _id: this.resource._id,
             identifiers: identsDeepCopy,
             type: formModel.resourcetype as string || '',
@@ -220,7 +220,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             parts: this.resource.parts,
             cites: this.resource.cites,
             status: this.resource.status
-        }
+        })
         return resource;
     }
 

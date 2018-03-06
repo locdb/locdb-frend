@@ -87,7 +87,7 @@ export class BrowseComponent implements OnInit {
 
       resourceFromEntry(entry): ProvenResource {
           const ocr = entry.ocrData;
-          const br: ProvenResource = {
+          const br: ProvenResource = new ProvenResource(new BibliographicResource({
             title: ocr.title || entry.bibliographicEntryText,
             publicationYear: ocr.date || '', // unary + operator makes it a number
             contributors: this.authors2contributors(ocr.authors),
@@ -98,8 +98,7 @@ export class BrowseComponent implements OnInit {
             number: ocr.volume || '', // hope they work
             status: ResourceStatus.external,
             identifiers: entry.identifiers.filter(i => i.scheme && i.literalValue),
-            provenance: Provenance.local
-          }
+          }))
           return br;
       }
 
