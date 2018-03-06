@@ -17,6 +17,44 @@ export class BibliographicResource {
   embodiedAs?: ResourceEmbodiment[];
   /* should be aggregate of parts.references */
   cites?: string[];
+
+  constructor(br: Partial<BibliographicResource>) {
+    // TODO do this properly, recursively call subconstructors
+    this._id = br._id;
+    this.identifiers = [] // br.identifiers.map(id => new Identifier(id))
+    for(let identifier of br.identifiers){
+      this.identifiers.push(new Identifier(identifier.scheme, identifier.literalValue))
+    }
+    this.type = br.type;
+    this.title = br.title;
+    this.subtitle = br.subtitle;
+    this.edition = br.edition;
+    this.number = br.number;
+    this.contributors = [] //br.contributors.map(c => new AgentRole(c));
+    for(let contributor of br.contributors){
+      this.contributors.push(contributor)
+    }
+    this.publicationYear = br.publicationYear;
+    this.status = br.status;
+    this.parts = [] //br.parts.map(be => new BibliographicEntry(be));
+    for(let part of br.parts){
+      this.parts.push(part)
+    }
+    this.partOf = br.partOf;
+    this.containerTitle = br.containerTitle;
+    this.cites = br.cites;
+  }
+
+  get authors() {
+    return this.contributors.filter(c => c.roleType === 'AUTHOR').map(authrole => authrole.heldBy.nameString);
+  }
+  get doi() {
+    return this.identifiers.filter(i => i.scheme === 'DOI').map(identifier => identifier.literalValue);
+  }
+
+  identifierValues(forScheme: string): string[] {
+    return this.identifiers.filter(ident => ident.scheme === forScheme).map(ident => ident.literalValue);
+}
 }
 
 
@@ -74,7 +112,12 @@ export class AgentRole {
   identifiers: Identifier[];
   roleType: string;
   heldBy: ResponsibleAgent;
-
+  // constructor (id: string, identifiers: Identifier[], roleType: string, heldBy: ResponsibleAgent) {
+  //   this._id  = id;
+  //   this.identifiers = identifiers;
+  //   this.roleType = roleType;
+  //   this.heldBy = heldBy;
+  // }
   // extracted from http://www.sparontologies.net/ontologies/pro/source.html#d4e361
   // as referenced by OCC metadata model
   // could be an enum
@@ -145,7 +188,7 @@ export class ToDoScans {
 
 export class ProvenResource extends BibliographicResource {
   constructor(br: BibliographicResource) {
-    super();
+    super(br);
     Object.assign(this, br);
   }
   get provenance(): Provenance {

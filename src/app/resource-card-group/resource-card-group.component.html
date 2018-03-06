@@ -4,7 +4,7 @@
   <div class="card-header" [class]="selected && selectable ? 'card-header bg-light' : 'card-header border-default  bg-light'">
     <div class="row">
       <div class="col-9">
-    <p>{{ resource.title }}
+    <p>{{ short() }}
       <span *ngIf="resource.type" class="badge badge-info">{{resource.type}}</span>
       <span *ngIf="resource.provenance" class="badge badge-warning">{{resource.provenance}}</span>
     </p>

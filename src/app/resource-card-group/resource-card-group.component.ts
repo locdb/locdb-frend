@@ -33,17 +33,43 @@ export class ResourceCardGroupComponent implements OnInit {
 
     short() {
       // A shorthand name for accordion heading
+      // <authors>. <year>. <title>. in <container-title>. <DOI>
       if (this.resource) {
         // resource already present
         const br = this.resource;
-        let s = br.title;
+        let s = ""
+        if(br.authors && br.authors.length>0){
+          s = br.authors.join(", ");
+          if (s.slice(-1)!="."){
+            s += ". ";
+          }
+        }
         if (br.publicationYear) {
-          s += ` (${br.publicationYear})`
+          s += " " + br.publicationYear + ".";
         }
-        if (br.status === 'EXTERNAL') {
-          s += ` [${br.type}]`
+        if (br.title){
+          s += " " + br.title;
+          if (s.slice(-1)!="."){
+            s += ". ";
+          }
         }
+        if (br.containerTitle){
+          s += " in " + br.containerTitle;
+          if (s.slice(-1)!="."){
+            s += ". ";
+          }
+        }
+        if (br.doi && br.doi.length>0){
+          s += "DOI: " + br.doi.join(", ");
+          if (s.slice(-1)!="."){
+            s += ". ";
+          }
+        }
+        // if (br.status === 'EXTERNAL') {
+        //   s += ` [${br.type}]`
+        // }
         return s;
+
       }
     }
 
