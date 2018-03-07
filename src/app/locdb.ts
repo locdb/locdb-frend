@@ -19,84 +19,141 @@ export function invert_enum(obj: Object) {
 }
 
 export const PropertyPrefixByType = invert_enum(enums["resourceType"]);
+const resourceType = enums.resourceType;
 
-export class TypedResource implements models.BibliographicResource {
+export function PropertyByType(type : string, property: string) {
+  return PropertyPrefixByType[type] + '_' + property;
+}
+
+export function containerTypes (type: string){
+    switch(type){
+        case resourceType.monograph || resourceType.editedBook || resourceType.book || resourceType.referenceBook:
+            return [resourceType.bookSet, resourceType.bookSeries];
+        case resourceType.bookSet:
+            return [resourceType.bookSeries]
+        case resourceType.bookChapter || resourceType.bookSection || resourceType.bookPart || resourceType.bookTrack || resourceType.component:
+            return [resourceType.editedBook, resourceType.book, resourceType.monograph]
+        case resourceType.proceedingsArticle:
+            return [resourceType.proceedings]
+        case resourceType.journalArticle:
+            return [resourceType.journalIssue, resourceType.journalVolume, resourceType.journal]
+        case resourceType.journalIssue:
+            return [resourceType.journalVolume, resourceType.journal]
+        case resourceType.journalVolume:
+            return [resourceType.journal]
+        case resourceType.report:
+            return [resourceType.reportSeries]
+        case resourceType.referenceEntry:
+            return [resourceType.referenceBook]
+        case resourceType.standard:
+            return [resourceType.standardSeries]
+        case resourceType.dataset:
+            return [resourceType.dataset]
+        default:
+            // return as default just book
+            return []
+    }
+}
+
+export class TypedResource {
+  private br: models.BibliographicResource;
   private _prefix: string;
 
   constructor(br: models.BibliographicResource) {
     // this will throw if type not possible!
     this._prefix = PropertyPrefixByType[br.type] + '_';
-    Object.assign(this, br);
+    this.br = br;
+  }
+
+  get _id() {
+    return this.br._id;
+  }
+
+  get cites() : Array<string> {
+    return this.br.cites;
+  }
+
+  get parts() : Array<models.BibliographicEntry> {
+    return this.br.parts;
+  }
+
+  get partOf(): string {
+    return this.br.partOf;
+  }
+
+  get status(): string {
+    return this.br.status;
   }
 
   set type ( newType: string ) {
     // this will throw if type not possible!
     this._prefix = PropertyPrefixByType[newType] + '_';
-    this.type = newType;
+    this.br.type = newType;
   }
 
   get identifiers(): Array<models.Identifier> {
-    return this[this._prefix + 'identifiers'];
+    return this.br[this._prefix + 'identifiers'];
   }
   set identifiers( identifiers: Array<models.Identifier> ) {
-    this[this._prefix + 'identifiers'] = identifiers;
+    this.br[this._prefix + 'identifiers'] = identifiers;
   }
 
   get title(): string {
-    return this[this._prefix + 'title'];
+    return this.br[this._prefix + 'title'];
   }
 
   set title( newTitle: string) {
-    this[this._prefix + 'title'] = newTitle;
+    this.br[this._prefix + 'title'] = newTitle;
   }
 
   get subtitle() : string {
-    return this[this._prefix + 'subtitle'];
+    return this.br[this._prefix + 'subtitle'];
   }
 
   set subtitle( newSubtitle: string) {
-    this[this._prefix + 'subtitle'] = newSubtitle;
+    this.br[this._prefix + 'subtitle'] = newSubtitle;
   }
 
   get edition() : string {
-    return this[this._prefix + 'edition'];
+    return this.br[this._prefix + 'edition'];
   }
 
   set edition(newEdition: string) {
-    this[this._prefix + 'edition'] = newEdition;
+    this.br[this._prefix + 'edition'] = newEdition;
   }
 
   get number() : string {
-    return this[this._prefix + 'number'];
+    return this.br[this._prefix + 'number'];
   }
 
   set number(newNumber: string) {
-    this[this._prefix + 'number'] = newNumber;
+    this.br[this._prefix + 'number'] = newNumber;
   }
 
   get contributors(): Array<models.AgentRole> {
-    return this[this._prefix + 'contributors'];
+    return this.br[this._prefix + 'contributors'];
   }
 
   set contributors( newContributors : Array<models.AgentRole>) {
-    this[this._prefix + 'contributors'] = newContributors;
+    this.br[this._prefix + 'contributors'] = newContributors;
   }
 
   get publicationYear() : string {
-    return this[this._prefix + 'publicationYear'];
+    return this.br[this._prefix + 'publicationYear'];
   }
 
   set publicationYear(newYear: string) {
-    this[this._prefix + 'publicationYear'] = newYear;
+    this.br[this._prefix + 'publicationYear'] = newYear;
   }
 
   get embodiedAs() : Array<models.ResourceEmbodiment> {
-    return this[this._prefix + 'embodiedAs'];
+    return this.br[this._prefix + 'embodiedAs'];
   }
 
   set embodiedAs(newEmbodiments: Array<models.ResourceEmbodiment>) {
-    this[this._prefix + 'embodiedAs'] = newEmbodiments;
+    this.br[this._prefix + 'embodiedAs'] = newEmbodiments;
   }
+
 }
 
 
