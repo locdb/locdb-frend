@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angular/http';
 
-import { TypedResource } from './locdb';
+import { TypedResource, enums } from './locdb';
 
 
 import {
@@ -136,62 +136,6 @@ export class LocdbService {
    embodimentType);
  }
 
-  /* SHOULD NOT BE NEEDED because of saveResource above */
-  saveScan(
-    ppn: string,
-    resourceType: string,
-    textualPdf: boolean,
-    file: File,
-    firstPage?: string,
-    lastPage?: string
-  ): Observable<ToDoScans> {
-    // DEPRECATED
-    // Take FileWithMetadata object instead
-    const url = `${this.locdbUrl}/saveScan`;
-    const formData: FormData = new FormData();
-    formData.append('ppn', ppn);
-    if (firstPage && lastPage) {
-      formData.append('firstPage', firstPage);
-      formData.append('lastPage', lastPage);
-    }
-    formData.append('textualPdf', textualPdf.toString());
-    formData.append('scan', file);
-    formData.append('resourceType', resourceType);
-    return this.http.post(url, formData).map(
-      (s) => s.json() as ToDoScans
-    ).catch(this.handleError);
-  }
-
-  saveScanForElectronicJournal(
-    // DEPRECATED
-    scheme: string,
-    value: string,
-    textualPdf: boolean,
-    file: File
-  ): Observable<ToDoScans> {
-    const url = `${this.locdbUrl}/saveScanForElectronicJournal`;
-    const formData: FormData = new FormData();
-    formData.append(scheme, value);
-    formData.append('textualPdf', textualPdf.toString());
-    formData.append('scan', file);
-    return this.http.post(
-      url,
-      formData,
-    ).map((s) => s.json() as ToDoScans).catch(this.handleError);
-  }
-
-
-  saveElectronicJournal(identifier: Identifier): Observable<any> {
-    // DEPRECATED
-    const url = `${this.locdbUrl}/saveElectronicJournal`
-    const params: URLSearchParams = new URLSearchParams();
-    params.set(identifier.scheme, identifier.literalValue);
-    return this.http.get(
-      url,
-      { search: params}
-    ).map(this.extractData).catch(this.handleError);
-  }
-  /* SHOULD NOT BE NEEDED because of saveResource above */
 
   suggestionsByEntry(be: BibliographicEntry, external?: boolean): Observable<BibliographicResource[]> {
     const headers = new Headers({ 'Content-Type': 'application/json' });
@@ -223,22 +167,21 @@ export class LocdbService {
   }
 
   deleteScan(scan: ToDoScans) {
-    return this.bibliographicEntryApi.remove(scan.id);
+    return this.bibliographicEntryApi.remove(scan._id);
   }
 
   putBibliographicEntry(entry: BibliographicEntry) {
     // obsolete by addTarget
-    return this.bibliographicEntryApi.update(entry.id, entry);
+    return this.bibliographicEntryApi.update(entry._id, entry);
   }
-
 
   /* Resources API end */
   addTargetBibliographicResource(entry: BibliographicEntry, resource: BibliographicResource): Observable<BibliographicResource> {
-    return this.bibliographicEntryApi.addTargetBibliographicResource(entry.id, resource.id).map( br => new TypedResource(br) );
+    return this.bibliographicEntryApi.addTargetBibliographicResource(entry._id, resource._id).map( br => new TypedResource(br) );
   }
 
   removeTargetBibliographicResource(entry): Observable<BibliographicResource> {
-    return this.bibliographicEntryApi.removeTargetBibliographicResource(entry.id).map( br => new TypedResource(br) );
+    return this.bibliographicEntryApi.removeTargetBibliographicResource(entry._id).map( br => new TypedResource(br) );
   }
 
   async updateTargetResource(
@@ -250,7 +193,7 @@ export class LocdbService {
     if (entry.references) {
       try {
         await this.removeTargetBibliographicResource(entry);
-        entry.status = 'OCR_PROCESSED'; // back-end does it... TODO FIXME
+        entry.status = enums.status.ocrProcessed; // back-end does it... TODO FIXME
       } catch (e) {
         console.log('References pointer was invalid. Pass...');
       }
@@ -258,19 +201,23 @@ export class LocdbService {
     }
     await this.addTargetBibliographicResource(entry, resource);
     /* to keep view consistent */
-    entry.status = 'VALID';
-    entry.references = resource.id;
+    entry.status = enums.status.valid;
+    entry.references = resource._id;
     return Promise.resolve(entry);
   }
 
-  bibliographicResource(identifier: string): Observable<BibliographicResource> {
+  bibliographicResource(identifier: string): Observable<TypedResource> {
     return this.bibliographicResourceApi.get(identifier).map( br => new TypedResource(br) );
+  }
+
+  parentResource(br: TypedResource | BibliographicResource): Observable<TypedResource> {
+    return this.bibliographicResource(br.partOf);
   }
 
   async safeCommitLink(
     entry: BibliographicEntry,
-    resource: BibliographicResource
-  ): Promise<BibliographicResource> {
+    resource: TypedResource
+  ): Promise<TypedResource> {
     /* if necessary, creates target resource before updating the reference of the entry */
     /* 1-3 requests */
     const target = await this.maybePostResource(resource).toPromise();
@@ -282,53 +229,54 @@ export class LocdbService {
 
 
   maybePutResource(
-    resource: BibliographicResource
-  ): Observable<BibliographicResource> {
+    resource: TypedResource
+  ): Observable<TypedResource> {
     /* Update the resource if it is known to the backend
      * 0-1 */
-    if (!resource.id) {
+    if (!resource._id) {
       return Observable.of(resource);
     } else {
-      return this.bibliographicResourceApi.update(resource.id, resource);
+      return this.bibliographicResourceApi.update(resource._id, resource.br).map( br => new TypedResource(br) );
     }
   }
 
-  maybePostResource(resource: TypedResource): Observable<TypedResource> {
+  maybePostResource(tr: TypedResource): Observable<TypedResource> {
     /* Post the resource if it is not stored in back-end yet
      * TODO a problem here, when resource is incomplete
      * 0-1 backend requests */
-    if (!resource._id) {
-      const url = `${this.locdbUrl}/bibliographicResources`;
-      resource.status = 'VALID'; // they should never be external
-      return this.bibliographicResourceApi.save(resource).map( br => new TypedResource(br) );
+    if (!tr._id) {
+      tr.status = enums.status.valid; // they should never be external
+      return this.bibliographicResourceApi.save(tr.br).map( br => new TypedResource(br) );
     } else {
-      return Observable.of(resource);
+      return Observable.of(tr);
     }
   }
 
 
 
-  putBibliographicResource(resource: BibliographicResource): Observable<BibliographicResource> {
-    return this.bibliographicResourceApi.update(resource.id, resource);
+  // DEPRECATED or integrate in Maybe Methods
+  putBibliographicResource(resource: TypedResource): Observable<TypedResource> {
+    return this.bibliographicResourceApi.update(resource._id, resource.br).map( br => new TypedResource(br));
   }
 
-  pushBibligraphicResource(resource: BibliographicResource): Observable<BibliographicResource> {
-    return this.bibliographicResourceApi.save(resource);
+  pushBibligraphicResource(resource: TypedResource): Observable<TypedResource> {
+    return this.bibliographicResourceApi.save(resource).map( br => new TypedResource(br));
   }
 
-  deleteBibliographicResource(resource: BibliographicResource) {
-    return this.bibliographicResourceApi.deleteSingle(resource.id);
+  deleteBibliographicResource(resource: TypedResource) : Observable<SuccessResponse> {
+    return this.bibliographicResourceApi.deleteSingle(resource._id);
   }
   /* Resources API end */
 
-  deleteBibliographicEntry(entry: BibliographicEntry) {
-    return this.bibliographicEntryApi.remove(entry.id);
-    }
-  newBibliographicEntry(): BibliographicEntry {
-    // TODO FIXME Mock
-    let entry = {identifiers:[{scheme: "PPP", literalValue: "2444666668888888"}]};
-    return entry;
+  deleteBibliographicEntry(entry: BibliographicEntry) : Observable<BibliographicEntry> {
+    return this.bibliographicEntryApi.remove(entry._id);
+  }
 
+  newBibliographicEntry(): Observable<BibliographicEntry> {
+    // TODO FIXME Mock
+    // TODO further could already include dummy entry object without id
+    let entry = {identifiers:[{scheme: "PPP", literalValue: "2444666668888888"}]};
+    return Observable.of(entry); // mock with observable
   }
 
   /* The following needs to be reconsidered, actually we could store login status here */

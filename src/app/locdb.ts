@@ -18,15 +18,24 @@ export function invert_enum(obj: Object) {
   return inverse;
 }
 
+export function values(obj) {
+  let values = []
+  for (let prop in obj) {
+    values.push(obj[prop]);
+  }
+  return values;
+}
+
+export const RESOURCE_TYPE_VALUES = values(enums.resourceTypes);
 export const PropertyPrefixByType = invert_enum(enums["resourceType"]);
 const resourceType = enums.resourceType;
 
-export function PropertyByType(type : string, property: string) {
+export function typedProperty(type : string, property: string) {
   return PropertyPrefixByType[type] + '_' + property;
 }
 
-export function containerTypes (type: string){
-    switch(type){
+export function containerTypes (type: string): Array<string>{
+    switch(type) {
         case resourceType.monograph || resourceType.editedBook || resourceType.book || resourceType.referenceBook:
             return [resourceType.bookSet, resourceType.bookSeries];
         case resourceType.bookSet:
@@ -50,21 +59,24 @@ export function containerTypes (type: string){
         case resourceType.dataset:
             return [resourceType.dataset]
         default:
-            // return as default just book
+            // return as default just book -- or []
             return []
     }
 }
 
 export class TypedResource {
-  private br: models.BibliographicResource;
+  br: models.BibliographicResource;
   private _prefix: string;
+  containerTypes: Array<string>;
 
   constructor(br: models.BibliographicResource) {
     // this will throw if type not possible!
     this._prefix = PropertyPrefixByType[br.type] + '_';
     this.br = br;
+    this.containerTypes = containerTypes(br.type);
   }
 
+  // forward native attributes
   get _id() {
     return this.br._id;
   }
@@ -85,10 +97,25 @@ export class TypedResource {
     return this.br.status;
   }
 
+  set status( newStatus) {
+    this.br.status = newStatus;
+  }
+
+  get type () {
+    return this.br.type;
+  }
+
   set type ( newType: string ) {
     // this will throw if type not possible!
     this._prefix = PropertyPrefixByType[newType] + '_';
+    this.containerTypes = containerTypes(newType);
     this.br.type = newType;
+  }
+  // forward native attributes end
+
+  getTypedAttr(property: string, type: string): any {
+    let prop = typedProperty(type, property);
+    return this.br[prop];
   }
 
   get identifiers(): Array<models.Identifier> {
@@ -152,6 +179,20 @@ export class TypedResource {
 
   set embodiedAs(newEmbodiments: Array<models.ResourceEmbodiment>) {
     this.br[this._prefix + 'embodiedAs'] = newEmbodiments;
+  }
+
+}
+
+// Helpers to deal with contributors
+export function extractRoleFromContribs(contribs: Array<models.AgentRole>, roleType): Array<models.AgentRole> {
+  return contribs.filter(x => x.roleType === roleType);
+}
+
+export function extractAgentsFromContribs(contribs: Array<models.AgentRole>, property?: string) : Array<models.ResponsibleAgent> | Array<any> {
+  if (property) {
+    return contribs.map(r => r.heldBy[property]);
+  } else {
+    return contribs.map(r => r.heldBy);
   }
 
 }
