@@ -2,6 +2,8 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angular/http';
 
+import { TypedResource } from './locdb';
+
 
 import {
   BibliographicEntryApi, BibliographicResourceApi,
@@ -117,10 +119,18 @@ export class LocdbService {
     return this.bibliographicEntryApi.getToDoBibliographicEntries(scan_id);
   }
 
- public saveResource(identifierScheme: string, identifierLiteralValue: string,
- resourceType: string, firstPage?: number, lastPage?: number, textualPdf?:
- boolean, binaryFile?: any, stringFile?: string, embodimentType?: string,
- extraHttpRequestParams?: any) {
+  public saveResource(
+   identifierScheme: string,
+   identifierLiteralValue: string,
+   resourceType: string,
+   firstPage?: number,
+   lastPage?: number,
+   textualPdf?: boolean,
+   binaryFile?: any,
+   stringFile?: string,
+   embodimentType?: string,
+   extraHttpRequestParams?: any
+ ) {
    return this.scanApi.saveResource(identifierScheme, identifierLiteralValue,
    resourceType, firstPage, lastPage, textualPdf, binaryFile, stringFile,
    embodimentType);
@@ -224,11 +234,11 @@ export class LocdbService {
 
   /* Resources API end */
   addTargetBibliographicResource(entry: BibliographicEntry, resource: BibliographicResource): Observable<BibliographicResource> {
-    return this.bibliographicEntryApi.addTargetBibliographicResource(entry.id, resource.id);
+    return this.bibliographicEntryApi.addTargetBibliographicResource(entry.id, resource.id).map( br => new TypedResource(br) );
   }
 
   removeTargetBibliographicResource(entry): Observable<BibliographicResource> {
-    return this.bibliographicEntryApi.removeTargetBibliographicResource(entry.id);
+    return this.bibliographicEntryApi.removeTargetBibliographicResource(entry.id).map( br => new TypedResource(br) );
   }
 
   async updateTargetResource(
@@ -254,7 +264,7 @@ export class LocdbService {
   }
 
   bibliographicResource(identifier: string): Observable<BibliographicResource> {
-    return this.bibliographicResourceApi.get(identifier);
+    return this.bibliographicResourceApi.get(identifier).map( br => new TypedResource(br) );
   }
 
   async safeCommitLink(
@@ -283,14 +293,14 @@ export class LocdbService {
     }
   }
 
-  maybePostResource(resource: BibliographicResource): Observable<BibliographicResource> {
+  maybePostResource(resource: TypedResource): Observable<TypedResource> {
     /* Post the resource if it is not stored in back-end yet
      * TODO a problem here, when resource is incomplete
      * 0-1 backend requests */
-    if (!resource.id) {
+    if (!resource._id) {
       const url = `${this.locdbUrl}/bibliographicResources`;
       resource.status = 'VALID'; // they should never be external
-      return this.bibliographicResourceApi.save(resource);
+      return this.bibliographicResourceApi.save(resource).map( br => new TypedResource(br) );
     } else {
       return Observable.of(resource);
     }

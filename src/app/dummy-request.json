@@ -1,0 +1,39 @@
+{
+  "journalArticle_identifiers": [
+    {
+      "literalValue": "011089423",
+      "scheme": "SWB_PPN"
+    }
+  ],
+  "type": "JOURNAL_ARTICLE",
+  "journal_title": "Modern analytic and computational methods in science and mathematics",
+  "journalVolume_number": "25",
+  "journalArticle_title": "Markovian decision processes",
+  "journalArticle_contributors": [
+    {
+      "identifiers": [
+        {
+          "literalValue": "string",
+          "scheme": "string"
+        }
+      ],
+      "roleType": "string",
+      "heldBy": {
+        "identifiers": [
+          {
+            "literalValue": "string",
+            "scheme": "string"
+          }
+        ],
+        "nameString": "string",
+        "givenName": "string",
+        "familyName": "string"
+      }
+    }
+  ],
+  "journalArticle_publicationYear": "1970",
+  "status": "EXTERNAL",
+  "parts": [],
+  "partOf": "",
+  "cites": []
+}

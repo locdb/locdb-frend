@@ -13,7 +13,7 @@
 import * as models from './models';
 
 export interface ToDoParts {
-    id: string;
+    _id: string;
 
     status?: string;
 

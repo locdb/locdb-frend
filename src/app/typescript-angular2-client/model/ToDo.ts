@@ -13,7 +13,7 @@
 import * as models from './models';
 
 export interface ToDo {
-    id: string;
+    _id: string;
 
     identifiers?: Array<models.Identifier>;
 

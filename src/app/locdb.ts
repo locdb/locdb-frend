@@ -21,7 +21,7 @@ export function invert_enum(obj: Object) {
 export const PropertyPrefixByType = invert_enum(enums["resourceType"]);
 
 export class TypedResource implements models.BibliographicResource {
-  _prefix: string;
+  private _prefix: string;
 
   constructor(br: models.BibliographicResource) {
     // this will throw if type not possible!
@@ -103,4 +103,4 @@ export class TypedResource implements models.BibliographicResource {
 export {BibliographicResource, AgentRole, BibliographicEntry, ErrorResponse, Feed, FeedEntry,
 FeedEntryEnclosures, FeedEntryImage, FeedEntryMeta, Identifier, LogRequest,
 ResourceEmbodiment, ResponsibleAgent, SuccessResponse, ToDo, ToDoParts,
-ToDoScans, User} from './typescript-angular2-client/model/models';
+ToDoScans, User, OCRData} from './typescript-angular2-client/model/models';

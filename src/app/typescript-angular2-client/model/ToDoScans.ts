@@ -13,7 +13,7 @@
 import * as models from './models';
 
 export interface ToDoScans {
-    id: string;
+    _id: string;
 
     status?: string;
 

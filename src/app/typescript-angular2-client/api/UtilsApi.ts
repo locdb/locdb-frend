@@ -42,6 +42,21 @@ export class UtilsApi {
     }
 
     /**
+     * Gets marc from k10+zentral (needed for debugging)
+     * @param query The query string
+     */
+    public get(query?: string, extraHttpRequestParams?: any): Observable<models.SuccessResponse> {
+        return this.getWithHttpInfo(query, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json() || {};
+                }
+            });
+    }
+
+    /**
      * Logs a json object.
      * @param logObject The object to log.
      */
@@ -56,6 +71,47 @@ export class UtilsApi {
             });
     }
 
+
+    /**
+     * 
+     * Gets marc from k10+zentral (needed for debugging)
+     * @param query The query string
+     */
+    public getWithHttpInfo(query?: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/get';
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        if (query !== undefined) {
+            queryParameters.set('query', <any>query);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json',
+            'multipart/form-data'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json',
+            'image/png',
+            'application/pdf'
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters,
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
 
     /**
      * 

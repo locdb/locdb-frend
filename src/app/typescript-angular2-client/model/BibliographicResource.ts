@@ -13,263 +13,261 @@
 import * as models from './models';
 
 export interface BibliographicResource {
-    id?: string;
+    _id?: string;
 
-    journalIdentifiers?: Array<models.Identifier>;
+    journal_identifiers?: Array<models.Identifier>;
 
-    journalVolumeIdentifiers?: Array<models.Identifier>;
+    journalVolume_identifiers?: Array<models.Identifier>;
 
-    journalIssueIdentifiers?: Array<models.Identifier>;
+    journalIssue_identifiers?: Array<models.Identifier>;
 
-    journalArticleIdentifiers?: Array<models.Identifier>;
+    journalArticle_identifiers?: Array<models.Identifier>;
 
-    monographIdentifiers?: Array<models.Identifier>;
+    monograph_identifiers?: Array<models.Identifier>;
 
-    editedBookIdentifiers?: Array<models.Identifier>;
+    editedBook_identifiers?: Array<models.Identifier>;
 
-    bookSeriesIdentifiers?: Array<models.Identifier>;
+    bookSeries_identifiers?: Array<models.Identifier>;
 
-    bookSetIdentifiers?: Array<models.Identifier>;
+    bookSet_identifiers?: Array<models.Identifier>;
 
-    bookChapterIdentifiers?: Array<models.Identifier>;
+    bookChapter_identifiers?: Array<models.Identifier>;
 
-    bookSectionIdentifiers?: Array<models.Identifier>;
+    bookSection_identifiers?: Array<models.Identifier>;
 
-    bookPartIdentifiers?: Array<models.Identifier>;
+    bookPart_identifiers?: Array<models.Identifier>;
 
-    bookTrackIdentifiers?: Array<models.Identifier>;
+    bookTrack_identifiers?: Array<models.Identifier>;
 
-    componentIdentifiers?: Array<models.Identifier>;
+    component_identifiers?: Array<models.Identifier>;
 
-    dissertationIdentifiers?: Array<models.Identifier>;
+    dissertation_identifiers?: Array<models.Identifier>;
 
-    proceedingsArticleIdentifiers?: Array<models.Identifier>;
+    proceedingsArticle_identifiers?: Array<models.Identifier>;
 
-    proceedingsIdentifiers?: Array<models.Identifier>;
+    proceedings_identifiers?: Array<models.Identifier>;
 
-    datasetIdentifiers?: Array<models.Identifier>;
+    dataset_identifiers?: Array<models.Identifier>;
 
-    reportIdentifiers?: Array<models.Identifier>;
+    report_identifiers?: Array<models.Identifier>;
 
-    reportSeriesIdentifiers?: Array<models.Identifier>;
+    reportSeries_identifiers?: Array<models.Identifier>;
 
-    bookIdentifiers?: Array<models.Identifier>;
+    book_identifiers?: Array<models.Identifier>;
 
-    referenceBookIdentifiers?: Array<models.Identifier>;
+    referenceBook_identifiers?: Array<models.Identifier>;
 
-    referenceEntryIdentifiers?: Array<models.Identifier>;
+    referenceEntry_identifiers?: Array<models.Identifier>;
 
-    standardIdentifiers?: Array<models.Identifier>;
+    standard_identifiers?: Array<models.Identifier>;
 
-    standardSeriesIdentifiers?: Array<models.Identifier>;
+    standardSeries_identifiers?: Array<models.Identifier>;
 
     type?: string;
 
-    journalTitle?: string;
+    journal_title?: string;
 
-    journalVolumeTitle?: string;
+    journalVolume_title?: string;
 
-    journalIssueTitle?: string;
+    journalIssue_title?: string;
 
-    journalArticleTitle?: string;
+    journalArticle_title?: string;
 
-    monographTitle?: string;
+    monograph_title?: string;
 
-    editedBookTitle?: string;
+    editedBook_title?: string;
 
-    bookSeriesTitle?: string;
+    bookSeries_title?: string;
 
-    bookSetTitle?: string;
+    bookSet_title?: string;
 
-    bookChapterTitle?: string;
+    bookChapter_title?: string;
 
-    bookSectionTitle?: string;
+    bookSection_title?: string;
 
-    bookPartTitle?: string;
+    bookPart_title?: string;
 
-    bookTrackTitle?: string;
+    bookTrack_title?: string;
 
-    componentTitle?: string;
+    component_title?: string;
 
-    reportTitle?: string;
+    report_title?: string;
 
-    proceedingsArticleTitle?: string;
+    proceedingsArticle_title?: string;
 
-    proceedingsTitle?: string;
+    proceedings_title?: string;
 
-    datasetTitle?: string;
+    dataset_title?: string;
 
-    reportSeriesTitle?: string;
+    reportSeries_title?: string;
 
-    bookTitle?: string;
+    book_title?: string;
 
-    referenceBookTitle?: string;
+    referenceBook_title?: string;
 
-    referenceEntryTitle?: string;
+    referenceEntry_title?: string;
 
-    standardTitle?: string;
+    standard_title?: string;
 
-    standardSeriesTitle?: string;
+    standardSeries_title?: string;
 
-    editedBookSubtitle?: string;
+    editedBook_subtitle?: string;
 
-    reportSubtitle?: string;
+    report_subtitle?: string;
 
-    dissertationSubtitle?: string;
+    dissertation_subtitle?: string;
 
-    proceedingsArticleSubtitle?: string;
+    proceedingsArticle_subtitle?: string;
 
-    standardSubtitle?: string;
+    standard_subtitle?: string;
 
-    standardSeriesSubtitle?: string;
+    standardSeries_subtitle?: string;
 
-    journalSubtitle?: string;
+    journal_subtitle?: string;
 
-    journalArticleSubtitle?: string;
+    journalArticle_subtitle?: string;
 
-    bookSeriesSubtitle?: string;
+    bookSeries_subtitle?: string;
 
-    monographSubtitle?: string;
+    monograph_subtitle?: string;
 
-    bookSetSubtitle?: string;
+    bookSet_subtitle?: string;
 
-    bookPartSubtitle?: string;
+    bookPart_subtitle?: string;
 
-    bookChapterSubtitle?: string;
+    bookChapter_subtitle?: string;
 
-    bookSectionSubtitle?: string;
+    bookSection_subtitle?: string;
 
-    bookTrackSubtitle?: string;
+    bookTrack_subtitle?: string;
 
-    componentSubtitle?: string;
+    component_subtitle?: string;
 
-    proceedingsSubtitle?: string;
+    proceedings_subtitle?: string;
 
-    deatasetSubtitle?: string;
+    dataset_subtitle?: string;
 
-    reportSeriesSubtitle?: string;
+    reportSeries_subtitle?: string;
 
-    bookSubtitle?: string;
+    book_subtitle?: string;
 
-    referenceBookSubtitle?: string;
+    referenceBook_subtitle?: string;
 
-    referenceEntrySubtitle?: string;
+    referenceEntry_subtitle?: string;
 
-    monographEdition?: string;
+    monograph_edition?: string;
 
-    editedBookEdition?: string;
+    editedBook_edition?: string;
 
-    dissertationEdition?: string;
+    dissertation_edition?: string;
 
-    proceedingsEdition?: string;
+    proceedings_edition?: string;
 
-    reportEdition?: string;
+    report_edition?: string;
 
-    bookEdition?: string;
+    book_edition?: string;
 
-    referenceBookEdition?: string;
+    referenceBook_edition?: string;
 
-    standardEdition?: string;
+    standard_edition?: string;
 
-    journalVolumeNumber?: string;
+    journalVolume_number?: string;
 
-    journalIssueNumber?: string;
+    journalIssue_number?: string;
 
-    bookPartNumber?: string;
+    bookPart_number?: string;
 
-    monographNumber?: string;
+    monograph_number?: string;
 
-    editedBookNumber?: string;
+    editedBook_number?: string;
 
-    componentNumber?: string;
+    component_number?: string;
 
-    bookSetNumber?: string;
+    bookSet_number?: string;
 
-    bookChapterNumber?: string;
+    bookChapter_number?: string;
 
-    bookSectionNumber?: string;
+    bookSection_number?: string;
 
-    bookTrackNumber?: string;
+    bookTrack_number?: string;
 
-    proceedingsNumber?: string;
+    proceedings_number?: string;
 
-    reportNumber?: string;
+    report_number?: string;
 
-    bookNumber?: string;
+    book_number?: string;
 
-    standardNumber?: string;
+    standard_number?: string;
 
-    referenceBookNumber?: string;
+    referenceBook_number?: string;
 
-    referenceEntryNumber?: string;
+    referenceEntry_number?: string;
 
-    contributors?: Array<models.AgentRole>;
+    journal_contributors?: Array<models.AgentRole>;
 
-    journalContributors?: Array<models.AgentRole>;
+    report_contributors?: Array<models.AgentRole>;
 
-    reportContributors?: Array<models.AgentRole>;
+    journalVolume_contributors?: Array<models.AgentRole>;
 
-    journalVolumeContributors?: Array<models.AgentRole>;
+    journalIssue_contributors?: Array<models.AgentRole>;
 
-    journalIssueContributors?: Array<models.AgentRole>;
+    journalArticle_contributors?: Array<models.AgentRole>;
 
-    journalArticleContributors?: Array<models.AgentRole>;
+    monograph_contributors?: Array<models.AgentRole>;
 
-    monographContributors?: Array<models.AgentRole>;
+    editedBook_contributors?: Array<models.AgentRole>;
 
-    editedBookContributors?: Array<models.AgentRole>;
+    bookSeries_contributors?: Array<models.AgentRole>;
 
-    bookSeriesContributors?: Array<models.AgentRole>;
+    proceedingsArticle_contributors?: Array<models.AgentRole>;
 
-    proceedingsArticleContributors?: Array<models.AgentRole>;
+    bookSet_contributors?: Array<models.AgentRole>;
 
-    bookSetContributors?: Array<models.AgentRole>;
+    bookChapter_contributors?: Array<models.AgentRole>;
 
-    bookChapterContributors?: Array<models.AgentRole>;
+    dataset_contributors?: Array<models.AgentRole>;
 
-    datasetContributors?: Array<models.AgentRole>;
+    bookTrack_contributors?: Array<models.AgentRole>;
 
-    bookTrackContributors?: Array<models.AgentRole>;
+    component_contributors?: Array<models.AgentRole>;
 
-    componentContributors?: Array<models.AgentRole>;
+    dissertation_contributors?: Array<models.AgentRole>;
 
-    dissertationContributors?: Array<models.AgentRole>;
+    proceedings_contributors?: Array<models.AgentRole>;
 
-    proceedingsContributors?: Array<models.AgentRole>;
+    reportSeries_contributors?: Array<models.AgentRole>;
 
-    repotrSeriesContributors?: Array<models.AgentRole>;
+    book_contributors?: Array<models.AgentRole>;
 
-    bookContributors?: Array<models.AgentRole>;
+    referenceBook_contributors?: Array<models.AgentRole>;
 
-    referenceBookContributors?: Array<models.AgentRole>;
+    referenceEntry_contributors?: Array<models.AgentRole>;
 
-    referenceEntryContributors?: Array<models.AgentRole>;
+    standard_contributors?: Array<models.AgentRole>;
 
-    standardContributors?: Array<models.AgentRole>;
+    standardSeries_contributors?: Array<models.AgentRole>;
 
-    standardSeriesContributors?: Array<models.AgentRole>;
+    journalArticle_publicationYear?: string;
 
-    journalArticlePublicationYear?: string;
+    monograph_publicationYear?: string;
 
-    monographPublicationYear?: string;
+    report_publicationYear?: string;
 
-    reportPublicationYear?: string;
+    editedBook_publicationYear?: string;
 
-    editedBookPublicationYear?: string;
+    dissertation_publicationYear?: string;
 
-    dissertationPublicationYear?: string;
+    proceedingsArticle_publicationYear?: string;
 
-    proceedingsArticlePublicationYear?: string;
+    dataset_publicationYear?: string;
 
-    datasetPublicationYear?: string;
+    proceedings_publicationYear?: string;
 
-    proceedingsPublicationYear?: string;
+    book_publicationYear?: string;
 
-    bookPublicationYear?: string;
+    referenceBook_publicationYear?: string;
 
-    referenceBookPublicationYear?: string;
-
-    standardPublicationYear?: string;
+    standard_publicationYear?: string;
 
     status?: string;
 
@@ -279,48 +277,48 @@ export interface BibliographicResource {
 
     cites?: Array<string>;
 
-    monographEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    monograph_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    editedBookEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    editedBook_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    bookSeriesEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    bookSeries_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    bookSetEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    bookSet_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    bookPartEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    bookPart_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    bookTrackEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    bookTrack_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    componentEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    component_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    dissertationEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    dissertation_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    proceedingsArticleEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    proceedingsArticle_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    proceedingsEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    proceedings_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    journalEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    journal_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    journalVolumeEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    journalVolume_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    journalIssueEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    journalIssue_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    journalArticleEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    journalArticle_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    datasetEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    dataset_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    reportEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    report_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    reportSeriesEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    reportSeries_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    bookEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    book_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    referenceBookEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    referenceBook_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    referenceEntryEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    referenceEntry_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    standardEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    standard_embodiedAs?: Array<models.ResourceEmbodiment>;
 
-    standardSeriesEmbodiedAs?: Array<models.ResourceEmbodiment>;
+    standardSeries_embodiedAs?: Array<models.ResourceEmbodiment>;
 
 }

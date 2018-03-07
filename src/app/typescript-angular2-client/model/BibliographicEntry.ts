@@ -13,7 +13,7 @@
 import * as models from './models';
 
 export interface BibliographicEntry {
-    id?: string;
+    _id?: string;
 
     identifiers?: Array<models.Identifier>;
 

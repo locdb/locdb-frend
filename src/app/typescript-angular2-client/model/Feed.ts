@@ -13,7 +13,7 @@
 import * as models from './models';
 
 export interface Feed {
-    id?: string;
+    _id?: string;
 
     name?: string;
 
