@@ -25,61 +25,61 @@ export class TypedResource implements models.BibliographicResource {
 
   constructor(br: models.BibliographicResource) {
     // this will throw if type not possible!
-    this._prefix = PropertyPrefixByType[br.type];
+    this._prefix = PropertyPrefixByType[br.type] + '_';
     Object.assign(this, br);
   }
 
   set type ( newType: string ) {
     // this will throw if type not possible!
-    this._prefix = PropertyPrefixByType[newType];
+    this._prefix = PropertyPrefixByType[newType] + '_';
     this.type = newType;
   }
 
   get identifiers(): Array<models.Identifier> {
-    return this[this._prefix + 'Identifiers'];
+    return this[this._prefix + 'identifiers'];
   }
   set identifiers( identifiers: Array<models.Identifier> ) {
-    this[this._prefix + 'Identifiers'] = identifiers;
+    this[this._prefix + 'identifiers'] = identifiers;
   }
 
   get title(): string {
-    return this[this._prefix + 'Title'];
+    return this[this._prefix + 'title'];
   }
 
   set title( newTitle: string) {
-    this[this._prefix + 'Title'] = newTitle;
+    this[this._prefix + 'title'] = newTitle;
   }
 
   get subtitle() : string {
-    return this[this._prefix + 'Subtitle'];
+    return this[this._prefix + 'subtitle'];
   }
 
   set subtitle( newSubtitle: string) {
-    this[this._prefix + 'Subtitle'] = newSubtitle;
+    this[this._prefix + 'subtitle'] = newSubtitle;
   }
 
   get edition() : string {
-    return this[this._prefix + 'Edition'];
+    return this[this._prefix + 'edition'];
   }
 
   set edition(newEdition: string) {
-    this[this._prefix + 'Edition'] = newEdition;
+    this[this._prefix + 'edition'] = newEdition;
   }
 
   get number() : string {
-    return this[this._prefix + 'Number'];
+    return this[this._prefix + 'number'];
   }
 
   set number(newNumber: string) {
-    this[this._prefix + 'Number'] = newNumber;
+    this[this._prefix + 'number'] = newNumber;
   }
 
   get contributors(): Array<models.AgentRole> {
-    return this[this._prefix + 'Contributors'];
+    return this[this._prefix + 'contributors'];
   }
 
   set contributors( newContributors : Array<models.AgentRole>) {
-    this[this._prefix + 'Contributors'] = newContributors;
+    this[this._prefix + 'contributors'] = newContributors;
   }
 
   get publicationYear() : string {
@@ -91,11 +91,11 @@ export class TypedResource implements models.BibliographicResource {
   }
 
   get embodiedAs() : Array<models.ResourceEmbodiment> {
-    return this[this._prefix + 'EmbodiedAs'];
+    return this[this._prefix + 'embodiedAs'];
   }
 
   set embodiedAs(newEmbodiments: Array<models.ResourceEmbodiment>) {
-    this[this._prefix + 'EmbodiedAs'] = newEmbodiments;
+    this[this._prefix + 'embodiedAs'] = newEmbodiments;
   }
 }
 
