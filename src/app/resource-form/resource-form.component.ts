@@ -203,24 +203,24 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
           (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
         );
         const resource: TypedResource =  new TypedResource({_id: this.resource._id,
-          type:  formModel.resourcetype as string})
+          type: formModel.resourcetype as string, partOf: this.resource.partOf,
+          parts: this.resource.parts, cites: this.resource.cites,
+          status: this.resource.status})
           resource.identifiers = identsDeepCopy;
           resource.title = formModel.title as string || '';
-          resource.subtitle = formModel.subtitle as string || '',
-          resource.edition = formModel.edition as string || '',
-          resource.containerTitle = formModel.containerTitle as string || '',
-          resource.number = formModel.resourcenumber as string || '',
-          resource.contributors = contribsDeepCopy,
-          resource.publicationYear = formModel.publicationyear as string || '',
+          resource.subtitle = formModel.subtitle as string || '';
+          resource.edition = formModel.edition as string || '';
+          // containerType ~> containerTitle
+          // additional dropdown when type is selected, according to containertypes
+          resource.containerTitle = formModel.containerTitle as string || '';
+          resource.number = formModel.resourcenumber as string || '';
+          resource.contributors = contribsDeepCopy;
+          resource.publicationYear = formModel.publicationyear as string || '';
             // partOf: formModel.partof as string || '',
             // warning: retain internal identifiers (dont show primary keys to the user)
             // not editable, but copied values
+          resource.embodiedAs = this.resource.embodiedAs;
 
-          resource.partOf = this.resource.partOf,
-          resource.embodiedAs = this.resource.embodiedAs,
-          resource.parts = this.resource.parts,
-          resource.cites =  this.resource.cites,
-            // status: this.resource.status
         return resource;
     }
 
