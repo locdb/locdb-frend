@@ -279,12 +279,6 @@ export class LocdbService {
   }
 
   /* The following needs to be reconsidered, actually we could store login status here */
-
-  fail(err: any): Observable<any> {
-    // array ok? TODO FIXME
-    return Observable.from([{ok: false}]);
-  }
-
   /** User and Instance Management */
 
   login(username: string, password: string): Observable<User> {
