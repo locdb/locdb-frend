@@ -3,8 +3,10 @@
 
 import * as models from './typescript-angular2-client/model/models'
 
+export {models};
+
 // MAKE ENUMS ACCESSIBLE
-export const enums = require('backend/api/schema/enum.json')
+export const enums = require('./backend/api/schema/enum.json')
 
 export function invert_enum(obj: Object) {
   let inverse = new Object();
@@ -18,7 +20,7 @@ export function invert_enum(obj: Object) {
   return inverse;
 }
 
-export function values(obj) {
+export function enum_values(obj) {
   let values = []
   for (let prop in obj) {
     values.push(obj[prop]);
@@ -26,7 +28,7 @@ export function values(obj) {
   return values;
 }
 
-export const RESOURCE_TYPE_VALUES = values(enums.resourceTypes);
+export const RESOURCE_TYPE_VALUES = enum_values(enums.resourceTypes);
 export const PropertyPrefixByType = invert_enum(enums["resourceType"]);
 const resourceType = enums.resourceType;
 
@@ -101,6 +103,30 @@ export class TypedResourceView implements MetaData {
   astype(otherType) {
     return new TypedResourceView(this.data, otherType);
   }
+
+  toString(): string {
+    /** Method to return authors or editors plus title, note
+    that this can be reused but is not sufficient for itself.
+    Where to place the 'year' depends on whether a container is available. */
+    let s = '';
+      // could treat editors differently
+    let editors = this.contributors.filter(x => x.roleType == enums.roleType.EDITOR);
+    let authors = this.contributors.filter(x => x.roleType === enums.roleType.AUTHOR);
+
+    if (authors.length) {
+      // If authors are given use authors!
+      let authorString = authors.map(x => x.heldBy.nameString).join('; ');
+      s += authorString + ': ';
+    } else if (editors.length) {
+      // fall-back to editors if no authors available
+      let editorString = editors.map(x => x.heldBy.nameString).join('; ')
+      s += editorString + ' (ed.): ';
+    }
+    // always put title!
+    s += this.title + '.';
+    return s;
+  }
+
 
   // forward native attributes
   get _id() {

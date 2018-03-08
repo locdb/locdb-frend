@@ -1,7 +1,8 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { BibliographicResource, TypedResource, ProvenResource, ToDo, Origin, Provenance } from '../locdb';
+import { BibliographicResource, TypedResourceView, ToDo } from '../locdb';
 import { LoggingService } from '../logging.service'
 import { LocdbService } from '../locdb.service';
+import { models, enums } from '../locdb';
 
 @Component({
   selector: 'app-resource-card-group',
@@ -10,8 +11,8 @@ import { LocdbService } from '../locdb.service';
 })
 export class ResourceCardGroupComponent implements OnInit {
 
-    @Input() resource: TypedResource; //BibliographicResource | ProvenResource | ToDo;
-    @Output() resourceChange = new EventEmitter<BibliographicResource | ProvenResource | ToDo>();
+    @Input() resource: TypedResourceView; //BibliographicResource | ProvenResource | ToDo;
+    @Output() resourceChange = new EventEmitter<TypedResourceView>();
     @Input() selected: boolean = false;
     @Input() selectable: boolean = true;
     @Output() externalReferences: any = new EventEmitter();

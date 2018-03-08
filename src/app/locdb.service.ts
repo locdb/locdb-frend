@@ -170,10 +170,6 @@ export class LocdbService {
     return this.bibliographicEntryApi.remove(scan._id);
   }
 
-  putBibliographicEntry(entry: BibliographicEntry) {
-    // obsolete by addTarget
-    return this.bibliographicEntryApi.update(entry._id, entry);
-  }
 
   /* Resources API end */
   addTargetBibliographicResource(entry: BibliographicEntry, resource: BibliographicResource): Observable<BibliographicResource> {
@@ -242,10 +238,11 @@ export class LocdbService {
 
   maybePostResource(tr: TypedResourceView): Observable<TypedResourceView> {
     /* Post the resource if it is not stored in back-end yet
-     * TODO a problem here, when resource is incomplete
+     * TODO potential problem here, when resource is incomplete
      * 0-1 backend requests */
     if (!tr._id) {
-      tr.status = enums.status.valid; // they should never be external
+      // !!! Never ever forget this when on righthand-side, they should never be external
+      tr.status = enums.status.valid;
       return this.bibliographicResourceApi.save(tr.data).map( br => new TypedResourceView(br) );
     } else {
       return Observable.of(tr);
@@ -272,11 +269,13 @@ export class LocdbService {
     return this.bibliographicEntryApi.remove(entry._id);
   }
 
-  newBibliographicEntry(): Observable<BibliographicEntry> {
-    // TODO FIXME Mock
-    // TODO further could already include dummy entry object without id
-    let entry = {identifiers:[{scheme: "PPP", literalValue: "2444666668888888"}]};
-    return Observable.of(entry); // mock with observable
+  updateBibliographicEntry(entry: BibliographicEntry) {
+    // status must be set to 'VALID' before, if performed by user.
+    return this.bibliographicEntryApi.update(entry._id, entry);
+  }
+
+  createBibliographicEntry(resource_id: string, entry: BibliographicEntry): Observable<BibliographicEntry> {
+    return this.bibliographicEntryApi.create(resource_id, entry);
   }
 
   /* The following needs to be reconsidered, actually we could store login status here */
