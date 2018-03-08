@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angular/http';
 
-import { TypedResource, enums } from './locdb';
+import { TypedResourceView, enums } from './locdb';
 
 
 import {
@@ -177,11 +177,11 @@ export class LocdbService {
 
   /* Resources API end */
   addTargetBibliographicResource(entry: BibliographicEntry, resource: BibliographicResource): Observable<BibliographicResource> {
-    return this.bibliographicEntryApi.addTargetBibliographicResource(entry._id, resource._id).map( br => new TypedResource(br) );
+    return this.bibliographicEntryApi.addTargetBibliographicResource(entry._id, resource._id).map( br => new TypedResourceView(br) );
   }
 
   removeTargetBibliographicResource(entry): Observable<BibliographicResource> {
-    return this.bibliographicEntryApi.removeTargetBibliographicResource(entry._id).map( br => new TypedResource(br) );
+    return this.bibliographicEntryApi.removeTargetBibliographicResource(entry._id).map( br => new TypedResourceView(br) );
   }
 
   async updateTargetResource(
@@ -206,18 +206,18 @@ export class LocdbService {
     return Promise.resolve(entry);
   }
 
-  bibliographicResource(identifier: string): Observable<TypedResource> {
-    return this.bibliographicResourceApi.get(identifier).map( br => new TypedResource(br) );
+  bibliographicResource(identifier: string): Observable<TypedResourceView> {
+    return this.bibliographicResourceApi.get(identifier).map( br => new TypedResourceView(br) );
   }
 
-  parentResource(br: TypedResource | BibliographicResource): Observable<TypedResource> {
+  parentResource(br: TypedResourceView | BibliographicResource): Observable<TypedResourceView> {
     return this.bibliographicResource(br.partOf);
   }
 
   async safeCommitLink(
     entry: BibliographicEntry,
-    resource: TypedResource
-  ): Promise<TypedResource> {
+    resource: TypedResourceView
+  ): Promise<TypedResourceView> {
     /* if necessary, creates target resource before updating the reference of the entry */
     /* 1-3 requests */
     const target = await this.maybePostResource(resource).toPromise();
@@ -229,24 +229,24 @@ export class LocdbService {
 
 
   maybePutResource(
-    resource: TypedResource
-  ): Observable<TypedResource> {
+    resource: TypedResourceView
+  ): Observable<TypedResourceView> {
     /* Update the resource if it is known to the backend
      * 0-1 */
     if (!resource._id) {
       return Observable.of(resource);
     } else {
-      return this.bibliographicResourceApi.update(resource._id, resource.br).map( br => new TypedResource(br) );
+      return this.bibliographicResourceApi.update(resource._id, resource.data).map( br => new TypedResourceView(br) );
     }
   }
 
-  maybePostResource(tr: TypedResource): Observable<TypedResource> {
+  maybePostResource(tr: TypedResourceView): Observable<TypedResourceView> {
     /* Post the resource if it is not stored in back-end yet
      * TODO a problem here, when resource is incomplete
      * 0-1 backend requests */
     if (!tr._id) {
       tr.status = enums.status.valid; // they should never be external
-      return this.bibliographicResourceApi.save(tr.br).map( br => new TypedResource(br) );
+      return this.bibliographicResourceApi.save(tr.data).map( br => new TypedResourceView(br) );
     } else {
       return Observable.of(tr);
     }
@@ -255,15 +255,15 @@ export class LocdbService {
 
 
   // DEPRECATED or integrate in Maybe Methods
-  putBibliographicResource(resource: TypedResource): Observable<TypedResource> {
-    return this.bibliographicResourceApi.update(resource._id, resource.br).map( br => new TypedResource(br));
+  putBibliographicResource(resource: TypedResourceView): Observable<TypedResourceView> {
+    return this.bibliographicResourceApi.update(resource._id, resource.data).map( br => new TypedResourceView(br));
   }
 
-  pushBibligraphicResource(resource: TypedResource): Observable<TypedResource> {
-    return this.bibliographicResourceApi.save(resource).map( br => new TypedResource(br));
+  pushBibligraphicResource(resource: TypedResourceView): Observable<TypedResourceView> {
+    return this.bibliographicResourceApi.save(resource).map( br => new TypedResourceView(br));
   }
 
-  deleteBibliographicResource(resource: TypedResource) : Observable<SuccessResponse> {
+  deleteBibliographicResource(resource: TypedResourceView) : Observable<SuccessResponse> {
     return this.bibliographicResourceApi.deleteSingle(resource._id);
   }
   /* Resources API end */

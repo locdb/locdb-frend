@@ -64,121 +64,129 @@ export function containerTypes (type: string): Array<string>{
     }
 }
 
-export class TypedResource {
-  br: models.BibliographicResource;
+export class TypedResourceView {
+  data: models.BibliographicResource;
   private _prefix: string;
   containerTypes: Array<string>;
+  readonly viewport_: string;
 
-  constructor(br: models.BibliographicResource) {
+  constructor(br: models.BibliographicResource, astype?: string) {
     // this will throw if type not possible!
-    this._prefix = PropertyPrefixByType[br.type] + '_';
-    this.br = br;
-    this.containerTypes = containerTypes(br.type);
+    if (astype) {
+      this.viewport_ = astype;
+    } else {
+      this.viewport_ = br.type;
+    }
+    this._prefix = PropertyPrefixByType[this.viewport_] + '_';
+    this.data = br;
+  }
+
+  /** Returns new View of different type on same resource  */
+  astype(otherType) {
+    return new TypedResourceView(this.data, otherType);
   }
 
   // forward native attributes
   get _id() {
-    return this.br._id;
+    return this.data._id;
   }
 
   get cites() : Array<string> {
-    return this.br.cites;
+    return this.data.cites;
   }
 
   get parts() : Array<models.BibliographicEntry> {
-    return this.br.parts;
+    return this.data.parts;
   }
 
   get partOf(): string {
-    return this.br.partOf;
+    return this.data.partOf;
   }
 
   get status(): string {
-    return this.br.status;
+    return this.data.status;
   }
 
   set status( newStatus) {
-    this.br.status = newStatus;
+    this.data.status = newStatus;
   }
 
   get type () {
-    return this.br.type;
+    return this.data.type;
   }
 
   set type ( newType: string ) {
     // this will throw if type not possible!
-    this._prefix = PropertyPrefixByType[newType] + '_';
-    this.containerTypes = containerTypes(newType);
-    this.br.type = newType;
+    this.data.type = newType;
   }
   // forward native attributes end
 
   getTypedAttr(property: string, type: string): any {
     let prop = typedProperty(type, property);
-    return this.br[prop];
+    return this.data[prop];
   }
 
   get identifiers(): Array<models.Identifier> {
-    return this.br[this._prefix + 'identifiers'];
+    return this.data[this._prefix + 'identifiers'];
   }
   set identifiers( identifiers: Array<models.Identifier> ) {
-    this.br[this._prefix + 'identifiers'] = identifiers;
+    this.data[this._prefix + 'identifiers'] = identifiers;
   }
 
   get title(): string {
-    return this.br[this._prefix + 'title'];
+    return this.data[this._prefix + 'title'];
   }
 
   set title( newTitle: string) {
-    this.br[this._prefix + 'title'] = newTitle;
+    this.data[this._prefix + 'title'] = newTitle;
   }
 
   get subtitle() : string {
-    return this.br[this._prefix + 'subtitle'];
+    return this.data[this._prefix + 'subtitle'];
   }
 
   set subtitle( newSubtitle: string) {
-    this.br[this._prefix + 'subtitle'] = newSubtitle;
+    this.data[this._prefix + 'subtitle'] = newSubtitle;
   }
 
   get edition() : string {
-    return this.br[this._prefix + 'edition'];
+    return this.data[this._prefix + 'edition'];
   }
 
   set edition(newEdition: string) {
-    this.br[this._prefix + 'edition'] = newEdition;
+    this.data[this._prefix + 'edition'] = newEdition;
   }
 
   get number() : string {
-    return this.br[this._prefix + 'number'];
+    return this.data[this._prefix + 'number'];
   }
 
   set number(newNumber: string) {
-    this.br[this._prefix + 'number'] = newNumber;
+    this.data[this._prefix + 'number'] = newNumber;
   }
 
   get contributors(): Array<models.AgentRole> {
-    return this.br[this._prefix + 'contributors'];
+    return this.data[this._prefix + 'contributors'];
   }
 
   set contributors( newContributors : Array<models.AgentRole>) {
-    this.br[this._prefix + 'contributors'] = newContributors;
+    this.data[this._prefix + 'contributors'] = newContributors;
   }
 
   get publicationYear() : string {
-    return this.br[this._prefix + 'publicationYear'];
+    return this.data[this._prefix + 'publicationYear'];
   }
 
   set publicationYear(newYear: string) {
-    this.br[this._prefix + 'publicationYear'] = newYear;
+    this.data[this._prefix + 'publicationYear'] = newYear;
   }
 
   get embodiedAs() : Array<models.ResourceEmbodiment> {
-    return this.br[this._prefix + 'embodiedAs'];
+    return this.data[this._prefix + 'embodiedAs'];
   }
 
   set embodiedAs(newEmbodiments: Array<models.ResourceEmbodiment>) {
-    this.br[this._prefix + 'embodiedAs'] = newEmbodiments;
+    this.data[this._prefix + 'embodiedAs'] = newEmbodiments;
   }
 
 }
