@@ -110,7 +110,7 @@ export class TypedResourceView implements MetaData {
     Where to place the 'year' depends on whether a container is available. */
     let s = '';
       // could treat editors differently
-    let editors = this.contributors.filter(x => x.roleType == enums.roleType.EDITOR);
+    let editors = this.contributors.filter(x => x.roleType === enums.roleType.EDITOR);
     let authors = this.contributors.filter(x => x.roleType === enums.roleType.AUTHOR);
 
     if (authors.length) {
@@ -125,6 +125,14 @@ export class TypedResourceView implements MetaData {
     // always put title!
     s += this.title + '.';
     return s;
+  }
+
+  publisherString(): string {
+    let publishers = this.contributors.filter(x => x.roleType === enums.roleType.PUBLISHER);
+    if (publishers.length){
+      return publishers[0].heldBy.nameString;
+    }
+    return '';
   }
 
 
