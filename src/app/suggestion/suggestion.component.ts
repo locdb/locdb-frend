@@ -1,13 +1,14 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter} from '@angular/core';
-import { BibliographicEntry, BibliographicResource, AgentRole, ResponsibleAgent, ProvenResource } from '../locdb';
+import { BibliographicEntry, BibliographicResource, AgentRole, ResponsibleAgent } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { LoggingService } from '../logging.service'
 import { MOCK_INTERNAL } from '../mock-bresources'
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { environment } from 'environments/environment';
-import { ResourceStatus, Provenance, Origin } from '../locdb';
 import { PopoverModule } from 'ngx-popover';
 import { Http } from '@angular/http';
+
+import { enums, models, TypedResourceView, MetaData } from '../locdb';
 
 
 @Component({
@@ -26,13 +27,12 @@ export class SuggestionComponent implements OnInit, OnChanges {
     // make this visible to template
     environment = environment;
 
-    selectedResource: ProvenResource;
+    selectedResource: TypedResourceView;
     query: string;
 
-    internalSuggestions: ProvenResource[];
-    externalSuggestions: ProvenResource[];
-    currentTarget: ProvenResource;
-    newResource: ProvenResource = null;
+    internalSuggestions: TypedResourceView[];
+    externalSuggestions: TypedResourceView[];
+    currentTarget: TypedResourceView;
 
     committed = false;
     max_shown_suggestions = 5
@@ -58,20 +58,20 @@ export class SuggestionComponent implements OnInit, OnChanges {
           this.query = this.queryFromEntry(this.entry);
           this.refresh();
           // add new Resource
-          this.newResource = this.resourceFromEntry(this.entry);
+          // does not work with new datamodel
+          // this.newResource = this.resourceFromEntry(this.entry);
           if (this.entry.references) {
             // entry already has a link
             this.locdbService.bibliographicResource(this.entry.references).subscribe(
-              (res) => {
-                const br = new ProvenResource(res);
-                this.currentTarget = br;
-                this.onSelect(br);
+              (trv) => {
+                this.currentTarget = trv;
+                this.onSelect(trv);
               },
               (err) => { console.log('Invalid entry.references pointer', this.entry.references) });
           } else {
             // entry was not linked yet
             this.currentTarget = null;
-            this.onSelect(this.newResource);
+            // this.onSelect(this.newResource);
           }
         } else {
           this.query = '';
@@ -91,7 +91,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       this.internalSuggestions = [];
       console.log('Fetching internal suggestions for', this.query, 'with threshold', this.internalThreshold);
       // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
-      this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold.toString()).subscribe(
+      this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold).subscribe(
         (sug) => { Object.is(this.entry, oldEntry) ? this.saveInternal(sug) : console.log('discarded suggestions')
                     this.loggingService.logSuggestionsArrived(this.entry, sug, true) },
         (err) => { this.internalInProgress = false }
@@ -104,7 +104,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       this.externalSuggestions = [];
       console.log('Fetching external suggestions for', this.query, 'with threshold', this.externalThreshold);
       // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
-      this.locdbService.suggestionsByQuery(this.query, true, this.externalThreshold.toString()).subscribe(
+      this.locdbService.suggestionsByQuery(this.query, true, this.externalThreshold).subscribe(
         (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions')
                     this.loggingService.logSuggestionsArrived(this.entry, sug, false) },
         (err) => { this.externalInProgress = false }
@@ -133,26 +133,20 @@ export class SuggestionComponent implements OnInit, OnChanges {
         return contributors;
     }
 
-    resourceFromEntry(entry): ProvenResource {
+    // Turns OCR data into (partial) metadata, the type is missing
+    resourceFromEntry(entry: models.BibliographicEntry): Partial<MetaData> {
         const ocr = entry.ocrData;
-        const br: ProvenResource = {
+        const br: Partial<MetaData> = {
           title: ocr.title || entry.bibliographicEntryText,
           publicationYear: ocr.date || '', // unary + operator makes it a number
           contributors: this.authors2contributors(ocr.authors),
-          embodiedAs: [],
-          parts: [],
-          partOf: '', // these two properties are new in ocr data
-          containerTitle: ocr.journal || '',
           number: ocr.volume || '', // hope they work
-          status: ResourceStatus.external,
-          identifiers: entry.identifiers.filter(i => i.scheme && i.literalValue),
-          provenance: Provenance.local
+          identifiers: entry.identifiers.filter(i => i.scheme && i.literalValue), // only valid ones
         }
         return br;
     }
 
-    onSelect(br?: ProvenResource): void {
-        console.log('Suggestion emitted', br);
+    onSelect(br?: TypedResourceView): void {
         this.loggingService.logReferenceTargetSelected(this.entry, br)
         // <------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         this.selectedResource = br;
@@ -193,7 +187,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       console.log('Commit');
       this.locdbService.safeCommitLink(this.entry, this.selectedResource).then(
         res => {
-          this.currentTarget = new ProvenResource(res);
+          this.currentTarget = res;
           this.onSelect(this.currentTarget);
           console.log('Log after commit');
           this.loggingService.logCommited(this.entry, this.currentTarget, provenance);

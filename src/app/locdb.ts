@@ -8,6 +8,8 @@ export {models};
 // MAKE ENUMS ACCESSIBLE
 export const enums = require('./backend/api/schema/enum.json')
 
+
+
 export function invert_enum(obj: Object) {
   let inverse = new Object();
   for (let key in obj) {
@@ -27,6 +29,18 @@ export function enum_values(obj) {
   }
   return values;
 }
+
+// ==== own enums for type safety, where important ==== //
+export enum ToDoStatus {
+  ocr = 'OCR_PROCESSED',
+  nocr = 'NOT_OCR_PROCESSED',
+  iocr = 'OCR_PROCESSING',
+  ext = 'EXTERNAL',
+  valid = 'VALID',
+}
+
+
+
 
 export const RESOURCE_TYPE_VALUES = enum_values(enums.resourceTypes);
 export const PropertyPrefixByType = invert_enum(enums["resourceType"]);
@@ -96,14 +110,10 @@ export class TypedResourceView implements MetaData {
   data: models.BibliographicResource;
   private _prefix: string;
   readonly viewport_: string;
-  
+
   constructor(br: models.BibliographicResource, astype?: string) {
-    // this will throw if type not possible!
-    if (astype) {
-      this.viewport_ = astype;
-    } else {
-      this.viewport_ = br.type;
-    }
+    // this will throw if type is invalid!, but that s not too bad.
+    this.viewport_ = astype ? astype : br.type;
     this._prefix = PropertyPrefixByType[this.viewport_] + '_';
     this.data = br;
   }

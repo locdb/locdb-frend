@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { BibliographicResource, ToDo, ToDoParts, ToDoScans, ToDoStatus, ProvenResource} from '../locdb';
+import { BibliographicResource, ToDo, ToDoParts, ToDoScans, TypedResourceView} from '../locdb';
 import { LocdbService } from '../locdb.service';
-import { Provenance } from '../locdb';
+import { Provenance, ToDoStatus } from '../locdb';
 
 
 @Component({
@@ -18,7 +18,7 @@ export class TodoListComponent implements OnInit, OnChanges {
   states = ToDoStatus;
   provenance = Provenance;
   loading = false;
-  selectedResource : ProvenResource;
+  selectedResource : TypedResourceView;
 
   constructor(private locdbService: LocdbService) { }
 
@@ -35,7 +35,7 @@ export class TodoListComponent implements OnInit, OnChanges {
   }
 
 
-  deleteScan(scan: ToDoScans, parent: ToDo | ToDoParts) {
+  deleteScan(scan: ToDoScans, parent: ToDoParts) {
     console.log('Deleting scan', scan);
     this.locdbService.deleteScan(scan).subscribe(
       (success) => {
@@ -83,7 +83,7 @@ export class TodoListComponent implements OnInit, OnChanges {
     this.todo.next(scanOrResource);
   }
 
-  onSelect(br?: ProvenResource): void {
+  onSelect(br?: TypedResourceView): void {
       this.selectedResource = br;
     }
 
@@ -101,7 +101,8 @@ export class TodoListComponent implements OnInit, OnChanges {
     return identifier.slice(0, 7);
   }
 
-  guard(t: ToDo) {
+  guard(t: ToDo | ToDoParts ) {
+    /* Guard needs rework */
     /* is there anything to display? */
     if (!t) { return false; }
     if (t.parts && t.parts.length) { return true; }
@@ -111,5 +112,4 @@ export class TodoListComponent implements OnInit, OnChanges {
       return !t.children.every((child) => !this.guard(child));
     }
     return false;
-  }
-}
+  }}
