@@ -64,7 +64,23 @@ export function containerTypes (type: string): Array<string>{
     }
 }
 
-export class TypedResourceView {
+export interface IResource {
+  _id : string;
+  identifiers: Array<models.Identifier>;
+  type: string;
+  partOf: string;
+  parts: Array<models.BibliographicEntry>;
+  status: string;
+  title: string;
+  subtitle: string;
+  edition: string;
+  number: string;
+  contributors: Array<models.AgentRole>;
+  publicationYear: string;
+  embodiedAs: Array<models.ResourceEmbodiment>;
+}
+
+export class TypedResourceView implements IResource {
   data: models.BibliographicResource;
   private _prefix: string;
   containerTypes: Array<string>;
@@ -116,7 +132,6 @@ export class TypedResourceView {
   }
 
   set type ( newType: string ) {
-    // this will throw if type not possible!
     this.data.type = newType;
   }
   // forward native attributes end
