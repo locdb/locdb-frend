@@ -64,23 +64,23 @@ export function containerTypes (type: string): Array<string>{
     }
 }
 
-export interface IResource {
-  _id : string;
+/** MetaData
+ * This is an Interface for MetaData that both TypedResourceView's and ToDo's
+ * should provide. Keep in mind that most of the attributes are marked optional
+ * in the specific implementations.
+ **/
+export interface MetaData {
   identifiers: Array<models.Identifier>;
   type: string;
-  partOf: string;
-  parts: Array<models.BibliographicEntry>;
-  status: string;
   title: string;
   subtitle: string;
   edition: string;
   number: string;
   contributors: Array<models.AgentRole>;
   publicationYear: string;
-  embodiedAs: Array<models.ResourceEmbodiment>;
 }
 
-export class TypedResourceView implements IResource {
+export class TypedResourceView implements MetaData {
   data: models.BibliographicResource;
   private _prefix: string;
   containerTypes: Array<string>;

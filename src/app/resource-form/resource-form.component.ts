@@ -146,18 +146,18 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         // need to first store locally until saved
         this.submitting = true;
         const resourceCopy = this.prepareSaveResource();
-        this.locdbService.maybePutResource(resourceCopy).then(
-            r =>  {
+        this.locdbService.maybePutResource(resourceCopy).subscribe(
+            (r) =>  {
                 // here better than this.resource = r, since reference is retained
                 Object.assign(this.resource, r);
                 this.ngOnChanges();
                 this.submitting = false;
                 this.submitted = true;
-                console.log("submitteg", false)
                 this.submitStatus.emit(false);
 
-            }
-        ).catch( err => { console.log('error submitting resource', err) ; this.submitting = false} );
+            },
+            (err) => { console.log('error submitting resource', err) ;
+                this.submitting = false });
     }
 
     revert() {
@@ -193,7 +193,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       return identifier;
     }
 
-    prepareSaveResource(): BibliographicResource  {
+    prepareSaveResource(): TypedResourceView  {
         // Form values need deep copy, else shallow copy is enough
         const formModel = this.resourceForm.value;
         const contribsDeepCopy = formModel.contributors.map(
