@@ -8,7 +8,7 @@ import {
     ROLES,
     Identifier,
     RESOURCE_TYPES,
-    TypedResource
+    TypedResourceView
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
@@ -23,7 +23,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // if this is a string, we can try to dereference it from the back-end
-    @Input() resource: TypedResource //BibliographicResource | ProvenResource | ToDo = null;
+    @Input() resource: TypedResourceView //BibliographicResource | ProvenResource | ToDo = null;
     @Output() resourceChange = new EventEmitter<BibliographicResource | ProvenResource | ToDo>();
 
     // this should not be here, the resource should only rely on itself and not
@@ -202,7 +202,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         const identsDeepCopy = formModel.identifiers.map(
           (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
         );
-        const resource: TypedResource =  new TypedResource({_id: this.resource._id,
+        const resource: TypedResourceView =  new TypedResourceView({_id: this.resource._id,
           type: formModel.resourcetype as string, partOf: this.resource.partOf,
           parts: this.resource.parts, cites: this.resource.cites,
           status: this.resource.status})
@@ -212,7 +212,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
           resource.edition = formModel.edition as string || '';
           // containerType ~> containerTitle
           // additional dropdown when type is selected, according to containertypes
-          resource.containerTitle = formModel.containerTitle as string || '';
+            // container Title does not need to be editable atm
+          // resource.containerTitle = formModel.containerTitle as string || '';
           resource.number = formModel.resourcenumber as string || '';
           resource.contributors = contribsDeepCopy;
           resource.publicationYear = formModel.publicationyear as string || '';
