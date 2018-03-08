@@ -108,22 +108,31 @@ export class TypedResourceView implements MetaData {
     /** Method to return authors or editors plus title, note
     that this can be reused but is not sufficient for itself.
     Where to place the 'year' depends on whether a container is available. */
-    let s = '';
       // could treat editors differently
+    // always put title!
+    let s = this.authorString();
+    if (this.publicationYear) {
+      s += `(${this.publicationYear})`;
+    }
+    s += '.';
+    s += this.title + '.';
+    return s;
+  }
+
+  authorString(): string {
+    let s = '';
     let editors = this.contributors.filter(x => x.roleType === enums.roleType.EDITOR);
     let authors = this.contributors.filter(x => x.roleType === enums.roleType.AUTHOR);
 
     if (authors.length) {
       // If authors are given use authors!
       let authorString = authors.map(x => x.heldBy.nameString).join('; ');
-      s += authorString + ': ';
+      s += authorString;
     } else if (editors.length) {
       // fall-back to editors if no authors available
       let editorString = editors.map(x => x.heldBy.nameString).join('; ')
-      s += editorString + ' (ed.): ';
+      s += editorString + ' (ed.)';
     }
-    // always put title!
-    s += this.title + '.';
     return s;
   }
 
