@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { BibliographicResource, ProvenResource, ToDo, Origin, Provenance } from '../locdb';
+import { BibliographicResource, TypedResource, ProvenResource, ToDo, Origin, Provenance } from '../locdb';
 import { LoggingService } from '../logging.service'
 import { LocdbService } from '../locdb.service';
 
@@ -10,7 +10,7 @@ import { LocdbService } from '../locdb.service';
 })
 export class ResourceCardGroupComponent implements OnInit {
 
-    @Input() resource: BibliographicResource | ProvenResource | ToDo;
+    @Input() resource: TypedResource; //BibliographicResource | ProvenResource | ToDo;
     @Output() resourceChange = new EventEmitter<BibliographicResource | ProvenResource | ToDo>();
     @Input() selected: boolean = false;
     @Input() selectable: boolean = true;
@@ -31,22 +31,53 @@ export class ResourceCardGroupComponent implements OnInit {
       }
 
 
-    short() {
-      // A shorthand name for accordion heading
-      if (this.resource) {
-        // resource already present
-        const br = this.resource;
-        let s = br.title;
-        if (br.publicationYear) {
-          s += ` (${br.publicationYear})`
-        }
-        if (br.status === 'EXTERNAL') {
-          s += ` [${br.type}]`
-        }
-        return s;
-      }
-    }
+      short() {
+        // A shorthand name for accordion heading
+        // <authors>. <year>. <title>. in <container-title>. <DOI>
+        if (this.resource) {
+          // resource already present
+          const br = this.resource;
+          let s = ""
+          if(br.authors && br.authors.length>0){
+            s = br.authors.join(", ");
+            if (s.slice(-1)!="."){
+              s += ". ";
+            }
+          }
+          if (br.publicationYear) {
+            s += " " + br.publicationYear + ".";
+          }
+          if (br.title){
+            s += " " + br.title;
+            if (s.slice(-1)!="."){
+              s += ". ";
+            }
+          }
+          if (br.containerTitle){
+            s += " in " + br.containerTitle;
+            if (s.slice(-1)!="."){
+              s += ". ";
+            }
+          }
+          if (br.doi && br.doi.length>0){
+            s += "DOI: " + br.doi.join(", ");
+            if (s.slice(-1)!="."){
+              s += ". ";
+            }
+          }
+          // if (br.status === 'EXTERNAL') {
+          //   s += ` [${br.type}]`
+          // }
+          return s;
 
+        }
+      }
+
+      toggleOpen(){
+        this.open = !this.open
+      }
+
+  }
     toggleOpen(){
       this.open = !this.open
     }

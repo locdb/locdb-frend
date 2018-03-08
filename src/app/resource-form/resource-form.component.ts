@@ -7,7 +7,8 @@ import {
     ToDo,
     ROLES,
     Identifier,
-    RESOURCE_TYPES
+    RESOURCE_TYPES,
+    TypedResource
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
@@ -22,7 +23,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // if this is a string, we can try to dereference it from the back-end
-    @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
+    @Input() resource: TypedResource //BibliographicResource | ProvenResource | ToDo = null;
     @Output() resourceChange = new EventEmitter<BibliographicResource | ProvenResource | ToDo>();
 
     // this should not be here, the resource should only rely on itself and not
@@ -134,7 +135,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             edition: this.resource.edition,
             resourcenumber: this.resource.number,
             publicationyear: this.resource.publicationYear,
-            containerTitle: this.resource.containerTitle
+            // containerTitle: this.resource.containerTitle still in progress
         });
         // new clean set contribs
         this.setContributors(this.resource.contributors);
@@ -201,26 +202,25 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         const identsDeepCopy = formModel.identifiers.map(
           (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
         );
-        const resource: BibliographicResource =  {
-            _id: this.resource._id,
-            identifiers: identsDeepCopy,
-            type: formModel.resourcetype as string || '',
-            title: formModel.title as string || '',
-            subtitle: formModel.subtitle as string || '',
-            edition: formModel.edition as string || '',
-            containerTitle: formModel.containerTitle as string || '',
-            number: formModel.resourcenumber as string || '',
-            contributors: contribsDeepCopy,
-            publicationYear: formModel.publicationyear as string || '',
+        const resource: TypedResource =  new TypedResource({_id: this.resource._id,
+          type: formModel.resourcetype as string, partOf: this.resource.partOf,
+          parts: this.resource.parts, cites: this.resource.cites,
+          status: this.resource.status})
+          resource.identifiers = identsDeepCopy;
+          resource.title = formModel.title as string || '';
+          resource.subtitle = formModel.subtitle as string || '';
+          resource.edition = formModel.edition as string || '';
+          // containerType ~> containerTitle
+          // additional dropdown when type is selected, according to containertypes
+          resource.containerTitle = formModel.containerTitle as string || '';
+          resource.number = formModel.resourcenumber as string || '';
+          resource.contributors = contribsDeepCopy;
+          resource.publicationYear = formModel.publicationyear as string || '';
             // partOf: formModel.partof as string || '',
             // warning: retain internal identifiers (dont show primary keys to the user)
             // not editable, but copied values
-            partOf: this.resource.partOf,
-            embodiedAs: this.resource.embodiedAs,
-            parts: this.resource.parts,
-            cites: this.resource.cites,
-            status: this.resource.status
-        }
+          resource.embodiedAs = this.resource.embodiedAs;
+
         return resource;
     }
 
