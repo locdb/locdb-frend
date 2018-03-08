@@ -82,12 +82,21 @@ export interface MetaData {
   publicationYear: string;
 }
 
+/* Our own enum for provenance data */
+export enum Provenance {
+  unknown = 'Unknown',
+  gScholar = 'Google Scholar',
+  crossref = 'CrossRef',
+  swb = 'SWB',
+  locdb = 'LOC-DB',
+  local = 'Local'
+}
+
 export class TypedResourceView implements MetaData {
   data: models.BibliographicResource;
   private _prefix: string;
-  containerTypes: Array<string>;
   readonly viewport_: string;
-
+  
   constructor(br: models.BibliographicResource, astype?: string) {
     // this will throw if type not possible!
     if (astype) {
@@ -137,11 +146,27 @@ export class TypedResourceView implements MetaData {
   }
 
   publisherString(): string {
+    let s = '';
     let publishers = this.contributors.filter(x => x.roleType === enums.roleType.PUBLISHER);
     if (publishers.length){
-      return publishers[0].heldBy.nameString;
+      s += publishers[0].heldBy.nameString;
     }
-    return '';
+    return s;
+  }
+
+  get provenance(): Provenance {
+    // could cache, yet identifiers may change ;)
+    let prov = Provenance.unknown;
+    if (this._id) {
+      prov = Provenance.locdb;
+    } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.swb)) {
+      prov =  Provenance.swb;
+    } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.crossref )) {
+      prov = Provenance.crossref
+    } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.gScholar)) {
+      prov = Provenance.gScholar;
+    }
+    return prov;
   }
 
 
