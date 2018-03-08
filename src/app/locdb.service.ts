@@ -163,6 +163,7 @@ export class LocdbService {
   }
 
   getScan(identifier: string) {
+    // we should not rely on LOCDB URL anymore. TODO FIXME
     return `${this.locdbUrl}/scans/${identifier}`;
   }
 
