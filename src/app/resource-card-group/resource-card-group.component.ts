@@ -78,7 +78,7 @@ export class ResourceCardGroupComponent implements OnInit {
       //     return s;
       //
       //   }
-      }
+
 
       toggleOpen(){
         this.open = !this.open;

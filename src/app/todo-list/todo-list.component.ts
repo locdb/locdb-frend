@@ -15,7 +15,6 @@ export class TodoListComponent implements OnInit, OnChanges {
   @Output() todo: EventEmitter<ToDoScans | BibliographicResource> = new EventEmitter();
   @Output() resourceTrack: EventEmitter<BibliographicResource[] | ToDo[]> = new EventEmitter();
   todos: ToDo[];
-  states = Object.values(enums.status);
   provenance = Provenance;
   loading = false;
   selectedResource : TypedResourceView;
@@ -105,11 +104,11 @@ export class TodoListComponent implements OnInit, OnChanges {
     /* Guard needs rework */
     /* is there anything to display? */
     if (!t) { return false; }
-    if (t.parts && t.parts.length) { return true; }
-    if (t.scans && t.scans.length) { return true; }
-    if (t.children) {
+    // if (t.parts && t.parts.length) { return true; }
+    if ((<ToDoParts>t).scans && (<ToDoParts>t).scans.length) { return true; }
+    if ((<ToDo>t).children) {
       // any children satisfies condition above?
-      return !t.children.every((child) => !this.guard(child));
+      return !(<ToDo>t).children.every((child) => !this.guard(child));
     }
     return false;
   }}

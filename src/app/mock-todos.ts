@@ -1,6 +1,6 @@
 import { ToDo, enums } from './locdb';
 
-export const MOCK_TODOBRS: ToDo[] =
+export const MOCK_TODOS: ToDo[] =
   [
   {
     '_id': '58d26b94a285f10778669ff5',

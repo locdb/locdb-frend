@@ -1,11 +1,10 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
-import { REFERENCES, REFERENCES_ALT } from './mock-references';
 // import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
 
 import { LocdbService } from './locdb.service';
 import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
 
-import { enums, ToDoScans, Identifier, BibliographicEntry } from './locdb';
+import { enums, enum_values, ToDoScans, Identifier, BibliographicEntry } from './locdb';
 
 const URL = '/api/'; // Same Origin Policy
 
@@ -21,7 +20,7 @@ export class ScanComponent {
 
   selected: ToDoScansWithMeta;
 
-  resourceTypes: string[] = Object.values(enums.resourceType);
+  resourceTypes: string[] = enum_values(enums.resourceType);
 
   uploading = false; // just for disabling the button
 
@@ -64,7 +63,7 @@ export class ScanComponent {
   onChange(event: any) { // file input
     for (const file of event.target.files){
       const [_id, first, last] = this.extractidandPages(file.name);
-      let rtype = enums.resourceType;
+      let rtype = enums.resourceType.journalArticle;
       // if (first && last) {
       //   rtype = ResourceType.collection;
       //   console.log('Assuming a collection')
@@ -309,7 +308,7 @@ class ToDoScansWithMeta {
   firstpage?: number;
   lastpage?: number;
   file?: File;
-  resourceType: ResourceType;
+  resourceType: enums.resourceType;
   uploading: boolean; // to determine button state
   err?: any;
   textualPdf?: boolean; // textual pdf flag. optional since not needed for electronic
@@ -323,7 +322,7 @@ class ToDoScansWithMeta {
       // identifier always required
       return false;
     } // else it has an identifier
-    if (this.resourceType === ResourceType.monograph || this.resourceType === ResourceType.journal) {
+    if (this.resourceType === enums.resourceType.monograph || this.resourceType === enums.resourceType.journal) {
       return true;
     } else {
       // currently only collection requires pages numbers

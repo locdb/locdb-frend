@@ -6,7 +6,8 @@ import {
     ToDo,
     Identifier,
     TypedResourceView,
-    enums
+    enums,
+    enum_values
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
@@ -41,8 +42,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // roles: string[] = ['CORPORATE','PUBLISHER', 'author']; // <-- to Locdb.ts as class?
     // roles: string[] = AgentRole.ROLES;
-    roles: string[] =  Object.values(enums.roleType);
-    resourceTypes: string[] = Object.values(enums.resourceType);
+    roles: string[] =  enum_values(enums.roleType);
+    resourceTypes: string[] = enum_values(enums.resourceType);
 
     constructor(
         private fb: FormBuilder,
