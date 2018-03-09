@@ -3,10 +3,10 @@
   <button type="button" class="close pull-right" (click)="onRemove(); $event.stopPropagation()" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
-  <p *ngIf="leaf && leaf.status !== states.ext">
+  <p *ngIf="leaf && leaf.status !== states.external">
     Scan {{ trimHash(leaf._id) }} on pp. {{leaf.firstPage}}-{{leaf.lastPage}}
   </p>
-  <p *ngIf="leaf && leaf.status === states.ext">
+  <p *ngIf="leaf && leaf.status === states.external">
     {{ leaf._id }}
   </p>
   <span class="badge badge-default badge-pill">{{ printState() }}</span>

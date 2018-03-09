@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 
 
-import { BibliographicResource, ToDo, ToDoParts, ToDoScans, ToDoStatus} from './locdb';
+import { BibliographicResource, ToDo, ToDoParts, ToDoScans, enums} from './locdb';
 // import { MOCK_TODOBRS } from './mock-todos';
 
 import { LocdbService } from './locdb.service';
@@ -15,8 +15,8 @@ import { LocdbService } from './locdb.service';
 
 export class TodoComponent implements OnInit {
   title = 'Todo Management';
-  state: ToDoStatus = ToDoStatus.ocr;
-  states = ToDoStatus;
+  state: enums.status = enums.status.ocrProcessed;
+  states = enums.status;
 
   @Output() todo: EventEmitter<ToDoScans | BibliographicResource> = new EventEmitter(true);
   @Output() resourceTrack: EventEmitter<BibliographicResource[] | ToDo[]> = new EventEmitter();

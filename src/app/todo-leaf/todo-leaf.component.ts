@@ -2,7 +2,7 @@ import { Component, OnInit, Input} from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
 
 
-import { ToDoScans, ToDoStatus } from '../locdb';
+import { ToDoScans, enums } from '../locdb';
 
 @Component({
   selector: 'app-todo-leaf',
@@ -13,7 +13,7 @@ export class TodoLeafComponent implements OnInit {
   @Input() leaf: ToDoScans;
   @Output() select: EventEmitter<boolean> = new EventEmitter();
   @Output() remove: EventEmitter<boolean> = new EventEmitter();
-  states = ToDoStatus;
+  states = enums.status;
 
   constructor() { }
 
@@ -22,10 +22,10 @@ export class TodoLeafComponent implements OnInit {
 
   printState() {
     if (!this.leaf) { return '' };
-    if (this.leaf.status === ToDoStatus.ocr) { return 'OCR processed' } ;
-    if (this.leaf.status === ToDoStatus.nocr) { return  'not OCR processed '};
-    if (this.leaf.status === ToDoStatus.iocr) { return 'OCR processing' };
-    if (this.leaf.status === ToDoStatus.ext)  { return 'External' };
+    if (this.leaf.status === enums.status.ocrProcessed) { return 'OCR ready' } ;
+    if (this.leaf.status === enums.status.notOcrProcessed) { return  'OCR not ready '};
+    if (this.leaf.status === enums.status.ocrProcessing) { return 'OCR waiting' };
+    if (this.leaf.status === enums.status.external)  { return 'Electronic' };
     return this.leaf.status
   }
 

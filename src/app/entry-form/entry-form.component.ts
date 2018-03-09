@@ -1,6 +1,6 @@
 import { Component, OnChanges, Input, Output, EventEmitter} from '@angular/core';
 import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
-import { BibliographicEntry, Identifier} from '../locdb';
+import { BibliographicEntry, Identifier, TypedResourceView} from '../locdb';
 import { SimpleChanges } from '@angular/core';
 import { LocdbService } from '../locdb.service';
 
@@ -13,6 +13,7 @@ import { LocdbService } from '../locdb.service';
 export class EntryFormComponent implements OnChanges {
   @Input() entry: BibliographicEntry;
   @Input() active: false;
+  @Input() resource: TypedResourceView;
   entryForm: FormGroup;
   submitted = false;
   disabled = true;
@@ -122,7 +123,7 @@ export class EntryFormComponent implements OnChanges {
         (error) => console.log('Error updating entry', error)
       );
     } else {
-      this.locdbService.createBibliographicEntry(null, entry).subscribe(
+      this.locdbService.createBibliographicEntry(this.resource._id, entry).subscribe(
     (result) => { this.entry = result; this.toggleDisabled(); this.ngOnChanges()},
       (error) => console.log('Error creating entry', error)
     )

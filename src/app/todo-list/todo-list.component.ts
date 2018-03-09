@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { BibliographicResource, ToDo, ToDoParts, ToDoScans, TypedResourceView} from '../locdb';
 import { LocdbService } from '../locdb.service';
-import { Provenance, ToDoStatus } from '../locdb';
+import { Provenance, enums } from '../locdb';
 
 
 @Component({
@@ -11,11 +11,11 @@ import { Provenance, ToDoStatus } from '../locdb';
 })
 export class TodoListComponent implements OnInit, OnChanges {
 
-  @Input() state: ToDoStatus;
+  @Input() state: enums.status;
   @Output() todo: EventEmitter<ToDoScans | BibliographicResource> = new EventEmitter();
   @Output() resourceTrack: EventEmitter<BibliographicResource[] | ToDo[]> = new EventEmitter();
   todos: ToDo[];
-  states = ToDoStatus;
+  states = Object.values(enums.status);
   provenance = Provenance;
   loading = false;
   selectedResource : TypedResourceView;
@@ -56,11 +56,11 @@ export class TodoListComponent implements OnInit, OnChanges {
 
   onSelectScan(scan: ToDoScans, trace: BibliographicResource[] | ToDo[]) {
     // called when pressing on a scan todo item
-    if ( scan.status === ToDoStatus.nocr ) {
+    if ( scan.status === enums.status.notOcrProcessed ) {
       console.log('Starting processing');
-      scan.status = ToDoStatus.iocr;
+      scan.status = enums.status.ocrProcessing;
       this.locdbService.triggerOcrProcessing(scan._id).subscribe(
-        (success) => scan.status = ToDoStatus.ocr,
+        (success) => scan.status = enums.status.ocrProcessed,
         (err) => console.log(err)
       )
     } else {
@@ -89,10 +89,10 @@ export class TodoListComponent implements OnInit, OnChanges {
 
   // 2 methods to delete after chagnes
   printState(scan: ToDoScans) {
-    if (scan.status === ToDoStatus.ocr) { return 'OCR processed' } ;
-    if (scan.status === ToDoStatus.nocr) { return  'not OCR processed '};
-    if (scan.status === ToDoStatus.iocr) { return 'OCR processing' };
-    if (scan.status === ToDoStatus.ext)  { return 'external' };
+    if (scan.status === enums.status.ocrProcessed) { return 'OCR processed' } ;
+    if (scan.status === enums.status.notOcrProcessed) { return  'not OCR processed '};
+    if (scan.status === enums.status.ocrProcessing) { return 'OCR processing' };
+    if (scan.status === enums.status.external)  { return 'external' };
     return scan.status
   }
 

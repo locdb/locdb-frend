@@ -34,8 +34,8 @@ import {
 // import { CredentialsService } from 'angular-with-credentials';
 
 // dummy data
-import { MOCK_TODOBRS } from './mock-todos';
-import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
+// import { MOCK_TODOBRS } from './mock-todos';
+// import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -88,26 +88,6 @@ export class LocdbService {
 
 
   // Generic helpers for data extraction and error handling
-  private extractData(res: Response) {
-    console.log('Response', res);
-    const body = res.json();
-    return body;
-  }
-
-  private handleError (error: Response | any) {
-    console.log(error)
-    // In a real world app, you might use a remote logging infrastructure
-    let errMsg: string;
-    if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = body.error || JSON.stringify(body);
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
-    console.error(errMsg);
-    return Observable.throw(errMsg);
-  }
 
   getToDo(status_: string): Observable<ToDo[]> {
     // acquire todo items and scans
@@ -137,22 +117,11 @@ export class LocdbService {
  }
 
 
-  suggestionsByEntry(be: BibliographicEntry, external?: boolean): Observable<BibliographicResource[]> {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
-
-    const url = external ? `${this.locdbUrl}/getExternalSuggestions` : `${this.locdbUrl}/getInternalSuggestions`
-
-    return this.http.post(url, be, options)
-      .map(response => response.json() as BibliographicResource[])
-      .catch(this.handleError);
-  }
-
-  suggestionsByQuery(query: string, external: boolean, threshold?: number): Observable<BibliographicResource[]> {
+  suggestionsByQuery(query: string, external: boolean, threshold?: number): Observable<TypedResourceView[]> {
     if (external) {
-      return this.bibliographicEntryApi.getExternalSuggestionsByQueryString(query, threshold);
+      return this.bibliographicEntryApi.getExternalSuggestionsByQueryString(query, threshold).map( l => l.map(br => new TypedResourceView(br)));
     } else {
-      return this.bibliographicEntryApi.getInternalSuggestionsByQueryString(query, threshold);
+      return this.bibliographicEntryApi.getInternalSuggestionsByQueryString(query, threshold).map( l => l.map(br => new TypedResourceView(br)));
     }
 
   }

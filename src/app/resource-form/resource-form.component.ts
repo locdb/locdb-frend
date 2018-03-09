@@ -1,14 +1,12 @@
 import {
     BibliographicResource,
     BibliographicEntry,
-    ProvenResource,
     AgentRole,
     ResponsibleAgent,
     ToDo,
-    ROLES,
     Identifier,
-    RESOURCE_TYPES,
-    TypedResourceView
+    TypedResourceView,
+    enums
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
@@ -24,7 +22,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // if this is a string, we can try to dereference it from the back-end
     @Input() resource: TypedResourceView //BibliographicResource | ProvenResource | ToDo = null;
-    @Output() resourceChange = new EventEmitter<BibliographicResource | ProvenResource | ToDo>();
+    @Output() resourceChange = new EventEmitter<TypedResourceView>();
 
     // this should not be here, the resource should only rely on itself and not
     // some entries TODO FIXME
@@ -43,8 +41,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // roles: string[] = ['CORPORATE','PUBLISHER', 'author']; // <-- to Locdb.ts as class?
     // roles: string[] = AgentRole.ROLES;
-    roles: string[] =  ROLES;
-    resourceTypes: string[] = RESOURCE_TYPES;
+    roles: string[] =  Object.values(enums.roleType);
+    resourceTypes: string[] = Object.values(enums.resourceType);
 
     constructor(
         private fb: FormBuilder,

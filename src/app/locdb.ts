@@ -6,7 +6,9 @@ import * as models from './typescript-angular2-client/model/models'
 export {models};
 
 // MAKE ENUMS ACCESSIBLE
-export const enums = require('./backend/api/schema/enum.json')
+// use this enums with Object.keys or Object.values if necessary
+import * as enums from './enums';
+export { enums };
 
 
 
@@ -30,27 +32,19 @@ export function enum_values(obj) {
   return values;
 }
 
-// ==== own enums for type safety, where important ==== //
-export enum ToDoStatus {
-  ocr = 'OCR_PROCESSED',
-  nocr = 'NOT_OCR_PROCESSED',
-  iocr = 'OCR_PROCESSING',
-  ext = 'EXTERNAL',
-  valid = 'VALID',
+
+/* This holds all possible enum values under same keys as in `enums` */
+interface KeyedStringValues {
+  [key: string]: Array<string>;
 }
 
-
-
-
-export const RESOURCE_TYPE_VALUES = enum_values(enums.resourceTypes);
-export const PropertyPrefixByType = invert_enum(enums["resourceType"]);
-const resourceType = enums.resourceType;
-
+export const PropertyPrefixByType = invert_enum(enums.resourceType);
 export function typedProperty(type : string, property: string) {
   return PropertyPrefixByType[type] + '_' + property;
 }
 
-export function containerTypes (type: string): Array<string>{
+export function containerTypes (type: enums.resourceType): Array<enums.resourceType>{
+  const resourceType = enums.resourceType;
     switch(type) {
         case resourceType.monograph || resourceType.editedBook || resourceType.book || resourceType.referenceBook:
             return [resourceType.bookSet, resourceType.bookSeries];
@@ -87,7 +81,7 @@ export function containerTypes (type: string): Array<string>{
  **/
 export interface MetaData {
   identifiers: Array<models.Identifier>;
-  type: string;
+  type: enums.resourceType;
   title: string;
   subtitle: string;
   edition: string;
@@ -119,7 +113,7 @@ export class TypedResourceView implements MetaData {
   }
 
   /** Returns new View of different type on same resource  */
-  astype(otherType) {
+  astype(otherType): TypedResourceView {
     return new TypedResourceView(this.data, otherType);
   }
 
@@ -140,8 +134,8 @@ export class TypedResourceView implements MetaData {
 
   authorString(): string {
     let s = '';
-    let editors = this.contributors.filter(x => x.roleType === enums.roleType.EDITOR);
-    let authors = this.contributors.filter(x => x.roleType === enums.roleType.AUTHOR);
+    let editors = this.contributors.filter(x => x.roleType === enums.roleType.editor);
+    let authors = this.contributors.filter(x => x.roleType === enums.roleType.author);
 
     if (authors.length) {
       // If authors are given use authors!
@@ -157,7 +151,7 @@ export class TypedResourceView implements MetaData {
 
   publisherString(): string {
     let s = '';
-    let publishers = this.contributors.filter(x => x.roleType === enums.roleType.PUBLISHER);
+    let publishers = this.contributors.filter(x => x.roleType === enums.roleType.publisher);
     if (publishers.length){
       s += publishers[0].heldBy.nameString;
     }
@@ -197,19 +191,19 @@ export class TypedResourceView implements MetaData {
     return this.data.partOf;
   }
 
-  get status(): string {
-    return this.data.status;
+  get status(): enums.status {
+    return <enums.status>this.data.status;
   }
 
-  set status( newStatus) {
+  set status( newStatus: enums.status) {
     this.data.status = newStatus;
   }
 
-  get type () {
-    return this.data.type;
+  get type (): enums.resourceType {
+    return <enums.resourceType>this.data.type;
   }
 
-  set type ( newType: string ) {
+  set type ( newType: enums.resourceType ) {
     this.data.type = newType;
   }
   // forward native attributes end

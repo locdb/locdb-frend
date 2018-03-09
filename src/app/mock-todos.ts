@@ -1,22 +1,16 @@
-import { ToDo, ToDoStatus } from './locdb';
+import { ToDo, enums } from './locdb';
 
 export const MOCK_TODOBRS: ToDo[] =
   [
   {
     '_id': '58d26b94a285f10778669ff5',
-    'scans': [
-      {
-        '_id': '54d26b85a285f10778669ffc',
-        'status': ToDoStatus.ocr
-      }
-    ],
     'children': [
       {
         '_id': '58d26b94a285f10778669ffa',
         'scans': [
           {
             '_id': '58d26b94a285f10778669ffc',
-            'status': ToDoStatus.ocr
+            'status': enums.status.ocrProcessed,
           }
         ]
       }
@@ -30,7 +24,7 @@ export const MOCK_TODOBRS: ToDo[] =
             'scans': [
               {
                 '_id': '58e03947d6c893087e17d1a7',
-                'status': ToDoStatus.nocr
+                'status': enums.status.notOcrProcessed,
               }
             ]
           }

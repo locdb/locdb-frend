@@ -5,7 +5,7 @@ import { REFERENCES, REFERENCES_ALT } from './mock-references';
 import { LocdbService } from './locdb.service';
 import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
 
-import { ResourceType, ToDoScans, Identifier, BibliographicEntry } from './locdb';
+import { enums, ToDoScans, Identifier, BibliographicEntry } from './locdb';
 
 const URL = '/api/'; // Same Origin Policy
 
@@ -21,8 +21,7 @@ export class ScanComponent {
 
   selected: ToDoScansWithMeta;
 
-  ResourceType = ResourceType;
-  resourceTypes: string[] = [ResourceType.monograph, ResourceType.collection, ResourceType.journal];
+  resourceTypes: string[] = Object.values(enums.resourceType);
 
   uploading = false; // just for disabling the button
 
@@ -65,14 +64,14 @@ export class ScanComponent {
   onChange(event: any) { // file input
     for (const file of event.target.files){
       const [_id, first, last] = this.extractidandPages(file.name);
-      let rtype: ResourceType;
-      if (first && last) {
-        rtype = ResourceType.collection;
-        console.log('Assuming a collection')
-      } else {
-        rtype = ResourceType.monograph;
-        console.log('Assuming a monograph')
-      }
+      let rtype = enums.resourceType;
+      // if (first && last) {
+      //   rtype = ResourceType.collection;
+      //   console.log('Assuming a collection')
+      // } else {
+      //   rtype = ResourceType.monograph;
+      //   console.log('Assuming a monograph')
+      // }
       this.listoffiles.push(
         new ToDoScansWithMeta(
           {
@@ -266,7 +265,7 @@ export class ScanComponent {
         firstpage: null,
         lastpage: null,
         file: null,
-        resourceType: ResourceType.journal, // electronic for now is always journal
+        resourceType: enums.resourceType.journal, // electronic for now is always journal
         uploading: false
       })
     );
@@ -327,7 +326,7 @@ class ToDoScansWithMeta {
     if (this.resourceType === ResourceType.monograph || this.resourceType === ResourceType.journal) {
       return true;
     } else {
-      // currently only collection requires pages numbers 
+      // currently only collection requires pages numbers
       if (this.firstpage && this.lastpage) {
         return true;
       }
