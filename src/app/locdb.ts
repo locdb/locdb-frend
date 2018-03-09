@@ -89,6 +89,39 @@ export interface MetaData {
   contributors: Array<models.AgentRole>;
   publicationYear: string;
 }
+export function authors2contributors (authors: string[]): models.AgentRole[] {
+  if (!authors) {return []};
+  const contributors = [];
+  for (const author of authors) {
+    const agent: models.ResponsibleAgent = {
+      nameString: author,
+      identifiers: [],
+      givenName: '',
+      familyName: '',
+    }
+    const role: models.AgentRole = {
+      roleType: enums.roleType.author,
+      heldBy: agent,
+      identifiers: [],
+    }
+    contributors.push(role);
+  }
+  return contributors;
+}
+
+export function OCR2MetaData(ocr: models.OCRData) : MetaData {
+  return {
+    title: ocr.title || '',
+    subtitle: '',
+    number: ocr.volume || '',
+    contributors: authors2contributors(ocr.authors),
+    publicationYear: ocr.date,
+    identifiers: [],
+    type: enums.resourceType.report,
+    edition: '',
+  };
+
+}
 
 /* Our own enum for provenance data */
 export enum Provenance {

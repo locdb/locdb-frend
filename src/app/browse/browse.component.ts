@@ -64,25 +64,7 @@ export class BrowseComponent implements OnInit {
 
       // these two functions could go somewhere else e.g. static in locdb.ts
       // BEGIN
-      authors2contributors (authors: string[]): AgentRole[] {
-          if (!authors) {return []};
-          const contributors = [];
-          for (const author of authors) {
-              const agent: ResponsibleAgent = {
-                  nameString: author,
-                  identifiers: [],
-                  givenName: '',
-                  familyName: '',
-              }
-              const role: AgentRole = {
-                  roleType: 'AUTHOR',
-                  heldBy: agent,
-                  identifiers: [],
-              }
-              contributors.push(role);
-          }
-          return contributors;
-      }
+
 
       onSelect(br?: TypedResourceView): void {
           this.committed = false;
