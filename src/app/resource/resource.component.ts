@@ -1,6 +1,6 @@
 import {
     BibliographicResource,
-    ProvenResource,
+    TypedResourceView,
     ToDo,
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
@@ -14,7 +14,7 @@ import { Component, Input } from '@angular/core';
 })
 export class ResourceComponent {
   // if this is a string, we can try to dereference it from the back-end
-  @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
+  @Input() resource: TypedResourceView= null;
   ngOnInit()  {
   }
 }

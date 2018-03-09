@@ -8,7 +8,7 @@ import {
   EventEmitter,
   Output
 } from '@angular/core';
-import { BibliographicEntry } from '../locdb'
+import { BibliographicEntry, TypedResourceView } from '../locdb'
 import { Observable } from 'rxjs/Rx';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { LoggingService } from '../logging.service'
@@ -21,6 +21,7 @@ import { LoggingService } from '../logging.service'
 
 export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
 
+  @Input() resource: TypedResourceView;
   @Input() entries: BibliographicEntry[];
   selectedEntry: BibliographicEntry;
   // first argument : true makes event emitter async
@@ -67,8 +68,9 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
 
 
   addEntry() {
-    const entry = new BibliographicEntry();
-    this.onSelectReference(entry);
+    //const entry = new BibliographicEntry();
+    console.log('missing implementation')
+    //this.onSelectReference(entry);
   }
 
   deleteEntry() {

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, BibliographicResource } from '../locdb';
+import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, TypedResourceView } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { FeedService } from '../feed.service';
 //import { environment } from 'environments/environment';
@@ -17,11 +17,11 @@ interface Track {
 /** Main App Component for whole LOCDB Frontend */
 export class AppwrapperComponent implements OnInit {
   title = 'LOC-DB Frontend';
-  source: BibliographicResource = null;
+  source: TypedResourceView = null;
   todo: ToDoScans | ToDo = null;
   resourceTrack: Track;
   entry: BibliographicEntry = null;
-  target: BibliographicResource = null;
+  target: TypedResourceView = null;
   constructor (private locdbService: LocdbService ) {}
 
   ngOnInit() {
@@ -37,7 +37,7 @@ export class AppwrapperComponent implements OnInit {
     this.resourceTrack = { todo: resources[0], part: resources[1] };
   }
 
-  updateSource (br: BibliographicResource) {
+  updateSource (br: TypedResourceView) {
     // this.enableCitation();
     // this.visualState = 2;
     console.log('Updating source', br);
@@ -58,7 +58,7 @@ export class AppwrapperComponent implements OnInit {
     this.target = null;
   }
 
-  updateTarget (br: BibliographicResource) {
+  updateTarget (br: TypedResourceView) {
     // this.enableCitation();
     // this.visualState = 2;
     console.log('Updating target', br);

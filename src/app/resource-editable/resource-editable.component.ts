@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { BibliographicResource, ProvenResource, ToDo, Origin, Provenance } from '../locdb';
+import { BibliographicResource, TypedResourceView, ToDo, Origin, Provenance } from '../locdb';
 import { LoggingService } from '../logging.service'
 import { LocdbService } from '../locdb.service';
 
@@ -12,7 +12,7 @@ import { LocdbService } from '../locdb.service';
   styleUrls: ['./resource-editable.component.css'],
 })
 export class ResourceEditableComponent implements OnInit {
-  @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
+  @Input() resource: TypedResourceView = null;
   @Input() editing = true;
 
   @Output() submitStatus: EventEmitter<boolean> = new EventEmitter();
@@ -23,10 +23,10 @@ export class ResourceEditableComponent implements OnInit {
 
 
   showForm(val: boolean) {
-    this.resource = <BibliographicResource> this.resource
+    this.resource = <TypedResourceView> this.resource
     // Display the form or stop displaying it
     // this.editing = val;
-    if (this.resource instanceof ProvenResource){
+    if (this.resource instanceof TypedResourceView){
       let provenance = this.resource.provenance;
 
         if (this.editing){

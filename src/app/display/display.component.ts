@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, OnChanges, Input, Output, EventEmitter, ViewChildren, ViewChild} from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 
-import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, BibliographicResource } from '../locdb';
+import { BibliographicEntry } from '../locdb';
 import { LocdbService } from '../locdb.service';
 
 import { environment } from 'environments/environment';

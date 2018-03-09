@@ -117,16 +117,16 @@ export class EntryFormComponent implements OnChanges {
     console.log('Submitting entry', this.entry);
 
     if (entry._id) {
-      this.locdbService.putBibliographicEntry(entry).subscribe(
+      this.locdbService.updateBibliographicEntry(entry).subscribe(
         (result) => { this.entry = result; this.toggleDisabled(); this.ngOnChanges()},
         (error) => console.log('Error updating entry', error)
       );
     } else {
-      console.log('Post entry not implemented');
-      // this.locdbService.posthBibliographicEntry(entry).subscribe(
-      //   (result) => { this.entry = result; this.submitted = true; this.ngOnChanges()},
-      //   (error) => console.log('Error putting new entry')
-      // )
+      this.locdbService.createBibliographicEntry(null, entry).subscribe(
+    (result) => { this.entry = result; this.toggleDisabled(); this.ngOnChanges()},
+      (error) => console.log('Error creating entry', error)
+    )
+
     }
   }
   reconstructIdentifier(scheme: string, value: string): Identifier {

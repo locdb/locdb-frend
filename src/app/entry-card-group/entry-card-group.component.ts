@@ -1,6 +1,6 @@
 import { Component, OnChanges, Input, Output, EventEmitter} from '@angular/core';
 import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
-import { BibliographicEntry, Identifier} from '../locdb';
+import { BibliographicEntry, Identifier, TypedResourceView} from '../locdb';
 import { SimpleChanges } from '@angular/core';
 import { LocdbService } from '../locdb.service';
 @Component({
@@ -14,6 +14,7 @@ export class EntryCardGroupComponent implements OnChanges {
 
 
 
+    @Input() resource: TypedResourceView;
     @Input() entry: BibliographicEntry;
     @Input() active: false;
     entryForm: FormGroup;
@@ -122,16 +123,16 @@ export class EntryCardGroupComponent implements OnChanges {
       console.log('Submitting entry', this.entry);
 
       if (entry._id) {
-        this.locdbService.putBibliographicEntry(entry).subscribe(
+        this.locdbService.updateBibliographicEntry(entry).subscribe(
           (result) => { this.entry = result; this.toggleOpen(); this.ngOnChanges()},
           (error) => console.log('Error updating entry', error)
         );
       } else {
-        console.log('Post entry not implemented');
-        // this.locdbService.posthBibliographicEntry(entry).subscribe(
-        //   (result) => { this.entry = result; this.submitted = true; this.ngOnChanges()},
-        //   (error) => console.log('Error putting new entry')
-        // )
+        this.locdbService.createBibliographicEntry(this.resource._id, entry).subscribe(
+          (result) => { this.entry = result; this.toggleOpen(); this.ngOnChanges()},
+          (error) => console.log('Error creating entry', error)
+        )
+
       }
     }
     reconstructIdentifier(scheme: string, value: string): Identifier {

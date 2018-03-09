@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter} from '@angular/core';
-import { BibliographicEntry, BibliographicResource, AgentRole, ResponsibleAgent } from '../locdb';
+import { BibliographicEntry, TypedResourceView, AgentRole, ResponsibleAgent } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { LoggingService } from '../logging.service'
 import { MOCK_INTERNAL } from '../mock-bresources'
@@ -20,13 +20,12 @@ export class BrowseComponent implements OnInit {
       // make this visible to template
       environment = environment;
 
-      selectedResource: ProvenResource;
+      selectedResource: TypedResourceView;
       query: string;
 
-      internalSuggestions: ProvenResource[];
+      internalSuggestions: TypedResourceView[];
 
-      currentTarget: ProvenResource;
-      newResource: ProvenResource = null;
+      currentTarget: TypedResourceView;
 
       committed = false;
       max_shown_suggestions = 5
@@ -85,7 +84,7 @@ export class BrowseComponent implements OnInit {
           return contributors;
       }
 
-      onSelect(br?: ProvenResource): void {
+      onSelect(br?: TypedResourceView): void {
           this.committed = false;
       }
 
@@ -108,14 +107,5 @@ export class BrowseComponent implements OnInit {
         }
       }
 
-    queryFromEntry(entry: BibliographicEntry): string {
-      if (entry.ocrData.title) {
-        // if metadata is available, use it in favor of raw text
-        return `${entry.ocrData.title} ${entry.ocrData.authors.join(' ')}`
-      } else {
-        // authors typically included in entry text already
-        return `${entry.bibliographicEntryText}`
-      }
-    }
 
   }
