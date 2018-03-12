@@ -347,5 +347,5 @@ export function extractAgentsFromContribs(contribs: Array<models.AgentRole>, pro
 
 export {BibliographicResource, AgentRole, BibliographicEntry, ErrorResponse, Feed, FeedEntry,
 FeedEntryEnclosures, FeedEntryImage, FeedEntryMeta, Identifier, LogRequest,
-ResourceEmbodiment, ResponsibleAgent, SuccessResponse, ToDo, ToDoParts,
-ToDoScans, User, OCRData} from './typescript-angular2-client/model/models';
+ResourceEmbodiment, ResponsibleAgent, SuccessResponse, ToDo,
+User, OCRData} from './typescript-angular2-client/model/models';
