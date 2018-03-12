@@ -134,15 +134,25 @@ export enum Provenance {
 }
 
 export class TypedResourceView implements MetaData {
-  data: models.BibliographicResource;
+  readonly data: models.BibliographicResource;
   private _prefix: string;
   readonly viewport_: string;
 
-  constructor(br: models.BibliographicResource, astype?: string) {
+  constructor(br: models.BibliographicResource | models.ToDo, astype?: string) {
     // this will throw if type is invalid!, but that s not too bad.
     this.viewport_ = astype ? astype : br.type;
     this._prefix = PropertyPrefixByType[this.viewport_] + '_';
     this.data = br;
+  }
+
+  /** ToDo Specific **/
+  children(): Array<models.BibliographicResource> {
+    if (this.data.hasOwnProperty('children')) {
+      // TODO could map these to typed views, or do it on client side
+      return (<models.ToDo>this.data).children;
+    }
+    // TODO could change this to empty array if more convenient
+    return null;
   }
 
   /** Returns new View of different type on same resource  */

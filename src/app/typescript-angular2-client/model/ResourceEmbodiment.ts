@@ -23,6 +23,6 @@ export interface ResourceEmbodiment {
 
     url?: string;
 
-    scans?: Array<models.ToDoParts>;
+    scans?: Array<models.Scan>;
 
 }

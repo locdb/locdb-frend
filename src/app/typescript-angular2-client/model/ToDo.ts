@@ -13,24 +13,314 @@
 import * as models from './models';
 
 export interface ToDo {
-    _id: string;
+    _id?: string;
 
-    identifiers?: Array<models.Identifier>;
+    journal_identifiers?: Array<models.Identifier>;
+
+    journalVolume_identifiers?: Array<models.Identifier>;
+
+    journalIssue_identifiers?: Array<models.Identifier>;
+
+    journalArticle_identifiers?: Array<models.Identifier>;
+
+    monograph_identifiers?: Array<models.Identifier>;
+
+    editedBook_identifiers?: Array<models.Identifier>;
+
+    bookSeries_identifiers?: Array<models.Identifier>;
+
+    bookSet_identifiers?: Array<models.Identifier>;
+
+    bookChapter_identifiers?: Array<models.Identifier>;
+
+    bookSection_identifiers?: Array<models.Identifier>;
+
+    bookPart_identifiers?: Array<models.Identifier>;
+
+    bookTrack_identifiers?: Array<models.Identifier>;
+
+    component_identifiers?: Array<models.Identifier>;
+
+    dissertation_identifiers?: Array<models.Identifier>;
+
+    proceedingsArticle_identifiers?: Array<models.Identifier>;
+
+    proceedings_identifiers?: Array<models.Identifier>;
+
+    dataset_identifiers?: Array<models.Identifier>;
+
+    report_identifiers?: Array<models.Identifier>;
+
+    reportSeries_identifiers?: Array<models.Identifier>;
+
+    book_identifiers?: Array<models.Identifier>;
+
+    referenceBook_identifiers?: Array<models.Identifier>;
+
+    referenceEntry_identifiers?: Array<models.Identifier>;
+
+    standard_identifiers?: Array<models.Identifier>;
+
+    standardSeries_identifiers?: Array<models.Identifier>;
 
     type?: string;
 
-    title?: string;
+    journal_title?: string;
 
-    subtitle?: string;
+    journalVolume_title?: string;
 
-    edition?: string;
+    journalIssue_title?: string;
 
-    number?: number;
+    journalArticle_title?: string;
 
-    contributors?: Array<models.AgentRole>;
+    monograph_title?: string;
 
-    publicationYear?: string;
+    editedBook_title?: string;
 
-    children?: Array<models.ToDoParts>;
+    bookSeries_title?: string;
+
+    bookSet_title?: string;
+
+    bookChapter_title?: string;
+
+    bookSection_title?: string;
+
+    bookPart_title?: string;
+
+    bookTrack_title?: string;
+
+    component_title?: string;
+
+    report_title?: string;
+
+    proceedingsArticle_title?: string;
+
+    proceedings_title?: string;
+
+    dataset_title?: string;
+
+    reportSeries_title?: string;
+
+    book_title?: string;
+
+    referenceBook_title?: string;
+
+    referenceEntry_title?: string;
+
+    standard_title?: string;
+
+    standardSeries_title?: string;
+
+    editedBook_subtitle?: string;
+
+    report_subtitle?: string;
+
+    dissertation_subtitle?: string;
+
+    proceedingsArticle_subtitle?: string;
+
+    standard_subtitle?: string;
+
+    standardSeries_subtitle?: string;
+
+    journal_subtitle?: string;
+
+    journalArticle_subtitle?: string;
+
+    bookSeries_subtitle?: string;
+
+    monograph_subtitle?: string;
+
+    bookSet_subtitle?: string;
+
+    bookPart_subtitle?: string;
+
+    bookChapter_subtitle?: string;
+
+    bookSection_subtitle?: string;
+
+    bookTrack_subtitle?: string;
+
+    component_subtitle?: string;
+
+    proceedings_subtitle?: string;
+
+    dataset_subtitle?: string;
+
+    reportSeries_subtitle?: string;
+
+    book_subtitle?: string;
+
+    referenceBook_subtitle?: string;
+
+    referenceEntry_subtitle?: string;
+
+    monograph_edition?: string;
+
+    editedBook_edition?: string;
+
+    dissertation_edition?: string;
+
+    proceedings_edition?: string;
+
+    report_edition?: string;
+
+    book_edition?: string;
+
+    referenceBook_edition?: string;
+
+    standard_edition?: string;
+
+    journalVolume_number?: string;
+
+    journalIssue_number?: string;
+
+    bookPart_number?: string;
+
+    monograph_number?: string;
+
+    editedBook_number?: string;
+
+    component_number?: string;
+
+    bookSet_number?: string;
+
+    bookChapter_number?: string;
+
+    bookSection_number?: string;
+
+    bookTrack_number?: string;
+
+    proceedings_number?: string;
+
+    report_number?: string;
+
+    book_number?: string;
+
+    standard_number?: string;
+
+    referenceBook_number?: string;
+
+    referenceEntry_number?: string;
+
+    journal_contributors?: Array<models.AgentRole>;
+
+    report_contributors?: Array<models.AgentRole>;
+
+    journalVolume_contributors?: Array<models.AgentRole>;
+
+    journalIssue_contributors?: Array<models.AgentRole>;
+
+    journalArticle_contributors?: Array<models.AgentRole>;
+
+    monograph_contributors?: Array<models.AgentRole>;
+
+    editedBook_contributors?: Array<models.AgentRole>;
+
+    bookSeries_contributors?: Array<models.AgentRole>;
+
+    proceedingsArticle_contributors?: Array<models.AgentRole>;
+
+    bookSet_contributors?: Array<models.AgentRole>;
+
+    bookChapter_contributors?: Array<models.AgentRole>;
+
+    dataset_contributors?: Array<models.AgentRole>;
+
+    bookTrack_contributors?: Array<models.AgentRole>;
+
+    component_contributors?: Array<models.AgentRole>;
+
+    dissertation_contributors?: Array<models.AgentRole>;
+
+    proceedings_contributors?: Array<models.AgentRole>;
+
+    reportSeries_contributors?: Array<models.AgentRole>;
+
+    book_contributors?: Array<models.AgentRole>;
+
+    referenceBook_contributors?: Array<models.AgentRole>;
+
+    referenceEntry_contributors?: Array<models.AgentRole>;
+
+    standard_contributors?: Array<models.AgentRole>;
+
+    standardSeries_contributors?: Array<models.AgentRole>;
+
+    journalArticle_publicationYear?: string;
+
+    monograph_publicationYear?: string;
+
+    report_publicationYear?: string;
+
+    editedBook_publicationYear?: string;
+
+    dissertation_publicationYear?: string;
+
+    proceedingsArticle_publicationYear?: string;
+
+    dataset_publicationYear?: string;
+
+    proceedings_publicationYear?: string;
+
+    book_publicationYear?: string;
+
+    referenceBook_publicationYear?: string;
+
+    standard_publicationYear?: string;
+
+    status?: string;
+
+    parts?: Array<models.BibliographicEntry>;
+
+    partOf?: string;
+
+    cites?: Array<string>;
+
+    monograph_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    editedBook_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    bookSeries_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    bookSet_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    bookPart_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    bookTrack_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    component_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    dissertation_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    proceedingsArticle_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    proceedings_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    journal_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    journalVolume_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    journalIssue_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    journalArticle_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    dataset_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    report_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    reportSeries_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    book_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    referenceBook_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    referenceEntry_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    standard_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    standardSeries_embodiedAs?: Array<models.ResourceEmbodiment>;
+
+    children?: Array<models.BibliographicResource>;
 
 }
