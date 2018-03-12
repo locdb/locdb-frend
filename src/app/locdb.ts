@@ -148,12 +148,21 @@ export class TypedResourceView implements MetaData {
   /** ToDo Specific **/
   children(): Array<models.BibliographicResource> {
     if (this.data.hasOwnProperty('children')) {
-      // TODO could map these to typed views, or do it on client side
       return (<models.ToDo>this.data).children;
     }
-    // TODO could change this to empty array if more convenient
     return null;
   }
+
+  /* Short-hand to decide whether the underlying resource is a ToDo item.
+  This is preferred over checking for childrens directly, as the types and
+  implementation may change.
+
+  */
+  isTodo() {
+    return this.children != null;
+  }
+
+
 
   /** Returns new View of different type on same resource  */
   astype(otherType): TypedResourceView {
