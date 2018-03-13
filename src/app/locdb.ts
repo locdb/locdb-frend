@@ -24,6 +24,7 @@ export function invert_enum(obj: Object) {
   return inverse;
 }
 
+/* Use this function to extract all possible enum values for user input */
 export function enum_values(obj) {
   let values = []
   for (let prop in obj) {
@@ -32,11 +33,6 @@ export function enum_values(obj) {
   return values;
 }
 
-
-/* This holds all possible enum values under same keys as in `enums` */
-interface KeyedStringValues {
-  [key: string]: Array<string>;
-}
 
 export const PropertyPrefixByType = invert_enum(enums.resourceType);
 export function typedProperty(type : string, property: string) {
@@ -146,9 +142,15 @@ export class TypedResourceView implements MetaData {
   }
 
   /** ToDo Specific **/
-  children(): Array<models.BibliographicResource> {
+  children(typed:boolean=true): Array<models.BibliographicResource> | Array<TypedResourceView> {
     if (this.data.hasOwnProperty('children')) {
-      return (<models.ToDo>this.data).children;
+      const children = (<models.ToDo>this.data).children;
+      if (typed) {
+        return children.map(child => new TypedResourceView(child));
+      } else {
+        // return as plain BRs
+        return children;
+      }
     }
     return null;
   }

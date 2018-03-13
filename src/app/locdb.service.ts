@@ -17,17 +17,7 @@ import {Observable} from 'rxjs/Rx';
 // import 'rxjs/add/operator/map';
 
 // new types
-import {
-  Identifier,
-  ToDo,
-  ToDoScans,
-  BibliographicEntry,
-  BibliographicResource,
-  Feed, FeedEntry,
-  OCRData,
-  User,
-  SuccessResponse
-} from './locdb'
+import { models } from './locdb'
 
 
 // Local testing with credentials
@@ -89,12 +79,20 @@ export class LocdbService {
 
   // Generic helpers for data extraction and error handling
 
-  getToDo(status_: string): Observable<ToDo[]> {
+  getToDo(status_: enums.status): Observable<models.ToDo[]> {
     // acquire todo items and scans
     return this.scanApi.getToDo(status_);
   }
 
-  getToDoBibliographicEntries(scan_id: string): Observable<BibliographicEntry[]> {
+  /* Returns all ToDo items */
+  getAgenda(statuses: Array<enums.status>): Observable<models.ToDo[]> {
+    return Observable.from(statuses).flatMap(
+      (status) => this.getToDo(status)
+      // could sort via map by something
+    );
+  }
+
+  getToDoBibliographicEntries(scan_id: string): Observable<models.BibliographicEntry[]> {
     // fetches list of entries for a scan id
     return this.bibliographicEntryApi.getToDoBibliographicEntries(scan_id);
   }
