@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
 // import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
-
+import { TemplateRef } from '@angular/core';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { LocdbService } from './locdb.service';
 import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
 
@@ -22,14 +24,22 @@ export class ScanComponent {
 
   resourceTypes: string[] = enum_values(enums.resourceType);
 
+  embodimentTypes: string[] = enum_values(enums.embodimentType);
+
   uploading = false; // just for disabling the button
 
   listoffiles: ToDoScansWithMeta[] = [];
 
+  modalChoiceResourceType: string;
 
+  modalRef: BsModalRef;
 
-  constructor ( private locdbService: LocdbService) {
+  constructor ( private locdbService: LocdbService,private modalService: BsModalService) {
     // necessary to display select options
+  }
+
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
   }
 
   onclickupload() { // check if content is set
@@ -62,6 +72,7 @@ export class ScanComponent {
 
   onChange(event: any) { // file input
     for (const file of event.target.files){
+
       const [_id, first, last] = this.extractidandPages(file.name);
       let rtype = enums.resourceType.journalArticle;
       // if (first && last) {
@@ -157,6 +168,7 @@ export class ScanComponent {
     listelement.uploading = true;
     listelement.err = null;
     if (listelement.file) {
+      // NOTE: if-else is redundant, maybe need to catch some inputs here
       // it is obviously enough to just provide the file metadata
       // as formdata push will then load the file on server side
       // do not test it before workshop
@@ -171,10 +183,9 @@ export class ScanComponent {
     } else {
       // saveElectronicJournal should go here
       console.log('Empty file. Uploading as Journal');
-      this.locdbService.saveElectronicJournal(listelement.identifier).subscribe(
-        (res) => this.successHandler(listelement, res, false), // no auto-trigger in this case
-        (err) => this.processError(listelement, err)
-      );
+      this.locdbService.saveResource(listelement.identifier.scheme,
+      listelement.identifier.literalValue,
+      listelement.resourceType) // is it set?
     }
   }
 
@@ -185,41 +196,51 @@ export class ScanComponent {
     console.log('Pushing: ', listelement);
     // turn third arguments to true to enable auto-trigger
     // depends on back-end returning the correct scan
-
-    if (listelement.resourceType === ResourceType.monograph) {
+    if (listelement.resourceType === enums.resourceType.monograph) {
       // Monograph no page numbers necessary
-      this.locdbService.saveScan(
-        listelement.identifier.literalValue,
-        listelement.resourceType,
-        listelement.textualPdf,
-        listelement.file,
-      ).subscribe(
-        (suc) => this.successHandler(listelement, suc, true), // auto trigger ocr
-        (err) => this.processError(listelement, err)
-      );
-    } else if (listelement.resourceType === ResourceType.journal) {
-      // Electronic journal.
-      this.locdbService.saveScanForElectronicJournal (
-        listelement.identifier.scheme,
-        listelement.identifier.literalValue,
-        listelement.textualPdf,
-        listelement.file
-      ).subscribe(
-        (suc) => this.successHandler(listelement, suc, false),
-        (err) => this.processError(listelement, err)
-      );
-    } else { // Collection
-      this.locdbService.saveScan(
-        listelement.identifier.literalValue,
-        listelement.resourceType,
-        listelement.textualPdf,
-        listelement.file,
-        listelement.firstpage.toString(), // toString for transport
-        listelement.lastpage.toString() // toString for transport
-      ).subscribe(
-        (suc) => this.successHandler(listelement, suc, true), // auto trigger ocr
-        (err) => this.processError(listelement, err)
-      );
+      this.locdbService.saveResource(listelement.identifier.scheme,
+      listelement.identifier.literalValue,
+      listelement.resourceType,
+      listelement.firstpage,
+      listelement.lastpage,
+      listelement.textualPdf,
+      listelement.file,
+      null,
+      listelement.embodimentType
+    )//print or digital enum)
+    //
+    //   this.locdbService.saveScan(
+    //     listelement.identifier.literalValue,
+    //     listelement.resourceType,
+    //     listelement.textualPdf,
+    //     listelement.file,
+    //   ).subscribe(
+    //     (suc) => this.successHandler(listelement, suc, true), // auto trigger ocr
+    //     (err) => this.processError(listelement, err)
+    //   );
+    // } else if (listelement.resourceType === enums.resourceType.journal) {
+    //   // Electronic journal.
+    //   this.locdbService.saveScanForElectronicJournal (
+    //     listelement.identifier.scheme,
+    //     listelement.identifier.literalValue,
+    //     listelement.textualPdf,
+    //     listelement.file
+    //   ).subscribe(
+    //     (suc) => this.successHandler(listelement, suc, false),
+    //     (err) => this.processError(listelement, err)
+    //   );
+    // } else { // Collection
+    //   this.locdbService.saveScan(
+    //     listelement.identifier.literalValue,
+    //     listelement.resourceType,
+    //     listelement.textualPdf,
+    //     listelement.file,
+    //     listelement.firstpage.toString(), // toString for transport
+    //     listelement.lastpage.toString() // toString for transport
+    //   ).subscribe(
+    //     (suc) => this.successHandler(listelement, suc, true), // auto trigger ocr
+    //     (err) => this.processError(listelement, err)
+    //   );
     }
 
   }
@@ -312,6 +333,7 @@ class ToDoScansWithMeta {
   uploading: boolean; // to determine button state
   err?: any;
   textualPdf?: boolean; // textual pdf flag. optional since not needed for electronic
+  embodimentType?: enums.embodimentType;
 
   constructor (other: Partial<ToDoScansWithMeta>) {
     Object.assign(this, other);

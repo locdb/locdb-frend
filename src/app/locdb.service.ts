@@ -106,8 +106,7 @@ export class LocdbService {
    textualPdf?: boolean,
    binaryFile?: any,
    stringFile?: string,
-   embodimentType?: string,
-   extraHttpRequestParams?: any
+   embodimentType?: string
  ) {
    return this.scanApi.saveResource(identifierScheme, identifierLiteralValue,
    resourceType, firstPage, lastPage, textualPdf, binaryFile, stringFile,
