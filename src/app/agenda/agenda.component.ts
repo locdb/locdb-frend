@@ -88,19 +88,6 @@ export class AgendaComponent implements OnInit, OnChanges {
       this.selectedResource = br;
     }
 
-  // 2 methods to delete after chagnes
-  printState(scan: ToDoScans) {
-    if (scan.status === enums.status.ocrProcessed) { return 'OCR processed' } ;
-    if (scan.status === enums.status.notOcrProcessed) { return  'not OCR processed '};
-    if (scan.status === enums.status.ocrProcessing) { return 'OCR processing' };
-    if (scan.status === enums.status.external)  { return 'external' };
-    return scan.status
-  }
-
-  trimHash(identifier: string) {
-    // heuristic :)
-    return identifier.slice(0, 7);
-  }
 
   guard(t: ToDo | ToDoParts ) {
     /* Guard needs rework */
