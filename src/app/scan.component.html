@@ -23,8 +23,9 @@
                 <tbody>
                   <tr>
                     <td><select name="idtype" [(ngModel)]="toDoScansWithMeta.identifier.scheme">
-                        <option value="ppn">PPN</option>
-                        <option value="doi" [disabled]="toDoScansWithMeta.resourceType !== ResourceType.journal ">DOI</option>
+                        <!-- <option value="ppn">PPN</option>
+                        <option value="doi" [disabled]="toDoScansWithMeta.resourceType !== ResourceType.journal ">DOI</option> -->
+                        <option *ngFor="let it of identifierTypes" [value]="it">{{it}}</option>
                     </select></td>
                     <td><input type="text" name="_id" [(ngModel)]="toDoScansWithMeta.identifier.literalValue" style="width: 100%;"
                       class="form-control input-sm pull-right"></td>
@@ -65,7 +66,6 @@
           </div>
         </div>
       </div>
-    </div>
     <div class="card-footer">
       <button type="button" class="btn btn-warning" (click)="onclickclear()" [disabled]="uploading || !listoffiles[0]">Clear</button> &nbsp;
       <!-- <label class="btn btn-default"> -->
@@ -92,13 +92,24 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
+  </div>
   <div class="modal-body">
     <label> set Resource Type: <labeL>
-      <select name="modaltypeselect" [(ngModel)]="modalChoiceResourceType" style="width: 100%;"
         class="form-control input-sm pull-right">
         <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
       </select>
+      <select name="modaltypeselect" [(ngModel)]="modalChoiceResourceType" style="width: 100%;"
       <input type="file" multiple (change)="onChange($event)">
       <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
   </div>
 </ng-template>
+
+<!-- TODO: Code for Floating Action Button 
+<div class="share-wrapper col-xs-1 col-xs-push-11">
+   <a href="javascript:void(0)" style="background: none">
+     <i class="icon icon-material-share btn btn-info btn-raised withripple"
+     style="color: #03a9f4; background: rgba(255, 255, 255, 0.90); font-size: 30px; padding-left: 16px; padding-top: 14px; height: 60px;">
+       <div class="share-ripple ripple-wrapper"><span class="glyphicon glyphicon-search"></span></div>
+       </i>
+    </a>
+</div>  -->

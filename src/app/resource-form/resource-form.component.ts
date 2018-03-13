@@ -44,6 +44,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     // roles: string[] = AgentRole.ROLES;
     roles: string[] =  enum_values(enums.roleType);
     resourceTypes: string[] = enum_values(enums.resourceType);
+    identifierTypes: string[] = enum_values(enums.identifier);
 
     constructor(
         private fb: FormBuilder,

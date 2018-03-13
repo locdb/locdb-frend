@@ -14,6 +14,7 @@ const URL = '/api/'; // Same Origin Policy
   moduleId: module.id,
   selector: 'app-scan',
   templateUrl: './scan.component.html',
+  styleUrls: ['./scan.component.css'],  
   providers: [ LocdbService ]
 })
 
@@ -25,6 +26,8 @@ export class ScanComponent {
   resourceTypes: string[] = enum_values(enums.resourceType);
 
   embodimentTypes: string[] = enum_values(enums.embodimentType);
+
+  identifierTypes: string[] = enum_values(enums.identifier);
 
   uploading = false; // just for disabling the button
 
