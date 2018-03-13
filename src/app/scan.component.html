@@ -9,7 +9,7 @@
       <div class="list-group">
         <div *ngFor="let toDoScansWithMeta of listoffiles">
           <a href="#flup" class="list-group-item list-group-item-action" [class.list-group-item-danger]="toDoScansWithMeta.err" [class.list-group-item-warning]="!toDoScansWithMeta.err && !toDoScansWithMeta.allset" [class.list-group-item-success]="!toDoScansWithMeta.err && toDoScansWithMeta.allset" (click)="onSelect(toDoScansWithMeta); $event.preventDefault(); $event.stopPropagation()">
-            {{getName(toDoScansWithMeta)}} 
+            {{getName(toDoScansWithMeta)}}
             <span class="badge badge-primary">{{getMetadata(toDoScansWithMeta)}}
             </span>
             <button type="button" class="close pull-right" (click)="removeItemFromList(toDoScansWithMeta); $event.preventDefault(); $event.stopPropagation()" aria-label="Close">
@@ -44,6 +44,15 @@
                       </select>
                     </td>
                   </tr>
+                  <tr>
+                    <td><label for="typeselect">Embodiment Type</label></td>
+                    <td>
+                      <select [disabled]="!toDoScansWithMeta.file" name="embodimentselect" [(ngModel)]="toDoScansWithMeta.embodimentType" style="width: 100%;"
+                        class="form-control input-sm pull-right">
+                        <option *ngFor="let et of embodimentTypes" [value]="et">{{et}}</option>
+                      </select>
+                    </td>
+                  </tr>
                   <tr *ngIf="toDoScansWithMeta.file && toDoScansWithMeta.file.name.toLowerCase().endsWith('.pdf')">
                     <td><label for="istextual">Is textual PDF?</label></td>
                     <td>
@@ -62,7 +71,7 @@
       <!-- <label class="btn btn-default"> -->
       <!--   Browse Files <input type="file" multiple (change)= "onChange($event)" hidden style="display: none !important;"> -->
       <!-- </label> &nbsp; -->
-      <input type="file" multiple (change)="onChange($event)">
+      <button type="button" class="btn btn-primary" (click)="openModal(template)">Upload Files</button>
       <button type="button" class="btn btn-default" (click)="addId()"> Add Electronic Resource
       </button> &nbsp;
       <button type="button" class="btn btn-primary" (click)="onclickupload()" [disabled]="uploading || !listoffiles[0]">Upload</button>
@@ -75,3 +84,21 @@
   </div>
 </div>
 </div>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Batch Upload</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <label> set Resource Type: <labeL>
+      <select name="modaltypeselect" [(ngModel)]="modalChoiceResourceType" style="width: 100%;"
+        class="form-control input-sm pull-right">
+        <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
+      </select>
+      <input type="file" multiple (change)="onChange($event)">
+      <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
+  </div>
+</ng-template>

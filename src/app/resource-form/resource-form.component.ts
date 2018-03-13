@@ -134,7 +134,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             edition: this.resource.edition,
             resourcenumber: this.resource.number,
             publicationyear: this.resource.publicationYear,
-            // containerTitle: this.resource.containerTitle still in progress
+            // containerTitle: this.resource.containerTitle // still in progress
         });
         // new clean set contribs
         this.setContributors(this.resource.contributors);
