@@ -53,9 +53,7 @@ npm install
   {
     "spec": {},
     "options": {
-      "additionalProp1": "string",
-      "additionalProp2": "string",
-      "additionalProp3": "string"
+      "modelPropertyNaming": "original",
     },
     "swaggerUrl": "https://locdb.bib.uni-mannheim.de/locdb-dev/swagger",
     "authorizationValue": {
