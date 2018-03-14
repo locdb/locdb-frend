@@ -79,13 +79,13 @@ export class LocdbService {
 
   // Generic helpers for data extraction and error handling
 
-  getToDo(status_: enums.status): Observable<models.ToDo[]> {
+  getToDo(status_: enums.status): Observable<TypedResourceView[]> {
     // acquire todo items and scans
-    return this.scanApi.getToDo(status_);
+    return this.scanApi.getToDo(status_).map((todos) => todos.map( (todo) => new TypedResourceView(todo)));
   }
 
   /* Returns all ToDo items */
-  getAgenda(statuses: Array<enums.status>): Observable<models.ToDo[]> {
+  getAgenda(statuses: Array<enums.status>): Observable<TypedResourceView[]> {
     return Observable.from(statuses).flatMap(
       (status) => this.getToDo(status)
       // could sort via map by something
@@ -133,24 +133,23 @@ export class LocdbService {
     return `${this.locdbUrl}/scans/${identifier}`;
   }
 
-  deleteScan(scan: ToDoScans) {
+  deleteScan(scan: models.Scan) {
     return this.bibliographicEntryApi.remove(scan._id);
   }
 
 
   /* Resources API end */
-  addTargetBibliographicResource(entry: BibliographicEntry, resource: BibliographicResource): Observable<BibliographicResource> {
-    return this.bibliographicEntryApi.addTargetBibliographicResource(entry._id, resource._id).map( br => new TypedResourceView(br) );
+  addTargetBibliographicResource(entry: models.BibliographicEntry, resource_id: string): Observable<TypedResourceView> {
+    return this.bibliographicEntryApi.addTargetBibliographicResource(entry._id, resource_id).map( br => new TypedResourceView(br) );
   }
 
-  removeTargetBibliographicResource(entry): Observable<BibliographicResource> {
+  removeTargetBibliographicResource(entry: models.BibliographicEntry): Observable<TypedResourceView> {
     return this.bibliographicEntryApi.removeTargetBibliographicResource(entry._id).map( br => new TypedResourceView(br) );
   }
 
   async updateTargetResource(
-    entry: BibliographicEntry,
-    resource: BibliographicResource
-  ): Promise<BibliographicEntry> {
+    entry: models.BibliographicEntry,
+    resource_id: string ): Promise<models.BibliographicEntry> {
     /* adds or update link from entry to resource
      * 1-2 requests */
     if (entry.references) {
@@ -162,10 +161,10 @@ export class LocdbService {
       }
       entry.references = '';
     }
-    await this.addTargetBibliographicResource(entry, resource);
+    await this.addTargetBibliographicResource(entry, resource_id);
     /* to keep view consistent */
     entry.status = enums.status.valid;
-    entry.references = resource._id;
+    entry.references = resource_id;
     return Promise.resolve(entry);
   }
 
@@ -173,18 +172,18 @@ export class LocdbService {
     return this.bibliographicResourceApi.get(identifier).map( br => new TypedResourceView(br) );
   }
 
-  parentResource(br: TypedResourceView | BibliographicResource): Observable<TypedResourceView> {
+  parentResource(br: TypedResourceView | models.BibliographicResource): Observable<TypedResourceView> {
     return this.bibliographicResource(br.partOf);
   }
 
   async safeCommitLink(
-    entry: BibliographicEntry,
+    entry: models.BibliographicEntry,
     resource: TypedResourceView
   ): Promise<TypedResourceView> {
     /* if necessary, creates target resource before updating the reference of the entry */
     /* 1-3 requests */
     const target = await this.maybePostResource(resource).toPromise();
-    await this.updateTargetResource(entry, target);
+    await this.updateTargetResource(entry, target._id);
     return target;
   }
 
@@ -224,57 +223,57 @@ export class LocdbService {
   }
 
   pushBibligraphicResource(resource: TypedResourceView): Observable<TypedResourceView> {
-    return this.bibliographicResourceApi.save(resource).map( br => new TypedResourceView(br));
+    return this.bibliographicResourceApi.save(resource.data).map( br => new TypedResourceView(br));
   }
 
-  deleteBibliographicResource(resource: TypedResourceView) : Observable<SuccessResponse> {
+  deleteBibliographicResource(resource: TypedResourceView) : Observable<models.SuccessResponse> {
     return this.bibliographicResourceApi.deleteSingle(resource._id);
   }
   /* Resources API end */
 
-  deleteBibliographicEntry(entry: BibliographicEntry) : Observable<BibliographicEntry> {
+  deleteBibliographicEntry(entry: models.BibliographicEntry) : Observable<models.BibliographicEntry> {
     return this.bibliographicEntryApi.remove(entry._id);
   }
 
-  updateBibliographicEntry(entry: BibliographicEntry) {
+  updateBibliographicEntry(entry: models.BibliographicEntry) {
     // status must be set to 'VALID' before, if performed by user.
     return this.bibliographicEntryApi.update(entry._id, entry);
   }
 
-  createBibliographicEntry(resource_id: string, entry: BibliographicEntry): Observable<BibliographicEntry> {
+  createBibliographicEntry(resource_id: string, entry: models.BibliographicEntry): Observable<models.BibliographicEntry> {
     return this.bibliographicEntryApi.create(resource_id, entry);
   }
 
   /* The following needs to be reconsidered, actually we could store login status here */
   /** User and Instance Management */
 
-  login(username: string, password: string): Observable<User> {
-    const user: User = {username: username, password: password};
+  login(username: string, password: string): Observable<models.User> {
+    const user: models.User = {username: username, password: password};
     return this.userApi.login(user);
   }
 
-  register(username: string, password: string): Observable<User> {
+  register(username: string, password: string): Observable<models.User> {
     // const headers = new Headers({ 'Content-Type': 'application/json' });
     // const options = new RequestOptions({ headers: headers, withCredentials: true });
-    const user: User = {username: username, password: password};
+    const user: models.User = {username: username, password: password};
     return this.userApi.signup(user);
   }
 
-  logout(): Observable<SuccessResponse> {
+  logout(): Observable<models.SuccessResponse> {
     return this.userApi.logout();
   }
 
 
   //
-  addFeed(feed: Feed): Observable<User> {
+  addFeed(feed: models.Feed): Observable<models.User> {
     return this.userApi.addFeed(feed);
   }
 
-  fetchFeeds(): Observable<FeedEntry[][]> {
+  fetchFeeds(): Observable<models.FeedEntry[][]> {
     return this.userApi.fetchFeeds();
   }
 
-  deleteFeed(identifier: string): Observable<User> {
+  deleteFeed(identifier: string): Observable<models.User> {
     return this.userApi.deleteFeed(identifier);
   }
 } // LocdbService

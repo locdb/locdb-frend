@@ -1,7 +1,7 @@
 <p>
   {{ embodiment.firstPage }} {{embodiment.lastPage}} {{ embodiment.type }} {{ embodiment.format}}
 </p>
-<a *ngIf="embodiment.url" [href]="embodiment.url">Inspect Source</a>
+<a [href]="embodiment.url" [class.disabled]="embodiment.url">Inspect Source</a>
 <ul *ngIf="embodiment.scans">
   <li *ngFor="let scan of embodiment.scans">
     <button type="button" [onclick]="selectScan(scan)"> {{ scan | json}}</button>

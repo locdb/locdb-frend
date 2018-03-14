@@ -1,11 +1,17 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { BibliographicResource, ToDo, TypedResourceView, ResourceEmbodiment} from '../locdb';
+import { BibliographicResource, TypedResourceView, ResourceEmbodiment} from '../locdb';
 import { LocdbService } from '../locdb.service';
-import { Provenance, enums, MetaData } from '../locdb';
+import { Provenance, enums, MetaData, enum_values, models} from '../locdb';
 
 interface Tracking {
   [key: string ]: boolean;
 }
+
+type ScanContext = [TypedResourceView, TypedResourceView, models.ResourceEmbodiment] | [TypedResourceView, models.ResourceEmbodiment ]
+type RefsContext = [TypedResourceView, TypedResourceView] | [TypedResourceView]
+
+
+
 
 @Component({
   selector: 'app-agenda',
@@ -13,13 +19,15 @@ interface Tracking {
   styleUrls: ['./agenda.component.css']
 })
 export class AgendaComponent implements OnInit, OnChanges {
-
-  @Output() resourceTrack: EventEmitter<MetaData[]> = new EventEmitter();
-  todos: ToDo[];
-  provenance = Provenance;
+  @Output() refsWithContext: EventEmitter<[Array<models.BibliographicEntry>, RefsContext] | null> = new EventEmitter();
+  @Output() scanWithContext: EventEmitter<[models.Scan, ScanContext] | null> = new EventEmitter()
+  todos: TypedResourceView[];
+  // provenance = Provenance;
   loading = false;
-  selectedResource : TypedResourceView;
+  // selectedResource : TypedResourceView;
   tracking: Tracking = {};
+  statuses: Array<string> = enum_values(enums.status);
+  title = "Agenda";
 
   constructor(private locdbService: LocdbService) { }
 
@@ -48,57 +56,41 @@ export class AgendaComponent implements OnInit, OnChanges {
   }
 
 
-
-
   refresh() {
     this.ngOnChanges();
   }
 
-
-  onSelectScan(scan: ToDoScans, trace: BibliographicResource[] | ToDo[]) {
-    // called when pressing on a scan todo item
-    if ( scan.status === enums.status.notOcrProcessed ) {
-      console.log('Starting processing');
-      scan.status = enums.status.ocrProcessing;
-      this.locdbService.triggerOcrProcessing(scan._id).subscribe(
-        (success) => scan.status = enums.status.ocrProcessed,
-        (err) => console.log(err)
-      )
+  inspectRefs(resource:TypedResourceView, parent?:TypedResourceView) {
+    if (parent){
+      this.refsWithContext.emit([resource.parts, [parent, resource]]);
     } else {
-      console.log('Todo item selected', scan);
-      this.todo.next(scan);
-      console.log('resourceTrack: ', trace)
-      this.resourceTrack.next(trace)
+      this.refsWithContext.emit([resource.parts, [resource]])
     }
   }
 
-  onSelectExternal(resource: ToDo, trace: BibliographicResource[]) {
-    // called when pressing on an external todo item
-    console.log('onselect external');
-    this.todo.next(resource);
-    this.resourceTrack.next(trace);
-  }
-
-
-  emit(scanOrResource: ToDoScans | ToDo) {
-    this.todo.next(scanOrResource);
-  }
-
-  onSelect(br?: TypedResourceView): void {
-      this.selectedResource = br;
+  inspectScan(scan: models.Scan, embodiment: models.ResourceEmbodiment,
+              resource: TypedResourceView, parent?: TypedResourceView) {
+    if (parent) {
+      this.scanWithContext.emit([scan, [parent, resource, embodiment]])
+    } else {
+      this.scanWithContext.emit([scan, [resource, embodiment]])
     }
-
-
-  guard(t: ToDo | ToDoParts ) {
-    /* Guard needs rework */
-    /* is there anything to display? */
-    if (!t) { return false; }
-    // if (t.parts && t.parts.length) { return true; }
-    if ((<ToDoParts>t).scans && (<ToDoParts>t).scans.length) { return true; }
-    if ((<ToDo>t).children) {
-      // any children satisfies condition above?
-      return !(<ToDo>t).children.every((child) => !this.guard(child));
-    }
-    return false;
   }
+
+
+
+
+
+  // guard(t: ToDo | ToDoParts ) {
+  //   /* Guard needs rework */
+  //   /* is there anything to display? */
+  //   if (!t) { return false; }
+  //   // if (t.parts && t.parts.length) { return true; }
+  //   if ((<ToDoParts>t).scans && (<ToDoParts>t).scans.length) { return true; }
+  //   if ((<ToDo>t).children) {
+  //     // any children satisfies condition above?
+  //     return !(<ToDo>t).children.every((child) => !this.guard(child));
+  //   }
+  //   return false;
+  // }
 }

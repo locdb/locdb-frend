@@ -1,0 +1,23 @@
+<p *ngIf="resource">
+  <span class="badge badge-primary"> {{ resource.type }} </span>
+  {{ resource.contributors? | authors || resource.contributors? | editors + ' (ed.)'}}
+  .
+  <span class="badge badge-secondary"> {{ resource.publicationYear? }}</span>
+  .
+  <b>{{resource.title?}}</b>
+  ,
+  {{ resource.contributors? | publisher }}
+  .
+  <span class="badge badge-success" *ngFor="let ident of identifiers?">
+    {{ident.scheme?}}: {{ident.literalValue?}}
+  </span>
+  <span *ngIf="in">
+    In:
+    {{ in.contributors? | authors || in.contributors? | editors + ' (ed.)'}}
+    :
+    {{ in.title? }}
+    ,
+    {{ resource?.contributors | publisher }}
+    .
+  </span>
+</p>

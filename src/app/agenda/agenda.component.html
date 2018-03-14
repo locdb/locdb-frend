@@ -1,21 +1,13 @@
-<div class="card" *ngFor="let todo of todos">
-  <app-metadata [of]=todo></app-metadata>
-  <ul *ngIf="todo.embodiments && todo.embodiments.length">
-    <li *ngFor="let embodiment of todo.embodiments">
-      <app-embodiment [embodiment]="embodiment"></app-embodiment>
-    </li>
-  </ul>
-
-  <ul>
-    <li *ngFor="let child of todo.children">
-
-      <ul *ngIf="child.embodiments && child.embodiments.length">
-        <li *ngFor="let embodiment of child.embodiments">
-          <app-embodiment [embodiment]="embodiment"></app-embodiment>
-        </li>
-      </ul>
-
-    </li>
-  </ul>
+<div class="card">
+  <h3 class="card-title">{{ title }}</h3>
+  <div class="card-body">
+    <input *ngFor="let status of statuses" type="checkbox" [(ngModel)]="tracking.status"
+  </div>
+  <div class="card-body">
+    <app-todo *ngFor="todo of todos" [todo]="todo" (refs)="inspectRefs()">
+      <app-todo *ngFor="child of todo.children" [todo]="child">
+      </app-todo>
+    </app-todo>
+</div>
 
 </div>

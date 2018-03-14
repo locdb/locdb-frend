@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
-import { ToDo, ToDoScans, BibliographicEntry, BibliographicResource } from '../locdb';
+import { models, enums } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import {Observable} from 'rxjs/Rx';
 import { SimpleChanges } from '@angular/core';
