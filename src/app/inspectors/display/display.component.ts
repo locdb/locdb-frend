@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy, OnChanges, Input, Output, EventEmitter, ViewChildren, ViewChild} from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 
-import { BibliographicEntry } from '../locdb';
-import { LocdbService } from '../locdb.service';
+import { BibliographicEntry } from '../../locdb';
+import { LocdbService } from '../../locdb.service';
 
-import { environment } from 'environments/environment';
 import * as d3 from 'd3';
 import { PopoverModule } from 'ngx-popover/index';
 

@@ -1,27 +1,26 @@
 import { Component, OnChanges, Input, Output, EventEmitter} from '@angular/core';
 import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
-import { BibliographicEntry, Identifier, TypedResourceView} from '../locdb';
+import { models, TypedResourceView} from '../../locdb';
 import { SimpleChanges } from '@angular/core';
-import { LocdbService } from '../locdb.service';
+import { LocdbService } from '../../locdb.service';
 @Component({
-  selector: 'app-entry-card-group',
-  templateUrl: './entry-card-group.component.html',
-  styleUrls: ['./entry-card-group.component.css'],
+  selector: 'app-entry-card',
+  templateUrl: './entry-card.component.html',
+  styleUrls: ['./entry-card.component.css'],
 })
-
-export class EntryCardGroupComponent implements OnChanges {
+export class EntryCardComponent implements OnChanges {
 
 
 
 
     @Input() resource: TypedResourceView;
-    @Input() entry: BibliographicEntry;
+    @Input() entry: models.BibliographicEntry;
     @Input() active: false;
     entryForm: FormGroup;
     submitted = false;
     disabled = true;
     open = false;
-    @Output() state: EventEmitter<BibliographicEntry> = new EventEmitter()
+    @Output() state: EventEmitter<models.BibliographicEntry> = new EventEmitter()
 
 
 
@@ -94,7 +93,7 @@ export class EntryCardGroupComponent implements OnChanges {
         // Display the form or stop displaying it
         this.submitted = !val;
     }
-    setIdentifiers(ids: Identifier[]) {
+    setIdentifiers(ids: models.Identifier[]) {
       const identsFGs = ids ? ids.map(
         identifier => this.fb.group(
           {literalValue: identifier.literalValue,
@@ -135,7 +134,7 @@ export class EntryCardGroupComponent implements OnChanges {
 
       }
     }
-    reconstructIdentifier(scheme: string, value: string): Identifier {
+    reconstructIdentifier(scheme: string, value: string): models.Identifier {
       const identifier = {
         scheme: scheme,
         literalValue: value,
@@ -143,7 +142,7 @@ export class EntryCardGroupComponent implements OnChanges {
       return identifier;
     }
 
-    prepareSaveEntry(): BibliographicEntry {
+    prepareSaveEntry(): models.BibliographicEntry {
       const formModel = this.entryForm.value;
       // deep copy of form model lairs
       // const authorsDeepCopy: string[] = formModel.authors.map(
@@ -156,7 +155,7 @@ export class EntryCardGroupComponent implements OnChanges {
       const identsDeepCopy = formModel.identifiers.map(
         (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
       ).filter(i => i.scheme && i.literalValue); // sanity check
-      const saveEntry: BibliographicEntry = {
+      const saveEntry: models.BibliographicEntry = {
         _id: this.entry._id,
         bibliographicEntryText: formModel.bibliographicEntryText as string || '',
         references: formModel.references as string || '',
@@ -187,10 +186,10 @@ export class EntryCardGroupComponent implements OnChanges {
     revert() { this.ngOnChanges(); }
 
     delete(entry) {
-      if (confirm('Are you sure to delete resource ' + entry._id)) {
+      if (confirm('Are you sure to delete entry ' + entry._id)) {
            this.locdbService.deleteBibliographicEntry(entry).subscribe(
               (res) => {console.log('Deleted'); this.entry = null;},
-              (err) => {alert("Error deleting resource " + entry._id); console.log("Error", err)}
+              (err) => {alert("Error deleting entry " + entry._id); console.log("Error", err)}
           );
       }
      }

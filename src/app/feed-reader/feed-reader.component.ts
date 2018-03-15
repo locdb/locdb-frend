@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { LocdbService } from '../locdb.service';
 import { FeedService } from '../feed.service';
-import { Feed } from '../locdb'
+import { models } from '../locdb'
 import { Http } from '@angular/http';
 
 @Component({
@@ -56,7 +56,7 @@ export class FeedComponent implements OnInit {
   styleUrls: ['./feed-reader.component.css'],
 })
 export class FeedReaderComponent implements OnInit {
-  feeds: Feed[] = []
+  feeds: models.Feed[] = []
   title = "Feed Reader"
 
   constructor(private feedService: FeedService, private locdbService: LocdbService) {
@@ -70,10 +70,12 @@ export class FeedReaderComponent implements OnInit {
 
   ngOnInit() {
     console.log('Feedreader says hi');
-    this.locdbService.fetchFeeds().subscribe(
-      (res) => { this.feeds = res; console.log("feeds: ", this.feeds) },
-      (err) => { console.log(err); console.log("feeds: ", this.feeds) }
-    )
+    // this.locdbService.fetchFeeds().subscribe(
+    //   // Only for compiling TODO FIXME
+    //   (res) => { this.feeds = res[0]; console.log("feeds: ", this.feeds) },
+    //   // (res) => { this.feeds = res; console.log("feeds: ", this.feeds) },
+    //   (err) => { console.log(err); console.log("feeds: ", this.feeds) }
+    // )
     //mock me a feed
     // let feed: Feed = {_id: 'xy', name: 'test', url: 'http://rss.cnn.com/rss/edition.rss'};
     // this.feeds.push(feed)
@@ -82,15 +84,15 @@ export class FeedReaderComponent implements OnInit {
   addFeed(url: string, name?: string) {
     console.log("add feed: ", url)
     name = name ? name : 'UNK'
-    this.locdbService.addFeed(name, url).subscribe(
-      (suc) => { this.feeds.push(suc) },
+    this.locdbService.addFeed({name: name, url: url}).subscribe(
+      (user) => { this.feeds = user.feeds },
       (err) => { console.log(err) }
     );
   }
 
-  deleteFeed(feed: Feed) {
+  deleteFeed(feed: models.Feed) {
     this.locdbService.deleteFeed(feed._id).subscribe(
-      (suc) => { this.feeds = suc },
+      (user) => { this.feeds = user.feeds },
       (err) => { console.log(err) }
     );
 

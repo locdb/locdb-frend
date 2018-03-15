@@ -11,7 +11,7 @@ import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
 
 @Component({
   selector: 'app-resource',
-  templateUrl: './author-year-format.component.html',
+  templateUrl: './author-year-format.html',
   styleUrls: ['./resource.component.css']
 })
 export class ResourceComponent {

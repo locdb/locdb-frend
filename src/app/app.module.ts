@@ -26,37 +26,31 @@ import { HotkeyModule } from 'angular2-hotkeys';
 
 // own
 import { ScanComponent } from './scan.component';
-import { DisplayComponent } from './display/display.component';
 import { LocdbService } from './locdb.service';
 import { SuggestionComponent } from './suggestion/suggestion.component';
 import { LoginComponent } from './login/login.component';
 import { VisualComponent } from './visual/visual.component';
 import { CommitComponent } from './commit/commit.component';
 
-// todo related
-import { TodoComponent } from './todo.component';
-import { TodoDetailComponent } from './todo-detail/todo-detail.component';
-import { TodoListComponent } from './todo-list/todo-list.component';
-import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
+// agenda related
+import { AgendaComponent, TodoComponent, EmbodimentComponent } from './agenda';
+
+// inspector related
+import { RefsInspectorComponent, ScanInspectorComponent, EntryListComponent, EntryCardComponent, DisplayComponent} from './inspectors';
 
 // feeds
 import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
-
-// entries
-import { EntryListComponent } from './entry-list/entry-list.component';
-import { EntryFormComponent } from './entry-form/entry-form.component';
 
 // resource related
 import { ResourceComponent } from './resource/resource.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
 import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
-import { AppwrapperComponent } from './appwrapper/appwrapper.component';
+import { LinkingComponent } from './linking/linking.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 
 import { LoggingService } from './logging.service';
 import { ResourceCardGroupComponent } from './resource-card-group/resource-card-group.component';
-import { EntryCardGroupComponent } from './entry-card-group/entry-card-group.component'
 import { BrowseComponent } from './browse/browse.component'
 
 
@@ -68,7 +62,7 @@ import {
 import { BASE_PATH } from './typescript-angular2-client/variables'
 
 const appRoutes: Routes = [
-  { path: 'resolve', component: AppwrapperComponent },
+  { path: 'resolve', component: LinkingComponent },
   { path: 'ingest', component: ScanComponent},
   { path: 'browse', component: BrowseComponent},
   { path: 'frontpage', component: FrontpageComponent},
@@ -110,7 +104,6 @@ const appRoutes: Routes = [
     ScanComponent,
     TodoComponent,
     DisplayComponent,
-    EntryFormComponent,
     SuggestionComponent,
     ResourceFormComponent,
     LoginComponent,
@@ -119,16 +112,15 @@ const appRoutes: Routes = [
     FeedReaderComponent,
     FeedComponent,
     EntryListComponent,
-    TodoDetailComponent,
-    TodoListComponent,
-    TodoLeafComponent,
+    RefsInspectorComponent,
+    ScanInspectorComponent,
     ResourceComponent,
     ResourceAccordionGroupComponent,
     ResourceEditableComponent,
-    AppwrapperComponent,
+    LinkingComponent,
     FrontpageComponent,
     ResourceCardGroupComponent,
-    EntryCardGroupComponent,
+    EntryCardComponent,
     BrowseComponent,
   ],
   providers: [

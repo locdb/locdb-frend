@@ -1,40 +1,55 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, TypedResourceView } from '../locdb';
+import { models, enums, TypedResourceView } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { FeedService } from '../feed.service';
+import { Context } from '../agenda/agenda.component';
 //import { environment } from 'environments/environment';
 
-interface Track {
-  todo: ToDo,
-  part: ToDoParts,
-}
 @Component({
-  selector: 'app-wrap',
-  templateUrl: './appwrapper.component.html',
+  selector: 'app-linking',
+  templateUrl: './linking.component.html',
   providers: [ LocdbService, FeedService ]
 })
 
 /** Main App Component for whole LOCDB Frontend */
-export class AppwrapperComponent implements OnInit {
+export class LinkingComponent implements OnInit {
   title = 'LOC-DB Frontend';
   source: TypedResourceView = null;
-  todo: ToDoScans | ToDo = null;
-  resourceTrack: Track;
-  entry: BibliographicEntry = null;
+  context: Context;
+  scan: models.Scan = null;
+  refs: Array<models.BibliographicEntry> = null;
+  entry: models.BibliographicEntry = null;
   target: TypedResourceView = null;
+  mode: 'refs' | 'scan' | 'agenda' = 'agenda';
   constructor (private locdbService: LocdbService ) {}
 
   ngOnInit() {
     // this.visualState = 0;
   }
 
-  updateTodo(todo: ToDoScans | ToDo) {
-    // this.visualState = 0;
-    this.todo = todo;
+  get isInspecting () {
+    return this.mode == 'agenda';
   }
 
-  updateTrack(resources: any[]){
-    this.resourceTrack = { todo: resources[0], part: resources[1] };
+  startInspectRefs(refs: Array<models.BibliographicEntry>, context: Context) {
+    this.mode = 'refs';
+    this.refs = refs;
+    this.context = context;
+    this.scan = null;
+  }
+
+  startInspectScan(scan: models.Scan, context: Context) {
+    this.mode = 'scan';
+    this.scan = scan;
+    this.context = context;
+    this.refs = null;
+  }
+
+  reset() {
+    this.mode = 'agenda';
+    this.context = null;
+    this.refs = null;
+    this.scan = null;
   }
 
   updateSource (br: TypedResourceView) {
@@ -44,7 +59,7 @@ export class AppwrapperComponent implements OnInit {
     this.source = br;
   }
 
-  updateEntry (entry: BibliographicEntry) {
+  updateEntry (entry: models.BibliographicEntry) {
     // the check on entry causes the infamous ExpressionChangedAfterItWasSet exception
     // this.showCitation()
     // if (entry) {

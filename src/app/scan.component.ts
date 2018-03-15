@@ -6,7 +6,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { LocdbService } from './locdb.service';
 import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
 
-import { enums, enum_values, ToDoScans, Identifier, BibliographicEntry } from './locdb';
+import { enums, enum_values, models, Identifier, BibliographicEntry } from './locdb';
 
 const URL = '/api/'; // Same Origin Policy
 
@@ -14,7 +14,7 @@ const URL = '/api/'; // Same Origin Policy
   moduleId: module.id,
   selector: 'app-scan',
   templateUrl: './scan.component.html',
-  styleUrls: ['./scan.component.css'],  
+  styleUrls: ['./scan.component.css'],
   providers: [ LocdbService ]
 })
 

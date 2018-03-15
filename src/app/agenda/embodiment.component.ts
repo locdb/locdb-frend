@@ -7,7 +7,6 @@ import { LocdbService } from '../locdb.service';
   selector: 'app-embodiment',
   templateUrl: './embodiment.component.html',
   providers: [ LocdbService ],
-  styleUrls: ['./embodiment.component.css']
 })
 export class EmbodimentComponent {
   @Input() embodiment : models.ResourceEmbodiment;

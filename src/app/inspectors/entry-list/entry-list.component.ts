@@ -8,10 +8,10 @@ import {
   EventEmitter,
   Output
 } from '@angular/core';
-import { BibliographicEntry, TypedResourceView } from '../locdb'
+import { models, TypedResourceView } from '../../locdb'
 import { Observable } from 'rxjs/Rx';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
-import { LoggingService } from '../logging.service'
+import { LoggingService } from '../../logging.service'
 
 @Component({
   selector: 'app-entry-list',
@@ -22,11 +22,11 @@ import { LoggingService } from '../logging.service'
 export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() resource: TypedResourceView;
-  @Input() entries: BibliographicEntry[];
-  selectedEntry: BibliographicEntry;
+  @Input() entries: models.BibliographicEntry[];
+  selectedEntry: models.BibliographicEntry;
   // first argument : true makes event emitter async
   // necessary to avoid ChangeDetection errors
-  @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter(true);
+  @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter(true);
 
 
   constructor(private _hotkeysService: HotkeysService, private loggingService: LoggingService) {
@@ -77,7 +77,7 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
-  onSelectReference(entry: BibliographicEntry) {
+  onSelectReference(entry: models.BibliographicEntry) {
     if (this.selectedEntry === entry) { return; } // guard
     this.loggingService.logReferenceSelected(entry)
     this.selectedEntry = entry;

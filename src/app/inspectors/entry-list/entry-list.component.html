@@ -1,0 +1,8 @@
+<div *ngIf="!entries" class="loader">
+</div>
+  <div style="height: 1000px; overflow-y: scroll;">
+  <div *ngFor="let e of entries">
+    <app-entry-card [resource]="resource" [entry]="e" [active]="e == selectedEntry" (click)="onSelectReference(e)">
+    </app-entry-card>
+  </div>
+</div>

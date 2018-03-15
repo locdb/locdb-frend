@@ -7,10 +7,14 @@ interface Tracking {
   [key: string ]: boolean;
 }
 
-type ScanContext = [TypedResourceView, TypedResourceView, models.ResourceEmbodiment] | [TypedResourceView, models.ResourceEmbodiment ]
-type RefsContext = [TypedResourceView, TypedResourceView] | [TypedResourceView]
 
 
+export interface Context {
+  mode: 'refs' | 'scan';
+  parent: TypedResourceView | null;
+  source: TypedResourceView;
+  embodiment?: models.ResourceEmbodiment;
+}
 
 
 @Component({
@@ -19,8 +23,8 @@ type RefsContext = [TypedResourceView, TypedResourceView] | [TypedResourceView]
   styleUrls: ['./agenda.component.css']
 })
 export class AgendaComponent implements OnInit, OnChanges {
-  @Output() refsWithContext: EventEmitter<[Array<models.BibliographicEntry>, RefsContext] | null> = new EventEmitter();
-  @Output() scanWithContext: EventEmitter<[models.Scan, ScanContext] | null> = new EventEmitter()
+  @Output() refsWithContext: EventEmitter<[Array<models.BibliographicEntry>, Context]> = new EventEmitter();
+  @Output() scanWithContext: EventEmitter<[models.Scan, Context]> = new EventEmitter()
   todos: TypedResourceView[];
   // provenance = Provenance;
   loading = false;
@@ -61,20 +65,12 @@ export class AgendaComponent implements OnInit, OnChanges {
   }
 
   inspectRefs(resource:TypedResourceView, parent?:TypedResourceView) {
-    if (parent){
-      this.refsWithContext.emit([resource.parts, [parent, resource]]);
-    } else {
-      this.refsWithContext.emit([resource.parts, [resource]])
-    }
+    this.refsWithContext.emit([resource.parts, { mode: 'refs', source: resource, parent: parent || null}]);
   }
 
   inspectScan(scan: models.Scan, embodiment: models.ResourceEmbodiment,
               resource: TypedResourceView, parent?: TypedResourceView) {
-    if (parent) {
-      this.scanWithContext.emit([scan, [parent, resource, embodiment]])
-    } else {
-      this.scanWithContext.emit([scan, [resource, embodiment]])
-    }
+    this.scanWithContext.emit([scan, { mode: 'scan', source: resource, embodiment: embodiment, parent:parent || null }])
   }
 
 

@@ -1,8 +1,8 @@
 import { Component, OnChanges, Input, Output, EventEmitter} from '@angular/core';
 import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
-import { BibliographicEntry, Identifier, TypedResourceView} from '../locdb';
+import { models, TypedResourceView} from '../../locdb';
 import { SimpleChanges } from '@angular/core';
-import { LocdbService } from '../locdb.service';
+import { LocdbService } from '../../locdb.service';
 
 @Component({
   selector: 'app-entry-form',
@@ -11,14 +11,14 @@ import { LocdbService } from '../locdb.service';
 })
 
 export class EntryFormComponent implements OnChanges {
-  @Input() entry: BibliographicEntry;
+  @Input() entry: models.BibliographicEntry;
   @Input() active: false;
   @Input() resource: TypedResourceView;
   entryForm: FormGroup;
   submitted = false;
   disabled = true;
   open = false;
-  @Output() state: EventEmitter<BibliographicEntry> = new EventEmitter()
+  @Output() state: EventEmitter<models.BibliographicEntry> = new EventEmitter()
 
 
 
@@ -89,7 +89,7 @@ export class EntryFormComponent implements OnChanges {
       // Display the form or stop displaying it
       this.submitted = !val;
   }
-  setIdentifiers(ids: Identifier[]) {
+  setIdentifiers(ids: models.Identifier[]) {
     const identsFGs = ids ? ids.map(
       identifier => this.fb.group(
         {literalValue: identifier.literalValue,
@@ -130,7 +130,7 @@ export class EntryFormComponent implements OnChanges {
 
     }
   }
-  reconstructIdentifier(scheme: string, value: string): Identifier {
+  reconstructIdentifier(scheme: string, value: string): models.Identifier {
     const identifier = {
       scheme: scheme,
       literalValue: value,
@@ -138,7 +138,7 @@ export class EntryFormComponent implements OnChanges {
     return identifier;
   }
 
-  prepareSaveEntry(): BibliographicEntry {
+  prepareSaveEntry(): models.BibliographicEntry {
     const formModel = this.entryForm.value;
     // deep copy of form model lairs
     // const authorsDeepCopy: string[] = formModel.authors.map(
@@ -151,7 +151,7 @@ export class EntryFormComponent implements OnChanges {
     const identsDeepCopy = formModel.identifiers.map(
       (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
     ).filter(i => i.scheme && i.literalValue); // sanity check
-    const saveEntry: BibliographicEntry = {
+    const saveEntry: models.BibliographicEntry = {
       _id: this.entry._id,
       bibliographicEntryText: formModel.bibliographicEntryText as string || '',
       references: formModel.references as string || '',
