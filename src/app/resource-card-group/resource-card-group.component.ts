@@ -1,8 +1,7 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { BibliographicResource, TypedResourceView, ToDo } from '../locdb';
+import { models, TypedResourceView, enums } from '../locdb';
 import { LoggingService } from '../logging.service'
 import { LocdbService } from '../locdb.service';
-import { models, enums } from '../locdb';
 
 @Component({
   selector: 'app-resource-card-group',

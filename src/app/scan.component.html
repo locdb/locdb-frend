@@ -76,14 +76,14 @@
       </button> &nbsp;
       <button type="button" class="btn btn-primary" (click)="onclickupload()" [disabled]="uploading || !listoffiles[0]">Upload</button>
     </div>
-</div>
-<!-- end of col -->
-  </div>
+  </div> <!-- end of card body -->
+</div> <!-- end of card -->
+</div> <!-- end of col -->
   <div class="col-xs-12 col-md-6">
     <app-feed-reader></app-feed-reader>
   </div>
-</div>
-</div>
+</div> <!-- end of row -->
+</div> <!-- end of container -->
 
 <ng-template #template>
   <div class="modal-header">
@@ -92,13 +92,12 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  </div>
   <div class="modal-body">
-    <label> set Resource Type: <labeL>
-        class="form-control input-sm pull-right">
+    <label> set Resource Type: </label>
+        <!-- class="form-control input-sm pull-right"> -->
         <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
-      </select>
-      <select name="modaltypeselect" [(ngModel)]="modalChoiceResourceType" style="width: 100%;"
+        <select name="modaltypeselect" [(ngModel)]="modalChoiceResourceType" style="width: 100%;">
+        </select>
       <input type="file" multiple (change)="onChange($event)">
       <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
   </div>

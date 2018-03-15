@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, OnChanges, Input, Output, EventEmitter, ViewChildren, ViewChild} from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 
-import { BibliographicEntry } from '../../locdb';
+import { models } from '../../locdb';
 import { LocdbService } from '../../locdb.service';
 
 import * as d3 from 'd3';
@@ -35,9 +35,9 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     // @Input() todo: ToDoScans;
 
     @Input() img_src = '';
-    @Input() entries: BibliographicEntry[] = [];
+    @Input() entries: models.BibliographicEntry[] = [];
 
-    selectedEntry: BibliographicEntry = null;
+    selectedEntry: models.BibliographicEntry = null;
 
     title = 'Scan Display';
     currentIndex = 0;
@@ -47,7 +47,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     imgX = 1500;    // initvalues no relevance if new picture is set
     imgY = 1500;
 
-    @Output() entry: EventEmitter<BibliographicEntry> = new EventEmitter();
+    @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
 
     constructor( private locdbService: LocdbService, private _hotkeysService: HotkeysService) {
     }
@@ -111,7 +111,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         return coordinates.split(' ').length >= 4
     }
 
-    rectFromEntry(entry: BibliographicEntry): Rect {
+    rectFromEntry(entry: models.BibliographicEntry): Rect {
         const values = entry.ocrData.coordinates.split(' ')
         const rect = {
                 x: Number(values[0]),
@@ -178,5 +178,5 @@ class Rect {
     y: number;
     height: number;
     width: number;
-    entry: BibliographicEntry;
+    entry: models.BibliographicEntry;
 }

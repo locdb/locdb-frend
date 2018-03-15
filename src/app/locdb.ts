@@ -1,7 +1,7 @@
 // Just a foward from generated code.
 
 
-import * as models from './typescript-angular2-client/model/models'
+import * as models from './typescript-angular-client/model/models'
 
 export {models};
 
@@ -17,7 +17,8 @@ export function invert_enum(obj: Object) {
   for (let key in obj) {
     let val = obj[key]
     if (val in inverse) {
-      Error("Mapping not invertible. Duplicate value: " + val);
+      // Error("Mapping not invertible. Duplicate value: " + val);
+      console.log("Error inverting enum, yet proceeding");
     }
     inverse[val] = key
   }
@@ -130,7 +131,7 @@ export enum Provenance {
 }
 
 export class TypedResourceView implements MetaData {
-  readonly data: models.BibliographicResource;
+  readonly data: models.BibliographicResource | models.ToDo;
   private _prefix: string;
   readonly viewport_: string;
 
@@ -345,9 +346,3 @@ export function extractAgentsFromContribs(contribs: Array<models.AgentRole>, pro
   }
 
 }
-
-
-export {BibliographicResource, AgentRole, BibliographicEntry, ErrorResponse, Feed, FeedEntry,
-FeedEntryEnclosures, FeedEntryImage, FeedEntryMeta, Identifier, LogRequest,
-ResourceEmbodiment, ResponsibleAgent, SuccessResponse, ToDo,
-User, OCRData} from './typescript-angular2-client/model/models';

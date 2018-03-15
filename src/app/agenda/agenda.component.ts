@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { BibliographicResource, TypedResourceView, ResourceEmbodiment} from '../locdb';
 import { LocdbService } from '../locdb.service';
-import { Provenance, enums, MetaData, enum_values, models} from '../locdb';
+import { TypedResourceView, enums, enum_values, models} from '../locdb';
+import { TodoComponent } from './todo.component'
 
 interface Tracking {
   [key: string ]: boolean;
@@ -40,12 +40,13 @@ export class AgendaComponent implements OnInit, OnChanges {
     // reasonable defaults
     this.tracking[enums.status.ocrProcessed] = true;
     this.tracking[enums.status.external] = true;
-    this.tracking[enums.status.valid] = true;
+    this.tracking[enums.status.valid] = false;
     this.tracking[enums.status.notOcrProcessed] = false;
     this.tracking[enums.status.ocrProcessing] = false;
   }
 
   ngOnChanges() {
+    console.log("Fetching Todos from Backend");
     this.todos = [];
     let statuses: Array<enums.status> = [];
     for (const status in this.tracking) {

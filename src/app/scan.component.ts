@@ -6,7 +6,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { LocdbService } from './locdb.service';
 import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
 
-import { enums, enum_values, models, Identifier, BibliographicEntry } from './locdb';
+import { enums, enum_values, models } from './locdb';
 
 const URL = '/api/'; // Same Origin Policy
 
@@ -250,7 +250,7 @@ export class ScanComponent {
 
   successHandler(item, response, autotrigger: boolean) {
     item.uploading = false;
-    const entry: BibliographicEntry = response[response.length - 1];
+    const entry: models.BibliographicEntry = response[response.length - 1];
     console.log('Response item: ', response)
     // clear after upload
     this.removeItemFromList(item);
@@ -328,7 +328,7 @@ export class ScanComponent {
 
 
 class ToDoScansWithMeta {
-  identifier: Identifier;
+  identifier: models.Identifier;
   firstpage?: number;
   lastpage?: number;
   file?: File;

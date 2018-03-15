@@ -1,13 +1,26 @@
 <div class="card">
-  <h3 class="card-title">{{ title }}</h3>
-  <div class="card-body">
-    <input *ngFor="let status of statuses" type="checkbox" [(ngModel)]="tracking.status"
+  <div class="card-header">
+    <h3 class="card-title">{{ title }}</h3>
+    <ul>
+    <li *ngFor="let status of statuses">
+      <input type="checkbox" [(ngModel)]="tracking[status]">
+      <label><b> {{ status}} </b> </label>
+    </li>
+    </ul>
+    <button type="button" class="btn btn-primary" (click)="ngOnChanges()"> Refresh </button>
   </div>
   <div class="card-body">
-    <app-todo *ngFor="todo of todos" [todo]="todo" (refs)="inspectRefs()">
-      <app-todo *ngFor="child of todo.children" [todo]="child">
-      </app-todo>
-    </app-todo>
-</div>
-
+    <div class="card" *ngFor="let todo of todos">
+      <div class="card-header">
+        <app-todo [todo]="todo" (refs)="inspectRefs(todo)" (scan)="inspectScan($event[1], $event[0], todo)">
+        </app-todo>
+      </div>
+      <div class="card-body" *ngIf="todo.children">
+        <div class="card card-body" *ngFor="let child of todo.children()">
+        <app-todo [todo]="todo" (refs)="inspectRefs(child, todo)" (scan)="inspectScan($event[1], $event[0], child, todo)">
+        </app-todo>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

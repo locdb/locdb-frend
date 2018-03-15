@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter} from '@angular/core';
-import { BibliographicEntry, TypedResourceView, AgentRole, ResponsibleAgent } from '../locdb';
+import { TypedResourceView, models} from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { LoggingService } from '../logging.service'
 import { MOCK_INTERNAL } from '../mock-bresources'
@@ -35,7 +35,7 @@ export class BrowseComponent implements OnInit {
 
       internalThreshold = 1.0;
 
-      searchentry: BibliographicEntry = {}
+      searchentry: models.BibliographicEntry = {}
 
 
 

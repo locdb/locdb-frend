@@ -12,15 +12,11 @@ import { EntryListComponent } from './entry-list/entry-list.component';
   styleUrls: ['./inspector.css']
 })
 export class RefsInspectorComponent implements OnInit, OnChanges {
-  @Input() in: TypedResourceView;
+  @Input() resource: TypedResourceView;
   @Input() refs: Array<models.BibliographicEntry>;
-  @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter(true);
-  @Output() goBack: EventEmitter<null> = new EventEmitter();
-  loading = false;
-
+  @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
 
   constructor( private locdbService: LocdbService) { }
-
 
   ngOnInit() {
     console.log("RefsInspector onInit")

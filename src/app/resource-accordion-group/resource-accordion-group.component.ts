@@ -1,5 +1,5 @@
 import { EventEmitter, Component, OnInit, ViewEncapsulation, Input, Output } from '@angular/core';
-import { TypedResourceView, ToDo, } from '../locdb';
+import { TypedResourceView } from '../locdb';
 
 @Component({
   selector: 'app-resource-accordion-group',

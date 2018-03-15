@@ -16,22 +16,27 @@
 
 
 <div class="row" *ngIf="isInspecting">
-
-
+  <div class="col-xs-12 col-sm-6 col-md-6">
+    <app-scan-inspector *ngIf="scan" [resource]="context.source" [scan]="refs" (entry)="updateEntry($event)"></app-scan-inspector>
+    <app-refs-inspector *ngIf="refs" [resource]="context.source" [refs]="scan" (entry)="updateEntry($event)"></app-refs-inspector>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-6">
+    <app-suggestion [entry]="entry" (suggest)='updateTarget($event)'></app-suggestion>
+  </div>
 </div>
 
 
-  <div class='row'>
-    <div class='col-xs-12 col-sm-6 col-md-6'>
-      <app-todo [hidden]="todo" (todo)="updateTodo($event)" (resourceTrack)="updateTrack($event)"></app-todo>
-      <app-todo-detail *ngIf="todo" [todo]="todo" [resourceTrack]="resourceTrack" (goBack)="updateTodo(null); updateTrack(null)" (entry)="updateEntry($event)"></app-todo-detail>
-      <div style="margin-top: 1rem;">
-      </div>
-    </div>
-    <div class="col-xs-12 col-sm-6 col-md-6">
-      <div *ngIf='entry'>
-        <app-suggestion [entry]='entry' (suggest)='updateTarget($event)'></app-suggestion>
-      </div>
-    </div>
-  </div>
+  <!-- <div class='row'> -->
+  <!--   <div class='col-xs-12 col-sm-6 col-md-6'> -->
+  <!--     <app-todo [hidden]="todo" (todo)="updateTodo($event)" (resourceTrack)="updateTrack($event)"></app-todo> -->
+  <!--     <app-todo-detail *ngIf="todo" [todo]="todo" [resourceTrack]="resourceTrack" (goBack)="updateTodo(null); updateTrack(null)" (entry)="updateEntry($event)"></app-todo-detail> -->
+  <!--     <div style="margin-top: 1rem;"> -->
+  <!--     </div> -->
+  <!--   </div> -->
+  <!--   <div class="col-xs-12 col-sm-6 col-md-6"> -->
+  <!--     <div *ngIf='entry'> -->
+  <!--       <app-suggestion [entry]='entry' (suggest)='updateTarget($event)'></app-suggestion> -->
+  <!--     </div> -->
+  <!--   </div> -->
+  <!-- </div> -->
 <!-- </section> -->

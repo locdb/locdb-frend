@@ -6,7 +6,6 @@ import { LocdbService } from '../../locdb.service';
 @Component({
   selector: 'app-entry-card',
   templateUrl: './entry-card.component.html',
-  styleUrls: ['./entry-card.component.css'],
 })
 export class EntryCardComponent implements OnChanges {
 

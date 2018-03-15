@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
-import { TypedResourceView, BibliographicEntry } from '../locdb';
+import { TypedResourceView, models } from '../locdb';
 import { LocdbService } from '../locdb.service';
 
 @Component({
@@ -11,10 +11,10 @@ import { LocdbService } from '../locdb.service';
 export class CommitComponent implements OnInit {
 
   @Input() source: TypedResourceView = null;
-  @Input() entry: BibliographicEntry = null;
+  @Input() entry: models.BibliographicEntry = null;
   @Input() target: TypedResourceView = null;
 
-  @Output() committed: EventEmitter<[TypedResourceView, BibliographicEntry, TypedResourceView]> = new EventEmitter();
+  @Output() committed: EventEmitter<[TypedResourceView, models.BibliographicEntry, TypedResourceView]> = new EventEmitter();
 
 
   constructor(private locdbService: LocdbService) { }

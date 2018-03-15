@@ -4,6 +4,6 @@
 <a [href]="embodiment.url" [class.disabled]="embodiment.url">Inspect Source</a>
 <ul *ngIf="embodiment.scans">
   <li *ngFor="let scan of embodiment.scans">
-    <button type="button" [onclick]="selectScan(scan)"> {{ scan | json}}</button>
+    <button type="button" (click)="selectScan(scan)"> {{ scan | json}}</button>
   </li>
 </ul>

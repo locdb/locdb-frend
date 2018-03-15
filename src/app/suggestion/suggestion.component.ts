@@ -1,5 +1,4 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter} from '@angular/core';
-import { BibliographicEntry, BibliographicResource, AgentRole, ResponsibleAgent } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { LoggingService } from '../logging.service'
 import { MOCK_INTERNAL } from '../mock-bresources'
@@ -21,8 +20,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
 
     // retain entry as input, then we can modifiy its 'references' field
-    @Input() entry: BibliographicEntry;
-    @Output() suggest: EventEmitter<BibliographicResource> = new EventEmitter();
+    @Input() entry: models.BibliographicEntry;
+    @Output() suggest: EventEmitter<models.BibliographicResource> = new EventEmitter();
 
     // make this visible to template
     environment = environment;
@@ -113,17 +112,17 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     // these two functions could go somewhere else e.g. static in locdb.ts
     // BEGIN
-    authors2contributors (authors: string[]): AgentRole[] {
+    authors2contributors (authors: string[]): models.AgentRole[] {
         if (!authors) {return []};
         const contributors = [];
         for (const author of authors) {
-            const agent: ResponsibleAgent = {
+            const agent: models.ResponsibleAgent = {
                 nameString: author,
                 identifiers: [],
                 givenName: '',
                 familyName: '',
             }
-            const role: AgentRole = {
+            const role: models.AgentRole = {
                 roleType: 'AUTHOR',
                 heldBy: agent,
                 identifiers: [],
@@ -212,7 +211,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       }
     }
 
-  queryFromEntry(entry: BibliographicEntry): string {
+  queryFromEntry(entry: models.BibliographicEntry): string {
     if (entry.ocrData.title) {
       // if metadata is available, use it in favor of raw text
       return `${entry.ocrData.title} ${entry.ocrData.authors.join(' ')}`

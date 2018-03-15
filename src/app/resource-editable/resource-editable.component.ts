@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { BibliographicResource, TypedResourceView, ToDo, Provenance } from '../locdb';
+import { models, TypedResourceView } from '../locdb';
 import { LoggingService } from '../logging.service'
 import { LocdbService } from '../locdb.service';
 

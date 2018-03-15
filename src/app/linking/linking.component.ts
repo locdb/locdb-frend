@@ -3,12 +3,15 @@ import { models, enums, TypedResourceView } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { FeedService } from '../feed.service';
 import { Context } from '../agenda/agenda.component';
+import { AgendaComponent } from '../agenda/agenda.component';
+
+import { RefsInspectorComponent, ScanInspectorComponent } from '../inspectors';
 //import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-linking',
   templateUrl: './linking.component.html',
-  providers: [ LocdbService, FeedService ]
+  providers: [ LocdbService ]
 })
 
 /** Main App Component for whole LOCDB Frontend */
@@ -28,7 +31,7 @@ export class LinkingComponent implements OnInit {
   }
 
   get isInspecting () {
-    return this.mode == 'agenda';
+    return this.mode !== 'agenda';
   }
 
   startInspectRefs(refs: Array<models.BibliographicEntry>, context: Context) {
@@ -36,6 +39,7 @@ export class LinkingComponent implements OnInit {
     this.refs = refs;
     this.context = context;
     this.scan = null;
+    this.entry = null;
   }
 
   startInspectScan(scan: models.Scan, context: Context) {
@@ -43,6 +47,7 @@ export class LinkingComponent implements OnInit {
     this.scan = scan;
     this.context = context;
     this.refs = null;
+    this.entry = null;
   }
 
   reset() {
@@ -50,6 +55,7 @@ export class LinkingComponent implements OnInit {
     this.context = null;
     this.refs = null;
     this.scan = null;
+    this.entry = null;
   }
 
   updateSource (br: TypedResourceView) {

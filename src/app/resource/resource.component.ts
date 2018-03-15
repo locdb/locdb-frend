@@ -1,7 +1,5 @@
 import {
-    BibliographicResource,
     TypedResourceView,
-    ToDo,
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, Input } from '@angular/core';

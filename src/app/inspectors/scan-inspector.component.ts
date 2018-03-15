@@ -14,11 +14,10 @@ import { DisplayComponent } from './display/display.component';
 })
 export class ScanInspectorComponent implements OnInit, OnChanges {
   @Input() scan: models.Scan = null;
-  @Input() in: TypedResourceView;
+  @Input() resource: TypedResourceView;
   scanIsVisible = true;
   entries: models.BibliographicEntry[] = [];
-  @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter(true);
-  @Output() goBack: EventEmitter<null> = new EventEmitter();
+  @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
   loading = false;
 
 

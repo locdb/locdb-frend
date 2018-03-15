@@ -1,10 +1,5 @@
 import {
-    BibliographicResource,
-    BibliographicEntry,
-    AgentRole,
-    ResponsibleAgent,
-    ToDo,
-    Identifier,
+    models,
     TypedResourceView,
     enums,
     enum_values
@@ -78,7 +73,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
 
     // clean array treatment
-    setContributors(roles: AgentRole[]) {
+    setContributors(roles: models.AgentRole[]) {
         const contribFGs = roles ? roles.map(
             arole => this.fb.group(
                 {role: arole.roleType, name: arole.heldBy.nameString }
@@ -102,7 +97,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
 
     // clean array treatment end
-    setIdentifiers(ids: Identifier[]) {
+    setIdentifiers(ids: models.Identifier[]) {
         const identsFGs = ids ? ids.map(
             identifier => this.fb.group(
                 {literalValue: identifier.literalValue,
@@ -170,7 +165,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         this.submitStatus.emit(false)
     }
 
-    reconstructAgentRole(name: string, role: string): AgentRole {
+    reconstructAgentRole(name: string, role: string): models.AgentRole {
         const agentRole = {
             identifiers: [],
             roleType: role,
@@ -185,7 +180,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         return agentRole;
     }
 
-    reconstructIdentifier(scheme: string, value: string): Identifier {
+    reconstructIdentifier(scheme: string, value: string): models.Identifier {
       const identifier = {
         scheme: scheme,
         literalValue: value,

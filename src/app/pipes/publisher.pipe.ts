@@ -10,6 +10,7 @@ import { models, enums } from '../locdb'
 export class PublisherPipe implements PipeTransform {
   transform(contributors: Array<models.AgentRole>): string {
     const publisher = contributors.filter(x => x.roleType === enums.roleType.publisher);
+    if (!publisher.length) { return ''; }
     const publisherString = publisher[0].heldBy.nameString;
     return publisherString;
   }

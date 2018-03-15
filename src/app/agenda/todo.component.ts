@@ -4,21 +4,20 @@ import { LocdbService } from '../locdb.service';
 
 
 @Component({
-  selector: 'app-embodiment',
-  templateUrl: './embodiment.component.html',
+  selector: 'app-todo',
+  templateUrl: './todo.component.html',
   providers: [ LocdbService ],
-  styleUrls: ['./embodiment.component.css']
 })
 export class TodoComponent {
   @Input() todo : TypedResourceView;
   @Output() scan: EventEmitter<[models.ResourceEmbodiment, models.Scan]> = new EventEmitter();
-  @Output() references: EventEmitter<Array<models.BibliographicEntry>> = new EventEmitter();
+  @Output() refs: EventEmitter<Array<models.BibliographicEntry>> = new EventEmitter();
 
   constructor() {}
 
 
   inspectReferences(){
-    this.references.emit(this.todo.parts);
+    this.refs.emit(this.todo.parts);
   }
 
   inspectScan(embodiment_scan: [models.ResourceEmbodiment, models.Scan]) {

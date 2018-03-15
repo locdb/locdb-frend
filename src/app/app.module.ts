@@ -1,9 +1,10 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, InjectionToken } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 // import { APP_BASE_HREF } from '@angular/common';
 
 import { AppComponent } from './app.component';
@@ -53,13 +54,15 @@ import { LoggingService } from './logging.service';
 import { ResourceCardGroupComponent } from './resource-card-group/resource-card-group.component';
 import { BrowseComponent } from './browse/browse.component'
 
+import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe } from './pipes';
+
 
 import {
-  BibliographicEntryApi, BibliographicResourceApi,
-  ScanApi, UserApi
-} from './typescript-angular2-client/api/api';
+  BibliographicEntryService, BibliographicResourceService,
+  ScanService, UserService
+} from './typescript-angular-client/api/api';
 
-import { BASE_PATH } from './typescript-angular2-client/variables'
+import { BASE_PATH } from './typescript-angular-client/variables'
 
 const appRoutes: Routes = [
   { path: 'resolve', component: LinkingComponent },
@@ -92,6 +95,7 @@ const appRoutes: Routes = [
     BrowserModule,
     FormsModule,
     HttpModule,
+    HttpClientModule,
     ReactiveFormsModule,
     PopoverModule,
     RouterModule.forRoot(
@@ -122,6 +126,13 @@ const appRoutes: Routes = [
     ResourceCardGroupComponent,
     EntryCardComponent,
     BrowseComponent,
+    AgendaComponent,
+    TodoComponent,
+    EmbodimentComponent,
+    AuthorsPipe,
+    EditorsPipe,
+    PublisherPipe,
+    EmbracePipe
   ],
   providers: [
     { provide: BASE_PATH, useValue: environment.locdbUrl},
@@ -129,10 +140,10 @@ const appRoutes: Routes = [
     CredentialsService,
     // {provide: APP_BASE_HREF, useValue : bhref}
     LoggingService,
-    BibliographicEntryApi,
-    BibliographicResourceApi,
-    ScanApi,
-    UserApi
+    BibliographicEntryService,
+    BibliographicResourceService,
+    ScanService,
+    UserService
   ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

@@ -6,9 +6,9 @@ import { TypedResourceView, enums } from './locdb';
 
 
 import {
-  BibliographicEntryApi, BibliographicResourceApi,
-  ScanApi, UserApi
-} from './typescript-angular2-client/api/api';
+  BibliographicEntryService, BibliographicResourceService,
+  ScanService, UserService
+} from './typescript-angular-client/api/api';
 
 // advanced rxjs async handling;
 import {Observable} from 'rxjs/Rx';
@@ -63,10 +63,10 @@ export class LocdbService {
 
   constructor(
     private http: Http,
-    private scanApi: ScanApi,
-    private userApi: UserApi,
-    private bibliographicEntryApi: BibliographicEntryApi,
-    private bibliographicResourceApi: BibliographicResourceApi,
+    private scanService: ScanService,
+    private userService: UserService,
+    private bibliographicEntryService: BibliographicEntryService,
+    private bibliographicResourceService: BibliographicResourceService,
     private credentials: CredentialsService
   ) {
     if (this.credentials) { // This is here to help with testing so you can pass in null for CredentialsService
@@ -81,7 +81,7 @@ export class LocdbService {
 
   getToDo(status_: enums.status): Observable<TypedResourceView[]> {
     // acquire todo items and scans
-    return this.scanApi.getToDo(status_).map((todos) => todos.map( (todo) => new TypedResourceView(todo)));
+    return this.scanService.getToDo(status_).map((todos) => todos.map( (todo) => new TypedResourceView(todo)));
   }
 
   /* Returns all ToDo items */
@@ -94,7 +94,7 @@ export class LocdbService {
 
   getToDoBibliographicEntries(scan_id: string): Observable<models.BibliographicEntry[]> {
     // fetches list of entries for a scan id
-    return this.bibliographicEntryApi.getToDoBibliographicEntries(scan_id);
+    return this.bibliographicEntryService.getToDoBibliographicEntries(scan_id);
   }
 
   public saveResource(
@@ -108,7 +108,7 @@ export class LocdbService {
    stringFile?: string,
    embodimentType?: string
  ) {
-   return this.scanApi.saveResource(identifierScheme, identifierLiteralValue,
+   return this.scanService.saveResource(identifierScheme, identifierLiteralValue,
    resourceType, firstPage, lastPage, textualPdf, binaryFile, stringFile,
    embodimentType);
  }
@@ -116,16 +116,16 @@ export class LocdbService {
 
   suggestionsByQuery(query: string, external: boolean, threshold?: number): Observable<TypedResourceView[]> {
     if (external) {
-      return this.bibliographicEntryApi.getExternalSuggestionsByQueryString(query, threshold).map( l => l.map(br => new TypedResourceView(br)));
+      return this.bibliographicEntryService.getExternalSuggestionsByQueryString(query, threshold).map( l => l.map(br => new TypedResourceView(br)));
     } else {
-      return this.bibliographicEntryApi.getInternalSuggestionsByQueryString(query, threshold).map( l => l.map(br => new TypedResourceView(br)));
+      return this.bibliographicEntryService.getInternalSuggestionsByQueryString(query, threshold).map( l => l.map(br => new TypedResourceView(br)));
     }
 
   }
 
 
   triggerOcrProcessing(scanId: string) {
-    return this.scanApi.triggerOcrProcessing(scanId);
+    return this.scanService.triggerOcrProcessing(scanId);
   }
 
   getScan(identifier: string) {
@@ -134,17 +134,17 @@ export class LocdbService {
   }
 
   deleteScan(scan: models.Scan) {
-    return this.bibliographicEntryApi.remove(scan._id);
+    return this.bibliographicEntryService.remove(scan._id);
   }
 
 
   /* Resources API end */
   addTargetBibliographicResource(entry: models.BibliographicEntry, resource_id: string): Observable<TypedResourceView> {
-    return this.bibliographicEntryApi.addTargetBibliographicResource(entry._id, resource_id).map( br => new TypedResourceView(br) );
+    return this.bibliographicEntryService.addTargetBibliographicResource(entry._id, resource_id).map( br => new TypedResourceView(br) );
   }
 
   removeTargetBibliographicResource(entry: models.BibliographicEntry): Observable<TypedResourceView> {
-    return this.bibliographicEntryApi.removeTargetBibliographicResource(entry._id).map( br => new TypedResourceView(br) );
+    return this.bibliographicEntryService.removeTargetBibliographicResource(entry._id).map( br => new TypedResourceView(br) );
   }
 
   async updateTargetResource(
@@ -169,7 +169,7 @@ export class LocdbService {
   }
 
   bibliographicResource(identifier: string): Observable<TypedResourceView> {
-    return this.bibliographicResourceApi.get(identifier).map( br => new TypedResourceView(br) );
+    return this.bibliographicResourceService.get(identifier).map( br => new TypedResourceView(br) );
   }
 
   parentResource(br: TypedResourceView | models.BibliographicResource): Observable<TypedResourceView> {
@@ -198,7 +198,7 @@ export class LocdbService {
     if (!resource._id) {
       return Observable.of(resource);
     } else {
-      return this.bibliographicResourceApi.update(resource._id, resource.data).map( br => new TypedResourceView(br) );
+      return this.bibliographicResourceService.update(resource._id, <models.BibliographicResource>resource.data).map( br => new TypedResourceView(br) );
     }
   }
 
@@ -209,7 +209,7 @@ export class LocdbService {
     if (!tr._id) {
       // !!! Never ever forget this when on righthand-side, they should never be external
       tr.status = enums.status.valid;
-      return this.bibliographicResourceApi.save(tr.data).map( br => new TypedResourceView(br) );
+      return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).map( br => new TypedResourceView(br) );
     } else {
       return Observable.of(tr);
     }
@@ -219,29 +219,29 @@ export class LocdbService {
 
   // DEPRECATED or integrate in Maybe Methods
   putBibliographicResource(resource: TypedResourceView): Observable<TypedResourceView> {
-    return this.bibliographicResourceApi.update(resource._id, resource.data).map( br => new TypedResourceView(br));
+    return this.bibliographicResourceService.update(resource._id, <models.BibliographicResource>resource.data).map( br => new TypedResourceView(br));
   }
 
   pushBibligraphicResource(resource: TypedResourceView): Observable<TypedResourceView> {
-    return this.bibliographicResourceApi.save(resource.data).map( br => new TypedResourceView(br));
+    return this.bibliographicResourceService.save(<models.BibliographicResource>resource.data).map( br => new TypedResourceView(br));
   }
 
   deleteBibliographicResource(resource: TypedResourceView) : Observable<models.SuccessResponse> {
-    return this.bibliographicResourceApi.deleteSingle(resource._id);
+    return this.bibliographicResourceService.deleteSingle(resource._id);
   }
   /* Resources API end */
 
   deleteBibliographicEntry(entry: models.BibliographicEntry) : Observable<models.BibliographicEntry> {
-    return this.bibliographicEntryApi.remove(entry._id);
+    return this.bibliographicEntryService.remove(entry._id);
   }
 
   updateBibliographicEntry(entry: models.BibliographicEntry) {
     // status must be set to 'VALID' before, if performed by user.
-    return this.bibliographicEntryApi.update(entry._id, entry);
+    return this.bibliographicEntryService.update(entry._id, entry);
   }
 
   createBibliographicEntry(resource_id: string, entry: models.BibliographicEntry): Observable<models.BibliographicEntry> {
-    return this.bibliographicEntryApi.create(resource_id, entry);
+    return this.bibliographicEntryService.create(resource_id, entry);
   }
 
   /* The following needs to be reconsidered, actually we could store login status here */
@@ -249,31 +249,31 @@ export class LocdbService {
 
   login(username: string, password: string): Observable<models.User> {
     const user: models.User = {username: username, password: password};
-    return this.userApi.login(user);
+    return this.userService.login(user);
   }
 
   register(username: string, password: string): Observable<models.User> {
     // const headers = new Headers({ 'Content-Type': 'application/json' });
     // const options = new RequestOptions({ headers: headers, withCredentials: true });
     const user: models.User = {username: username, password: password};
-    return this.userApi.signup(user);
+    return this.userService.signup(user);
   }
 
   logout(): Observable<models.SuccessResponse> {
-    return this.userApi.logout();
+    return this.userService.logout();
   }
 
 
   //
   addFeed(feed: models.Feed): Observable<models.User> {
-    return this.userApi.addFeed(feed);
+    return this.userService.addFeed(feed);
   }
 
   fetchFeeds(): Observable<models.FeedEntry[][]> {
-    return this.userApi.fetchFeeds();
+    return this.userService.fetchFeeds();
   }
 
   deleteFeed(identifier: string): Observable<models.User> {
-    return this.userApi.deleteFeed(identifier);
+    return this.userService.deleteFeed(identifier);
   }
 } // LocdbService

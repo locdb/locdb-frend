@@ -1,0 +1,11 @@
+export * from './bibliographicEntry.service';
+import { BibliographicEntryService } from './bibliographicEntry.service';
+export * from './bibliographicResource.service';
+import { BibliographicResourceService } from './bibliographicResource.service';
+export * from './scan.service';
+import { ScanService } from './scan.service';
+export * from './user.service';
+import { UserService } from './user.service';
+export * from './utils.service';
+import { UtilsService } from './utils.service';
+export const APIS = [BibliographicEntryService, BibliographicResourceService, ScanService, UserService, UtilsService];
