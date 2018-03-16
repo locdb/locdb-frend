@@ -1,4 +1,4 @@
-<app-resource [resource]="this.todo"></app-resource>
+<app-metadata [of]="this.todo"></app-metadata>
 <button type="button" class="btn btn-primary" (click)="inspectReferences()"> Inspect References </button>
 <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="embodiment-group" disabled="!todo.embodiments"> Embodiments </button>
 <ul id="embodiment-group" class="list-group list-group-flush "*ngIf="todo.embodiments && todo.embodiments.length">

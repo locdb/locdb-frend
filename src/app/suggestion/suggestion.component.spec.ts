@@ -8,12 +8,12 @@ import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ResourceEditableComponent } from '../resource-editable/resource-editable.component';
 import { ResourceFormComponent } from '../resource-form/resource-form.component';
-import { ResourceComponent } from '../resource/resource.component';
+import { MetadataComponent } from '../metadata/metadata.component';
 import { HttpModule } from '@angular/http';
 import { LocdbService, CredentialsService } from '../locdb.service';
 import { PopoverModule } from 'ngx-popover';
 import { LoggingService } from '../logging.service';
-import { ResourceCardGroupComponent } from '../resource-card-group/resource-card-group.component'
+import { ResourceCardComponent } from '../resource-card/resource-card.component'
 
 describe('SuggestionComponent', () => {
   let component: SuggestionComponent;
@@ -35,7 +35,7 @@ describe('SuggestionComponent', () => {
         ResourceFormComponent,
         ResourceEditableComponent,
         ResourceAccordionGroupComponent,
-        ResourceCardGroupComponent,
+        ResourceCardComponent,
       ],
       providers: [ LocdbService, CredentialsService, LoggingService ]
     })

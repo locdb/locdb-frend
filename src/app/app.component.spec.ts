@@ -56,7 +56,7 @@ import { FrontpageComponent } from './frontpage/frontpage.component';
 
 // New
 import { LoggingService } from './logging.service';
-import { ResourceCardGroupComponent } from './resource-card-group/resource-card-group.component';
+import { ResourceCardComponent } from './resource-card-group/resource-card-group.component';
 import { EntryCardGroupComponent } from './entry-card-group/entry-card-group.component'
 import { BrowseComponent } from './browse/browse.component'
 ////////  SPECS  /////////////
@@ -120,7 +120,7 @@ describe('AppComponent with TCB', function () {
           ResourceEditableComponent,
           AppwrapperComponent,
           FrontpageComponent,
-          ResourceCardGroupComponent,
+          ResourceCardComponent,
           EntryCardGroupComponent,
           BrowseComponent,
         ],

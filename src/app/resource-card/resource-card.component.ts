@@ -4,11 +4,11 @@ import { LoggingService } from '../logging.service'
 import { LocdbService } from '../locdb.service';
 
 @Component({
-  selector: 'app-resource-card-group',
-  templateUrl: './resource-card-group.component.html',
-  styleUrls: ['./resource-card-group.component.css'],
+  selector: 'app-resource-card',
+  templateUrl: './resource-card.component.html',
+  styleUrls: ['./resource-card.component.css'],
 })
-export class ResourceCardGroupComponent implements OnInit {
+export class ResourceCardComponent implements OnInit {
 
     @Input() resource: TypedResourceView; //BibliographicResource | ProvenResource | ToDo;
     @Output() resourceChange = new EventEmitter<TypedResourceView>();

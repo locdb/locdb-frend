@@ -27,17 +27,17 @@
     <h5 class="card-title">
       Currently references
     </h5>
-    <app-resource-card-group [(resource)]="currentTarget" [selected]="currentTarget == selectedResource" (click)="onSelect(currentTarget)">
-    </app-resource-card-group>
+    <app-resource-card [(resource)]="currentTarget" [selected]="currentTarget == selectedResource" (click)="onSelect(currentTarget)">
+    </app-resource-card>
   </div>
   <div class="card-block">
     <h5 class="card-title">
       Suggestions
     </h5>
     <div *ngFor="let r of internalSuggestions;let i = index">
-      <app-resource-card-group *ngIf="max_in <= 0 || i < max_in"
+      <app-resource-card *ngIf="max_in <= 0 || i < max_in"
         [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
-      </app-resource-card-group>
+      </app-resource-card>
     </div>
     <button type="button" *ngIf="max_in == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
       <p><em>Show all</em></p>
@@ -54,9 +54,9 @@
     </h5>
     <div *ngIf="externalSuggestions">
     <div *ngFor="let r of externalSuggestions;let i = index">
-      <app-resource-card-group *ngIf="max_ex <= 0 || i < max_ex"
+      <app-resource-card *ngIf="max_ex <= 0 || i < max_ex"
         [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
-      </app-resource-card-group>
+      </app-resource-card>
     </div>
     <button type="button" *ngIf="max_ex == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_ex()">
       <p><em>Show all</em></p>
@@ -73,8 +73,8 @@
     <!-- <h5 class="card-title">
       New resource from reference metadata
     </h5>
-    <app-resource-card-group [resource]="newResource" [selected]="newResource === selectedResource" (click)="onSelect(newResource)">
-    </app-resource-card-group> -->
+    <app-resource-card [resource]="newResource" [selected]="newResource === selectedResource" (click)="onSelect(newResource)">
+    </app-resource-card> -->
   <!-- </div> -->
 </div>
 <!-- Panel footer allowing actions -->

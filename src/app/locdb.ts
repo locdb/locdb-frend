@@ -76,7 +76,7 @@ export function containerTypes (type: enums.resourceType): Array<enums.resourceT
  * should provide. Keep in mind that most of the attributes are marked optional
  * in the specific implementations.
  **/
-export interface MetaData {
+export interface Metadata {
   identifiers: Array<models.Identifier>;
   type: enums.resourceType;
   title: string;
@@ -84,7 +84,7 @@ export interface MetaData {
   edition: string;
   number: string;
   contributors: Array<models.AgentRole>;
-  publicationYear: string;
+  publicationDate: string;
 }
 export function authors2contributors (authors: string[]): models.AgentRole[] {
   if (!authors) {return []};
@@ -106,13 +106,13 @@ export function authors2contributors (authors: string[]): models.AgentRole[] {
   return contributors;
 }
 
-export function OCR2MetaData(ocr: models.OCRData) : MetaData {
+export function OCR2MetaData(ocr: models.OCRData) : Metadata {
   return {
     title: ocr.title || '',
     subtitle: '',
     number: ocr.volume || '',
     contributors: authors2contributors(ocr.authors),
-    publicationYear: ocr.date,
+    publicationDate: ocr.date,
     identifiers: [],
     type: enums.resourceType.report,
     edition: '',
@@ -130,7 +130,7 @@ export enum Provenance {
   local = 'Local'
 }
 
-export class TypedResourceView implements MetaData {
+export class TypedResourceView implements Metadata {
   readonly data: models.BibliographicResource | models.ToDo;
   private _prefix: string;
   readonly viewport_: string;
@@ -179,8 +179,8 @@ export class TypedResourceView implements MetaData {
       // could treat editors differently
     // always put title!
     let s = this.authorString();
-    if (this.publicationYear) {
-      s += `(${this.publicationYear})`;
+    if (this.publicationDate) {
+      s += `(${this.publicationDate})`;
     }
     s += '.';
     s += this.title + '.';
@@ -315,12 +315,12 @@ export class TypedResourceView implements MetaData {
     this.data[this._prefix + 'contributors'] = newContributors;
   }
 
-  get publicationYear() : string {
-    return this.data[this._prefix + 'publicationYear'];
+  get publicationDate() : string {
+    return this.data[this._prefix + 'publicationDate'];
   }
 
-  set publicationYear(newYear: string) {
-    this.data[this._prefix + 'publicationYear'] = newYear;
+  set publicationDate(newYear: string) {
+    this.data[this._prefix + 'publicationDate'] = newYear;
   }
 
   get embodiedAs() : Array<models.ResourceEmbodiment> {

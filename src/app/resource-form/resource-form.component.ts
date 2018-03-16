@@ -129,7 +129,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             resourcetype: this.resource.type,
             edition: this.resource.edition,
             resourcenumber: this.resource.number,
-            publicationyear: this.resource.publicationYear,
+            publicationyear: this.resource.publicationDate,
             // containerTitle: this.resource.containerTitle // still in progress
         });
         // new clean set contribs
@@ -211,7 +211,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
           // resource.containerTitle = formModel.containerTitle as string || '';
           resource.number = formModel.resourcenumber as string || '';
           resource.contributors = contribsDeepCopy;
-          resource.publicationYear = formModel.publicationyear as string || '';
+          resource.publicationDate = formModel.publicationyear as string || '';
             // partOf: formModel.partof as string || '',
             // warning: retain internal identifiers (dont show primary keys to the user)
             // not editable, but copied values
@@ -242,8 +242,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             // resource already present
             const br = this.resource;
             let s = br.title;
-            if (br.publicationYear) {
-                s += ` (${br.publicationYear})`
+            if (br.publicationDate) {
+                s += ` (${br.publicationDate})`
             }
             if (br.status === 'EXTERNAL') {
                 s += ` [${br.type}]`

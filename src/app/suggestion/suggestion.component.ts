@@ -7,7 +7,7 @@ import { environment } from 'environments/environment';
 import { PopoverModule } from 'ngx-popover';
 import { Http } from '@angular/http';
 
-import { enums, models, TypedResourceView, MetaData } from '../locdb';
+import { enums, models, TypedResourceView, Metadata } from '../locdb';
 
 
 @Component({
@@ -133,11 +133,12 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     // Turns OCR data into (partial) metadata, the type is missing
-    resourceFromEntry(entry: models.BibliographicEntry): Partial<MetaData> {
+    // Duplicate code with locdb.ts
+    resourceFromEntry(entry: models.BibliographicEntry): Partial<Metadata> {
         const ocr = entry.ocrData;
-        const br: Partial<MetaData> = {
+        const br: Partial<Metadata> = {
           title: ocr.title || entry.bibliographicEntryText,
-          publicationYear: ocr.date || '', // unary + operator makes it a number
+          publicationDate: ocr.date || '', // unary + operator makes it a number
           contributors: this.authors2contributors(ocr.authors),
           number: ocr.volume || '', // hope they work
           identifiers: entry.identifiers.filter(i => i.scheme && i.literalValue), // only valid ones

@@ -1,8 +1,8 @@
-import { MetaData, TypedResourceView, enums  } from './locdb'
+import { Metadata, TypedResourceView, enums  } from './locdb'
 
 const br1 = new TypedResourceView({_id: '42', type: enums.resourceType.journalArticle});
 br1.title = 'Learned helplessness in humans: Critique and reformula';
-br1.publicationYear = '1989';
+br1.publicationDate = '1989';
 br1.contributors = [
       {roleType: 'author', identifiers: [], heldBy: {nameString: 'Abramson, L.Y.', identifiers: []}},
       {roleType: 'author', identifiers: [], heldBy: {nameString: 'Seligman, M.E.P', identifiers: []}},
@@ -11,7 +11,7 @@ br1.contributors = [
 
 const br2 = new TypedResourceView({_id: '43', type: enums.resourceType.monograph});
 br2.title = 'Studien zum autoritaeren Charakter';
-br2.publicationYear = '1973';
+br2.publicationDate = '1973';
 br2.embodiedAs = [{format:'print'}];
 br2.contributors = [
       {roleType: 'author', identifiers: [],  heldBy: {nameString: 'Adorno, T.W.', identifiers: []}},

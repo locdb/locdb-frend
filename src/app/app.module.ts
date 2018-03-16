@@ -43,7 +43,7 @@ import { RefsInspectorComponent, ScanInspectorComponent, EntryListComponent, Ent
 import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
 
 // resource related
-import { ResourceComponent } from './resource/resource.component';
+import { MetadataComponent } from './metadata/metadata.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
 import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
@@ -51,7 +51,7 @@ import { LinkingComponent } from './linking/linking.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 
 import { LoggingService } from './logging.service';
-import { ResourceCardGroupComponent } from './resource-card-group/resource-card-group.component';
+import { ResourceCardComponent } from './resource-card/resource-card.component';
 import { BrowseComponent } from './browse/browse.component'
 
 import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe } from './pipes';
@@ -118,12 +118,12 @@ const appRoutes: Routes = [
     EntryListComponent,
     RefsInspectorComponent,
     ScanInspectorComponent,
-    ResourceComponent,
+    MetadataComponent,
     ResourceAccordionGroupComponent,
     ResourceEditableComponent,
     LinkingComponent,
     FrontpageComponent,
-    ResourceCardGroupComponent,
+    ResourceCardComponent,
     EntryCardComponent,
     BrowseComponent,
     AgendaComponent,

@@ -27,8 +27,8 @@ export class ResourceAccordionGroupComponent implements OnInit {
       // resource already present
       const br = this.resource;
       let s = br.title;
-      if (br.publicationYear) {
-        s += ` (${br.publicationYear})`
+      if (br.publicationDate) {
+        s += ` (${br.publicationDate})`
       }
       if (br.status === 'EXTERNAL') {
         s += ` [${br.type}]`
