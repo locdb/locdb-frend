@@ -26,10 +26,19 @@
               <table class="table table-striped">
                 <tbody>
                   <tr>
+                    <td><label for="typeselect">Resource Type</label></td>
+                    <td>
+                      <select [disabled]="!toDoScansWithMeta.file" name="typeselect" [(ngModel)]="toDoScansWithMeta.resourceType" style="width: 100%;"
+                        class="form-control input-sm pull-right">
+                        <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
                     <td><select name="idtype" [(ngModel)]="toDoScansWithMeta.identifier.scheme">
                         <!-- <option value="ppn">PPN</option>
                         <option value="doi" [disabled]="toDoScansWithMeta.resourceType !== ResourceType.journal ">DOI</option> -->
-                        <option *ngFor="let it of identifierTypes" [value]="it">{{it}}</option>
+                        <option *ngFor="let it of requiredIdentifiers[toDoScansWithMeta.resourceType]" [value]="it">{{it}}</option>
                     </select></td>
                     <td><input type="text" name="_id" [(ngModel)]="toDoScansWithMeta.identifier.literalValue" style="width: 100%;"
                       class="form-control input-sm pull-right"></td>
@@ -39,15 +48,6 @@
                       class="form-control input-sm pull-right"></td>
                     <td> to <input type="number" name="firstlastpage" [(ngModel)]="toDoScansWithMeta.lastpage" style="width: 90%;"
                       class="form-control input-sm pull-right"></td>
-                  </tr>
-                  <tr>
-                    <td><label for="typeselect">Resource Type</label></td>
-                    <td>
-                      <select [disabled]="!toDoScansWithMeta.file" name="typeselect" [(ngModel)]="toDoScansWithMeta.resourceType" style="width: 100%;"
-                        class="form-control input-sm pull-right">
-                        <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
-                      </select>
-                    </td>
                   </tr>
                   <tr>
                     <td><label for="typeselect">Embodiment Type</label></td>
@@ -97,19 +97,19 @@
     </button>
   </div>
   <div class="modal-body">
-    <label> Identifier Scheme: </label>
-    <select [(ngModel)]="batchInformation.identifierScheme">
-      <option *ngFor="let scheme of identifierTypes" [value]="scheme">{{scheme}}</option>
-    </select>
-    <br>
     <label> Resource Type: </label>
         <!-- class="form-control input-sm pull-right"> -->
         <select name="modaltypeselect" [(ngModel)]="batchInformation.resourceType">
         <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
         </select>
+    <br>
+    <label> Identifier Scheme: </label>
+    <select [(ngModel)]="batchInformation.identifierScheme">
+      <option *ngFor="let scheme of requiredIdentifiers[batchInformation.resourceType]" [value]="scheme">{{scheme}}</option>
+    </select>
         <hr/>
       <input type="file" multiple (change)="onChange($event)">
-      <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button>
+      <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="confirmBatch()">Confirm </button>

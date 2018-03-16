@@ -32,7 +32,10 @@ export class ScanComponent {
 
   selected: ToDoScansWithMeta;
 
-  resourceTypes: string[] = enum_values(enums.resourceType);
+  // just to make them accessible
+  requiredIdentifiers = REQUIRED_IDENTIFIERS;
+
+  resourceTypes: string[] = Object.keys(REQUIRED_IDENTIFIERS);
   // resourceTypes = enums.resourceType;
 
   embodimentTypes: string[] = enum_values(enums.embodimentType);
@@ -47,8 +50,9 @@ export class ScanComponent {
   batchInformation: {
     resourceType: enums.resourceType,
     identifierScheme: enums.identifier
-  } = { resourceType: enums.resourceType.report, identifierScheme:
+  } = { resourceType: enums.resourceType.bookChapter, identifierScheme:
   enums.identifier.swb_ppn }
+  // DEFAULTS FOR batch process
 
   modalRef: BsModalRef;
 
