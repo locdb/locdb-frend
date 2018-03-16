@@ -8,7 +8,11 @@
   <div id="flup" class="card-body">
       <div class="list-group">
         <div *ngFor="let toDoScansWithMeta of listoffiles">
-          <a href="#flup" class="list-group-item list-group-item-action" [class.list-group-item-danger]="toDoScansWithMeta.err" [class.list-group-item-warning]="!toDoScansWithMeta.err && !toDoScansWithMeta.allset" [class.list-group-item-success]="!toDoScansWithMeta.err && toDoScansWithMeta.allset" (click)="onSelect(toDoScansWithMeta); $event.preventDefault(); $event.stopPropagation()">
+          <a href="#flup" class="list-group-item list-group-item-action"
+          [class.list-group-item-danger]="toDoScansWithMeta.err"
+          [class.list-group-item-warning]="!toDoScansWithMeta.err && !toDoScansWithMeta.allset"
+          [class.list-group-item-success]="!toDoScansWithMeta.err && toDoScansWithMeta.allset"
+          (click)="onSelect(toDoScansWithMeta); $event.preventDefault(); $event.stopPropagation()">
             {{getName(toDoScansWithMeta)}}
             <span class="badge badge-primary">{{getMetadata(toDoScansWithMeta)}}
             </span>
@@ -105,7 +109,7 @@
         </select>
         <hr/>
       <input type="file" multiple (change)="onChange($event)">
-      <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
+      <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="confirmBatch()">Confirm </button>

@@ -295,11 +295,12 @@ export class ScanComponent {
   addId() {
     this.listoffiles.push(new ToDoScansWithMeta(
       {
-        identifier: { scheme: 'doi', literalValue: null },
+        identifier: { scheme: this.identifierTypes[7], literalValue: null },
         firstpage: null,
         lastpage: null,
         file: null,
         resourceType: enums.resourceType.journal, // electronic for now is always journal
+        embodimentType: enums.embodimentType.digital,
         uploading: false
       })
     );
@@ -341,7 +342,7 @@ class ToDoScansWithMeta {
   firstpage?: number;
   lastpage?: number;
   file?: File;
-  resourceType: enums.resourceType;
+  resourceType: string;
   uploading: boolean; // to determine button state
   err?: any;
   textualPdf?: boolean; // textual pdf flag. optional since not needed for electronic
