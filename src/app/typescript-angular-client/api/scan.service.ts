@@ -107,21 +107,21 @@ export class ScanService {
     /**
      * 
      * Retrieves the BRs including their associated parts and scans that are either not processed or processed by the OCR-component or retrieved from external.
-     * @param status The status for which the ToDo-list shall be retrieved
+     * @param status The list of status for which the ToDo-list shall be retrieved
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getToDo(status: string, observe?: 'body', reportProgress?: boolean): Observable<Array<ToDo>>;
-    public getToDo(status: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ToDo>>>;
-    public getToDo(status: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ToDo>>>;
-    public getToDo(status: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getToDo(status: Array<string>, observe?: 'body', reportProgress?: boolean): Observable<Array<ToDo>>;
+    public getToDo(status: Array<string>, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ToDo>>>;
+    public getToDo(status: Array<string>, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ToDo>>>;
+    public getToDo(status: Array<string>, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (status === null || status === undefined) {
             throw new Error('Required parameter status was null or undefined when calling getToDo.');
         }
 
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (status !== undefined) {
-            queryParameters = queryParameters.set('status', <any>status);
+        if (status) {
+            queryParameters = queryParameters.set('status', status.join(COLLECTION_FORMATS['csv']));
         }
 
         let headers = this.defaultHeaders;

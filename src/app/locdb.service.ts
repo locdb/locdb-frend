@@ -79,18 +79,18 @@ export class LocdbService {
 
   // Generic helpers for data extraction and error handling
 
-  getToDo(status_: enums.status): Observable<TypedResourceView[]> {
+  getToDo(statuses: Array<enums.status>): Observable<TypedResourceView[]> {
     // acquire todo items and scans
-    return this.scanService.getToDo(status_).map((todos) => todos.map( (todo) => new TypedResourceView(todo)));
+    return this.scanService.getToDo(statuses).map((todos) => todos.map( (todo) => new TypedResourceView(todo)));
   }
 
-  /* Returns all ToDo items */
-  getAgenda(statuses: Array<enums.status>): Observable<TypedResourceView[]> {
-    return Observable.from(statuses).flatMap(
-      (status) => this.getToDo(status)
-      // could sort via map by something
-    );
-  }
+  // /* Returns all ToDo items */
+  // getAgenda(statuses: Array<enums.status>): Observable<TypedResourceView[]> {
+  //   return Observable.from(statuses).flatMap(
+  //     (status) => this.getToDo(status)
+  //     // could sort via map by something
+  //   );
+  // }
 
   getToDoBibliographicEntries(scan_id: string): Observable<models.BibliographicEntry[]> {
     // fetches list of entries for a scan id
