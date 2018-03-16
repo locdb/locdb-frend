@@ -74,7 +74,7 @@
       <button type="button" class="btn btn-primary" (click)="openModal(template)">Upload Files</button>
       <button type="button" class="btn btn-default" (click)="addId()"> Add Electronic Resource
       </button> &nbsp;
-      <button type="button" class="btn btn-primary" (click)="onclickupload()" [disabled]="uploading || !listoffiles[0]">Upload</button>
+      <button type="button" class="btn btn-primary" (click)="onclickupload()" [disabled]="uploading || !listoffiles.length">Upload</button>
     </div>
   </div> <!-- end of card body -->
 </div> <!-- end of card -->

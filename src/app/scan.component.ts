@@ -33,7 +33,7 @@ export class ScanComponent {
   uploading = false; // just for disabling the button
 
   listoffiles: ToDoScansWithMeta[] = [];
-  batch: any[] = [];
+  batch: File[] = [];
 
   batchInformation: {
     resourceType: enums.resourceType,
@@ -194,7 +194,10 @@ export class ScanComponent {
       console.log('Empty file. Uploading as Journal');
       this.locdbService.saveResource(listelement.identifier.scheme,
       listelement.identifier.literalValue,
-      listelement.resourceType) // is it set?
+      listelement.resourceType).subscribe(
+        (suc) => this.successHandler(listelement, suc, false),
+        (err) => this.processError(listelement, err)
+      ) // is it set?
     }
   }
 
@@ -205,18 +208,21 @@ export class ScanComponent {
     console.log('Pushing: ', listelement);
     // turn third arguments to true to enable auto-trigger
     // depends on back-end returning the correct scan
-    if (listelement.resourceType === enums.resourceType.monograph) {
       // Monograph no page numbers necessary
       this.locdbService.saveResource(listelement.identifier.scheme,
       listelement.identifier.literalValue,
       listelement.resourceType,
-      listelement.firstpage,
-      listelement.lastpage,
+      listelement.firstpage || undefined,
+      listelement.lastpage || undefined,
       listelement.textualPdf,
       listelement.file,
-      null,
+      '',
       listelement.embodimentType
-    )//print or digital enum)
+    ).subscribe(
+      (suc) => this.successHandler(listelement, suc, true),
+      (err) => this.processError(listelement, err)
+    );
+    //print or digital enum)
     //
     //   this.locdbService.saveScan(
     //     listelement.identifier.literalValue,
@@ -250,7 +256,6 @@ export class ScanComponent {
     //     (suc) => this.successHandler(listelement, suc, true), // auto trigger ocr
     //     (err) => this.processError(listelement, err)
     //   );
-    }
 
   }
 
@@ -348,18 +353,19 @@ class ToDoScansWithMeta {
 
   get allset() {
     if (!this.identifier.literalValue) {
-      // identifier always required
+      // identifier always required and non-empty
       return false;
-    } // else it has an identifier
-    if (this.resourceType === enums.resourceType.monograph || this.resourceType === enums.resourceType.journal) {
-      return true;
-    } else {
-      // currently only collection requires pages numbers
-      if (this.firstpage && this.lastpage) {
-        return true;
-      }
     }
+    // else it has an identifier
+    // if (this.resourceType === enums.resourceType.monograph || this.resourceType === enums.resourceType.journal) {
+    //   return true;
+    // } else {
+    //   // currently only collection requires pages numbers
+    //   if (this.firstpage && this.lastpage) {
+    //     return true;
+    //   }
+    // }
     // default
-    return false;
+    return true;
   }
 }
