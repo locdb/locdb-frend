@@ -30,7 +30,7 @@ export class AgendaComponent implements OnInit, OnChanges {
   loading = false;
   // selectedResource : TypedResourceView;
   tracking: Tracking = {};
-  statuses: Array<string> = enum_values(enums.status);
+  statuses: Array<string> = enum_values(enums.todoStatus);
   title = "Agenda";
 
   constructor(private locdbService: LocdbService) { }

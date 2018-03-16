@@ -1,3 +1,10 @@
+export enum todoStatus {
+  notOcrProcessed = "NOT_OCR_PROCESSED",
+  ocrProcessing = "OCR_PROCESSING",
+  ocrProcessed = "OCR_PROCESSED",
+  external = "EXTERNAL"
+}
+
 export enum status {
   notOcrProcessed = "NOT_OCR_PROCESSED",
     ocrProcessing = "OCR_PROCESSING",

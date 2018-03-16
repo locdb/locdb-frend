@@ -33,8 +33,13 @@ export class ScanComponent {
   uploading = false; // just for disabling the button
 
   listoffiles: ToDoScansWithMeta[] = [];
+  batch: any[] = [];
 
-  modalChoiceResourceType: string;
+  batchInformation: {
+    resourceType: enums.resourceType,
+    identifierScheme: enums.identifier
+  } = { resourceType: enums.resourceType.report, identifierScheme:
+  enums.identifier.swb_ppn }
 
   modalRef: BsModalRef;
 
@@ -76,30 +81,29 @@ export class ScanComponent {
 
   onChange(event: any) { // file input
     console.log(event);
-    for (const file of event.target.files){
+    this.batch = event.target.files;
+  }
 
+  confirmBatch() {
+    for (const file of this.batch){
       const [_id, first, last] = this.extractidandPages(file.name);
-      let rtype = enums.resourceType[this.modalChoiceResourceType];
-      // if (first && last) {
-      //   rtype = ResourceType.collection;
-      //   console.log('Assuming a collection')
-      // } else {
-      //   rtype = ResourceType.monograph;
-      //   console.log('Assuming a monograph')
-      // }
+      let rtype = this.batchInformation.resourceType;
+      let identifierScheme = this.batchInformation.identifierScheme;
       this.listoffiles.push(
         new ToDoScansWithMeta(
           {
-            identifier: { literalValue: _id, scheme: 'ppn' },
+            identifier: { literalValue: _id, scheme: identifierScheme},
             firstpage: first,
             lastpage: last,
             file: file,
             resourceType: rtype, uploading: false,
-            textualPdf: false
+            textualPdf: false,
+            embodimentType: enums.embodimentType.print
           }
         )
       );
     }
+    this.modalRef.hide();
   }
 
   onSelect(item: ToDoScansWithMeta) {
@@ -326,8 +330,6 @@ export class ScanComponent {
     this.uploading = !this.listoffiles.every((elem) => !elem.uploading);
   }
 }
-
-
 
 class ToDoScansWithMeta {
   identifier: models.Identifier;
