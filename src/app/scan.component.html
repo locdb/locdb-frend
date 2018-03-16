@@ -70,17 +70,17 @@
           </div>
         </div>
       </div>
+  </div> <!-- end of card body -->
     <div class="card-footer">
       <button type="button" class="btn btn-warning" (click)="onclickclear()" [disabled]="uploading || !listoffiles[0]">Clear</button> &nbsp;
       <!-- <label class="btn btn-default"> -->
       <!--   Browse Files <input type="file" multiple (change)= "onChange($event)" hidden style="display: none !important;"> -->
       <!-- </label> &nbsp; -->
-      <button type="button" class="btn btn-primary" (click)="openModal(template)">Upload Files</button>
-      <button type="button" class="btn btn-default" (click)="addId()"> Add Electronic Resource
+      <button type="button" class="btn btn-secondary" (click)="openModal(template)">Upload Files</button>
+      <button type="button" class="btn btn-secondary" (click)="addId()"> Add Electronic Resource
       </button> &nbsp;
       <button type="button" class="btn btn-primary" (click)="onclickupload()" [disabled]="uploading || !listoffiles.length">Upload</button>
     </div>
-  </div> <!-- end of card body -->
 </div> <!-- end of card -->
 </div> <!-- end of col -->
   <div class="col-xs-12 col-md-6">
