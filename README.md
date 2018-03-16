@@ -47,13 +47,14 @@ npm install
 
 1. Go to [Swagger Code Generator](http://generator.swagger.io/)
 2. Select `POST /gen/clients/{language}` 'Generates a client library' and press 'Try it out' button
-3. Select `typescript-angular2` as the target language for the client library and insert the following snippet as body:
+3. Select `typescript-angular` as the target language for the client library and insert the following snippet as body:
 
   ```json
   {
     "spec": {},
     "options": {
       "modelPropertyNaming": "original",
+      "ngVersion": "5.2"
     },
     "swaggerUrl": "https://locdb.bib.uni-mannheim.de/locdb-dev/swagger",
     "authorizationValue": {
