@@ -33,7 +33,7 @@ export class ScanComponent {
 
   listoffiles: ToDoScansWithMeta[] = [];
 
-  modalChoiceResourceType: string = enums.resourceType.journalArticle;
+  modalChoiceResourceType: string = enum_values(enums.resourceType)[0];
 
   modalRef: BsModalRef;
 
@@ -77,7 +77,7 @@ export class ScanComponent {
     for (const file of event.target.files){
 
       const [_id, first, last] = this.extractidandPages(file.name);
-      let rtype = this.modalChoiceResourceType//enums.resourceType.journalArticle;
+      let rtype = this.modalChoiceResourceType //enums.resourceType.journalArticle;
       // if (first && last) {
       //   rtype = ResourceType.collection;
       //   console.log('Assuming a collection')
@@ -88,7 +88,7 @@ export class ScanComponent {
       this.listoffiles.push(
         new ToDoScansWithMeta(
           {
-            identifier: { literalValue: _id, scheme: 'ppn' },
+            identifier: { literalValue: _id, scheme: this.identifierTypes[7] },
             firstpage: first,
             lastpage: last,
             file: file,
@@ -284,11 +284,12 @@ export class ScanComponent {
   addId() {
     this.listoffiles.push(new ToDoScansWithMeta(
       {
-        identifier: { scheme: 'doi', literalValue: null },
+        identifier: { scheme: this.identifierTypes[7], literalValue: null },
         firstpage: null,
         lastpage: null,
         file: null,
         resourceType: enums.resourceType.journal, // electronic for now is always journal
+        embodimentType: enums.embodimentType.digital,
         uploading: false
       })
     );
@@ -332,7 +333,7 @@ class ToDoScansWithMeta {
   firstpage?: number;
   lastpage?: number;
   file?: File;
-  resourceType: enums.resourceType;
+  resourceType: string;
   uploading: boolean; // to determine button state
   err?: any;
   textualPdf?: boolean; // textual pdf flag. optional since not needed for electronic
@@ -343,7 +344,8 @@ class ToDoScansWithMeta {
   }
 
   get allset() {
-    if (!this.identifier.literalValue) {
+    // allways required
+    if (!this.identifier.literalValue || !this.identifier.scheme) {
       // identifier always required
       return false;
     } // else it has an identifier
@@ -351,7 +353,9 @@ class ToDoScansWithMeta {
       return true;
     } else {
       // currently only collection requires pages numbers
-      if (this.firstpage && this.lastpage) {
+      if (this.identifier.literalValue
+         && this.identifier.scheme != ""
+        && this.firstpage && this.lastpage && this.resourceType) {
         return true;
       }
     }
