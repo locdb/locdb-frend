@@ -1,6 +1,6 @@
 <app-metadata [of]="this.todo"></app-metadata>
-<button type="button" class="btn btn-primary" (click)="inspectReferences()"> Inspect References </button>
-<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="embodiment-group" disabled="!todo.embodiments"> Embodiments </button>
+<button type="button" class="btn btn-primary" (click)="inspectReferences()" [disabled]="!todo.parts || !todo.parts.length"> Inspect References </button>
+<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="embodiment-group" [disabled]="!todo.embodiments"> Embodiments </button>
 <ul id="embodiment-group" class="list-group list-group-flush "*ngIf="todo.embodiments && todo.embodiments.length">
   <li class="list-group-item" *ngFor="let embodiment of todo.embodiments">
     <app-embodiment [embodiment]="embodiment" (onSelect)="inspectScan($event)"></app-embodiment>

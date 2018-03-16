@@ -93,17 +93,18 @@
     </button>
   </div>
   <div class="modal-body">
-    <label> set Resource Type: </label>
+    <label for="modaltypeselect"> Resource Type: </label>
         <!-- class="form-control input-sm pull-right"> -->
-        <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
         <select name="modaltypeselect" [(ngModel)]="modalChoiceResourceType" style="width: 100%;">
+        <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
         </select>
+        <hr/>
       <input type="file" multiple (change)="onChange($event)">
       <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
   </div>
 </ng-template>
 
-<!-- TODO: Code for Floating Action Button 
+<!-- TODO: Code for Floating Action Button
 <div class="share-wrapper col-xs-1 col-xs-push-11">
    <a href="javascript:void(0)" style="background: none">
      <i class="icon icon-material-share btn btn-info btn-raised withripple"

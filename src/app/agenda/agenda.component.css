@@ -1,0 +1,15 @@
+ul > li {
+  display: inline;
+  margin-right: 1em;
+}
+
+ul {
+  display: inline-block;
+  margin-bottom: 0;
+  padding-left: 0;
+}
+
+.refresh-panel {
+  display: flex;
+  justify-content: flex-end;
+}
