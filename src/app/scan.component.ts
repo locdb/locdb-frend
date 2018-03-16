@@ -24,6 +24,7 @@ export class ScanComponent {
   selected: ToDoScansWithMeta;
 
   resourceTypes: string[] = enum_values(enums.resourceType);
+  // resourceTypes = enums.resourceType;
 
   embodimentTypes: string[] = enum_values(enums.embodimentType);
 
@@ -74,10 +75,11 @@ export class ScanComponent {
   }
 
   onChange(event: any) { // file input
+    console.log(event);
     for (const file of event.target.files){
 
       const [_id, first, last] = this.extractidandPages(file.name);
-      let rtype = enums.resourceType.journalArticle;
+      let rtype = enums.resourceType[this.modalChoiceResourceType];
       // if (first && last) {
       //   rtype = ResourceType.collection;
       //   console.log('Assuming a collection')
