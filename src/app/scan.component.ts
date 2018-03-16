@@ -10,6 +10,15 @@ import { enums, enum_values, models } from './locdb';
 
 const URL = '/api/'; // Same Origin Policy
 
+const REQUIRED_IDENTIFIERS = {}
+REQUIRED_IDENTIFIERS[enums.resourceType.journal] = [enums.identifier.zdb_id];
+REQUIRED_IDENTIFIERS[enums.resourceType.journalArticle] = [enums.identifier.doi];
+REQUIRED_IDENTIFIERS[enums.resourceType.bookChapter] = [enums.identifier.doi, enums.identifier.swb_ppn];
+REQUIRED_IDENTIFIERS[enums.resourceType.proceedingsArticle] = [enums.identifier.doi, enums.identifier.swb_ppn];
+REQUIRED_IDENTIFIERS[enums.resourceType.monograph] = [enums.identifier.swb_ppn];
+REQUIRED_IDENTIFIERS[enums.resourceType.book] = [enums.identifier.swb_ppn];
+
+
 @Component({
   moduleId: module.id,
   selector: 'app-scan',
@@ -353,9 +362,10 @@ class ToDoScansWithMeta {
   }
 
   get allset() {
-    if (!this.identifier.literalValue) {
-      // identifier always required and non-empty
-      return false;
+    const required = REQUIRED_IDENTIFIERS[this.resourceType];
+    for (const r of required) {
+      if (this.identifier.scheme === r && this.identifier.literalValue)
+      { return true;}
     }
     // else it has an identifier
     // if (this.resourceType === enums.resourceType.monograph || this.resourceType === enums.resourceType.journal) {
@@ -367,6 +377,6 @@ class ToDoScansWithMeta {
     //   }
     // }
     // default
-    return true;
+    return false;
   }
 }
