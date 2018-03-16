@@ -30,7 +30,7 @@
                     <td><input type="text" name="_id" [(ngModel)]="toDoScansWithMeta.identifier.literalValue" style="width: 100%;"
                       class="form-control input-sm pull-right"></td>
                   </tr>
-                  <tr *ngIf="toDoScansWithMeta.resourceType === ResourceType.collection">
+                  <tr *ngIf="toDoScansWithMeta.resourceType === resourceTypes.collection">
                     <td><label>Pages</label> from <input type="number" name="firstpage" [(ngModel)]="toDoScansWithMeta.firstpage" style="width: 75%;"
                       class="form-control input-sm pull-right"></td>
                     <td> to <input type="number" name="firstlastpage" [(ngModel)]="toDoScansWithMeta.lastpage" style="width: 90%;"
@@ -93,17 +93,17 @@
     </button>
   </div>
   <div class="modal-body">
-    <label> set Resource Type: </label>
+    <label> Please set a Resource Type for the batch: </label>
         <!-- class="form-control input-sm pull-right"> -->
-        <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
         <select name="modaltypeselect" [(ngModel)]="modalChoiceResourceType" style="width: 100%;">
+          <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
         </select>
-      <input type="file" multiple (change)="onChange($event)">
+      <input type="file" multiple (change)="onChange($event);modalRef.hide()">
       <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
   </div>
 </ng-template>
 
-<!-- TODO: Code for Floating Action Button 
+<!-- TODO: Code for Floating Action Button
 <div class="share-wrapper col-xs-1 col-xs-push-11">
    <a href="javascript:void(0)" style="background: none">
      <i class="icon icon-material-share btn btn-info btn-raised withripple"

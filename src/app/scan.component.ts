@@ -33,7 +33,7 @@ export class ScanComponent {
 
   listoffiles: ToDoScansWithMeta[] = [];
 
-  modalChoiceResourceType: string;
+  modalChoiceResourceType: string = enums.resourceType.journalArticle;
 
   modalRef: BsModalRef;
 
@@ -77,7 +77,7 @@ export class ScanComponent {
     for (const file of event.target.files){
 
       const [_id, first, last] = this.extractidandPages(file.name);
-      let rtype = enums.resourceType.journalArticle;
+      let rtype = this.modalChoiceResourceType//enums.resourceType.journalArticle;
       // if (first && last) {
       //   rtype = ResourceType.collection;
       //   console.log('Assuming a collection')
