@@ -16,6 +16,7 @@ export class EmbodimentComponent {
 
 
   selectScan(scan : models.Scan) {
+    console.log("select scan", scan)
     this.onSelect.emit([this.embodiment, scan]);
   }
 

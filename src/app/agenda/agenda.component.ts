@@ -55,7 +55,7 @@ export class AgendaComponent implements OnInit, OnChanges {
       }
     }
     this.locdbService.getToDo(statuses).subscribe(
-      (todos) => { this.todos = todos; this.loading = false },
+      (todos) => { this.todos = todos; this.loading = false; },
       (err) => { console.log(err); this.loading = false; }
     );
   }
