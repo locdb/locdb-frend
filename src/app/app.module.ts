@@ -26,7 +26,7 @@ import { PopoverModule } from 'ngx-popover';
 import { HotkeyModule } from 'angular2-hotkeys';
 
 // own
-import { ScanComponent } from './scan.component';
+import { ScanComponent } from './ingest/scan.component';
 import { LocdbService } from './locdb.service';
 import { SuggestionComponent } from './suggestion/suggestion.component';
 import { LoginComponent } from './login/login.component';
@@ -40,7 +40,7 @@ import { AgendaComponent, TodoComponent, EmbodimentComponent } from './agenda';
 import { RefsInspectorComponent, ScanInspectorComponent, EntryListComponent, EntryCardComponent, DisplayComponent} from './inspectors';
 
 // feeds
-import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
+import { FeedComponent, FeedReaderComponent } from './ingest/feed-reader/feed-reader.component';
 
 // resource related
 import { MetadataComponent } from './metadata/metadata.component';

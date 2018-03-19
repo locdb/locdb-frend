@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { ScanComponent } from './scan.component';
-import { LocdbService, CredentialsService } from './locdb.service'
+import { LocdbService, CredentialsService } from '../locdb.service'
 
 import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
 import { FeedService } from './feed.service';

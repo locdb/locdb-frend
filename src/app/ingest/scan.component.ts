@@ -3,21 +3,12 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { LocdbService } from './locdb.service';
+import { LocdbService } from '../locdb.service';
 import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
 
-import { enums, enum_values, models } from './locdb';
+import { enums, enum_values, models } from '../locdb';
 
-const URL = '/api/'; // Same Origin Policy
-
-const REQUIRED_IDENTIFIERS = {}
-REQUIRED_IDENTIFIERS[enums.resourceType.journal] = [enums.identifier.zdb_id];
-REQUIRED_IDENTIFIERS[enums.resourceType.journalArticle] = [enums.identifier.doi];
-REQUIRED_IDENTIFIERS[enums.resourceType.bookChapter] = [enums.identifier.doi, enums.identifier.swb_ppn];
-REQUIRED_IDENTIFIERS[enums.resourceType.proceedingsArticle] = [enums.identifier.doi, enums.identifier.swb_ppn];
-REQUIRED_IDENTIFIERS[enums.resourceType.monograph] = [enums.identifier.swb_ppn];
-REQUIRED_IDENTIFIERS[enums.resourceType.book] = [enums.identifier.swb_ppn];
-
+import { REQUIRED_IDENTIFIERS, requiresPageNumbers } from './constraints';
 
 @Component({
   moduleId: module.id,
@@ -34,6 +25,7 @@ export class ScanComponent {
 
   // just to make them accessible
   requiredIdentifiers = REQUIRED_IDENTIFIERS;
+  requiresPageNumbers = requiresPageNumbers;
 
   resourceTypes: string[] = Object.keys(REQUIRED_IDENTIFIERS);
   // resourceTypes = enums.resourceType;
@@ -79,11 +71,11 @@ export class ScanComponent {
       }
     }
     if (ready) {
-      console.log('Ready for upload..');
+      console.log('Ready for upload...');
       this.uploading = true;
       this.listoffiles.map((elem) => this.writefilecontent(elem));
     } else {
-      alert('Files not ready!');
+      alert('Please insert missing information!');
     }
   }
 
@@ -274,6 +266,8 @@ export class ScanComponent {
 
   successHandler(item, response, autotrigger: boolean) {
     item.uploading = false;
+    console.log(response);
+    // last element is scan
     const entry: models.BibliographicEntry = response[response.length - 1];
     console.log('Response item: ', response)
     // clear after upload
@@ -308,7 +302,7 @@ export class ScanComponent {
   addId() {
     this.listoffiles.push(new ToDoScansWithMeta(
       {
-        identifier: { scheme: this.identifierTypes[7], literalValue: null },
+        identifier: { scheme: enums.identifier.zdb_id, literalValue: null },
         firstpage: null,
         lastpage: null,
         file: null,
@@ -336,7 +330,7 @@ export class ScanComponent {
       return (item.file.size / 1024 / 1024).toFixed(3) + ' MB, '
         + item.file.type;
     } else {
-      return 'Web Journal';
+      return 'Electronic';
     }
   }
 
@@ -355,21 +349,41 @@ class ToDoScansWithMeta {
   firstpage?: number;
   lastpage?: number;
   file?: File;
-  resourceType: string;
   uploading: boolean; // to determine button state
   err?: any;
   textualPdf?: boolean; // textual pdf flag. optional since not needed for electronic
   embodimentType?: enums.embodimentType;
+
+  // private, to overwrite setter side effects
+  private _resourceType;
+  set resourceType( newType: string) {
+    // side effect: valid identifier types may not match
+    let oldScheme = this.identifier.scheme;
+    if (REQUIRED_IDENTIFIERS[newType].indexOf(oldScheme) === -1) {
+      // identifier scheme not possible for new type, guess one
+      this.identifier.scheme = REQUIRED_IDENTIFIERS[newType][0];
+    }
+    this._resourceType = newType;
+  }
+
+  get resourceType (): string {
+    return this._resourceType;
+  }
+
 
   constructor (other: Partial<ToDoScansWithMeta>) {
     Object.assign(this, other);
   }
 
   get allset() {
-    const required = REQUIRED_IDENTIFIERS[this.resourceType];
-    for (const r of required) {
-      if (this.identifier.scheme === r && this.identifier.literalValue)
-      { return true;}
+    const idOk = ((REQUIRED_IDENTIFIERS[this.resourceType].indexOf(this.identifier.scheme) > -1) && this.identifier.literalValue);
+    if (idOk) {
+      if (this.file && requiresPageNumbers(this.resourceType, this.identifier.scheme)) {
+        // non-null and non-zero, could also check whether first <= last but ok
+        return (this.firstpage && this.lastpage);
+      } else {
+        return true;
+      }
     }
     // else it has an identifier
     // if (this.resourceType === enums.resourceType.monograph || this.resourceType === enums.resourceType.journal) {

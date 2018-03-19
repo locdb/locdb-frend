@@ -16,7 +16,7 @@
             {{getName(toDoScansWithMeta)}}
             <span class="badge badge-primary">{{getMetadata(toDoScansWithMeta)}}
             </span>
-            <button type="button" class="close pull-right" (click)="removeItemFromList(toDoScansWithMeta); $event.preventDefault(); $event.stopPropagation()" aria-label="Close">
+            <button type="button" class="close pull-right" (click)="removeItemFromList(toDoScansWithMeta); $event.preventDefault(); $event.stopPropagation()" aria-label="Close" [disabled]="uploading">
               <span aria-hidden="true">&times;</span>
             </button>
           </a>
@@ -28,7 +28,7 @@
                   <tr>
                     <td><label for="typeselect">Resource Type</label></td>
                     <td>
-                      <select [disabled]="!toDoScansWithMeta.file" name="typeselect" [(ngModel)]="toDoScansWithMeta.resourceType" style="width: 100%;"
+                      <select name="typeselect" [(ngModel)]="toDoScansWithMeta.resourceType" style="width: 100%;"
                         class="form-control input-sm pull-right">
                         <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
                       </select>
@@ -43,16 +43,16 @@
                     <td><input type="text" name="_id" [(ngModel)]="toDoScansWithMeta.identifier.literalValue" style="width: 100%;"
                       class="form-control input-sm pull-right"></td>
                   </tr>
-                  <tr>
+                  <tr *ngIf="toDoScansWithMeta.file && requiresPageNumbers(toDoScansWithMeta.resourceType, toDoScansWithMeta.identifier.scheme)">
                     <td><label>Pages</label> from <input type="number" name="firstpage" [(ngModel)]="toDoScansWithMeta.firstpage" style="width: 75%;"
                       class="form-control input-sm pull-right"></td>
                     <td> to <input type="number" name="firstlastpage" [(ngModel)]="toDoScansWithMeta.lastpage" style="width: 90%;"
                       class="form-control input-sm pull-right"></td>
                   </tr>
-                  <tr>
-                    <td><label for="typeselect">Embodiment Type</label></td>
+                  <tr *ngIf="toDoScansWithMeta.file">
+                    <td><label for="embodimentselect">Embodiment Type</label></td>
                     <td>
-                      <select [disabled]="!toDoScansWithMeta.file" name="embodimentselect" [(ngModel)]="toDoScansWithMeta.embodimentType" style="width: 100%;"
+                      <select name="embodimentselect" [(ngModel)]="toDoScansWithMeta.embodimentType" style="width: 100%;"
                         class="form-control input-sm pull-right">
                         <option *ngFor="let et of embodimentTypes" [value]="et">{{et}}</option>
                       </select>
@@ -72,7 +72,7 @@
       </div>
   </div> <!-- end of card body -->
     <div class="card-footer">
-      <button type="button" class="btn btn-warning" (click)="onclickclear()" [disabled]="uploading || !listoffiles[0]">Clear</button> &nbsp;
+      <button type="button" class="btn btn-warning" (click)="onclickclear()" [disabled]="uploading || !listoffiles.length">Clear</button> &nbsp;
       <!-- <label class="btn btn-default"> -->
       <!--   Browse Files <input type="file" multiple (change)= "onChange($event)" hidden style="display: none !important;"> -->
       <!-- </label> &nbsp; -->

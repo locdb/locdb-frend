@@ -1,7 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 
 import { LocdbService } from './locdb.service';
-import { FeedService } from './feed.service';
+import { FeedService } from './ingest/feed.service';
 
 @Component({
     selector: 'app-root',

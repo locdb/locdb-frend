@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { models, enums, TypedResourceView } from '../locdb';
 import { LocdbService } from '../locdb.service';
-import { FeedService } from '../feed.service';
 import { Context } from '../agenda/agenda.component';
 import { AgendaComponent } from '../agenda/agenda.component';
 

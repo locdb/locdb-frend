@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { LocdbService } from '../locdb.service';
+import { LocdbService } from '../../locdb.service';
 import { FeedService } from '../feed.service';
-import { models } from '../locdb'
+import { models } from '../../locdb'
 import { Http } from '@angular/http';
 
 @Component({

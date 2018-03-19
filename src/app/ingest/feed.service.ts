@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject }    from 'rxjs/Subject';
-import { models }       from './locdb'
+import { models }       from '../locdb'
 
 @Injectable()
 export class FeedService {
