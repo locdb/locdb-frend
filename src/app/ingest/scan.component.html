@@ -1,11 +1,14 @@
-<div class="container-fluid">
+<div class="container">
 <div class="row">
-  <div class="col-xs-12 col-md-6">
+<div class="col-xs-12 col-md-12">
 <div class="card">
   <div class="card-header">
-        <h3>{{title}}</h3>
+        <h2>{{title}}</h2>
+        <hr/>
+        <button type="button" class="btn btn-secondary" (click)="openModal(template)">Add Batch of Files</button>
+        <button type="button" class="btn btn-secondary" (click)="addId()"> Add Electronic Resource</button>
   </div>
-  <div id="flup" class="card-body">
+  <div id="flup" class="card-body" *ngIf="listoffiles && listoffiles.length">
       <div class="list-group">
         <div *ngFor="let toDoScansWithMeta of listoffiles">
           <a href="#flup" class="list-group-item list-group-item-action"
@@ -71,21 +74,15 @@
         </div>
       </div>
   </div> <!-- end of card body -->
-    <div class="card-footer">
+    <div class="card-footer" *ngIf="listoffiles && listoffiles.length">
       <button type="button" class="btn btn-warning" (click)="onclickclear()" [disabled]="uploading || !listoffiles.length">Clear</button> &nbsp;
       <!-- <label class="btn btn-default"> -->
       <!--   Browse Files <input type="file" multiple (change)= "onChange($event)" hidden style="display: none !important;"> -->
       <!-- </label> &nbsp; -->
-      <button type="button" class="btn btn-secondary" (click)="openModal(template)">Upload Files</button>
-      <button type="button" class="btn btn-secondary" (click)="addId()"> Add Electronic Resource
-      </button> &nbsp;
-      <button type="button" class="btn btn-primary" (click)="onclickupload()" [disabled]="uploading || !listoffiles.length">Upload</button>
+      <button type="button" class="btn btn-primary float-right" (click)="onclickupload()" [disabled]="uploading || !listoffiles.length">Upload</button>
     </div>
 </div> <!-- end of card -->
 </div> <!-- end of col -->
-  <div class="col-xs-12 col-md-6">
-    <app-feed-reader></app-feed-reader>
-  </div>
 </div> <!-- end of row -->
 </div> <!-- end of container -->
 
@@ -112,7 +109,7 @@
       <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="confirmBatch()">Confirm </button>
+    <button type="button" class="btn btn-primary float-right" (click)="confirmBatch()">Confirm </button>
   </div>
 
 </ng-template>

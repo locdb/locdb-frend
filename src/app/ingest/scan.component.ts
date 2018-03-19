@@ -19,7 +19,7 @@ import { REQUIRED_IDENTIFIERS, requiresPageNumbers } from './constraints';
 })
 
 export class ScanComponent {
-  title = 'File Upload';
+  title = 'Ingest';
 
   selected: ToDoScansWithMeta;
 
