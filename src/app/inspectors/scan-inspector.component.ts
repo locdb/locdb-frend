@@ -36,8 +36,8 @@ export class ScanInspectorComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges | any) {
   }
 
-  getScan(id: string) {
-    return this.locdbService.getScan(id);
+  getScanImage() {
+    return this.locdbService.getScanImage(this.scan);
   }
 
   showScan() {

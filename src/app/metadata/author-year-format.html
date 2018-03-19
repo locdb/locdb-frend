@@ -1,10 +1,8 @@
 <p *ngIf="of">
   <span class="badge badge-primary"> {{ of.type }} </span>
-  {{ of.contributors | authors }}
-  .
+  {{ of.contributors | authors }}:
   <span class="badge badge-secondary"> {{ of.publicationDate }}</span>
-  .
-  <b>{{of.title}}</b>
+  <b>{{of.title}} {{ of.subtitle }}</b>
   ,
   {{ of.contributors | publisher }}
   .
