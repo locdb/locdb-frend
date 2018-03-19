@@ -17,11 +17,10 @@
 <div class="card-body" style="height: 800px; overflow-y: scroll;">
   <!-- Panel body providing suggestions -->
   <div class="card-block">
-    <accordion>
     <div *ngFor="let r of internalSuggestions;let i = index">
-      <app-resource-accordion-group *ngIf="max_in <= 0 || i < max_in"
+      <app-resource-card *ngIf="max_in <= 0 || i < max_in"
         [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
-      </app-resource-accordion-group>
+      </app-resource-card>
     </div>
     <button type="button" *ngIf="max_in == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
       <p><em>Show all</em></p>
@@ -29,7 +28,6 @@
     <button type="button" *ngIf="max_in == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
       <p><em>Show less</em></p>
     </button>
-    </accordion>
     <div *ngIf="internalInProgress" class="loader">
     </div>
   </div>

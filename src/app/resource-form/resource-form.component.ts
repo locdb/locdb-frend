@@ -54,8 +54,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             edition: '',
             resourcenumber: '',
             publicationyear: '',
-            // partof: '',
-            containerTitle: '',
             contributors: this.fb.array([]),
             identifiers: this.fb.array([]),
         });
@@ -72,11 +70,30 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         // }
     }
 
+
+    nameFromAgent(agent: models.ResponsibleAgent): string {
+      if (agent.familyName) {
+        return agent.familyName + ';' + agent.givenName;
+      } else {
+        return agent.nameString;
+      }
+    }
+
+    agentFromName(forminput: string): models.ResponsibleAgent {
+      const [lastname, firstname, ...other] = forminput.split(';');
+      return {
+        identifiers: [],
+        givenName: firstname,
+        familyName: lastname,
+        nameString: forminput // retain original input
+      }
+    }
+
     // clean array treatment
     setContributors(roles: models.AgentRole[]) {
         const contribFGs = roles ? roles.map(
             arole => this.fb.group(
-                {role: arole.roleType, name: arole.heldBy.nameString }
+                {role: arole.roleType, name: this.nameFromAgent(arole.heldBy)}
             )
         ) : [];
         const contribFormArray = this.fb.array(contribFGs);
@@ -169,13 +186,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         const agentRole = {
             identifiers: [],
             roleType: role,
-            heldBy: {
-                identifiers: [],
-                roleType: role,
-                givenName: '',
-                familyName: '',
-                nameString: name,
-            }
+            heldBy: this.agentFromName(name)
         }
         return agentRole;
     }

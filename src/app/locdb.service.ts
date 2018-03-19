@@ -208,7 +208,8 @@ export class LocdbService {
      * 0-1 backend requests */
     if (!tr._id) {
       // !!! Never ever forget this when on righthand-side, they should never be external
-      tr.status = enums.status.valid;
+      // 19.03.2018: Dont do this, we would corrupt todo item flag..
+      // tr.status = enums.status.valid;
       return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).map( br => new TypedResourceView(br) );
     } else {
       return Observable.of(tr);

@@ -20,7 +20,7 @@
 </div>
   </div>
 </div>
-  <div class="card-body bg-light" *ngIf="open && selected" >
+  <div class="card-body bg-light" *ngIf="open" >
   <app-resource-editable [resource]="resource" (resourceChange)="resource=$event; resourceChange.emit($event)"
       (submitStatus)="disabled=!$event; open = $event">
   </app-resource-editable>

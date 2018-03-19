@@ -3,7 +3,6 @@ import { TypedResourceView, models} from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { LoggingService } from '../logging.service'
 import { MOCK_INTERNAL } from '../mock-bresources'
-import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { environment } from 'environments/environment';
 // import { ResourceStatus, Provenance, Origin } from '../locdb';
 import { PopoverModule } from 'ngx-popover';
