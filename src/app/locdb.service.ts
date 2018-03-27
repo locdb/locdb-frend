@@ -133,9 +133,6 @@ export class LocdbService {
     return `${this.locdbUrl}/scans/${identifier}`;
   }
 
-  getScanImage(scan: models.Scan) {
-    return `${this.locdbUrl}/scans/${scan.scanName}`;
-  }
 
   deleteScan(scan: models.Scan) {
     return this.bibliographicEntryService.remove(scan._id);
