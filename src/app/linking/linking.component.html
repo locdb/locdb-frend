@@ -10,7 +10,9 @@
 </nav>
 
 <div [hidden]="isInspecting">
-<app-agenda (refsWithContext)="startInspectRefs($event[0], $event[1])" (scanWithContext)="startInspectScan($event[0], $event[1])">
+<!-- <p (click)="testRefs()"> TestRefs </p>
+  <p (click)="testScans()"> TestScans </p> -->
+<app-agenda [routerTracking]="tracking" (refsWithContext)="startInspectRefs($event[0], $event[1])" (scanWithContext)="startInspectScan($event[0], $event[1])">
 </app-agenda>
 </div>
 

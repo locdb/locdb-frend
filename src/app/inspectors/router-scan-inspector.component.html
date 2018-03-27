@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-6 col-md-6">
+<div class="card">
+  <div class="card-header"  *ngIf="!sorry_text">
+    <button type="button" class="btn btn-secondary" (click)="showrefs()">
+      Ref view
+    </button>
+    <!-- <div class="btn-toolbar" role="toolbar" aria-label="Toolbar">
+      <div class="btn-group" role="group" aria-label="Toggle scan view">
+        <button type="button" class="btn btn-secondary" (click)="showScan()" [class.active]="scanIsVisible">
+          Scan view
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="hideScan()" [class.active]="!scanIsVisible">
+          Reference list
+        </button>
+      </div>
+    </div> -->
+    <app-metadata [of]="resource" [in]="parent"></app-metadata>
+  </div>
+  <div class="card-header" *ngIf="sorry_text">
+    <p> {{sorry_text}} </p>
+  </div>
+  <div class="card-body"  *ngIf="!sorry_text">
+    <div>
+      <app-display [img_src]="getScanImage()" [entries]="entries" (entry)="forwardEntry($event)"
+          *ngIf="scan_content_type == 'image'"></app-display>
+      <p *ngIf="scan_content_type && scan_content_type != 'image'"> Received {{scan_content_type}}-type </p>
+    </div>
+    <div *ngIf="loading" class="loader">
+    </div>
+  </div>
+  <div class="card-footer"  *ngIf="!sorry_text">
+    <div class="text-right">
+      <button type="button" class="btn btn-primary" (click)="newEntry()">
+        <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Add Entry
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-6">
+  <app-suggestion [entry]="entry" (suggest)='updateTarget($event)'></app-suggestion>
+</div>
+</div>
