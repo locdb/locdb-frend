@@ -138,7 +138,7 @@ export class TypedResourceView implements Metadata {
   constructor(br: models.BibliographicResource | models.ToDo, astype?: string) {
     // this will throw if type is invalid!, but that s not too bad.
     this.viewport_ = astype ? astype : br.type;
-    console.log(this.viewport_);
+    // console.log(this.viewport_);
     this._prefix = PropertyPrefixByType[this.viewport_] + '_';
     this.data = br;
   }

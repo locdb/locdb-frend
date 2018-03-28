@@ -2,9 +2,9 @@
   <div class="col-xs-12 col-sm-6 col-md-6">
     <div class="card">
   <div class="card-header" *ngIf="!sorry_text">
-      <button type="button" class="btn btn-secondary" (click)="showScan()">
+      <!-- <button type="button" class="btn btn-secondary" (click)="showScan()">
         Scan view
-      </button>
+      </button> -->
       <app-metadata [of]="resource" [in]="parent"></app-metadata>
   </div>
   <div class="card-header" *ngIf="sorry_text">
@@ -13,7 +13,7 @@
   <div class="card-body" *ngIf="!sorry_text">
 
     <app-entry-list *ngIf="refs.length > 0" [resource]="resource" [entries]="refs" (entry)="forwardEntry($event)"></app-entry-list>
-    <p *ngIf="refs.length < 1"> No references availiable. </p> 
+    <p *ngIf="refs.length < 1"> No references availiable. </p>
   </div>
   <div class="card-footer" *ngIf="!sorry_text">
     <div class="text-right">

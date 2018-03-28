@@ -16,13 +16,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class RouterScanInspectorComponent implements OnInit, OnChanges {
   // @Input() scan: models.Scan = null;
   // @Input() resource: TypedResourceView;
-  // if sorry_text is set it is shows instead of the app display in the card body 
+  // if sorry_text is set it is shows instead of the app display in the card body
   sorry_text = "";
   _id: string;
   scan: models.Scan = null;
   scan_content_type: string = "";
   resource: TypedResourceView;
-  entries: models.BibliographicEntry[] = [];
+  //entries: models.BibliographicEntry[] = [];
+  refs: Array<models.BibliographicEntry> = [];
+  scanIsVisible = true;
   // @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
   entry: models.BibliographicEntry; //EventEmitter<models.BibliographicEntry> = new EventEmitter();
   loading = false;
@@ -39,16 +41,23 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     // load Bibliographic resource because only id is passed along the route
     this.locdbService.getBibliographicResource(this._id).subscribe((res) => {
       this.resource = res
+      console.log("Resource ", res)
+      this.refs = res.parts // TODO filter parts for OCRCoordinates
       let embodiments_with_scans = res.embodiedAs.filter((embo) => embo.scans.length > 0)
       for (let embodiment_with_scans of embodiments_with_scans){
+        console.log("embo_with_scans ", embodiment_with_scans)
         // get scan_ids from the resource
-        this.scan_id = embodiment_with_scans.scans.pop()._id
-        // check wether scan is an image or something else
-        this.locdbService.checkScanImage(this.scan_id).subscribe(data => {
-            this.scan_content_type = data.headers.get("content-type").split('/')[0]
+        let ewsScansLength = embodiment_with_scans.scans.length
+        if (ewsScansLength>0){
+          this.scan_id = embodiment_with_scans.scans[ewsScansLength-1]._id
+          console.log("Scan_id ", this.scan_id)
+          // check wether scan is an image or something else
+          this.locdbService.checkScanImage(this.scan_id).subscribe(data => {
+              this.scan_content_type = data.headers.get("content-type").split('/')[0]
         },
         (err) => { console.log("err, loading url", err) });
     }
+  }
     if(!this.scan_id){
       this.sorry_text = "No scans attached"
     }
@@ -65,12 +74,20 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     return scan
     }
 
-  showrefs() {
-    this.router.navigate(['/linking/RefsInspector/', this._id]);
-  }
+  // showrefs() {
+  //   this.router.navigate(['/linking/RefsInspector/', this._id]);
+  // }
 
   forwardEntry(entry: models.BibliographicEntry) {
     this.entry = entry
+  }
+
+  showScan() {
+    this.scanIsVisible = true;
+  }
+
+  hideScan() {
+    this.scanIsVisible = false;
   }
 
   newEntry() {
