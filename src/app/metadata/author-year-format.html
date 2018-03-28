@@ -6,7 +6,7 @@
   ,
   {{ of.contributors | publisher }}
   .
-  <span class="badge badge-success" *ngFor="let ident of identifiers">
+  <span class="badge badge-success" *ngFor="let ident of of.identifiers">
     {{ident.scheme}}: {{ident.literalValue}}
   </span>
   <span *ngIf="in">
