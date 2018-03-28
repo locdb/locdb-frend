@@ -138,6 +138,11 @@ export class LocdbService {
     return this.bibliographicEntryService.remove(scan._id);
   }
 
+  checkScanImage(identifier: string){
+    return this.http.get(`${this.locdbUrl}/scans/${identifier}`)
+  }
+
+
 
   /* Resources API end */
   addTargetBibliographicResource(entry: models.BibliographicEntry, resource_id: string): Observable<TypedResourceView> {
@@ -217,7 +222,9 @@ export class LocdbService {
     }
   }
 
-
+  getBibliographicResource(id:string): Observable<TypedResourceView> {
+    return this.bibliographicResourceService.get(id).map(br => new TypedResourceView(br));
+  }
 
   // DEPRECATED or integrate in Maybe Methods
   putBibliographicResource(resource: TypedResourceView): Observable<TypedResourceView> {

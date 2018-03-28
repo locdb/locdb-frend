@@ -37,7 +37,7 @@ import { CommitComponent } from './commit/commit.component';
 import { AgendaComponent, TodoComponent, EmbodimentComponent } from './agenda';
 
 // inspector related
-import { RefsInspectorComponent, ScanInspectorComponent, EntryListComponent, EntryCardComponent, DisplayComponent} from './inspectors';
+import { RouterRefsInspectorComponent, RouterScanInspectorComponent, RefsInspectorComponent, ScanInspectorComponent, EntryListComponent, EntryCardComponent, DisplayComponent} from './inspectors';
 
 // feeds
 import { FeedComponent, FeedReaderComponent } from './ingest/feed-reader/feed-reader.component';
@@ -65,10 +65,12 @@ import {
 import { BASE_PATH } from './typescript-angular-client/variables'
 
 const appRoutes: Routes = [
-  { path: 'resolve', component: LinkingComponent },
+  { path: 'resolve/:NOT_OCR_PROCESSED/:OCR_PROCESSING/:OCR_PROCESSED/:EXTERNAL', component: LinkingComponent },
   { path: 'ingest', component: ScanComponent},
   { path: 'browse', component: BrowseComponent},
   { path: 'frontpage', component: FrontpageComponent},
+  { path: 'linking/RefsInspector/:id', component: RouterRefsInspectorComponent},
+  { path: 'linking/ScanInspector/:id', component: RouterScanInspectorComponent},
   // { path: 'feedreader', component: FeedReaderComponent},
   // { path: 'hero/:id',      component: HeroDetailComponent },
   // {
@@ -76,10 +78,15 @@ const appRoutes: Routes = [
   //   component: HeroListComponent,
   //   data: { title: 'Heroes List' }
   // },
+
   { path: '',
     redirectTo: '/frontpage',
     pathMatch: 'full'
    },
+   { path: 'resolve',
+     redirectTo: '/resolve/false/false/true/true',
+     pathMatch: 'full'
+    },
   { path: '**', redirectTo: '/frontpage' }
 ];
 
@@ -118,6 +125,8 @@ const appRoutes: Routes = [
     EntryListComponent,
     RefsInspectorComponent,
     ScanInspectorComponent,
+    RouterRefsInspectorComponent,
+    RouterScanInspectorComponent,
     MetadataComponent,
     ResourceAccordionGroupComponent,
     ResourceEditableComponent,

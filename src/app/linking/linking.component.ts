@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { models, enums, TypedResourceView } from '../locdb';
+import { models, enums, enum_values, TypedResourceView } from '../locdb';
 import { LocdbService } from '../locdb.service';
-import { Context } from '../agenda/agenda.component';
+import { Context, Tracking } from '../agenda/agenda.component';
 import { AgendaComponent } from '../agenda/agenda.component';
+import { Router, ActivatedRoute} from '@angular/router';
 
 import { RefsInspectorComponent, ScanInspectorComponent } from '../inspectors';
 //import { environment } from 'environments/environment';
@@ -23,9 +24,13 @@ export class LinkingComponent implements OnInit {
   entry: models.BibliographicEntry = null;
   target: TypedResourceView = null;
   mode: 'refs' | 'scan' | 'agenda' = 'agenda';
-  constructor (private locdbService: LocdbService ) {}
+  tracking: Tracking = {};
+
+  constructor (private locdbService: LocdbService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
+    this.getTrackingFromRoute()
+
     // this.visualState = 0;
   }
 
@@ -83,6 +88,26 @@ export class LinkingComponent implements OnInit {
     // this.visualState = 2;
     console.log('Updating target', br);
     this.target = br;
+  }
+
+  testRefs(){
+    this.router.navigate(['/linking/RefsInspector/', "5ab4c039e841b54dabf4d427"]);
+  }
+  testScans(){
+    this.router.navigate(['/linking/ScanInspector/', "5ab4c039e841b54dabf4d427"]);
+  }
+  getTrackingFromRoute(){
+    let statuses = enum_values(enums.todoStatus);;
+    let tracking: Tracking = {};
+    for (let status of statuses){
+      if (this.route.snapshot.params[status] === 'false'){
+        tracking[status] = false; //this.route.snapshot.params[status];
+      }else{
+        tracking[status] = true;}
+      console.log("status", status)
+    }
+    console.log("tracking", tracking)
+    this.tracking = tracking;
   }
 
 

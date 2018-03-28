@@ -2,8 +2,9 @@ import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angu
 import { LocdbService } from '../locdb.service';
 import { TypedResourceView, enums, enum_values, models} from '../locdb';
 import { TodoComponent } from './todo.component'
+import { Router } from '@angular/router';
 
-interface Tracking {
+export interface Tracking {
   [key: string ]: boolean;
 }
 
@@ -25,6 +26,19 @@ export interface Context {
 export class AgendaComponent implements OnInit, OnChanges {
   @Output() refsWithContext: EventEmitter<[Array<models.BibliographicEntry>, Context]> = new EventEmitter();
   @Output() scanWithContext: EventEmitter<[models.Scan, Context]> = new EventEmitter()
+  @Input() set routerTracking(rtracking: Tracking){
+    console.log("setter")
+    if(!(typeof rtracking === 'undefined')){
+      this.loading = true;
+      this.tracking[enums.status.ocrProcessed] = rtracking[enums.status.ocrProcessed];
+      this.tracking[enums.status.external] = rtracking[enums.status.external]
+      this.tracking[enums.status.valid] = false;
+      this.tracking[enums.status.notOcrProcessed] = rtracking[enums.status.notOcrProcessed]
+      this.tracking[enums.status.ocrProcessing] = rtracking[enums.status.ocrProcessing]
+      this.fetchTodos()
+    }
+    console.log("rt", this.tracking)
+  }
   todos: TypedResourceView[];
   // provenance = Provenance;
   loading = false;
@@ -33,45 +47,57 @@ export class AgendaComponent implements OnInit, OnChanges {
   statuses: Array<string> = enum_values(enums.todoStatus);
   title = "Agenda";
 
-  constructor(private locdbService: LocdbService) { }
+  constructor(private locdbService: LocdbService, private router: Router) { }
 
   ngOnInit() {
-    this.loading = true;
+    // this.loading = true;
     // reasonable defaults
-    this.tracking[enums.status.ocrProcessed] = true;
-    this.tracking[enums.status.external] = true;
-    this.tracking[enums.status.valid] = false;
-    this.tracking[enums.status.notOcrProcessed] = false;
-    this.tracking[enums.status.ocrProcessing] = false;
+    // this.tracking[enums.status.ocrProcessed] = true;
+    // this.tracking[enums.status.external] = true;
+    // this.tracking[enums.status.valid] = false;
+    // this.tracking[enums.status.notOcrProcessed] = false;
+    // this.tracking[enums.status.ocrProcessing] = false;
+
   }
 
   ngOnChanges() {
+  }
+
+  fetchTodos(){
     console.log("Fetching Todos from Backend");
     this.todos = [];
     let statuses: Array<enums.status> = [];
     for (const status in this.tracking) {
       if (this.tracking[status]) {
+        console.log("pushpushpush")
         statuses.push(<enums.status>status);
       }
     }
     this.locdbService.getToDo(statuses).subscribe(
-      (todos) => { this.todos = todos; this.loading = false; },
+      (todos) => { this.todos = todos; this.loading = false; console.log("Todos", todos) },
       (err) => { console.log(err); this.loading = false; }
     );
   }
 
 
   refresh() {
-    this.ngOnChanges();
+    console.log("refresh")
+    this.router.navigate(['/resolve/', this.tracking['NOT_OCR_PROCESSED'],
+    this.tracking['OCR_PROCESSING'],
+    this.tracking['OCR_PROCESSED'],
+    this.tracking['EXTERNAL']]);
+    this.fetchTodos()
   }
 
   inspectRefs(resource:TypedResourceView, parent?:TypedResourceView) {
-    this.refsWithContext.emit([resource.parts, { mode: 'refs', source: resource, parent: parent || null}]);
+    // this.refsWithContext.emit([resource.parts, { mode: 'refs', source: resource, parent: parent || null}]);
+    this.router.navigate(['/linking/RefsInspector/', resource._id]);
   }
 
   inspectScan(scan: models.Scan, embodiment: models.ResourceEmbodiment,
               resource: TypedResourceView, parent?: TypedResourceView) {
-    this.scanWithContext.emit([scan, { mode: 'scan', source: resource, embodiment: embodiment, parent:parent || null }])
+    // this.scanWithContext.emit([scan, { mode: 'scan', source: resource, embodiment: embodiment, parent:parent || null }])
+    this.router.navigate(['/linking/ScanInspector/', resource._id]);
   }
 
 

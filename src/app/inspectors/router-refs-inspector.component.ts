@@ -1,0 +1,60 @@
+
+import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
+import { models, enums, TypedResourceView } from '../locdb';
+import { LocdbService } from '../locdb.service';
+import {Observable} from 'rxjs/Rx';
+import { SimpleChanges } from '@angular/core';
+import { EntryListComponent } from './entry-list/entry-list.component';
+import { ActivatedRoute, Router } from '@angular/router';
+
+@Component({
+  selector: 'app-rou-refs-inspector',
+  templateUrl: './router-refs-inspector.component.html',
+  styleUrls: ['./inspector.css']
+})
+export class RouterRefsInspectorComponent implements OnInit, OnChanges {
+  // @Input() resource: TypedResourceView;
+  // @Input() refs: Array<models.BibliographicEntry>;
+  // @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
+  // if sorry_text is set it is shows instead of the app entry list in the card body
+  sorry_text = "";
+  _id: string;
+  resource: TypedResourceView;
+  refs: Array<models.BibliographicEntry> = [];
+  entry: models.BibliographicEntry; //EventEmitter<models.BibliographicEntry> = new EventEmitter();
+
+  constructor( private locdbService: LocdbService, private route: ActivatedRoute, private router: Router) { }
+
+  ngOnInit() {
+    this._id = this.route.snapshot.params.id;
+    console.log("Resource laden... ")
+    // load Bibliographic resource because only id is passed along the route
+    this.locdbService.getBibliographicResource(this._id).subscribe((res) => {
+      this.resource = res
+      console.log("Resource ", res)
+      this.refs = res.parts
+      console.log("refs", this.refs)
+    },
+    (err) => { this.sorry_text = "No resource found with id " + this._id;
+              console.log("err, no br") });
+
+  }
+
+  ngOnChanges(changes: SimpleChanges | any) {
+    // fetch entries for todo item (cold observable, call in template with async)
+  }
+
+  forwardEntry(entry: models.BibliographicEntry) {
+    this.entry = entry
+    // this.entry.emit(entry);
+  }
+
+  showScan(){
+    this.router.navigate(['/linking/ScanInspector/', this._id]);
+  }
+
+  newEntry() {
+    // this.refs.push(this.locdbService.newBibliographicEntry())
+  }
+
+}
