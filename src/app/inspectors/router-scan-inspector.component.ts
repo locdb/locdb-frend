@@ -42,7 +42,11 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     this.locdbService.getBibliographicResource(this._id).subscribe((res) => {
       this.resource = res
       console.log("Resource ", res)
-      this.refs = res.parts // TODO filter parts for OCRCoordinates
+      for(let part of res.parts){
+        if(part.ocrData){
+          this.refs.push(part)
+        }
+      }
       let embodiments_with_scans = res.embodiedAs.filter((embo) => embo.scans.length > 0)
       for (let embodiment_with_scans of embodiments_with_scans){
         console.log("embo_with_scans ", embodiment_with_scans)

@@ -85,29 +85,33 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     fetchInternalSuggestions(): void {
-      const oldEntry = this.entry;
-      this.internalInProgress = true; // loading icon
-      this.internalSuggestions = [];
-      console.log('Fetching internal suggestions for', this.query, 'with threshold', this.internalThreshold);
-      // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
-      this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold).subscribe(
-        (sug) => { Object.is(this.entry, oldEntry) ? this.saveInternal(sug) : console.log('discarded suggestions')
-                    this.loggingService.logSuggestionsArrived(this.entry, sug, true) },
-        (err) => { this.internalInProgress = false }
-      );
+      if(this.query){
+        const oldEntry = this.entry;
+        this.internalInProgress = true; // loading icon
+        this.internalSuggestions = [];
+        console.log('Fetching internal suggestions for', this.query, 'with threshold', this.internalThreshold);
+        // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
+        this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold).subscribe(
+          (sug) => { Object.is(this.entry, oldEntry) ? this.saveInternal(sug) : console.log('discarded suggestions')
+                      this.loggingService.logSuggestionsArrived(this.entry, sug, true) },
+          (err) => { this.internalInProgress = false }
+        );
+      }
     }
 
     fetchExternalSuggestions(): void {
-      const oldEntry = this.entry;
-      this.externalInProgress = true; // loading icon
-      this.externalSuggestions = [];
-      console.log('Fetching external suggestions for', this.query, 'with threshold', this.externalThreshold);
-      // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
-      this.locdbService.suggestionsByQuery(this.query, true, this.externalThreshold).subscribe(
-        (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions')
-                    this.loggingService.logSuggestionsArrived(this.entry, sug, false) },
-        (err) => { this.externalInProgress = false }
-      );
+      if(this.query){
+        const oldEntry = this.entry;
+        this.externalInProgress = true; // loading icon
+        this.externalSuggestions = [];
+        console.log('Fetching external suggestions for', this.query, 'with threshold', this.externalThreshold);
+        // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
+        this.locdbService.suggestionsByQuery(this.query, true, this.externalThreshold).subscribe(
+          (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions')
+                      this.loggingService.logSuggestionsArrived(this.entry, sug, false) },
+          (err) => { this.externalInProgress = false }
+        );
+      }
     }
 
     // these two functions could go somewhere else e.g. static in locdb.ts
@@ -213,12 +217,14 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
   queryFromEntry(entry: models.BibliographicEntry): string {
-    if (entry.ocrData.title) {
-      // if metadata is available, use it in favor of raw text
-      return `${entry.ocrData.title} ${entry.ocrData.authors.join(' ')}`
-    } else {
-      // authors typically included in entry text already
-      return `${entry.bibliographicEntryText}`
+    if (entry.ocrData){
+      if (entry.ocrData.title) {
+        // if metadata is available, use it in favor of raw text
+        return `${entry.ocrData.title} ${entry.ocrData.authors.join(' ')}`
+      } else {
+        // authors typically included in entry text already
+        return `${entry.bibliographicEntryText}`
+      }
     }
   }
 
