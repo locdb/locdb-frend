@@ -152,7 +152,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     onSelect(br?: TypedResourceView): void {
         this.loggingService.logReferenceTargetSelected(this.entry, br)
-        // <------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        // <--------------------------------------------------------------------
         this.selectedResource = br;
         this.committed = false;
         this.suggest.emit(br);
