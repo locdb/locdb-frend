@@ -99,11 +99,14 @@ export class LinkingComponent implements OnInit {
   getTrackingFromRoute(){
     let statuses = enum_values(enums.todoStatus);;
     let tracking: Tracking = {};
+    let bin = this.route.snapshot.params['bin']
+    let pos = 0;
     for (let status of statuses){
-      if (this.route.snapshot.params[status] === 'false'){
-        tracking[status] = false; //this.route.snapshot.params[status];
+      if (bin.charAt(pos) == '1'){
+        tracking[status] = true; //this.route.snapshot.params[status];
       }else{
-        tracking[status] = true;}
+        tracking[status] = false;}
+        pos += 1
       console.log("status", status)
     }
     console.log("tracking", tracking)

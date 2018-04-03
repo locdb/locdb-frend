@@ -34,7 +34,7 @@ export class EmbodimentComponent {
   // 2 methods to delete after chagnes
   printState(scan: models.Scan) {
     if (scan.status === enums.status.ocrProcessed) { return 'OCR processed' } ;
-    if (scan.status === enums.status.notOcrProcessed) { return  'not OCR processed '};
+    if (scan.status === enums.status.notOcrProcessed) { return  'not OCR processed'};
     if (scan.status === enums.status.ocrProcessing) { return 'OCR processing' };
     if (scan.status === enums.status.external)  { return 'external' };
     return scan.status
@@ -43,5 +43,15 @@ export class EmbodimentComponent {
   trimHash(identifier: string) {
     // heuristic :)
     return identifier.slice(0, 7);
+  }
+
+  ocrprocess(scan: models.Scan){
+    scan.status = enums.status.ocrProcessing
+    console.log("process", scan)
+    this.locdbService.triggerOcrProcessing(scan._id).subscribe((res) => {
+      console.log("Result: ", res)
+    },
+    (err) => { scan.status = enums.status.notOcrProcessed
+                console.log("triggering failed, ", err) });
   }
 }

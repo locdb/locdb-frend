@@ -54,8 +54,12 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
           // check wether scan is an image or something else
           this.locdbService.checkScanImage(this.scan_id).subscribe(data => {
               this.scan_content_type = data.headers.get("content-type").split('/')[0]
+              console.log("Scan content type: ", this.scan_content_type)
         },
-        (err) => { console.log("err, loading url", err) });
+        (err) => { this.sorry_text = "Scan image not found " + this.scan_id;
+                    console.log("err, loading url", err);
+                    //this.scan_content_type = "image"
+                  });
     }
   }
     if(!this.scan_id){

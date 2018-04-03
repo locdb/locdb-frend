@@ -27,7 +27,6 @@ export class AgendaComponent implements OnInit, OnChanges {
   @Output() refsWithContext: EventEmitter<[Array<models.BibliographicEntry>, Context]> = new EventEmitter();
   @Output() scanWithContext: EventEmitter<[models.Scan, Context]> = new EventEmitter()
   @Input() set routerTracking(rtracking: Tracking){
-    console.log("setter")
     if(!(typeof rtracking === 'undefined')){
       this.loading = true;
       this.tracking[enums.status.ocrProcessed] = rtracking[enums.status.ocrProcessed];
@@ -37,7 +36,6 @@ export class AgendaComponent implements OnInit, OnChanges {
       this.tracking[enums.status.ocrProcessing] = rtracking[enums.status.ocrProcessing]
       this.fetchTodos()
     }
-    console.log("rt", this.tracking)
   }
   todos: TypedResourceView[];
   // provenance = Provenance;
@@ -69,7 +67,6 @@ export class AgendaComponent implements OnInit, OnChanges {
     let statuses: Array<enums.status> = [];
     for (const status in this.tracking) {
       if (this.tracking[status]) {
-        console.log("pushpushpush")
         statuses.push(<enums.status>status);
       }
     }
@@ -81,11 +78,12 @@ export class AgendaComponent implements OnInit, OnChanges {
 
 
   refresh() {
-    console.log("refresh")
-    this.router.navigate(['/resolve/', this.tracking['NOT_OCR_PROCESSED'],
-    this.tracking['OCR_PROCESSING'],
-    this.tracking['OCR_PROCESSED'],
-    this.tracking['EXTERNAL']]);
+    let bin = '';
+    if(this.tracking['NOT_OCR_PROCESSED']) {bin = bin + '1'} else {bin = bin + '0'}
+    if(this.tracking['OCR_PROCESSING']) {bin = bin + '1'} else {bin = bin + '0'}
+    if(this.tracking['OCR_PROCESSED']) {bin = bin + '1'} else {bin = bin + '0'}
+    if(this.tracking['EXTERNAL']) {bin = bin + '1'} else {bin = bin + '0'}
+    this.router.navigate(['/resolve/',bin]);
     this.fetchTodos()
   }
 

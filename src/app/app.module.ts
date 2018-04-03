@@ -65,7 +65,8 @@ import {
 import { BASE_PATH } from './typescript-angular-client/variables'
 
 const appRoutes: Routes = [
-  { path: 'resolve/:NOT_OCR_PROCESSED/:OCR_PROCESSING/:OCR_PROCESSED/:EXTERNAL', component: LinkingComponent },
+  // { path: 'resolve/:NOT_OCR_PROCESSED/:OCR_PROCESSING/:OCR_PROCESSED/:EXTERNAL', component: LinkingComponent },
+  { path: 'resolve/:bin', component: LinkingComponent },
   { path: 'ingest', component: ScanComponent},
   { path: 'browse', component: BrowseComponent},
   { path: 'frontpage', component: FrontpageComponent},
@@ -84,7 +85,7 @@ const appRoutes: Routes = [
     pathMatch: 'full'
    },
    { path: 'resolve',
-     redirectTo: '/resolve/false/false/true/true',
+     redirectTo: '/resolve/0010',
      pathMatch: 'full'
     },
   { path: '**', redirectTo: '/frontpage' }

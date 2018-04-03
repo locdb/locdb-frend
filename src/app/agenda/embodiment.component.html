@@ -5,5 +5,6 @@
 <ul *ngIf="embodiment.scans">
   <li *ngFor="let scan of embodiment.scans">
     <a href="#" (click)="selectScan(scan); false"> {{ scan.scanName }}</a>
+     <i *ngIf="printState(scan) === 'not OCR processed'" class="fa fa-play-circle" aria-hidden="true"  (click)="ocrprocess(scan)"></i>
   </li>
 </ul>

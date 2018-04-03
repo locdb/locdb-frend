@@ -22,7 +22,7 @@
   </div>
   <div class="card-body"  *ngIf="!sorry_text">
     <div [hidden]="!scanIsVisible">
-      <app-display [img_src]="getScanImage()" [entries]="entries" (entry)="forwardEntry($event)"
+      <app-display [img_src]="getScanImage()" [entries]="refs" (entry)="forwardEntry($event)"
           *ngIf="scan_content_type == 'image'"></app-display>
       <p *ngIf="scan_content_type && scan_content_type != 'image'"> Received {{scan_content_type}}-type </p>
     </div>
