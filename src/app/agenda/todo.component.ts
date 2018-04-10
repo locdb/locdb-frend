@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter} from '@angular/core';
+import { OnChanges, Component, Input, Output, EventEmitter} from '@angular/core';
 import { models, enums, TypedResourceView } from '../locdb';
 import { LocdbService } from '../locdb.service';
 
@@ -14,7 +14,9 @@ export class TodoComponent {
   @Output() refs: EventEmitter<Array<models.BibliographicEntry>> = new EventEmitter();
 
   constructor() {}
-
+  ngOnChanges(){
+    console.log(this.todo)
+  }
 
   inspectReferences(){
     this.refs.emit(this.todo.parts);
