@@ -7,7 +7,17 @@ import { LocdbService, CredentialsService } from '../locdb.service'
 
 import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
 import { FeedService } from './feed.service';
+// api
+import { ScanService } from '../typescript-angular-client/api/scan.service'
+import { UserService } from '../typescript-angular-client/api/user.service'
+import { UtilsService } from '../typescript-angular-client/api/utils.service'
+import { BibliographicEntryService } from '../typescript-angular-client/api/bibliographicEntry.service'
+import { BibliographicResourceService } from '../typescript-angular-client/api/bibliographicResource.service'
 
+import { HttpClientModule } from '@angular/common/http';
+
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { ModalModule } from 'ngx-bootstrap/modal';
 describe('ScanComponent', () => {
   let component: ScanComponent;
   let fixture: ComponentFixture<ScanComponent>;
@@ -15,8 +25,14 @@ describe('ScanComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ScanComponent, FeedReaderComponent, FeedComponent ],
-      imports: [ FormsModule, HttpModule ],
-      providers: [ LocdbService, HttpModule, CredentialsService, FeedService]
+      imports: [ FormsModule, HttpModule, HttpClientModule, ModalModule.forRoot()],
+      providers: [ LocdbService, HttpModule, CredentialsService, FeedService,
+        ScanService,
+        UserService,
+        UtilsService,
+        BibliographicResourceService,
+        BibliographicEntryService,
+        BsModalService]
     })
     .compileComponents();
   }));

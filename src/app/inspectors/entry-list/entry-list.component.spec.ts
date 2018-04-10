@@ -6,8 +6,8 @@ import { HotkeyModule, Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { LoggingService } from '../logging.service';
-import { EntryCardGroupComponent } from '../entry-card-group/entry-card-group.component';
+import { LoggingService } from '../../logging.service';
+import { EntryCardComponent } from '../entry-card/entry-card.component';
 
 describe('EntryListComponent', () => {
   let component: EntryListComponent;
@@ -15,7 +15,7 @@ describe('EntryListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EntryListComponent, EntryFormComponent, EntryCardGroupComponent ],
+      declarations: [ EntryListComponent, EntryFormComponent, EntryCardComponent ],
       imports: [ HotkeyModule.forRoot(), AccordionModule, ReactiveFormsModule, HttpModule],
       providers: [ HotkeysService, LoggingService ]
     })

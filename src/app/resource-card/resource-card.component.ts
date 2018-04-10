@@ -26,7 +26,6 @@ export class ResourceCardComponent implements OnInit {
     }
 
       onSelectExternal() {
-        console.log("whoop")
         this.externalReferences.next(true)
       }
 

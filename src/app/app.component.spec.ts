@@ -28,44 +28,67 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { PopoverModule } from 'ngx-popover';
 import { CredentialsService } from './locdb.service';
 import {HotkeyModule} from 'angular2-hotkeys';
-
-
 // own
-import { ScanComponent } from './scan.component';
-import { TodoComponent } from './todo.component';
-import { DisplayComponent } from './display/display.component';
-import { EntryFormComponent } from './entry-form/entry-form.component';
+import { ScanComponent } from './ingest/scan.component';
+import { TodoComponent } from './agenda/todo.component';
+import { DisplayComponent } from './inspectors/display/display.component';
+import { EntryFormComponent } from './inspectors/entry-form/entry-form.component';
 import { LocdbService } from './locdb.service';
 import { SuggestionComponent } from './suggestion/suggestion.component';
 import { LoginComponent } from './login/login.component';
 import { VisualComponent } from './visual/visual.component';
 import { CommitComponent } from './commit/commit.component';
-import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
-import { EntryListComponent } from './entry-list/entry-list.component';
-import { TodoDetailComponent } from './todo-detail/todo-detail.component';
-import { TodoListComponent } from './todo-list/todo-list.component';
-import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
+import { FeedComponent, FeedReaderComponent } from './ingest/feed-reader/feed-reader.component';
+import { EntryListComponent } from './inspectors/entry-list/entry-list.component';
+// import { TodoDetailComponent } from './todo-detail/todo-detail.component';
+// import { TodoListComponent } from './todo-list/todo-list.component';
+// import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
+import { EmbodimentComponent } from './agenda/embodiment.component'
+import { MetadataComponent } from './metadata/metadata.component'
+import { AgendaComponent } from './agenda/agenda.component'
+// inspector related
 
+import { RouterRefsInspectorComponent, RouterScanInspectorComponent } from './inspectors';
+import { ScanInspectorComponent } from './inspectors/scan-inspector.component'
+import { RefsInspectorComponent } from './inspectors/refs-inspector.component'
+// pipes
+import {
+    TypedResourceView,
+    Metadata
+} from './locdb';
+import { Component, Input } from '@angular/core';
+
+import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from './pipes';
 // resource related
-import { ResourceComponent } from './resource/resource.component';
+// import { ResourceComponent } from './resource/resource.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
 import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
-import { AppwrapperComponent } from './appwrapper/appwrapper.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
-
+import { LinkingComponent } from './linking/linking.component'
 // New
 import { LoggingService } from './logging.service';
-import { ResourceCardComponent } from './resource-card-group/resource-card-group.component';
-import { EntryCardGroupComponent } from './entry-card-group/entry-card-group.component'
+import { ResourceCardComponent } from './resource-card/resource-card.component';
+import { EntryCardComponent } from './inspectors/entry-card/entry-card.component'
 import { BrowseComponent } from './browse/browse.component'
+// api
+import { ScanService } from './typescript-angular-client/api/scan.service'
+import { UserService } from './typescript-angular-client/api/user.service'
+import { UtilsService } from './typescript-angular-client/api/utils.service'
+import { BibliographicEntryService } from './typescript-angular-client/api/bibliographicEntry.service'
+import { BibliographicResourceService } from './typescript-angular-client/api/bibliographicResource.service'
+
+import { HttpClient, HttpHeaders, HttpParams,
+         HttpResponse, HttpEvent, HttpClientModule }                           from '@angular/common/http';
 ////////  SPECS  /////////////
 
 const appRoutes: Routes = [
-  { path: 'resolve', component: AppwrapperComponent },
+  { path: 'resolve/:bin', component: LinkingComponent },
   { path: 'ingest', component: ScanComponent},
-  { path: 'browse', component: SuggestionComponent},
+  { path: 'browse', component: BrowseComponent},
   { path: 'frontpage', component: FrontpageComponent},
+  { path: 'linking/RefsInspector/:id', component: RouterRefsInspectorComponent},
+  { path: 'linking/ScanInspector/:id', component: RouterScanInspectorComponent},
   // { path: 'feedreader', component: FeedReaderComponent},
   // { path: 'hero/:id',      component: HeroDetailComponent },
   // {
@@ -73,12 +96,16 @@ const appRoutes: Routes = [
   //   component: HeroListComponent,
   //   data: { title: 'Heroes List' }
   // },
-  { path: '',
-    redirectTo: '/frontpage',
-    pathMatch: 'full'
-   },
-  { path: '**', redirectTo: '/frontpage' }
-];
+    { path: '',
+      redirectTo: '/frontpage',
+      pathMatch: 'full'
+     },
+     { path: 'resolve',
+       redirectTo: '/resolve/0010',
+       pathMatch: 'full'
+      },
+    { path: '**', redirectTo: '/frontpage' }
+  ];
 
 /// Delete this
 describe('Smoke test', () => {
@@ -96,6 +123,11 @@ describe('AppComponent with TCB', function () {
           LocdbService,
           CredentialsService,
           LoggingService,
+          ScanService,
+          UserService,
+          UtilsService,
+          BibliographicResourceService,
+          BibliographicEntryService,
           {provide: APP_BASE_HREF, useValue : '/'}
         ],
         declarations: [
@@ -112,16 +144,27 @@ describe('AppComponent with TCB', function () {
           FeedReaderComponent,
           FeedComponent,
           EntryListComponent,
-          TodoDetailComponent,
-          TodoListComponent,
-          TodoLeafComponent,
-          ResourceComponent,
+          RouterRefsInspectorComponent,
+          RouterScanInspectorComponent,
+          EmbodimentComponent,
+          MetadataComponent,
+          AuthorsPipe,
+          EditorsPipe,
+          PublisherPipe,
+          EmbracePipe,
+          AgendaComponent,
+          ScanInspectorComponent,
+          RefsInspectorComponent,
+          // TodoDetailComponent,
+          // TodoListComponent,
+          // TodoLeafComponent,
+          // ResourceComponent,
           ResourceAccordionGroupComponent,
           ResourceEditableComponent,
-          AppwrapperComponent,
+          LinkingComponent,
           FrontpageComponent,
           ResourceCardComponent,
-          EntryCardGroupComponent,
+          EntryCardComponent,
           BrowseComponent,
         ],
         imports: [
@@ -135,6 +178,11 @@ describe('AppComponent with TCB', function () {
           HttpModule,
           ReactiveFormsModule,
           PopoverModule,
+          // HttpClient,
+          // HttpHeaders,
+          // HttpParams,
+          // HttpResponse,
+          HttpClientModule,
           RouterModule.forRoot(
             appRoutes,
             { enableTracing: true } // <-- debugging purposes only

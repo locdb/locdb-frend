@@ -14,7 +14,15 @@ import { LocdbService, CredentialsService } from '../locdb.service';
 import { PopoverModule } from 'ngx-popover';
 import { LoggingService } from '../logging.service';
 import { ResourceCardComponent } from '../resource-card/resource-card.component'
+import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
+// api
+import { ScanService } from '../typescript-angular-client/api/scan.service'
+import { UserService } from '../typescript-angular-client/api/user.service'
+import { UtilsService } from '../typescript-angular-client/api/utils.service'
+import { BibliographicEntryService } from '../typescript-angular-client/api/bibliographicEntry.service'
+import { BibliographicResourceService } from '../typescript-angular-client/api/bibliographicResource.service'
 
+import { HttpClientModule }  from '@angular/common/http';
 describe('SuggestionComponent', () => {
   let component: SuggestionComponent;
   let fixture: ComponentFixture<SuggestionComponent>;
@@ -28,16 +36,28 @@ describe('SuggestionComponent', () => {
         FormsModule,
         HttpModule,
         PopoverModule,
+        HttpModule,
+        HttpClientModule,
       ],
       declarations: [
         SuggestionComponent,
-        ResourceComponent,
+        // ResourceComponent,
         ResourceFormComponent,
         ResourceEditableComponent,
         ResourceAccordionGroupComponent,
         ResourceCardComponent,
+        MetadataComponent,
+        AuthorsPipe,
+        EditorsPipe,
+        PublisherPipe,
+        EmbracePipe,
       ],
-      providers: [ LocdbService, CredentialsService, LoggingService ]
+      providers: [ LocdbService, CredentialsService, LoggingService,
+        ScanService,
+        UserService,
+        UtilsService,
+        BibliographicResourceService,
+        BibliographicEntryService, ]
     })
     .compileComponents();
   }));
