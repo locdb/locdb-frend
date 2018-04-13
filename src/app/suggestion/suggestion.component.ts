@@ -1,4 +1,5 @@
-import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter}
+from '@angular/core';
 import { LocdbService } from '../locdb.service';
 import { LoggingService } from '../logging.service'
 import { MOCK_INTERNAL } from '../mock-bresources'
@@ -6,8 +7,12 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { environment } from 'environments/environment';
 import { PopoverModule } from 'ngx-popover';
 import { Http } from '@angular/http';
+import { TemplateRef } from '@angular/core';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { enums, models, TypedResourceView, Metadata } from '../locdb';
+import { REQUIRED_IDENTIFIERS } from '../ingest/constraints';
 
 
 @Component({
@@ -32,6 +37,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
     internalSuggestions: TypedResourceView[];
     externalSuggestions: TypedResourceView[];
     currentTarget: TypedResourceView;
+    modalRef: BsModalRef;
+    resourceType: enums.resourceType;
+    resourceTypes: string[] = Object.keys(REQUIRED_IDENTIFIERS);
 
     committed = false;
     max_shown_suggestions = 5
@@ -47,7 +55,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
 
 
-    constructor(private locdbService: LocdbService, private loggingService: LoggingService) { }
+    constructor(private locdbService: LocdbService,
+      private loggingService: LoggingService,
+      private modalService: BsModalService) { }
 
     ngOnInit() {
     }
@@ -75,6 +85,10 @@ export class SuggestionComponent implements OnInit, OnChanges {
         } else {
           this.query = '';
         }
+    }
+
+    openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
     }
 
     refresh() {
@@ -228,6 +242,11 @@ export class SuggestionComponent implements OnInit, OnChanges {
         return `${entry.bibliographicEntryText}`
       }
     }
+  }
+
+  create_resourse(){
+    console.log("create me", this.resourceType, this.entry)
+
   }
 
   encodeURI(uri: string){

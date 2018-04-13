@@ -19,7 +19,9 @@
             {{getName(toDoScansWithMeta)}}
             <span class="badge badge-primary">{{getMetadata(toDoScansWithMeta)}}
             </span>
-            <button type="button" class="close pull-right" (click)="removeItemFromList(toDoScansWithMeta); $event.preventDefault(); $event.stopPropagation()" aria-label="Close" [disabled]="uploading">
+            <button type="button" class="close pull-right"
+            (click)="removeItemFromList(toDoScansWithMeta); $event.preventDefault(); $event.stopPropagation()"
+            aria-label="Close" [disabled]="uploading">
               <span aria-hidden="true">&times;</span>
             </button>
           </a>
@@ -41,30 +43,40 @@
                     <td><select name="idtype" [(ngModel)]="toDoScansWithMeta.identifier.scheme">
                         <!-- <option value="ppn">PPN</option>
                         <option value="doi" [disabled]="toDoScansWithMeta.resourceType !== ResourceType.journal ">DOI</option> -->
-                        <option *ngFor="let it of requiredIdentifiers[toDoScansWithMeta.resourceType]" [value]="it">{{it}}</option>
+                        <option *ngFor="let it of requiredIdentifiers[toDoScansWithMeta.resourceType]"
+                        [value]="it">{{it}}</option>
                     </select></td>
-                    <td><input type="text" name="_id" [(ngModel)]="toDoScansWithMeta.identifier.literalValue" style="width: 100%;"
+                    <td><input type="text" name="_id"
+                      [(ngModel)]="toDoScansWithMeta.identifier.literalValue" style="width: 100%;"
                       class="form-control input-sm pull-right"></td>
                   </tr>
-                  <tr *ngIf="toDoScansWithMeta.file && requiresPageNumbers(toDoScansWithMeta.resourceType, toDoScansWithMeta.identifier.scheme)">
-                    <td><label>Pages</label> from <input type="number" name="firstpage" [(ngModel)]="toDoScansWithMeta.firstpage" style="width: 75%;"
+                  <tr *ngIf="toDoScansWithMeta.file &&
+                        requiresPageNumbers(toDoScansWithMeta.resourceType, toDoScansWithMeta.identifier.scheme)">
+                    <td><label>Pages</label> from <input type="number" name="firstpage"
+                      [(ngModel)]="toDoScansWithMeta.firstpage" style="width: 75%;"
                       class="form-control input-sm pull-right"></td>
-                    <td> to <input type="number" name="firstlastpage" [(ngModel)]="toDoScansWithMeta.lastpage" style="width: 90%;"
+                    <td> to <input type="number" name="firstlastpage"
+                      [(ngModel)]="toDoScansWithMeta.lastpage" style="width: 90%;"
                       class="form-control input-sm pull-right"></td>
                   </tr>
                   <tr *ngIf="toDoScansWithMeta.file">
                     <td><label for="embodimentselect">Embodiment Type</label></td>
                     <td>
-                      <select name="embodimentselect" [(ngModel)]="toDoScansWithMeta.embodimentType" style="width: 100%;"
+                      <select name="embodimentselect" [(ngModel)]="toDoScansWithMeta.embodimentType"
+                      style="width: 100%;"
                         class="form-control input-sm pull-right">
                         <option *ngFor="let et of embodimentTypes" [value]="et">{{et}}</option>
                       </select>
                     </td>
                   </tr>
-                  <tr *ngIf="toDoScansWithMeta.file && toDoScansWithMeta.file.name.toLowerCase().endsWith('.pdf')">
+                  <tr *ngIf="toDoScansWithMeta.file &&
+                          toDoScansWithMeta.file.name.toLowerCase().endsWith('.pdf')">
                     <td><label for="istextual">Is textual PDF?</label></td>
                     <td>
-                      <input type="checkbox" name="istextual" [(ngModel)]="toDoScansWithMeta.textualPdf" style="width: 100%;" class="form-control input-sm pull-right">
+                      <input type="checkbox" name="istextual"
+                      [(ngModel)]="toDoScansWithMeta.textualPdf"
+                      style="width: 100%;"
+                      class="form-control input-sm pull-right">
                     </td>
                   </tr>
                 </tbody>
@@ -75,11 +87,13 @@
       </div>
   </div> <!-- end of card body -->
     <div class="card-footer" *ngIf="listoffiles && listoffiles.length">
-      <button type="button" class="btn btn-warning" (click)="onclickclear()" [disabled]="uploading || !listoffiles.length">Clear</button> &nbsp;
+      <button type="button" class="btn btn-warning" (click)="onclickclear()"
+      [disabled]="uploading || !listoffiles.length">Clear</button> &nbsp;
       <!-- <label class="btn btn-default"> -->
       <!--   Browse Files <input type="file" multiple (change)= "onChange($event)" hidden style="display: none !important;"> -->
       <!-- </label> &nbsp; -->
-      <button type="button" class="btn btn-primary float-right" (click)="onclickupload()" [disabled]="uploading || !listoffiles.length">Upload</button>
+      <button type="button" class="btn btn-primary float-right" (click)="onclickupload()"
+      [disabled]="uploading || !listoffiles.length">Upload</button>
     </div>
 </div> <!-- end of card -->
 </div> <!-- end of col -->
