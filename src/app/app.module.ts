@@ -32,6 +32,7 @@ import { SuggestionComponent } from './suggestion/suggestion.component';
 import { LoginComponent } from './login/login.component';
 import { VisualComponent } from './visual/visual.component';
 import { CommitComponent } from './commit/commit.component';
+import { ResourceFormBasicComponent } from './resource-form-basic/resource-form.component'
 
 // agenda related
 import { AgendaComponent, TodoComponent, EmbodimentComponent } from './agenda';
@@ -118,6 +119,7 @@ const appRoutes: Routes = [
     DisplayComponent,
     SuggestionComponent,
     ResourceFormComponent,
+    ResourceFormBasicComponent,
     LoginComponent,
     VisualComponent,
     CommitComponent,

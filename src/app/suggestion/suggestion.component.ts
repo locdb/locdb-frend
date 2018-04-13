@@ -38,8 +38,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     externalSuggestions: TypedResourceView[];
     currentTarget: TypedResourceView;
     modalRef: BsModalRef;
-    resourceType: enums.resourceType;
-    resourceTypes: string[] = Object.keys(REQUIRED_IDENTIFIERS);
+    newResource: TypedResourceView;
 
     committed = false;
     max_shown_suggestions = 5
@@ -85,10 +84,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
         } else {
           this.query = '';
         }
-    }
-
-    openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);
     }
 
     refresh() {
@@ -244,8 +239,35 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
   }
 
+  agentFromName(forminput: string): models.ResponsibleAgent {
+    const [lastname, firstname, ...other] = forminput.split(';');
+    return {
+      identifiers: [],
+      givenName: firstname,
+      familyName: lastname,
+      nameString: forminput // retain original input
+    }
+  }
+
+  openModal(template: TemplateRef<any>) {
+    // entry -> resource
+    this.newResource= new TypedResourceView({type: enums.resourceType.journalArticle})
+    if (this.entry.ocrData.title) {
+      this.newResource.title = this.entry.ocrData.title
+    }
+    this.newResource.contributors = []
+    for(let author of this.entry.ocrData.authors){
+        this.newResource.contributors.push({roleType: 'AUTHOR', heldBy: this.agentFromName(author)})
+    }
+    if (this.entry.ocrData.date) {
+      this.newResource.publicationDate = this.entry.ocrData.date
+    }
+
+    this.modalRef = this.modalService.show(template);
+  }
+
   create_resourse(){
-    console.log("create me", this.resourceType, this.entry)
+    console.log("create me", this.newResource, this.entry)
 
   }
 

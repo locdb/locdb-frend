@@ -103,7 +103,7 @@
   <div class="row">
   <div class="col-md-12">
   <button type="button" class="btn btn-secondary"
-  (click)="openModal(template)">
+  (click)="openModal(template)" [disabled]="!entry">
     <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
     new resource
   </button>
@@ -134,11 +134,13 @@
     </button>
   </div>
   <div class="modal-body">
-    <label> Resource Type: </label>
-        <!-- class="form-control input-sm pull-right"> -->
+    <!-- <label> Resource Type: </label>
+
         <select name="modaltypeselect" [(ngModel)]="resourceType">
         <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
-        </select>
+        </select> -->
+
+        <app-resource-form-basic [resource]="newResource" (resourceChanged)="create_resourse(resource)"></app-resource-form-basic>
       <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
   </div>
   <div class="modal-footer">
