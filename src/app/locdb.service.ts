@@ -17,7 +17,7 @@ import {Observable} from 'rxjs/Rx';
 // import 'rxjs/add/operator/map';
 
 // new types
-import { models } from './locdb'
+import { models } from './locdb';
 
 
 // Local testing with credentials
