@@ -266,8 +266,10 @@ export class SuggestionComponent implements OnInit, OnChanges {
     this.modalRef = this.modalService.show(template);
   }
 
-  create_resourse(){
-    console.log("create me", this.newResource, this.entry)
+  create_resourse(resource: TypedResourceView){
+    console.log("create me", this.entry, resource)
+    this.currentTarget = resource
+    this.modalRef.hide()
 
   }
 

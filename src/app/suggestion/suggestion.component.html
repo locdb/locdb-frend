@@ -140,11 +140,11 @@
         <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
         </select> -->
 
-        <app-resource-form-basic [resource]="newResource" (resourceChanged)="create_resourse(resource)"></app-resource-form-basic>
+        <app-resource-form-basic [resource]="newResource" (resourceChanged)="create_resourse($event)"></app-resource-form-basic>
       <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
   </div>
-  <div class="modal-footer">
+  <!-- <div class="modal-footer">
     <button type="button" class="btn btn-primary float-right" (click)="create_resourse()" [disabled]="!resourceType">Confirm </button>
-  </div>
+  </div> -->
 
 </ng-template>

@@ -62,6 +62,7 @@ import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from './pipes';
 // resource related
 // import { ResourceComponent } from './resource/resource.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
+import { ResourceFormBasicComponent } from './resource-form-basic/resource-form.component';
 import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
 import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
@@ -138,6 +139,7 @@ describe('AppComponent with TCB', function () {
           EntryFormComponent,
           SuggestionComponent,
           ResourceFormComponent,
+          ResourceFormBasicComponent,
           LoginComponent,
           VisualComponent,
           CommitComponent,
