@@ -63,6 +63,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges | any) {
         if (this.entry) {
+          console.log("entry: ", this.entry)
           this.query = this.queryFromEntry(this.entry);
           this.refresh();
           // add new Resource
@@ -89,6 +90,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     refresh() {
       // when search button is triggered
       this.loggingService.logSearchIssued(this.entry, this.selectedResource, this.query, [0,1])
+      this.newResource = null
       this.fetchInternalSuggestions();
       this.fetchExternalSuggestions();
     }
@@ -195,6 +197,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     commit() {
       console.log('Start commit', this.selectedResource)
       const pr = this.selectedResource;
+      console.log("selected Resource ", pr )
       const provenance = pr.provenance;
       console.log('Call Logging');
       this.loggingService.logCommitPressed(this.entry, this.selectedResource, provenance);
@@ -207,7 +210,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
           console.log('Log after commit');
           this.loggingService.logCommited(this.entry, this.currentTarget, provenance);
         })
-        .catch(err => alert('Something went wrong during commit: ' + err));
+        .catch(err => {
+          alert('Something went wrong during commit: ' + err);
+          console.log(err)});
     }
 
 
@@ -268,7 +273,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
   create_resourse(resource: TypedResourceView){
     console.log("create me", this.entry, resource)
-    this.currentTarget = resource
+    this.newResource = resource
     this.modalRef.hide()
 
   }

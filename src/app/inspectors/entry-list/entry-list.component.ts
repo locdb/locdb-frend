@@ -81,7 +81,7 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
     if (this.selectedEntry === entry) { return; } // guard
     this.loggingService.logReferenceSelected(entry)
     this.selectedEntry = entry;
-    console.log('entry emitted', entry)
+    // console.log('entry emitted', entry)
     this.entry.emit(entry)
   }
 

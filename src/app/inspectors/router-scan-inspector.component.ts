@@ -102,4 +102,8 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     // this.entries.push(this.locdbService.newBibliographicEntry())
   }
 
+  updateTarget(e){
+    console.log("eee", e)
+  }
+
 }
