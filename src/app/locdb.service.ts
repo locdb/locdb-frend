@@ -118,7 +118,7 @@ export class LocdbService {
     if (external) {
       return this.bibliographicEntryService.getExternalSuggestionsByQueryString(query, threshold).map( l => l.map(br => new TypedResourceView(br)));
     } else {
-      return this.bibliographicEntryService.getInternalSuggestionsByQueryString(query, threshold).map( l => l.map(br => new TypedResourceView(br)));
+      return this.bibliographicEntryService.getInternalSuggestionsByQueryString(query, threshold).map( l => l.map(ex => new TypedResourceView(ex)));
     }
 
   }
@@ -167,7 +167,7 @@ export class LocdbService {
       }
       entry.references = '';
     }
-    await this.addTargetBibliographicResource(entry, resource_id);
+    await this.addTargetBibliographicResource(entry, resource_id).toPromise();
     /* to keep view consistent */
     entry.status = enums.status.valid;
     entry.references = resource_id;
