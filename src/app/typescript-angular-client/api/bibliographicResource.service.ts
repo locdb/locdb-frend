@@ -19,6 +19,7 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 import { Observable }                                        from 'rxjs/Observable';
 
 import { BibliographicResource } from '../model/bibliographicResource';
+import { BibliographicResourceOpenCitations } from '../model/bibliographicResourceOpenCitations';
 import { ErrorResponse } from '../model/errorResponse';
 import { SuccessResponse } from '../model/successResponse';
 
@@ -274,6 +275,46 @@ export class BibliographicResourceService {
         ];
 
         return this.httpClient.get<Array<BibliographicResource>>(`${this.basePath}/bibliographicResources`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * Returns a list of bibliographic resources in OC format
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public listOC(observe?: 'body', reportProgress?: boolean): Observable<Array<BibliographicResourceOpenCitations>>;
+    public listOC(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<BibliographicResourceOpenCitations>>>;
+    public listOC(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<BibliographicResourceOpenCitations>>>;
+    public listOC(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json',
+            'image/png',
+            'application/pdf'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json',
+            'multipart/form-data'
+        ];
+
+        return this.httpClient.get<Array<BibliographicResourceOpenCitations>>(`${this.basePath}/bibliographicResourcesOC`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

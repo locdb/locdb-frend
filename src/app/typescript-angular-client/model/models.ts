@@ -1,6 +1,7 @@
 export * from './agentRole';
 export * from './bibliographicEntry';
 export * from './bibliographicResource';
+export * from './bibliographicResourceOpenCitations';
 export * from './errorResponse';
 export * from './feed';
 export * from './feedEntry';

@@ -98,6 +98,7 @@ export interface ToDo {
     standard_edition?: string;
     journalVolume_number?: string;
     journalIssue_number?: string;
+    journalArticle_number?: string;
     bookPart_number?: string;
     monograph_number?: string;
     editedBook_number?: string;
