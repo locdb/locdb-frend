@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ResourceEditableComponent } from '../resource-editable/resource-editable.component';
 import { ResourceFormComponent } from '../resource-form/resource-form.component';
+import { ResourceFormBasicComponent } from '../resource-form-basic/resource-form.component';
 import { MetadataComponent } from '../metadata/metadata.component';
 import { HttpModule } from '@angular/http';
 import { LocdbService, CredentialsService } from '../locdb.service';
@@ -43,6 +44,7 @@ describe('SuggestionComponent', () => {
         SuggestionComponent,
         // ResourceComponent,
         ResourceFormComponent,
+        ResourceFormBasicComponent,
         ResourceEditableComponent,
         ResourceAccordionGroupComponent,
         ResourceCardComponent,

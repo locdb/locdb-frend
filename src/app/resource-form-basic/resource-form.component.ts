@@ -139,8 +139,8 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     }
 
     onSubmit() {
-        const resourceCopy = this.prepareSaveResource();
-        this.resourceChanged.emit(resourceCopy)
+        const resource = this.prepareSaveResource();
+        this.resourceChanged.emit(resource)
     }
 
     revert() {
