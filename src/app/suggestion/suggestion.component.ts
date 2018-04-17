@@ -1,5 +1,4 @@
-import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter}
-from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter} from '@angular/core';
 import { LocdbService } from '../locdb.service';
 import { LoggingService } from '../logging.service'
 import { MOCK_INTERNAL } from '../mock-bresources'
@@ -65,7 +64,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
         if (this.entry) {
           console.log("entry: ", this.entry)
           this.query = this.queryFromEntry(this.entry);
-          this.refresh();
+          if (this.query) {
+           this.refresh();
+          }
           // add new Resource
           // does not work with new datamodel
           // this.newResource = this.resourceFromEntry(this.entry);
@@ -233,15 +234,12 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
   queryFromEntry(entry: models.BibliographicEntry): string {
-    if (entry.ocrData){
-      if (entry.ocrData.title) {
-        // if metadata is available, use it in favor of raw text
-        return `${entry.ocrData.title} ${entry.ocrData.authors.join(' ')}`
-      } else {
-        // authors typically included in entry text already
-        return `${entry.bibliographicEntryText}`
-      }
+    if (entry.ocrData && entrz.ocrData.title){
+      return entry.ocrData.title;
+    } else if (entry.bibliographicEntryText) {
+        return entry.bibliographicEntryText;
     }
+    return "";
   }
 
   agentFromName(forminput: string): models.ResponsibleAgent {
