@@ -182,9 +182,9 @@ export class BibliographicEntryService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getExternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<BibliographicResource>>;
-    public getExternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<BibliographicResource>>>;
-    public getExternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<BibliographicResource>>>;
+    public getExternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<Array<BibliographicResource>>>;
+    public getExternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Array<BibliographicResource>>>>;
+    public getExternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Array<BibliographicResource>>>>;
     public getExternalSuggestionsByQueryString(query: string, threshold?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (query === null || query === undefined) {
             throw new Error('Required parameter query was null or undefined when calling getExternalSuggestionsByQueryString.');
@@ -217,7 +217,7 @@ export class BibliographicEntryService {
             'multipart/form-data'
         ];
 
-        return this.httpClient.get<Array<BibliographicResource>>(`${this.basePath}/getExternalSuggestionsByQueryString`,
+        return this.httpClient.get<Array<Array<BibliographicResource>>>(`${this.basePath}/getExternalSuggestionsByQueryString`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -236,9 +236,9 @@ export class BibliographicEntryService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getInternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<BibliographicResource>>;
-    public getInternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<BibliographicResource>>>;
-    public getInternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<BibliographicResource>>>;
+    public getInternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<Array<BibliographicResource>>>;
+    public getInternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Array<BibliographicResource>>>>;
+    public getInternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Array<BibliographicResource>>>>;
     public getInternalSuggestionsByQueryString(query: string, threshold?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (query === null || query === undefined) {
             throw new Error('Required parameter query was null or undefined when calling getInternalSuggestionsByQueryString.');
@@ -271,7 +271,7 @@ export class BibliographicEntryService {
             'multipart/form-data'
         ];
 
-        return this.httpClient.get<Array<BibliographicResource>>(`${this.basePath}/getInternalSuggestionsByQueryString`,
+        return this.httpClient.get<Array<Array<BibliographicResource>>>(`${this.basePath}/getInternalSuggestionsByQueryString`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
