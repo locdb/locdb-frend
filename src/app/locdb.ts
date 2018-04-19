@@ -13,12 +13,12 @@ export { enums };
 
 
 export function invert_enum(obj: Object) {
-  let inverse = new Object();
-  for (let key in obj) {
-    let val = obj[key]
-    if (val in inverse) {
+  const inverse = new Object();
+  for (const key of Object.keys(obj)) {
+    const val = obj[key]
+    if (inverse.hasOwnProperty(val)) {
       // Error("Mapping not invertible. Duplicate value: " + val);
-      console.log("Error inverting enum, yet proceeding");
+      console.log('Error inverting enum, yet proceeding');
     }
     inverse[val] = key
   }
@@ -27,8 +27,8 @@ export function invert_enum(obj: Object) {
 
 /* Use this function to extract all possible enum values for user input */
 export function enum_values(obj) {
-  let values = []
-  for (let prop in obj) {
+  const values = []
+  for (const prop of Object.keys(obj)) {
     values.push(obj[prop]);
   }
   return values;
@@ -36,13 +36,14 @@ export function enum_values(obj) {
 
 
 export const PropertyPrefixByType = invert_enum(enums.resourceType);
-export function typedProperty(type : string, property: string) {
+export function typedProperty(type: string, property: string) {
   return PropertyPrefixByType[type] + '_' + property;
 }
 
-export function containerTypes (type: enums.resourceType): Array<enums.resourceType>{
+export function containerTypes (type: enums.resourceType): Array<enums.resourceType> {
+  /** Unused at the moment ? */
   const resourceType = enums.resourceType;
-    switch(type) {
+    switch (type) {
         case resourceType.monograph || resourceType.editedBook || resourceType.book || resourceType.referenceBook:
             return [resourceType.bookSet, resourceType.bookSeries];
         case resourceType.bookSet:
@@ -106,7 +107,7 @@ export function authors2contributors (authors: string[]): models.AgentRole[] {
   return contributors;
 }
 
-export function OCR2MetaData(ocr: models.OCRData) : Metadata {
+export function OCR2MetaData(ocr: models.OCRData): Metadata {
   return {
     title: ocr.title || '',
     subtitle: '',
@@ -135,16 +136,16 @@ export class TypedResourceView implements Metadata {
   private _prefix: string;
   readonly viewport_: string;
 
-  constructor(br: models.BibliographicResource | models.ToDo, astype?: string) {
+  constructor(brOrToDo: models.BibliographicResource | models.ToDo, astype?: string) {
     // this will throw if type is invalid!, but that s not too bad.
-    this.viewport_ = astype ? astype : br.type;
+    this.viewport_ = astype ? astype : brOrToDo.type;
     // console.log(this.viewport_);
     this._prefix = PropertyPrefixByType[this.viewport_] + '_';
-    this.data = br;
+    this.data = brOrToDo;
   }
 
   /** ToDo Specific **/
-  children(typed:boolean=true): Array<models.BibliographicResource> | Array<TypedResourceView> {
+  children(typed: boolean = true): Array<models.BibliographicResource> | Array<TypedResourceView> {
     if (this.data.hasOwnProperty('children')) {
       const children = (<models.ToDo>this.data).children;
       if (typed) {
@@ -190,16 +191,16 @@ export class TypedResourceView implements Metadata {
 
   authorString(): string {
     let s = '';
-    let editors = this.contributors.filter(x => x.roleType === enums.roleType.editor);
-    let authors = this.contributors.filter(x => x.roleType === enums.roleType.author);
+    const editors = this.contributors.filter(x => x.roleType === enums.roleType.editor);
+    const authors = this.contributors.filter(x => x.roleType === enums.roleType.author);
 
     if (authors.length) {
       // If authors are given use authors!
-      let authorString = authors.map(x => x.heldBy.nameString).join('; ');
+      const authorString = authors.map(x => x.heldBy.nameString).join('; ');
       s += authorString;
     } else if (editors.length) {
       // fall-back to editors if no authors available
-      let editorString = editors.map(x => x.heldBy.nameString).join('; ')
+      const editorString = editors.map(x => x.heldBy.nameString).join('; ')
       s += editorString + ' (ed.)';
     }
     return s;
@@ -207,8 +208,8 @@ export class TypedResourceView implements Metadata {
 
   publisherString(): string {
     let s = '';
-    let publishers = this.contributors.filter(x => x.roleType === enums.roleType.publisher);
-    if (publishers.length){
+    const publishers = this.contributors.filter(x => x.roleType === enums.roleType.publisher);
+    if (publishers.length) {
       s += publishers[0].heldBy.nameString;
     }
     return s;
@@ -235,11 +236,11 @@ export class TypedResourceView implements Metadata {
     return this.data._id;
   }
 
-  get cites() : Array<string> {
+  get cites(): Array<string> {
     return this.data.cites;
   }
 
-  get parts() : Array<models.BibliographicEntry> {
+  get parts(): Array<models.BibliographicEntry> {
     return this.data.parts;
   }
 
@@ -265,7 +266,9 @@ export class TypedResourceView implements Metadata {
   // forward native attributes end
 
   getTypedAttr(property: string, type: string): any {
-    let prop = typedProperty(type, property);
+    // this is not really necessary.. as we provided accessors for all types
+    // already, assert that it is not used anywhere, then drop.
+    const prop = typedProperty(type, property);
     return this.data[prop];
   }
 
@@ -284,7 +287,7 @@ export class TypedResourceView implements Metadata {
     this.data[this._prefix + 'title'] = newTitle;
   }
 
-  get subtitle() : string {
+  get subtitle(): string {
     return this.data[this._prefix + 'subtitle'];
   }
 
@@ -292,7 +295,7 @@ export class TypedResourceView implements Metadata {
     this.data[this._prefix + 'subtitle'] = newSubtitle;
   }
 
-  get edition() : string {
+  get edition(): string {
     return this.data[this._prefix + 'edition'];
   }
 
@@ -300,7 +303,7 @@ export class TypedResourceView implements Metadata {
     this.data[this._prefix + 'edition'] = newEdition;
   }
 
-  get number() : string {
+  get number(): string {
     return this.data[this._prefix + 'number'];
   }
 
@@ -312,11 +315,11 @@ export class TypedResourceView implements Metadata {
     return this.data[this._prefix + 'contributors'];
   }
 
-  set contributors( newContributors : Array<models.AgentRole>) {
+  set contributors( newContributors: Array<models.AgentRole>) {
     this.data[this._prefix + 'contributors'] = newContributors;
   }
 
-  get publicationDate() : string {
+  get publicationDate(): string {
     return this.data[this._prefix + 'publicationDate'];
   }
 
@@ -324,7 +327,7 @@ export class TypedResourceView implements Metadata {
     this.data[this._prefix + 'publicationDate'] = newYear;
   }
 
-  get embodiedAs() : Array<models.ResourceEmbodiment> {
+  get embodiedAs(): Array<models.ResourceEmbodiment> {
     return this.data[this._prefix + 'embodiedAs'];
   }
 
@@ -339,7 +342,8 @@ export function extractRoleFromContribs(contribs: Array<models.AgentRole>, roleT
   return contribs.filter(x => x.roleType === roleType);
 }
 
-export function extractAgentsFromContribs(contribs: Array<models.AgentRole>, property?: string) : Array<models.ResponsibleAgent> | Array<any> {
+export function extractAgentsFromContribs(contribs: Array<models.AgentRole>,
+  property?: string): Array<models.ResponsibleAgent> | Array<any> {
   if (property) {
     return contribs.map(r => r.heldBy[property]);
   } else {
