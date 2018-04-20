@@ -99,7 +99,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   }
 
   newEntry() {
-    // this.entries.push(this.locdbService.newBibliographicEntry())
+    // this.refs.push(this.locdbService.newBibliographicEntry())
   }
 
   updateTarget(e){

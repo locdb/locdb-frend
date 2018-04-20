@@ -234,7 +234,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
   queryFromEntry(entry: models.BibliographicEntry): string {
-    if (entry.ocrData && entrz.ocrData.title){
+    if (entry.ocrData && entry.ocrData.title){
       return entry.ocrData.title;
     } else if (entry.bibliographicEntryText) {
         return entry.bibliographicEntryText;
