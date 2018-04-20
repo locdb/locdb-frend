@@ -12,13 +12,11 @@ import { LocdbService } from '../../locdb.service';
 
 export class EntryFormComponent implements OnChanges {
   @Input() entry: models.BibliographicEntry;
-  @Input() active: false;
+  @Input() active: true;
   @Input() resource: TypedResourceView;
   entryForm: FormGroup;
   submitted = false;
-  disabled = true;
-  open = false;
-  @Output() state: EventEmitter<models.BibliographicEntry> = new EventEmitter()
+  @Output() done: EventEmitter<boolean> = new EventEmitter()
 
 
 
@@ -119,12 +117,12 @@ export class EntryFormComponent implements OnChanges {
 
     if (entry._id) {
       this.locdbService.updateBibliographicEntry(entry).subscribe(
-        (result) => { this.entry = result; this.toggleDisabled(); this.ngOnChanges()},
+        (result) => { this.entry = result; this.done.emit(true); this.ngOnChanges()},
         (error) => console.log('Error updating entry', error)
       );
     } else {
       this.locdbService.createBibliographicEntry(this.resource._id, entry).subscribe(
-    (result) => { this.entry = result; this.toggleDisabled(); this.ngOnChanges()},
+    (result) => { this.entry = result; this.done.emit(true); this.ngOnChanges()},
       (error) => console.log('Error creating entry', error)
     )
 
@@ -232,13 +230,6 @@ export class EntryFormComponent implements OnChanges {
     } else {
       return elements.join(' ');
     }
-  }
-
-  toggleDisabled(){
-    this.disabled = !this.disabled
-    this.open = !this.disabled
-    console.log("Toggle", this.disabled, this.open)
-
   }
 
 }

@@ -1,11 +1,5 @@
 <div *ngIf="entry">
   <!-- <div> open: </div>{{open}}, active:{{active}}, {{open && active}}, disabled:{{disabled}} -->
-  <button type="button" class="btn btn-secondary pull-right" *ngIf="disabled"
-  (click)="toggleDisabled()"> {{disabled ? 'details' : 'close'}}</button>
-  <accordion-group #group [isOpen]="open && active" [isDisabled]="disabled" [panelClass]="active ? 'text-white bg-dark' : entry.references ? 'border-success' : 'border-danger'">
-    <div accordion-heading class="clearfix">
-      {{short()}}
-    </div>
     <div *ngIf="submitted">
       <table class="table table-striped" style="table-layout:fixed;">
         <tbody>
@@ -169,3 +163,4 @@
       </div>
     </form>
   </div>
+</div>

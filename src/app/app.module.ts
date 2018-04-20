@@ -38,7 +38,9 @@ import { ResourceFormBasicComponent } from './resource-form-basic/resource-form.
 import { AgendaComponent, TodoComponent, EmbodimentComponent } from './agenda';
 
 // inspector related
-import { RouterRefsInspectorComponent, RouterScanInspectorComponent, RefsInspectorComponent, ScanInspectorComponent, EntryListComponent, EntryCardComponent, DisplayComponent} from './inspectors';
+import { RouterRefsInspectorComponent, RouterScanInspectorComponent, RefsInspectorComponent,
+  ScanInspectorComponent, EntryListComponent, EntryCardComponent, DisplayComponent,
+  EntryFormComponent} from './inspectors';
 
 // feeds
 import { FeedComponent, FeedReaderComponent } from './ingest/feed-reader/feed-reader.component';
@@ -63,7 +65,8 @@ import {
   ScanService, UserService
 } from './typescript-angular-client/api/api';
 
-import { BASE_PATH } from './typescript-angular-client/variables'
+import { BASE_PATH } from './typescript-angular-client/variables';
+import { EditViewComponent } from './edit-view/edit-view.component'
 
 const appRoutes: Routes = [
   // { path: 'resolve/:NOT_OCR_PROCESSED/:OCR_PROCESSING/:OCR_PROCESSED/:EXTERNAL', component: LinkingComponent },
@@ -73,6 +76,7 @@ const appRoutes: Routes = [
   { path: 'frontpage', component: FrontpageComponent},
   { path: 'linking/RefsInspector/:id', component: RouterRefsInspectorComponent},
   { path: 'linking/ScanInspector/:id', component: RouterScanInspectorComponent},
+  { path: 'edit', component: EditViewComponent},
   // { path: 'feedreader', component: FeedReaderComponent},
   // { path: 'hero/:id',      component: HeroDetailComponent },
   // {
@@ -137,6 +141,7 @@ const appRoutes: Routes = [
     FrontpageComponent,
     ResourceCardComponent,
     EntryCardComponent,
+    EntryFormComponent,
     BrowseComponent,
     AgendaComponent,
     TodoComponent,
@@ -144,7 +149,8 @@ const appRoutes: Routes = [
     AuthorsPipe,
     EditorsPipe,
     PublisherPipe,
-    EmbracePipe
+    EmbracePipe,
+    EditViewComponent
   ],
   providers: [
     { provide: BASE_PATH, useValue: environment.locdbUrl},
