@@ -113,7 +113,7 @@ export function OCR2MetaData(ocr: models.OCRData): Metadata {
     subtitle: '',
     number: ocr.volume || '',
     contributors: authors2contributors(ocr.authors),
-    publicationDate: ocr.date,
+    publicationDate: moment(ocr.date).toDate(),
     identifiers: [],
     type: enums.resourceType.report,
     edition: '',

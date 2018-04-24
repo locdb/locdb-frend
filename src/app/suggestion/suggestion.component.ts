@@ -10,7 +10,7 @@ import { TemplateRef } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
-import { enums, models, TypedResourceView, Metadata } from '../locdb';
+import { enums, models, TypedResourceView, Metadata, OCR2MetaData } from '../locdb';
 import { REQUIRED_IDENTIFIERS } from '../ingest/constraints';
 
 
@@ -122,7 +122,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
         // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
         this.locdbService.suggestionsByQuery(this.query, true, this.externalThreshold).subscribe(
           (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions')
-                      // this.loggingService.logSuggestionsArrived(this.entry, sug, false) 
+                      // this.loggingService.logSuggestionsArrived(this.entry, sug, false)
                     },
           (err) => { this.externalInProgress = false;
                     console.log(err)}
@@ -154,17 +154,17 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     // Turns OCR data into (partial) metadata, the type is missing
     // Duplicate code with locdb.ts
-    resourceFromEntry(entry: models.BibliographicEntry): Partial<Metadata> {
-        const ocr = entry.ocrData;
-        const br: Partial<Metadata> = {
-          title: ocr.title || entry.bibliographicEntryText,
-          publicationDate: ocr.date || '', // unary + operator makes it a number
-          contributors: this.authors2contributors(ocr.authors),
-          number: ocr.volume || '', // hope they work
-          identifiers: entry.identifiers.filter(i => i.scheme && i.literalValue), // only valid ones
-        }
-        return br;
-    }
+    // resourceFromEntry(entry: models.BibliographicEntry): Partial<Metadata> {
+    //     const ocr = entry.ocrData;
+    //     const br: Partial<Metadata> = {
+    //       title: ocr.title || entry.bibliographicEntryText,
+    //       publicationDate: new Date(ocr.date), // unary + operator makes it a number
+    //       contributors: this.authors2contributors(ocr.authors),
+    //       number: ocr.volume || '', // hope they work
+    //       identifiers: entry.identifiers.filter(i => i.scheme && i.literalValue), // only valid ones
+    //     }
+    //     return br;
+    // }
 
     onSelect(br?: TypedResourceView): void {
         this.loggingService.logReferenceTargetSelected(this.entry, br)
@@ -256,18 +256,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
   openModal(template: TemplateRef<any>) {
     // entry -> resource
-    this.newResource= new TypedResourceView({type: enums.resourceType.journalArticle})
-    if (this.entry.ocrData.title) {
-      this.newResource.title = this.entry.ocrData.title
-    }
-    this.newResource.contributors = []
-    for(let author of this.entry.ocrData.authors){
-        this.newResource.contributors.push({roleType: 'AUTHOR', heldBy: this.agentFromName(author)})
-    }
-    if (this.entry.ocrData.date) {
-      this.newResource.publicationDate = this.entry.ocrData.date
-    }
-
+    const metadata = OCR2MetaData(this.entry.ocrData);
+    this.newResource = new TypedResourceView(metadata);
     this.modalRef = this.modalService.show(template);
   }
 
