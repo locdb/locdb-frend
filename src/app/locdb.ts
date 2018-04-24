@@ -1,6 +1,6 @@
 // Just a foward from generated code.
 
-
+var moment = require('moment');
 import * as models from './typescript-angular-client/model/models'
 
 export {models};
@@ -85,7 +85,7 @@ export interface Metadata {
   edition: string;
   number: string;
   contributors: Array<models.AgentRole>;
-  publicationDate: string;
+  publicationDate: Date;
 }
 export function authors2contributors (authors: string[]): models.AgentRole[] {
   if (!authors) {return []};
@@ -319,12 +319,17 @@ export class TypedResourceView implements Metadata {
     this.data[this._prefix + 'contributors'] = newContributors;
   }
 
-  get publicationDate(): string {
-    return this.data[this._prefix + 'publicationDate'];
+  get publicationDate(): Date {
+    // rely on moment library to do the conversion from string
+    // moment can deal with both the initial date-time and later on full-date
+    const mom = moment(this.data[this._prefix + 'publicationDate']);
+    return mom.toDate();
   }
 
-  set publicationDate(newYear: string) {
-    this.data[this._prefix + 'publicationDate'] = newYear;
+  set publicationDate(newDate: Date) {
+    const dateMoment = moment(newDate);
+    const isoFullDate = dateMoment.format("YYYY-MM-DD");
+    this.data[this._prefix + 'publicationDate'] = isoFullDate;
   }
 
   get embodiedAs(): Array<models.ResourceEmbodiment> {
