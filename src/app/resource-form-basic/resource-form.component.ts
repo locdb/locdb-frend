@@ -59,7 +59,12 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
       if (agent.familyName) {
         return agent.familyName + ';' + agent.givenName;
       } else {
-        return agent.nameString;
+        if(agent.nameString){
+          return agent.nameString;
+        }
+        else{
+          return " "
+        }
       }
     }
 
@@ -90,7 +95,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     addContributor() {
         // reference from getter above
-        this.contributors.push(this.fb.group({role: '', name: ''}));
+        this.contributors.push(this.fb.group({role: 'AUTHOR', name: 'name'}));
     }
 
     removeContributor(index: number) {

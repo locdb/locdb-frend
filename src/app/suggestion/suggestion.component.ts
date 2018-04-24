@@ -105,7 +105,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
         // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
         this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold).subscribe(
           (sug) => { Object.is(this.entry, oldEntry) ? this.saveInternal(sug) : console.log('discarded suggestions')
-                      this.loggingService.logSuggestionsArrived(this.entry, sug, true) },
+                      // this.loggingService.logSuggestionsArrived(this.entry, sug, true)
+                    },
           (err) => { this.internalInProgress = false;
                     console.log(err) }
         );
@@ -121,7 +122,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
         // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
         this.locdbService.suggestionsByQuery(this.query, true, this.externalThreshold).subscribe(
           (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions')
-                      this.loggingService.logSuggestionsArrived(this.entry, sug, false) },
+                      // this.loggingService.logSuggestionsArrived(this.entry, sug, false) 
+                    },
           (err) => { this.externalInProgress = false;
                     console.log(err)}
         );

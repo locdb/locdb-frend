@@ -3,6 +3,7 @@ import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
 import { models, TypedResourceView} from '../../locdb';
 import { SimpleChanges } from '@angular/core';
 import { LocdbService } from '../../locdb.service';
+import { Router, ActivatedRoute} from '@angular/router';
 @Component({
   selector: 'app-entry-card',
   templateUrl: './entry-card.component.html',
@@ -25,7 +26,9 @@ export class EntryCardComponent implements OnChanges {
 
     constructor(
       private fb: FormBuilder,
-      private locdbService: LocdbService) { this.createForm(); }
+      private locdbService: LocdbService,
+      private route: ActivatedRoute,
+      private router: Router) { this.createForm(); }
 
     createForm() {
       this.entryForm = this.fb.group({
@@ -241,5 +244,10 @@ export class EntryCardComponent implements OnChanges {
         toggleOpen(){
           this.open = !this.open
         }
+
+      edit(){
+        this.router.navigate(['/edit/'],{ queryParams: { resource: this.resource._id, entry: this.entry._id } });
+
+      }
 
   }

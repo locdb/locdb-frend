@@ -79,6 +79,8 @@ import { UtilsService } from './typescript-angular-client/api/utils.service'
 import { BibliographicEntryService } from './typescript-angular-client/api/bibliographicEntry.service'
 import { BibliographicResourceService } from './typescript-angular-client/api/bibliographicResource.service'
 
+import { EditViewComponent } from './edit-view/edit-view.component'
+
 import { HttpClient, HttpHeaders, HttpParams,
          HttpResponse, HttpEvent, HttpClientModule }                           from '@angular/common/http';
 ////////  SPECS  /////////////
@@ -168,6 +170,7 @@ describe('AppComponent with TCB', function () {
           ResourceCardComponent,
           EntryCardComponent,
           BrowseComponent,
+          EditViewComponent,
         ],
         imports: [
           AccordionModule.forRoot(),

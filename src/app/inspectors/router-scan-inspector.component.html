@@ -21,7 +21,7 @@
     <p> {{sorry_text}} </p>
   </div>
   <div class="card-body"  *ngIf="!sorry_text">
-    <div [hidden]="!scanIsVisible">
+    <div [hidden]="!scanIsVisible" style="height: 800px; overflow-y: scroll;">
       <app-display [img_src]="getScanImage()" [entries]="refs" (entry)="forwardEntry($event)"
           *ngIf="scan_content_type == 'image'"></app-display>
       <p *ngIf="scan_content_type && scan_content_type != 'image'"> Received {{scan_content_type}}-type </p>
@@ -43,6 +43,8 @@
 </div>
 <div class="col-xs-12 col-sm-6 col-md-6">
   <!-- <app-suggestion [entry]="entry" (suggest)='updateTarget($event)'></app-suggestion> -->
+  <div *ngIf="entry">
     <app-suggestion [entry]="entry"></app-suggestion>
+  </div>
 </div>
 </div>

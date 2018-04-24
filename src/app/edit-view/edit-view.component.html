@@ -1,11 +1,11 @@
-<p>
+<!-- <p>
   edit-view works!# <br>
   {{resource_id}}<br>
   {{entry_id}}<br>
   resource: {{resource}}<br>
   entry: {{entry}}
 
-</p>
+</p> -->
 <div class="container">
   <!-- resource edit -->
   <div class="card" *ngIf="resource_id != 0 && entry_id == 0">
@@ -23,8 +23,8 @@
   <!-- entry edit -->
   <div class="card" *ngIf="resource_id != 0 && entry_id != 0 && entry_id != 'create'">
     <div class="card-header">
-      <h3 class="card-title">
-        Edit Entry {{entry_id}} attached to {{resource_id}}
+      <h3 *ngIf="resource" class="card-title">
+        Edit Entry {{entry_id}} attached to <b *ngIf="resource.title">{{resource.title}}</b> <b *ngIf="!resource.title">{{resource_id}}</b>
       </h3>
     </div>
     <div class="card-body">
@@ -36,8 +36,8 @@
   <!-- entry creation -->
   <div class="card" *ngIf="resource_id != 0 && entry_id == 'create'">
     <div class="card-header">
-      <h3 class="card-title">
-        Create Entry attached to {{resource_id}}
+      <h3 *ngIf="resource" class="card-title">
+        Create Entry attached to <b *ngIf="resource.title">{{resource.title}}</b> <b *ngIf="!resource.title">{{resource_id}}</b>
       </h3>
     </div>
     <div class="card-body">
@@ -50,12 +50,12 @@
   <div class="card" *ngIf="resource_id == 0 && entry_id == 0">
     <div class="card-header">
       <h3 class="card-title">
-        heady heady head
+        Oohps!
       </h3>
     </div>
     <div class="card-body">
       <p>
-        oohps!
+        No Ids ...
       </p>
     </div>
   </div>

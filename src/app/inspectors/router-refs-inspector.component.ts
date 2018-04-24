@@ -54,6 +54,8 @@ export class RouterRefsInspectorComponent implements OnInit, OnChanges {
   }
 
   newEntry() {
+    console.log("new entry")
+    this.router.navigate(['/edit/'],{ queryParams: { resource: this.resource._id, entry: "create" } });
     // this.refs.push(this.locdbService.newBibliographicEntry())
   }
 

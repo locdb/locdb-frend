@@ -70,10 +70,16 @@ export class EditViewComponent implements OnInit {
       });
   }
 
-  save_resourse(e){
-    console.log("Save resource ", e)
-    this.triggerBack();
+  save_resourse(_resource: TypedResourceView){
+    console.log("Save resource ", _resource.data.type)
+    console.log("Resource type: ", typeof(_resource))
+    this.locdbService.maybePutResource(_resource).subscribe((succ) => {
+      console.log("Save successful", succ)
+      this.triggerBack();
+  },
+    (err) => { console.log('Error', this.resource_id, err) });
   }
+
 
   triggerBack(){
     // history.back() //slow
