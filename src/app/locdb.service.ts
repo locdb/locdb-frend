@@ -113,11 +113,17 @@ export class LocdbService {
    embodimentType);
  }
 
- packTypedPair(parentAndChild: models.BibliographicResource[]): [TypedResourceView, TypedResourceView] {
+ packTypedPair(parentAndChild: models.BibliographicResource[]): [TypedResourceView | null, TypedResourceView] {
    /*
    Properly pack an array of bibliographic resources as returned by
    suggestion services into a **Pair** of parent and child typed resources
    */
+   if (parentAndChild.length == 1) {
+     // The single entry of the array is a stand-alone resource,
+     // we therefore return null as parent.
+     const tuple: [TypedResourceView, TypedResourceView] = [null, new TypedResourceView(parentAndChild[0])]
+     return tuple;
+   }
 
    if (parentAndChild.length > 2) {
      console.log("WARNING: more than 2 resources in [parent, child] relation")
