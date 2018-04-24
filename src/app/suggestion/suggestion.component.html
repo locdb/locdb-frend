@@ -31,9 +31,9 @@
     <h5 class="card-title">
       Currently references
     </h5>
-    <app-resource-card [(resource)]="currentTarget"
-    [selected]="currentTarget == selectedResource"
-    (click)="onSelect(currentTarget)">
+    <app-resource-card [(resources)]="currentTarget"
+    [selected]="currentTarget[1] == selectedResource"
+    (click)="onSelect(currentTarget[1])">
     </app-resource-card>
   </div>
 </div>
@@ -46,7 +46,7 @@
     </h5>
     <div *ngFor="let r of internalSuggestions;let i = index">
       <app-resource-card *ngIf="max_in <= 0 || i < max_in"
-        [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
+        [resources]="r" [selected]="r[1] == selectedResource" (click)="onSelect(r[1])">
       </app-resource-card>
     </div>
     <button type="button" *ngIf="max_in == max_shown_suggestions"
@@ -73,7 +73,7 @@
     <div *ngIf="externalSuggestions">
     <div *ngFor="let r of externalSuggestions;let i = index">
       <app-resource-card *ngIf="max_ex <= 0 || i < max_ex"
-        [resource]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
+        [resources]="r" [selected]="r[1] == selectedResource" (click)="onSelect(r[1])">
       </app-resource-card>
     </div>
     <button type="button" *ngIf="max_ex == max_shown_suggestions"
@@ -105,7 +105,7 @@
   </div>
   </div>
   </div>
-  
+
   <div class="row">
   <div class="col-md-12">
   <button type="button" class="btn btn-secondary"

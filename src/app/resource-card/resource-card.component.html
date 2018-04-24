@@ -1,17 +1,18 @@
 <!-- <div> open: </div>{{open}}, active:{{active}}, {{open && active}}, disabled:{{disabled}} -->
-<div class="card" *ngIf="resource" [class]="selected && selectable ? 'card bg-dark' : 'card bg-light'"
+<div class="card" *ngIf="resources[1]" [class]="selected && selectable ? 'card bg-dark' : 'card bg-light'"
     style="padding-left: 10px"> <!-- [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">-->
   <div class="card-header" [class]="selected && selectable ? 'card-header bg-light' : 'card-header border-default  bg-light'">
     <div class="row">
       <div class="col-9">
-    <p>{{ resource.title }}
+    <!-- <p>{{ resource.title }}
       <span *ngIf="resource.type" class="badge badge-info">{{resource.type}}</span>
       <span *ngIf="resource.provenance" class="badge badge-warning">{{resource.provenance}}</span>
-    </p>
+    </p> -->
+    <app-metadata [of]="resources[1]" [in]="resources[0]"></app-metadata>
   </div>
 
     <div class="col-2">
-    <button *ngIf="!selectable && resource.parts && resource.parts.length && !open" type="button" class="btn btn-success"
+    <button *ngIf="!selectable && resources[1].parts && resources[1].parts.length && !open" type="button" class="btn btn-success"
     (click)="onSelectExternal()">References</button>
   </div>
     <div class="col-1">
@@ -21,7 +22,7 @@
   </div>
 </div>
   <div class="card-body bg-light" *ngIf="open" >
-  <app-resource-editable [resource]="resource" (resourceChange)="resource=$event; resourceChange.emit($event)"
+  <app-resource-editable [resource]="resources[1]" (resourceChange)="resources[1]=$event; resourceChange.emit($event)"
       (submitStatus)="disabled=!$event; open = $event">
   </app-resource-editable>
 
