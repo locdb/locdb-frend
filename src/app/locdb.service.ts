@@ -113,14 +113,27 @@ export class LocdbService {
    embodimentType);
  }
 
+ packTypedPair(parentAndChild: models.BibliographicResource[]): [TypedResourceView, TypedResourceView] {
+   /*
+   Properly pack an array of bibliographic resources as returned by
+   suggestion services into a **Pair** of parent and child typed resources
+   */
 
-  suggestionsByQuery(query: string, external: boolean, threshold?: number): Observable<TypedResourceView[]> {
-    if (external) {
-      return this.bibliographicEntryService.getExternalSuggestionsByQueryString(query, threshold).map( l => l.map(br => new TypedResourceView(br)));
-    } else {
-      return this.bibliographicEntryService.getInternalSuggestionsByQueryString(query, threshold).map( l => l.map(ex => new TypedResourceView(ex)));
-    }
+   if (parentAndChild.length > 2) {
+     console.log("WARNING: more than 2 resources in [parent, child] relation")
+   }
+   // this is super annoying to create an actual typle
+   const tuple: [TypedResourceView, TypedResourceView] = [new TypedResourceView(parentAndChild[0]), new TypedResourceView(parentAndChild[1])]
+   return tuple;
+ }
 
+
+  suggestionsByQuery(query: string, external: boolean, threshold?: number): Observable<Array<[TypedResourceView, TypedResourceView]>> {
+    const entryService = this.bibliographicEntryService;
+    const suggestions$ = external ?
+    entryService.getExternalSuggestionsByQueryString(query, threshold) :
+    entryService.getInternalSuggestionsByQueryString(query, threshold);
+    return suggestions$.map(suggestions => suggestions.map(pair => this.packTypedPair(pair)));
   }
 
 

@@ -33,8 +33,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
     selectedResource: TypedResourceView;
     query: string;
 
-    internalSuggestions: TypedResourceView[];
-    externalSuggestions: TypedResourceView[];
+    internalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
+    externalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
     currentTarget: TypedResourceView;
     modalRef: BsModalRef;
     newResource: TypedResourceView;
@@ -48,7 +48,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     internalInProgress = false;
 
 
-    internalThreshold = 1.0;
+    internalThreshold = 0.1;
     externalThreshold = 0.5;
 
 
@@ -172,7 +172,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
         this.suggest.emit(br);
     }
 
-    saveInternal(sgt) {
+    saveInternal(sgt: Array<[TypedResourceView, TypedResourceView]>) {
         this.internalSuggestions = sgt
         if (this.internalSuggestions && this.internalSuggestions.length <= this.max_shown_suggestions) {
           this.max_in = -1;
@@ -184,7 +184,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
         // }
     }
 
-    saveExternal(sgt) {
+    saveExternal(sgt: Array<[TypedResourceView, TypedResourceView]>) {
         this.externalSuggestions = sgt;
         if (this.externalSuggestions && this.externalSuggestions.length <= this.max_shown_suggestions) {
           this.max_ex = -1;
