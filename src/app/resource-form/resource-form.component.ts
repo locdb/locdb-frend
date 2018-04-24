@@ -2,11 +2,12 @@ import {
     models,
     TypedResourceView,
     enums,
-    enum_values
+    enum_values,
+    isoFullDate
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
 
 @Component( {
     selector: 'app-resource-form',

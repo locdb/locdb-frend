@@ -108,17 +108,27 @@ export function authors2contributors (authors: string[]): models.AgentRole[] {
 }
 
 export function OCR2MetaData(ocr: models.OCRData): Metadata {
-  return {
+  console.log("Extracting OCR data from", ocr);
+  const ocrDate = moment(ocr.date, "YYYY").toDate();
+  const obj =  {
     title: ocr.title || '',
     subtitle: '',
     number: ocr.volume || '',
     contributors: authors2contributors(ocr.authors),
-    publicationDate: moment(ocr.date).toDate(),
+    publicationDate: ocrDate,
     identifiers: [],
     type: enums.resourceType.report,
     edition: '',
   };
+  console.log("Extracted", obj);
+  return obj;
 
+}
+
+export function isoFullDate(date: Date | string) {
+  // used in forms to provide initial value
+  // we could also use Angular DatePipe here
+  return moment(date).format("YYYY-MM-DD");
 }
 
 /* Our own enum for provenance data */
@@ -165,6 +175,17 @@ export class TypedResourceView implements Metadata {
   */
   isTodo() {
     return this.children != null;
+  }
+
+  set_from(other: Partial<Metadata>): void {
+    /* Sets typed properties from metadata */
+    this.identifiers = other.identifiers;
+    this.title = other.title;
+    this.subtitle = other.subtitle;
+    this.edition = other.edition;
+    this.number = other.number;
+    this.contributors = other.contributors;
+    this.publicationDate = other.publicationDate;
   }
 
 
@@ -263,14 +284,6 @@ export class TypedResourceView implements Metadata {
   set type ( newType: enums.resourceType ) {
     this.data.type = newType;
   }
-  // forward native attributes end
-
-  getTypedAttr(property: string, type: string): any {
-    // this is not really necessary.. as we provided accessors for all types
-    // already, assert that it is not used anywhere, then drop.
-    const prop = typedProperty(type, property);
-    return this.data[prop];
-  }
 
   get identifiers(): Array<models.Identifier> {
     return this.data[this._prefix + 'identifiers'];
@@ -322,8 +335,10 @@ export class TypedResourceView implements Metadata {
   get publicationDate(): Date {
     // rely on moment library to do the conversion from string
     // moment can deal with both the initial date-time and later on full-date
-    const mom = moment(this.data[this._prefix + 'publicationDate']);
-    return mom.toDate();
+    const strDate = this.data[this._prefix + 'publicationDate'];
+    const mom = moment(strDate);
+    const date = mom.toDate();
+    return date;
   }
 
   set publicationDate(newDate: Date) {

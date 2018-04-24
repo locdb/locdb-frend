@@ -179,7 +179,7 @@ export class LocdbService {
      * 1-2 requests */
     if (entry.references) {
       try {
-        await this.removeTargetBibliographicResource(entry);
+        await this.removeTargetBibliographicResource(entry).toPromise();
         entry.status = enums.status.ocrProcessed; // back-end does it... TODO FIXME
       } catch (e) {
         console.log('References pointer was invalid. Pass...');

@@ -272,19 +272,20 @@ export class SuggestionComponent implements OnInit, OnChanges {
   openModal(template: TemplateRef<any>) {
     // entry -> resource
     const metadata = OCR2MetaData(this.entry.ocrData);
-    this.newResource = [null, new TypedResourceView(metadata)];
+    this.newResource = new TypedResourceView({type: metadata.type});
+    this.newResource.set_from(metadata);
     this.modalRef = this.modalService.show(template);
   }
 
   create_resourse(resource: TypedResourceView){
-    console.log("create me", this.entry, resource)
-    this.newResource = [null,resource]
-    this.modalRef.hide()
+    console.log("create me", this.entry, resource);
+    this.newResource = resource;
+    this.modalRef.hide();
 
   }
 
   encodeURI(uri: string){
-    return encodeURIComponent(uri)
+    return encodeURIComponent(uri);
   }
 
 }
