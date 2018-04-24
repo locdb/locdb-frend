@@ -2,11 +2,12 @@ import {
     models,
     TypedResourceView,
     enums,
-    enum_values
+    enum_values,
+    isoFullDate
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 
 @Component( {
     selector: 'app-resource-form-basic',
@@ -41,11 +42,11 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     createForm()  {
         this.resourceForm = this.fb.group( {
             title: '',
-            resourcetype: '',
+            resourcetype: ['', Validators.required],
             subtitle: '',
             edition: '',
             resourcenumber: '',
-            publicationyear: new Date(),  // is this default ok?
+            publicationyear: '',  // is this default ok?
             contributors: this.fb.array([]),
             identifiers: this.fb.array([]),
         });
@@ -135,7 +136,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
             resourcetype: this.resource.type,
             edition: this.resource.edition,
             resourcenumber: this.resource.number,
-            publicationyear: this.resource.publicationDate,
+            publicationyear: isoFullDate(this.resource.publicationDate),
             // containerTitle: this.resource.containerTitle // still in progress
         });
         // new clean set contribs
