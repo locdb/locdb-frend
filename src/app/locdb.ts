@@ -1,6 +1,6 @@
 // Just a foward from generated code.
 
-var moment = require('moment');
+import * as moment from 'moment';
 import * as models from './typescript-angular-client/model/models'
 
 export {models};
