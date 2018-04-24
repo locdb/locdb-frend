@@ -71,7 +71,19 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     }
     },
     (err) => { this.sorry_text = "No resource found with id " + this._id;
-              console.log("err, no br") });
+    console.log("err, no br") });
+
+    this.route
+      .queryParams
+      .subscribe(params => {
+        // Defaults to 0 if no query param provided.
+        const list = params['list'] || '0';
+        console.log("got params", list)
+        if(list == '1'){
+          this.scanIsVisible = false
+        }
+        })
+
   }
 
   ngOnChanges(changes: SimpleChanges | any) {
@@ -91,14 +103,22 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   }
 
   showScan() {
+    this.router.navigate([], {
+        queryParams: {list: 0}
+    });
     this.scanIsVisible = true;
   }
 
   hideScan() {
+    this.router.navigate([], {
+        queryParams: {list: 1}
+    });
     this.scanIsVisible = false;
   }
 
   newEntry() {
+    console.log("new entry")
+    this.router.navigate(['/edit/'],{ queryParams: { resource: this.resource._id, entry: "create" } });
     // this.refs.push(this.locdbService.newBibliographicEntry())
   }
 

@@ -1,6 +1,7 @@
 import { OnChanges, Component, Input, Output, EventEmitter} from '@angular/core';
 import { models, enums, TypedResourceView } from '../locdb';
 import { LocdbService } from '../locdb.service';
+import { Router, ActivatedRoute} from '@angular/router';
 
 
 @Component({
@@ -13,7 +14,9 @@ export class TodoComponent {
   @Output() scan: EventEmitter<[models.ResourceEmbodiment, models.Scan]> = new EventEmitter();
   @Output() refs: EventEmitter<Array<models.BibliographicEntry>> = new EventEmitter();
 
-  constructor() {}
+  constructor(private route: ActivatedRoute,
+              private router: Router) {}
+
   ngOnChanges(){
     console.log(this.todo)
   }
@@ -26,5 +29,9 @@ export class TodoComponent {
     this.scan.emit([embodiment_scan[0], embodiment_scan[1]]);
   }
 
+  edit(){
+    this.router.navigate(['/edit/'],{ queryParams: { resource: this.todo._id} });
+
+  }
 
 }

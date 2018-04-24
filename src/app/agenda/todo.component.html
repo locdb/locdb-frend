@@ -2,9 +2,15 @@
   <div class="row">
     <div class="col-md-10"><app-metadata [of]="this.todo"></app-metadata></div>
     <div class="col-md-2">
-      <button type="button" class="btn btn-primary float-right" (click)="inspectReferences()">
+      <div class="center-block">
+      <button type="button" class="btn btn-primary btn-sm float-right" (click)="inspectReferences()">
         Inspect References </button>
       </div>
+        <div class="center-block">
+        <button type="button" class="btn btn-primary btn-sm float-right mt-2" (click)="edit()">
+          edit resource </button>
+      </div>
+    </div>
     </div>
   </div>
   <ul class="list-group list-group-flush" *ngIf="todo.embodiedAs && todo.embodiedAs.length">

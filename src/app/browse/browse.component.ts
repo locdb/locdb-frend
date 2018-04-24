@@ -56,7 +56,8 @@ export class BrowseComponent implements OnInit {
         console.log('Fetching internal suggestions for', this.query, 'with threshold', this.internalThreshold);
         this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold).subscribe(
           (sug) => {this.saveInternal(sug);
-                        this.loggingService.logSuggestionsArrived(this.searchentry, sug, true) },
+                        // this.loggingService.logSuggestionsArrived(this.searchentry, sug, true)
+                      },
           (err) => { this.internalInProgress = false }
         );
       }
