@@ -198,7 +198,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
           // resource.containerTitle = formModel.containerTitle as string || '';
           resource.number = formModel.resourcenumber as string || '';
           resource.contributors = contribsDeepCopy;
-          resource.publicationDate = formModel.publicationyear as string || '';
+          resource.publicationDate = formModel.publicationyear;
             // partOf: formModel.partof as string || '',
             // warning: retain internal identifiers (dont show primary keys to the user)
             // not editable, but copied values
