@@ -10,7 +10,7 @@ import { LocdbService } from '../locdb.service';
 })
 export class ResourceCardComponent implements OnInit {
 
-    @Input() resource: TypedResourceView; //BibliographicResource | ProvenResource | ToDo;
+    @Input() resources: [TypedResourceView, TypedResourceView] = [null,null]; //TypedResourceView; //BibliographicResource | ProvenResource | ToDo;
     @Output() resourceChange = new EventEmitter<TypedResourceView>();
     @Input() selected: boolean = false;
     @Input() selectable: boolean = true;
@@ -29,11 +29,11 @@ export class ResourceCardComponent implements OnInit {
         this.externalReferences.next(true)
       }
 
-      short() {
-        let s:string = this.resource ? this.resource.toString() : '<empty>';
-        // TODO put info on container resource if partof is available
-
-      }
+      // short() {
+      //   let s:string = this.resource ? this.resource.toString() : '<empty>';
+      //   // TODO put info on container resource if partof is available
+      //
+      // }
 
       toggleOpen(){
         this.open = !this.open;
