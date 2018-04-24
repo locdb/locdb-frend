@@ -100,7 +100,7 @@
     <h5 class="card-title">
       New resource from reference metadata
     </h5>
-    <app-resource-card [resource]="newResource" [selected]="newResource === selectedResource" (click)="onSelect(newResource)">
+    <app-resource-card [resources]="newResource" [selected]="newResource[1] === selectedResource" (click)="onSelect(newResource[1])">
     </app-resource-card>
   </div>
   </div>

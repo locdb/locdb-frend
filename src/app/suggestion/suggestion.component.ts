@@ -51,7 +51,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     modalRef: BsModalRef;
-    newResource: TypedResourceView;
+    newResource: [TypedResourceView, TypedResourceView];
 
     committed = false;
     max_shown_suggestions = 5
@@ -105,7 +105,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     refresh() {
       // when search button is triggered
       this.loggingService.logSearchIssued(this.entry, this.selectedResource, this.query, [0,1])
-      this.newResource = null
+      this.newResource = [null, null];
       this.fetchInternalSuggestions();
       this.fetchExternalSuggestions();
     }
@@ -272,13 +272,13 @@ export class SuggestionComponent implements OnInit, OnChanges {
   openModal(template: TemplateRef<any>) {
     // entry -> resource
     const metadata = OCR2MetaData(this.entry.ocrData);
-    this.newResource = new TypedResourceView(metadata);
+    this.newResource = [null, new TypedResourceView(metadata)];
     this.modalRef = this.modalService.show(template);
   }
 
   create_resourse(resource: TypedResourceView){
     console.log("create me", this.entry, resource)
-    this.newResource = resource
+    this.newResource = [null,resource]
     this.modalRef.hide()
 
   }
