@@ -25,7 +25,7 @@
 </div>
 <div class="card-body" style="height: 800px; overflow-y: scroll;">
   <!-- Panel body providing suggestions -->
-  <div class="row">
+  <div class="row" *ngIf="currentTarget[1]">
   <div class="col-md-12">
   <div *ngIf="currentTarget" class="card-block">
     <h5 class="card-title">
@@ -92,9 +92,8 @@
   </div>
 </div>
 </div>
-  <!-- NEW RESOURCE FROM OCR not possible due to new datamodel -->
 
-  <div class="row">
+  <div class="row" *ngIf="newResource[1]">
   <div class="col-md-12">
  <div class="card-block">
     <h5 class="card-title">
@@ -146,7 +145,7 @@
         <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
         </select> -->
 
-        <app-resource-form-basic [resource]="newResource" (resourceChanged)="create_resourse($event)"></app-resource-form-basic>
+        <app-resource-form-basic [resource]="newResource[1]" (resourceChanged)="create_resourse($event)"></app-resource-form-basic>
       <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
   </div>
   <!-- <div class="modal-footer">

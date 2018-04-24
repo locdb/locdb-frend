@@ -19,10 +19,12 @@ export class ResourceCardComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {
+      console.log("init")
     }
 
     ngOnChanges(){
-      this.open = false;
+      console.log("on changes")
+      // this.open = false;
     }
 
       onSelectExternal() {
@@ -36,7 +38,9 @@ export class ResourceCardComponent implements OnInit {
       // }
 
       toggleOpen(){
+        console.log("toggle, toggle, ...")
         this.open = !this.open;
+        console.log(this.open)
       }
 
   }
