@@ -53,7 +53,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             subtitle: '',
             edition: '',
             resourcenumber: '',
-            publicationyear: '',
+            publicationyear: new Date(), // this default ok?
             contributors: this.fb.array([]),
             identifiers: this.fb.array([]),
         });
