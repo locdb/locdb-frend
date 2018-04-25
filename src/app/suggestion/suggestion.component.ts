@@ -51,7 +51,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     modalRef: BsModalRef;
-    newResource: [TypedResourceView, TypedResourceView];
+    newResource: [TypedResourceView, TypedResourceView] = null;
 
     committed = false;
     max_shown_suggestions = 5
@@ -282,7 +282,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     console.log("create me", this.entry, resource);
     this.newResource = [null, resource];
     this.modalRef.hide();
-
+    this.onSelect(this.newResource[1]);
   }
 
   encodeURI(uri: string){
