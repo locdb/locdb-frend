@@ -70,7 +70,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     }
 
     agentFromName(forminput: string): models.ResponsibleAgent {
-      const [lastname, firstname, ...other] = forminput.split(';');
+      const [lastname, firstname, ...other] = forminput.split(', ');
       return {
         identifiers: [],
         givenName: firstname,
