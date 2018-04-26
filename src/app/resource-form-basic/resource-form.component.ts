@@ -3,7 +3,9 @@ import {
     TypedResourceView,
     enums,
     enum_values,
-    isoFullDate
+    isoFullDate,
+    composeName,
+    decomposeName
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
@@ -50,25 +52,33 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
 
     nameFromAgent(agent: models.ResponsibleAgent): string {
-      if (agent.familyName) {
-        return agent.familyName + ', ' + agent.givenName;
-      } else {
-        if (agent.nameString) {
-          return agent.nameString;
-        } else {
-          return ' ';
-        }
-      }
+        // forward to locdb.ts method for unified treatment everywhere
+        return composeName(agent);
+
+      // if (agent.familyName) {
+      //   return agent.familyName + ', ' + agent.givenName;
+      // } else {
+      //   if (agent.nameString) {
+      //     return agent.nameString;
+      //   } else {
+      //     return ' ';
+      //   }
+      // }
     }
 
     agentFromName(forminput: string): models.ResponsibleAgent {
-      const [lastname, firstname, ...other] = forminput.split(', ');
-      return {
-        identifiers: [],
-        givenName: firstname,
-        familyName: lastname,
-        nameString: forminput // retain original input
-      }
+        // forward to locdb.ts method for unified treatment everywhere
+        const agent = decomposeName(forminput);
+        // decompose only yields familyName givenName and nameString
+        agent.identifiers = [];
+        return agent;
+      // const [lastname, firstname, ...other] = forminput.split(', ');
+      // return {
+      //   identifiers: [],
+      //   givenName: firstname,
+      //   familyName: lastname,
+      //   nameString: forminput // retain original input
+      // }
     }
 
     // clean array treatment
