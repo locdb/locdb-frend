@@ -22,7 +22,7 @@
         </div>
         <div class="card-body" *ngIf="todo.children() && todo.children().length">
           <div class="card" *ngFor="let child of todo.children()">
-            <app-todo [todo]="child" (refs)="inspectRefs(child, todo)" (scan)="inspectScan($event[1], $event[0], child, todo)">
+            <app-todo [todo]="child" [container]="todo" (refs)="inspectRefs(child, todo)" (scan)="inspectScan($event[1], $event[0], child, todo)">
             </app-todo>
           </div>
         </div>

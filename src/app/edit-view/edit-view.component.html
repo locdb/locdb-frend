@@ -11,8 +11,9 @@
   <div class="card" *ngIf="resource_id != 0 && entry_id == 0">
     <div class="card-header">
       <h3 class="card-title">
-        Edit Ressource {{resource_id}}
+        Edit Resource
       </h3>
+      <app-metadata [of]="resource"></app-metadata>
     </div>
     <div class="card-body">
       <div class="container" *ngIf='resource'>

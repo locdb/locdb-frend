@@ -11,6 +11,7 @@ import * as enums from './enums';
 export { enums };
 
 
+export const NAME_SEPARATOR = ', '
 
 export function invert_enum(obj: Object) {
   const inverse = new Object();
@@ -355,6 +356,52 @@ export class TypedResourceView implements Metadata {
     this.data[this._prefix + 'embodiedAs'] = newEmbodiments;
   }
 
+}
+
+export function findContainerMetadata(trv: TypedResourceView, checkInitial = true): TypedResourceView {
+  /* Finds the least general container type that has meta data available,
+   * traverses the list of preferred container types for the current type
+   * from most preferable to least preferable.
+   * Designed for usage in metadata's of part.
+   * When `checkInitial` is false, the initial `trv` will not be checked against the condition.
+   * As a fallback, the same view as the input is returned.
+   * TODO: this could even be recursive, but for now we assume that our lookup table is flattened.
+   */
+  if (!trv) { return null; };
+  if (checkInitial && trv.title) { return trv; };
+
+  console.log("Find correct container meta for", trv);
+  const validTypes = containerTypes(trv.type);
+  for (const candidateType of validTypes) {
+    const view = trv.astype(candidateType);
+    // could even put callback as condition...
+    if (view.title) { return view };
+  }
+  return trv;
+}
+
+export function decomposeName(someString: string): Partial<models.ResponsibleAgent> {
+  const [lastname, firstname, ...other] = someString.split(NAME_SEPARATOR);
+  return {
+    givenName: firstname,
+    familyName: lastname,
+    nameString: someString
+  }
+}
+
+export function composeName(heldBy: models.ResponsibleAgent): string {
+  /* Carefully extracts  givenName and familyName from a responsible agent.
+   * Falls back to nameString if nothing is present. */
+  if (heldBy.givenName && heldBy.familyName) {
+    return heldBy.familyName + NAME_SEPARATOR + heldBy.givenName
+  } else if (heldBy.familyName) {
+    return heldBy.familyName;
+  } else if (heldBy.givenName) {
+    return heldBy.givenName;
+  } else if (heldBy.nameString) {
+    return heldBy.nameString;
+  }
+  return 'UNK'
 }
 
 // Helpers to deal with contributors
