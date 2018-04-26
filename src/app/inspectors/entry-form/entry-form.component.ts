@@ -22,7 +22,8 @@ export class EntryFormComponent implements OnChanges {
 
   constructor(
     private fb: FormBuilder,
-    private locdbService: LocdbService) { this.createForm(); }
+    private locdbService: LocdbService)
+  { this.createForm(); }
 
   createForm() {
     this.entryForm = this.fb.group({

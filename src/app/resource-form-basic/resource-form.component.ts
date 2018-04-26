@@ -17,19 +17,12 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 
 export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
-    // if this is a string, we can try to dereference it from the back-end
-    @Input() resource: TypedResourceView //BibliographicResource | ProvenResource | ToDo = null;
+    @Input() resource: TypedResourceView
     @Output() resourceChanged = new EventEmitter<TypedResourceView>();
 
 
     resourceForm: FormGroup;
     embodiments: FormGroup[] = [];
-
-
-
-
-    // roles: string[] = ['CORPORATE','PUBLISHER', 'author']; // <-- to Locdb.ts as class?
-    // roles: string[] = AgentRole.ROLES;
     roles: string[] =  enum_values(enums.roleType);
     resourceTypes: string[] = enum_values(enums.resourceType);
     identifierTypes: string[] = enum_values(enums.identifier);
@@ -58,13 +51,12 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     nameFromAgent(agent: models.ResponsibleAgent): string {
       if (agent.familyName) {
-        return agent.familyName + ';' + agent.givenName;
+        return agent.familyName + ', ' + agent.givenName;
       } else {
-        if(agent.nameString){
+        if (agent.nameString) {
           return agent.nameString;
-        }
-        else{
-          return " "
+        } else {
+          return ' ';
         }
       }
     }
@@ -129,7 +121,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     }
 
     ngOnChanges()  {
-        console.log("ngOnChanges", this.resource);
+        console.log('ngOnChanges', this.resource);
         this.resourceForm.reset( {
             title: this.resource.title,
             subtitle: this.resource.subtitle,
