@@ -6,7 +6,11 @@
   entry: {{entry}}
 
 </p> -->
-<div class="container">
+<div *ngIf="!request_answered && !request_failed" class="container">
+  <div class="loader">
+  </div>
+</div>
+<div *ngIf="request_answered"class="container">
   <!-- resource edit -->
   <div class="card" *ngIf="resource_id != 0 && entry_id == 0">
     <div class="card-header">

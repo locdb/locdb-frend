@@ -194,7 +194,7 @@ export class LocdbService {
   }
 
   bibliographicResource(identifier: string): Observable<TypedResourceView> {
-    return this.bibliographicResourceService.get(identifier).map( br => new TypedResourceView(br) );
+    return this.bibliographicResourceService.get(identifier).map( br => new TypedResourceView(br)).retryWhen(error => error.delay(500)).take(5);
   }
 
   parentResource(br: TypedResourceView | models.BibliographicResource): Observable<TypedResourceView> {
@@ -242,7 +242,7 @@ export class LocdbService {
   }
 
   getBibliographicResource(id:string): Observable<TypedResourceView> {
-    return this.bibliographicResourceService.get(id).map(br => new TypedResourceView(br));
+    return this.bibliographicResourceService.get(id).map(br => new TypedResourceView(br)).retryWhen(error => error.delay(750)).take(8);
   }
 
   // DEPRECATED or integrate in Maybe Methods

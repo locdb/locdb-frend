@@ -12,6 +12,9 @@ import { TypedResourceView, enums, enum_values, models} from '../locdb';
 export class EditViewComponent implements OnInit {
   sub;
 
+  request_answered = false;
+  request_failed = false;
+
   resource_id: string = "no resource id";
   resource: TypedResourceView
 
@@ -20,6 +23,16 @@ export class EditViewComponent implements OnInit {
 
   constructor(private locdbService: LocdbService, private route: ActivatedRoute,
     private location: Location, private router: Router) {}
+
+  delay(ms: number) {
+    console.log("delay", ms)
+      return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+
+  async retry_connection(){
+    await this.delay(2000)
+    this.ngOnInit()
+  }
 
   ngOnInit() {
     console.log("init");
@@ -38,8 +51,11 @@ export class EditViewComponent implements OnInit {
                   this.resource = trv;
                     console.log("got trv back: ", this.resource)
               }
+              this.request_answered = true
             },
-              (err) => { console.log('No resource found', this.resource_id) });
+              (err) => { console.log('No resource found', this.resource_id);
+                          console.log("error statuscode ", err.status)
+                        });
         }
         if(this.entry_id != '0'){
           console.log("enter if entry id")
@@ -64,11 +80,15 @@ export class EditViewComponent implements OnInit {
                   }
                 }
               }
+              this.request_answered = true
         },
-          (err) => { console.log('No resource found', this.resource_id) });
+          (err) => { console.log('No resource found', this.resource_id);
+                      this.request_answered = false });
       }
       });
   }
+
+
 
   save_resourse(_resource: TypedResourceView){
     console.log("Save resource ", _resource.data.type)
