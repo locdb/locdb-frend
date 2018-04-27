@@ -37,7 +37,15 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     @Input() img_src = '';
     @Input() entries: models.BibliographicEntry[] = [];
 
-    selectedEntry: models.BibliographicEntry = null;
+    _selectedEntry: models.BibliographicEntry = null;
+    get selectedEntry(){
+      if(this._selectedEntry)
+      return this._selectedEntry
+    }
+    @Input() set selectedEntry(val: models.BibliographicEntry){
+      if(val)
+      this._selectedEntry = val
+    }
 
     title = 'Scan Display';
     currentIndex = 0;
@@ -78,8 +86,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
                 e => e.ocrData.coordinates && this.validateCoordinates(e.ocrData.coordinates)
             ).map(this.rectFromEntry);
             const firstUnprocessed = this.rects.find(r => !r.entry.references);
-            this.selectedEntry = firstUnprocessed.entry;
-            this.entry.next(this.selectedEntry);
+            // this.selectedEntry = firstUnprocessed.entry;
+            // this.entry.next(this.selectedEntry);
         }
     }
 

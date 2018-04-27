@@ -22,7 +22,16 @@ export class RouterRefsInspectorComponent implements OnInit, OnChanges {
   resource: TypedResourceView;
   refs: Array<models.BibliographicEntry> = [];
   entry: models.BibliographicEntry; //EventEmitter<models.BibliographicEntry> = new EventEmitter();
-
+  selected_entry_display: models.BibliographicEntry;
+  display_trigger_selected_entry(entry: models.BibliographicEntry){
+    this.entry= entry;
+    this.selected_entry_display = entry;
+  }
+  selected_entry_list: models.BibliographicEntry;
+  list_trigger_selected_entry(entry: models.BibliographicEntry){
+    this.entry= entry;
+    this.selected_entry_list = entry;
+  }
   constructor( private locdbService: LocdbService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {

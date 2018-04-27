@@ -23,7 +23,17 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() resource: TypedResourceView;
   @Input() entries: models.BibliographicEntry[];
-  selectedEntry: models.BibliographicEntry;
+
+  _selectedEntry: models.BibliographicEntry = null;
+  get selectedEntry(){
+    if(this._selectedEntry)
+    return this._selectedEntry
+  }
+  @Input() set selectedEntry(val: models.BibliographicEntry){
+    if(val)
+    this._selectedEntry = val
+  }
+
   // first argument : true makes event emitter async
   // necessary to avoid ChangeDetection errors
   @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter(true);
@@ -51,7 +61,8 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges | any) {
-    if (!this.entries || !this.entries.length) { return; } // guard
+    console.log("onNgChanges entry list")
+    if (!this.entries || !this.entries.length || this.selectedEntry) { return; } // guard
     setTimeout(() => {
       this.selectedEntry = this.entries.find(e => !e.references);
       this.entry.emit(this.selectedEntry);

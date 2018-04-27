@@ -27,6 +27,16 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   scanIsVisible = true;
   // @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
   entry: models.BibliographicEntry; //EventEmitter<models.BibliographicEntry> = new EventEmitter();
+  selected_entry_display: models.BibliographicEntry;
+  display_trigger_selected_entry(entry: models.BibliographicEntry){
+    this.entry= entry;
+    this.selected_entry_display = entry;
+  }
+  selected_entry_list: models.BibliographicEntry;
+  list_trigger_selected_entry(entry: models.BibliographicEntry){
+    this.entry= entry;
+    this.selected_entry_list = entry;
+  }
   loading = false;
   embodiment_id: string;
   scan_id: string;

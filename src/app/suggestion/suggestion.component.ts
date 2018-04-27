@@ -51,7 +51,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     modalRef: BsModalRef;
-    newResource: [TypedResourceView, TypedResourceView] = null;
+    newResource: [TypedResourceView, TypedResourceView] = [null,null];
 
     committed = false;
     max_shown_suggestions = 5

@@ -1,25 +1,23 @@
-<div class="card-header">
-  <div class="row">
-    <div class="col-md-10"><app-metadata [of]="this.todo" [in]="this.container"></app-metadata></div>
-    <div class="col-md-2">
-      <div class="center-block">
-      <button type="button" class="btn btn-primary btn-sm float-right" (click)="inspectReferences()">
-        Inspect References </button>
+<div class="card mb-2">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-9"><app-metadata [of]="this.todo" [in]="this.container"></app-metadata></div>
+      <div class="col-md-3">
+        <div class="text-right">
+          <button type="button" class="btn btn-secondary btn-sm" (click)="edit()"><i class="fa fa-edit"></i> Edit </button>&nbsp;
+          <button type="button" class="btn btn-secondary btn-sm" (click)="inspectReferences()"><i class="fa fa-list"></i> References </button>
+        </div>
       </div>
-        <div class="center-block">
-        <button type="button" class="btn btn-primary btn-sm float-right mt-2" (click)="edit()">
-          Edit </button>
-      </div>
-    </div>
     </div>
   </div>
   <ul class="list-group list-group-flush" *ngIf="todo.embodiedAs && todo.embodiedAs.length">
     <div *ngFor="let embodiment of todo.embodiedAs">
       <li *ngIf="embodiment.scans.length" class="list-group-item">
-        <app-embodiment  [embodiment]="embodiment" (onSelect)="inspectScan($event)"></app-embodiment>
+        <app-embodiment [embodiment]="embodiment" (onSelect)="inspectScan($event)"></app-embodiment>
       </li>
     </div>
   </ul>
+</div>
 
   <!--
   <app-metadata [of]="this.todo"></app-metadata>
