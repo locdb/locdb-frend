@@ -1,12 +1,12 @@
 <p *ngIf="of">
   <span class="badge badge-primary"> {{ of.type }} </span>
-  {{ of.contributors | authors }}:
+  {{ of.contributors | authors }}
   <span class="badge badge-secondary"> {{ of.publicationDate | date:'yyyy' }}</span>
   <b>{{of.title}} {{ of.subtitle }}</b>
   ,
   {{ of.contributors | publisher }}
   .
-  <span class="badge badge-success" *ngFor="let ident of of.identifiers">
+  <span class="badge badge-info" *ngFor="let ident of of.identifiers">
     {{ident.scheme}}: {{ident.literalValue}}
   </span>
   <span *ngIf="in">

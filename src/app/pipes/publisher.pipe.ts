@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { models, enums } from '../locdb'
+import { models, enums, composeName } from '../locdb'
 
 
 /*
@@ -11,7 +11,7 @@ export class PublisherPipe implements PipeTransform {
   transform(contributors: Array<models.AgentRole>): string {
     const publisher = contributors.filter(x => x.roleType === enums.roleType.publisher);
     if (!publisher.length) { return ''; }
-    const publisherString = publisher[0].heldBy.nameString;
+    const publisherString = composeName(publisher[0]);
     return publisherString;
   }
 }
