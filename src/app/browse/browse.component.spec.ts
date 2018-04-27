@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ResourceEditableComponent } from '../resource-editable/resource-editable.component';
 import { ResourceFormComponent } from '../resource-form/resource-form.component';
+import { ResourceFormBasicComponent } from '../resource-form-basic/resource-form.component';
 import { ResourceCardComponent } from '../resource-card/resource-card.component';
 import { MetadataComponent } from '../metadata/metadata.component'
 // import { ResourceComponent } from '../resource/resource.component';
@@ -44,6 +45,7 @@ describe('BrowseComponent', () => {
         BrowseComponent,
         ResourceCardComponent,
         ResourceFormComponent,
+        ResourceFormBasicComponent,
         ResourceEditableComponent,
         ResourceAccordionGroupComponent,
         MetadataComponent,

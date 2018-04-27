@@ -1,6 +1,6 @@
 <div class="card-header">
   <div class="row">
-    <div class="col-md-10"><app-metadata [of]="this.todo"></app-metadata></div>
+    <div class="col-md-10"><app-metadata [of]="this.todo" [in]="this.container"></app-metadata></div>
     <div class="col-md-2">
       <div class="center-block">
       <button type="button" class="btn btn-primary btn-sm float-right" (click)="inspectReferences()">
@@ -8,7 +8,7 @@
       </div>
         <div class="center-block">
         <button type="button" class="btn btn-primary btn-sm float-right mt-2" (click)="edit()">
-          edit resource </button>
+          Edit </button>
       </div>
     </div>
     </div>

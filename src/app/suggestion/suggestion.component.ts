@@ -282,7 +282,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     console.log("create me", this.entry, resource);
     this.newResource = [null, resource];
     this.modalRef.hide();
-
+    this.onSelect(this.newResource[1]);
   }
 
   encodeURI(uri: string){

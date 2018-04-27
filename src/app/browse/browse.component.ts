@@ -12,7 +12,7 @@ import { PopoverModule } from 'ngx-popover';
   templateUrl: './browse.component.html',
   styleUrls: ['./browse.component.css'],
 })
-export class BrowseComponent implements OnInit {
+export class BrowseComponent implements OnInit, OnChanges {
 
       // retain entry as input, then we can modifiy its 'references' field
 
@@ -46,7 +46,7 @@ export class BrowseComponent implements OnInit {
 
       refresh() {
         // when search button is triggered
-        this.loggingService.logSearchIssued(this.searchentry, this.selectedResource, this.query, [0,1])
+        this.loggingService.logSearchIssued(this.searchentry, this.selectedResource, this.query, [0, 1])
         this.fetchInternalSuggestions();
       }
 
@@ -88,6 +88,4 @@ export class BrowseComponent implements OnInit {
             this.max_in = 0;
         }
       }
-
-
   }

@@ -1,8 +1,7 @@
-
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
 import { models, enums, TypedResourceView } from '../locdb';
 import { LocdbService } from '../locdb.service';
-import {Observable} from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 import { SimpleChanges } from '@angular/core';
 import { EntryListComponent } from './entry-list/entry-list.component';
 import { DisplayComponent } from './display/display.component';

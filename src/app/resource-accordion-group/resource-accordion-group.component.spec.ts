@@ -7,6 +7,7 @@ import { ResourceEditableComponent } from '../resource-editable/resource-editabl
 import { ReactiveFormsModule } from '@angular/forms';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ResourceCardComponent } from '../resource-card/resource-card.component';
+import { ResourceFormBasicComponent } from '../resource-form-basic/resource-form.component';
 
 import { MetadataComponent } from '../metadata/metadata.component'
 import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
@@ -20,6 +21,7 @@ describe('ResourceAccordionGroupComponent', () => {
       imports: [ AccordionModule, ReactiveFormsModule ],
       declarations: [ ResourceAccordionGroupComponent,
         // ResourceComponent,
+        ResourceFormBasicComponent,
         ResourceFormComponent, ResourceEditableComponent,
         MetadataComponent,
         AuthorsPipe,

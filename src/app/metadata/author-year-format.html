@@ -1,7 +1,7 @@
 <p *ngIf="of">
   <span class="badge badge-primary"> {{ of.type }} </span>
   {{ of.contributors | authors }}:
-  <span class="badge badge-secondary"> {{ of.publicationDate.getFullYear() }}</span>
+  <span class="badge badge-secondary"> {{ of.publicationDate | date:'yyyy' }}</span>
   <b>{{of.title}} {{ of.subtitle }}</b>
   ,
   {{ of.contributors | publisher }}
@@ -11,7 +11,7 @@
   </span>
   <span *ngIf="in">
     <em>In:</em>
-    {{ in.contributors | authors }}
+    {{ in.contributors | editors }}
     :
     {{ in.title }}
     .

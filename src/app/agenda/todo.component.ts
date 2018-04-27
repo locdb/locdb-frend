@@ -10,7 +10,8 @@ import { Router, ActivatedRoute} from '@angular/router';
   providers: [ LocdbService ],
 })
 export class TodoComponent {
-  @Input() todo : TypedResourceView;
+  @Input() todo: TypedResourceView;
+  @Input() container: TypedResourceView;
   @Output() scan: EventEmitter<[models.ResourceEmbodiment, models.Scan]> = new EventEmitter();
   @Output() refs: EventEmitter<Array<models.BibliographicEntry>> = new EventEmitter();
 

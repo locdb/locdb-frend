@@ -1,11 +1,13 @@
 import {
     TypedResourceView,
-    Metadata
+  Metadata,
+  findContainerMetadata
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 
 import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
+
 
 
 @Component({
@@ -13,10 +15,18 @@ import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
   templateUrl: './author-year-format.html',
   styleUrls: ['./metadata.component.css']
 })
-export class MetadataComponent {
+export class MetadataComponent implements OnInit, OnChanges {
   // if this is a string, we can try to dereference it from the back-end
   @Input() of: Metadata = null;
-  @Input() in: Metadata | null = null;
+  /* in Must be typed resource view to automagically find the correct metadata */
+  @Input() in: TypedResourceView | null = null;
+
   ngOnInit()  {
+
+
+  }
+
+  ngOnChanges() {
+    this.in = findContainerMetadata(this.in);
   }
 }

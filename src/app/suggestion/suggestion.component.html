@@ -32,7 +32,7 @@
       Currently references
     </h5>
     <app-resource-card [(resources)]="currentTarget"
-    [selected]="currentTarget[1] == selectedResource"
+        [selected]="currentTarget[1] == selectedResource"
     (click)="onSelect(currentTarget[1])">
     </app-resource-card>
   </div>
@@ -41,9 +41,9 @@
 <div class="row">
 <div class="col-md-12">
   <div class="card-block">
-    <h5 class="card-title">
+    <h4 class="card-title">
       Suggestions
-    </h5>
+    </h4>
     <div *ngFor="let r of internalSuggestions;let i = index">
       <app-resource-card *ngIf="max_in <= 0 || i < max_in"
         [resources]="r" [selected]="r[1] == selectedResource" (click)="onSelect(r[1])">
@@ -64,12 +64,13 @@
   </div>
 </div>
 </div>
+<hr/>
   <div class="row">
   <div class="col-md-12">
   <div class="card-block">
-    <h5 class="card-title">
-      External suggestions
-    </h5>
+    <h4 class="card-title">
+      External Suggestions
+    </h4>
     <div *ngIf="externalSuggestions">
     <div *ngFor="let r of externalSuggestions;let i = index">
       <app-resource-card *ngIf="max_ex <= 0 || i < max_ex"
@@ -92,29 +93,29 @@
   </div>
 </div>
 </div>
+<hr/>
 
-  <div class="row" *ngIf="newResource[1]">
+<div class="row" *ngIf="newResource">
   <div class="col-md-12">
- <div class="card-block">
-    <h5 class="card-title">
-      New resource from reference metadata
-    </h5>
-    <app-resource-card [resources]="newResource" [selected]="newResource[1] === selectedResource" (click)="onSelect(newResource[1])">
-    </app-resource-card>
+    <div class="card-block">
+      <h4 class="card-title">
+        New resource from reference metadata
+      </h4>
+      <app-resource-card [resources]="newResource" [selected]="newResource[1] === selectedResource" (click)="onSelect(newResource[1])">
+      </app-resource-card>
+    </div>
   </div>
-  </div>
-  </div>
+</div>
 
-  <div class="row">
+<div class="row" *ngIf="!newResource">
   <div class="col-md-12">
-  <button type="button" class="btn btn-secondary"
-  (click)="openModal(template)" [disabled]="!entry">
-    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-    new resource
-  </button>
+    <button type="button" class="btn btn-secondary" (click)="openModal(template)" [disabled]="!entry">
+      <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+      Create Resource
+    </button>
+  </div>
 </div>
-</div>
-</div>
+</div> <!-- end card body -->
 <!-- Panel footer allowing actions -->
 <div class="card-footer">
   <div class="text-right">
