@@ -13,18 +13,14 @@
       </div>
     </div>
     <div class="card-body">
-      <div class="card" *ngFor="let todo of todos">
+      <div class="card mb-3" *ngFor="let todo of todos">
         <div class="card-header" >
-          <div class="card">
             <app-todo [todo]="todo" (refs)="inspectRefs(todo)" (scan)="inspectScan($event[1], $event[0], todo)">
             </app-todo>
-          </div>
         </div>
         <div class="card-body" *ngIf="todo.children() && todo.children().length">
-          <div class="card" *ngFor="let child of todo.children()">
-            <app-todo [todo]="child" [container]="todo" (refs)="inspectRefs(child, todo)" (scan)="inspectScan($event[1], $event[0], child, todo)">
+            <app-todo *ngFor="let child of todo.children()" [todo]="child" [container]="todo" (refs)="inspectRefs(child, todo)" (scan)="inspectScan($event[1], $event[0], child, todo)">
             </app-todo>
-          </div>
         </div>
       </div>
     </div>
