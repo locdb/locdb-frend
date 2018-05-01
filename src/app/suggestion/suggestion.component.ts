@@ -33,6 +33,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
     selectedResource: TypedResourceView;
     query: string;
 
+    search_extended = false;
+
+
     internalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
     externalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
     _currentTarget: TypedResourceView;
@@ -287,6 +290,10 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
   encodeURI(uri: string){
     return encodeURIComponent(uri);
+  }
+
+  toggle_extended_search(){
+    this.search_extended = !this.search_extended
   }
 
 }

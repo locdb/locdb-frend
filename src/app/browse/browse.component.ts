@@ -22,6 +22,8 @@ export class BrowseComponent implements OnInit, OnChanges {
       selectedResource: TypedResourceView;
       query: string;
 
+      search_extended = false;
+
       internalSuggestions: TypedResourceView[];
 
       currentTarget: TypedResourceView;
@@ -87,5 +89,9 @@ export class BrowseComponent implements OnInit, OnChanges {
         } else {
             this.max_in = 0;
         }
+      }
+      
+      toggle_extended_search(){
+        this.search_extended = !this.search_extended
       }
   }
