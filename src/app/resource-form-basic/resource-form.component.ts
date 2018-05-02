@@ -144,6 +144,8 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         // new clean set contribs
         this.setContributors(this.resource.contributors);
         this.setIdentifiers(this.resource.identifiers);
+        console.log('Contribs in resource:', this.resource.contributors);
+        console.log('Contribs in form:', this.contributors);
     }
 
     onSubmit() {
