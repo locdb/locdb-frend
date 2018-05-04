@@ -21,6 +21,7 @@ export class EntryCardComponent implements OnChanges {
     disabled = true;
     open = false;
     @Output() state: EventEmitter<models.BibliographicEntry> = new EventEmitter()
+    @Output() openEdit: EventEmitter<{}> = new EventEmitter()
 
 
 
@@ -246,7 +247,8 @@ export class EntryCardComponent implements OnChanges {
         }
 
       edit(){
-        this.router.navigate(['/edit/'],{ queryParams: { resource: this.resource._id, entry: this.entry._id } });
+        this.openEdit.emit({ resource: this.resource._id, entry: this.entry._id })
+        // this.router.navigate(['/edit/'],{ queryParams: { resource: this.resource._id, entry: this.entry._id } });
 
       }
 

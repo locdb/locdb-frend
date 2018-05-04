@@ -37,6 +37,7 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
   // first argument : true makes event emitter async
   // necessary to avoid ChangeDetection errors
   @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter(true);
+  @Output() openEdit: EventEmitter<{}> = new EventEmitter()
 
 
   constructor(private _hotkeysService: HotkeysService, private loggingService: LoggingService) {
@@ -94,6 +95,10 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
     this.selectedEntry = entry;
     // console.log('entry emitted', entry)
     this.entry.emit(entry)
+  }
+
+  forwardOpenEdit(event){
+    this.openEdit.emit(event)
   }
 
 }

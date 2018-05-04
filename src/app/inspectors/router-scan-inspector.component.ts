@@ -7,6 +7,7 @@ import { SimpleChanges } from '@angular/core';
 import { EntryListComponent } from './entry-list/entry-list.component';
 import { DisplayComponent } from './display/display.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-rou-scan-inspector',
@@ -42,7 +43,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   scan_id: string;
 
 
-  constructor( private locdbService: LocdbService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private location: Location, private locdbService: LocdbService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     console.log('ScanInspector onInit');
@@ -90,7 +91,11 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
         const list = params['list'] || '0';
         console.log("got params", list)
         if(list == '1'){
+          if(this.scanIsVisible){
+            this.location.back();
+          }
           this.scanIsVisible = false
+
         }
         })
 
@@ -113,16 +118,10 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   }
 
   showScan() {
-    this.router.navigate([], {
-        queryParams: {list: 0}
-    });
     this.scanIsVisible = true;
   }
 
   hideScan() {
-    this.router.navigate([], {
-        queryParams: {list: 1}
-    });
     this.scanIsVisible = false;
   }
 
@@ -134,6 +133,14 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
 
   updateTarget(e){
     console.log("eee", e)
+  }
+  async triggerEdit(params){
+    await this.router.navigate([], {
+        queryParams: {list: 1}
+    });
+    console.log("Edit: ", params)
+    this.router.navigate(['/edit/'],{ queryParams: params});
+
   }
 
 }

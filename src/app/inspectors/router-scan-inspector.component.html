@@ -29,7 +29,7 @@
     </div>
     <div [hidden]="scanIsVisible">
       <app-entry-list [resource]="resource" [entries]="refs" [selectedEntry]="selected_entry_display"
-          (entry)="list_trigger_selected_entry($event)"></app-entry-list>
+          (entry)="list_trigger_selected_entry($event)" (openEdit)="triggerEdit($event)"></app-entry-list>
     </div>
     <div *ngIf="loading" class="loader">
     </div>
