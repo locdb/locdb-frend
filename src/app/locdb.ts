@@ -126,7 +126,7 @@ export function OCR2MetaData(ocr: models.OCRData): Metadata {
 
 }
 
-export function isoFullDate(date: Date | string) {
+export function isoFullDate(date: Date | string): string {
   // used in forms to provide initial value
   // we could also use Angular DatePipe here
 
@@ -190,6 +190,12 @@ export class TypedResourceView implements Metadata {
     this.number = other.number;
     this.contributors = other.contributors;
     this.publicationDate = other.publicationDate;
+  }
+
+  getTypedProperty(type: enums.resourceType, property: string) {
+    const prefix = PropertyPrefixByType[type];
+    const typed_property = prefix + 'property';
+    return this.data[typed_property];
   }
 
 
@@ -421,7 +427,7 @@ export function composeName(heldBy: models.ResponsibleAgent): string {
   } else if (heldBy.nameString) {
     return heldBy.nameString;
   }
-  return 'UNK'
+  return 'UNK';
 }
 
 // Helpers to deal with contributors

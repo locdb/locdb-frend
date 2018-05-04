@@ -17,9 +17,9 @@ import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
 })
 export class MetadataComponent implements OnInit, OnChanges {
   // if this is a string, we can try to dereference it from the back-end
-  @Input() of: Metadata = null;
+  @Input() of: Metadata = null; // child resource
   /* in Must be typed resource view to automagically find the correct metadata */
-  @Input() in: TypedResourceView | null = null;
+  @Input() in: TypedResourceView | null = null; // parent resource
 
   ngOnInit()  {
 
