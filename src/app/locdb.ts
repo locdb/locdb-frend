@@ -357,7 +357,7 @@ export class TypedResourceView implements Metadata {
 
   set publicationDate(newDate: Date | string) {
     if (newDate == undefined || newDate == null || newDate == "" || newDate == " "){
-      this.data[this._prefix + 'publicationDate'] = ""
+      this.data[this._prefix + 'publicationDate'] = undefined
     }
     else{
       console.log("setDate", newDate)
