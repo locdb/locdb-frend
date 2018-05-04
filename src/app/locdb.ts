@@ -86,7 +86,7 @@ export interface Metadata {
   edition: string;
   number: string;
   contributors: Array<models.AgentRole>;
-  publicationDate: Date;
+  publicationDate: Date | string;
 }
 export function authors2contributors (authors: string[]): models.AgentRole[] {
   if (!authors) {return []};
@@ -129,6 +129,9 @@ export function OCR2MetaData(ocr: models.OCRData): Metadata {
 export function isoFullDate(date: Date | string) {
   // used in forms to provide initial value
   // we could also use Angular DatePipe here
+
+  console.log("Date: ", date)
+
   return moment(date).format("YYYY-MM-DD");
 }
 
@@ -333,19 +336,36 @@ export class TypedResourceView implements Metadata {
     this.data[this._prefix + 'contributors'] = newContributors;
   }
 
-  get publicationDate(): Date {
+  get publicationDate(): Date  | string {
     // rely on moment library to do the conversion from string
     // moment can deal with both the initial date-time and later on full-date
     const strDate = this.data[this._prefix + 'publicationDate'];
+    // console.log("getDate", strDate)
+    if (strDate == undefined){
+      console.log("Date undefined");
+      return null;
+    }
     const mom = moment(strDate);
     const date = mom.toDate();
+    // console.log("moment null", isoFullDate(moment(null).format("YYYY-MM-DD")))
+    // console.log("moment undefined", moment(undefined).format("YYYY-MM-DD"))
+    // console.log("moment ''", moment("").format("YYYY-MM-DD"))
+    // console.log("moment ' '", moment(" ").format("YYYY-MM-DD"))
+    // console.log("getDate", date)
     return date;
   }
 
-  set publicationDate(newDate: Date) {
-    const dateMoment = moment(newDate);
-    const isoFullDate = dateMoment.format("YYYY-MM-DD");
-    this.data[this._prefix + 'publicationDate'] = isoFullDate;
+  set publicationDate(newDate: Date | string) {
+    if (newDate == undefined || newDate == null || newDate == "" || newDate == " "){
+      this.data[this._prefix + 'publicationDate'] = ""
+    }
+    else{
+      console.log("setDate", newDate)
+      const dateMoment = moment(newDate);
+      const isoFullDate = dateMoment.format("YYYY-MM-DD");
+      console.log("isoFullDate ", isoFullDate)
+      this.data[this._prefix + 'publicationDate'] = isoFullDate;
+    }
   }
 
   get embodiedAs(): Array<models.ResourceEmbodiment> {

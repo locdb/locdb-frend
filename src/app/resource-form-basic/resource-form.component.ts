@@ -83,7 +83,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     // clean array treatment
     setContributors(roles: models.AgentRole[]) {
-        const contribFGs = roles ? roles.map(
+        const contribFGs = roles ? roles.filter(arole => arole != null).map(
             arole => this.fb.group(
                 {role: arole.roleType, name: this.nameFromAgent(arole.heldBy)}
             )
@@ -183,9 +183,8 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     prepareSaveResource(): TypedResourceView  {
         // Form values need deep copy, else shallow copy is enough
         const formModel = this.resourceForm.value;
-        const contribsDeepCopy = formModel.contributors.map(
-            (elem: {name: string, role: string }) => this.reconstructAgentRole(elem.name, elem.role)
-        );
+        const contribsDeepCopy = formModel.contributors.map((elem: {name: string, role: string }) =>
+        elem.name == "UNK"? this.reconstructAgentRole("", elem.role): this.reconstructAgentRole(elem.name, elem.role));
         const identsDeepCopy = formModel.identifiers.map(
           (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
         );
@@ -203,6 +202,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
           // resource.containerTitle = formModel.containerTitle as string || '';
           resource.number = formModel.resourcenumber as string || '';
           resource.contributors = contribsDeepCopy;
+          console.log("pubyear", formModel.publicationyear)
           resource.publicationDate = formModel.publicationyear;
             // partOf: formModel.partof as string || '',
             // warning: retain internal identifiers (dont show primary keys to the user)
