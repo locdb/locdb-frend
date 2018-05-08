@@ -30,7 +30,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     // make this visible to template
     environment = environment;
 
-    selectedResource: TypedResourceView;
+    selectedResource: [TypedResourceView, TypedResourceView] = [null,null];
     query: string;
 
     search_extended = false;
@@ -38,17 +38,17 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     internalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
     externalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
-    _currentTarget: TypedResourceView;
+    _currentTarget: [TypedResourceView, TypedResourceView];
     get currentTarget(){
-      return [null, this._currentTarget]
+      return this._currentTarget
     }
 
     set currentTarget(target: [TypedResourceView, TypedResourceView] | TypedResourceView){
       if (target instanceof TypedResourceView){
-        this._currentTarget = target
+        this._currentTarget = [null, target]
       }
       else{
-        this._currentTarget = target[1]
+        this._currentTarget = target
       }
 
     }
@@ -91,8 +91,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
             // entry already has a link
             this.locdbService.bibliographicResource(this.entry.references).subscribe(
               (trv) => {
-                this._currentTarget = trv;
-                this.onSelect(trv);
+                this.currentTarget = [null,trv];
+                this.onSelect(this.currentTarget);
               },
               (err) => { console.log('Invalid entry.references pointer', this.entry.references) });
           } else {
@@ -107,7 +107,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     refresh() {
       // when search button is triggered
-      this.loggingService.logSearchIssued(this.entry, this.selectedResource, this.query, [0,1])
+      this.loggingService.logSearchIssued(this.entry, this.selectedResource[1], this.query, [0,1])
       this.newResource = [null, null];
       this.fetchInternalSuggestions();
       this.fetchExternalSuggestions();
@@ -183,12 +183,12 @@ export class SuggestionComponent implements OnInit, OnChanges {
     //     return br;
     // }
 
-    onSelect(br?: TypedResourceView): void {
-        this.loggingService.logReferenceTargetSelected(this.entry, br)
+    onSelect(br?: [TypedResourceView, TypedResourceView]): void {
+        this.loggingService.logReferenceTargetSelected(this.entry, br[1])
         // <--------------------------------------------------------------------
         this.selectedResource = br;
         this.committed = false;
-        this.suggest.emit(br);
+        this.suggest.emit(br[1]);
     }
 
     saveInternal(sgt: Array<[TypedResourceView, TypedResourceView]>) {
@@ -216,20 +216,20 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     commit() {
       console.log('Start commit', this.selectedResource)
-      const pr = this.selectedResource;
+      const pr = this.selectedResource[1];
       console.log("selected Resource ", pr )
       console.log("entry ", this.entry)
       const provenance = pr.provenance;
       console.log('Call Logging');
-      this.loggingService.logCommitPressed(this.entry, this.selectedResource, provenance);
+      this.loggingService.logCommitPressed(this.entry, this.selectedResource[1], provenance);
       const pinnedResource = this.selectedResource;
       console.log('Commit');
       this.locdbService.safeCommitLink(this.entry, this.selectedResource).then(
         res => {
-          this._currentTarget = res;
-          this.onSelect(this._currentTarget);
+          this.currentTarget = res;
+          this.onSelect(this.currentTarget);
           console.log('Log after commit');
-          this.loggingService.logCommited(this.entry, this._currentTarget, provenance);
+          this.loggingService.logCommited(this.entry, this._currentTarget[1], provenance);
         })
         .catch(err => {
           alert('Something went wrong during commit: ' + err);
@@ -285,7 +285,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     console.log("create me", this.entry, resource);
     this.newResource = [null, resource];
     this.modalRef.hide();
-    this.onSelect(this.newResource[1]);
+    this.onSelect(this.newResource);
   }
 
   encodeURI(uri: string){

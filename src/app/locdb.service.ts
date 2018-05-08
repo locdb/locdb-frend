@@ -203,13 +203,22 @@ export class LocdbService {
 
   async safeCommitLink(
     entry: models.BibliographicEntry,
-    resource: TypedResourceView
-  ): Promise<TypedResourceView> {
+    resources: [TypedResourceView, TypedResourceView]
+  ): Promise<[TypedResourceView, TypedResourceView]> {
     /* if necessary, creates target resource before updating the reference of the entry */
     /* 1-3 requests */
-    const target = await this.maybePostResource(resource).toPromise();
-    await this.updateTargetResource(entry, target._id);
-    return target;
+    let target_parent = null
+    if(resources[1] != undefined && resources[1] != null){
+      let target_resource = resources[1]
+      target_parent = await this.maybePostResource(target_resource).toPromise();
+    }
+    let target = null
+    if (resources[0] != undefined && resources[0] != null){
+      let resource = resources[0]
+      const target = await this.maybePostResource(resource).toPromise();
+    }
+    await this.updateTargetResource(entry, target_parent._id);
+    return [target, target_parent];
   }
 
 
@@ -223,6 +232,7 @@ export class LocdbService {
     if (!resource._id) {
       return Observable.of(resource);
     } else {
+      resource.publicationDate = resource.publicationDate //correct date format if it was set incorrectly
       return this.bibliographicResourceService.update(resource._id, <models.BibliographicResource>resource.data).map( br => new TypedResourceView(br) );
     }
   }
@@ -234,6 +244,7 @@ export class LocdbService {
     if (!tr._id) {
       // !!! Never ever forget this when on righthand-side, they should never be external
       // 19.03.2018: Dont do this, we would corrupt todo item..
+      tr.publicationDate = tr.publicationDate //correct date format if it was set incorrectly
       tr.status = enums.status.valid;
       return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).map( br => new TypedResourceView(br) );
     } else {

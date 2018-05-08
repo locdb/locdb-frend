@@ -9,9 +9,13 @@ import { models, enums, composeName } from '../locdb'
 @Pipe({name: 'publisher'})
 export class PublisherPipe implements PipeTransform {
   transform(contributors: Array<models.AgentRole>): string {
-    const publisher = contributors.filter(x => x.roleType === enums.roleType.publisher);
-    if (!publisher.length) { return ''; }
-    const publisherString = composeName(publisher[0]);
-    return publisherString;
+    if(contributors != undefined){
+      const publisher = contributors.filter(x => x.roleType === enums.roleType.publisher);
+      if (!publisher.length) { return ''; }
+      const publisherString = composeName(publisher[0]);
+      return publisherString;
+    } else {
+      return ""
+    }
   }
 }

@@ -30,7 +30,7 @@ export class CommitComponent implements OnInit {
     this.entry.references = this.target._id;
     this.source.cites.push(this.target._id);
     // we should update the resource not the entry TODO FIXME
-    this.locdbService.safeCommitLink(this.entry,this.target).then( (result) => {
+    this.locdbService.safeCommitLink(this.entry,[null,this.target]).then( (result) => {
       console.log('Submitted Entry with result', result);
       this.committed.next([this.source, this.entry, this.target])
     });

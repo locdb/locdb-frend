@@ -50,15 +50,15 @@
 </div>
 <div class="card-body" style="height: 800px; overflow-y: scroll;">
   <!-- Panel body providing suggestions -->
-  <div class="row" *ngIf="currentTarget[1]">
+  <div class="row" *ngIf="currentTarget">
   <div class="col-md-12">
   <div *ngIf="currentTarget" class="card-block">
     <h5 class="card-title">
       Currently references
     </h5>
     <app-resource-card [(resources)]="currentTarget"
-        [selected]="currentTarget[1] == selectedResource"
-    (click)="onSelect(currentTarget[1])">
+        [selected]="currentTarget == selectedResource"
+    (click)="onSelect(currentTarget)">
     </app-resource-card>
   </div>
 </div>
@@ -71,7 +71,7 @@
     </h4>
     <div *ngFor="let r of internalSuggestions;let i = index">
       <app-resource-card *ngIf="max_in <= 0 || i < max_in"
-        [resources]="r" [selected]="r[1] == selectedResource" (click)="onSelect(r[1])">
+        [resources]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
       </app-resource-card>
     </div>
     <button type="button" *ngIf="max_in == max_shown_suggestions"
@@ -99,8 +99,8 @@
     <div *ngIf="externalSuggestions">
     <div *ngFor="let r of externalSuggestions;let i = index">
       <app-resource-card *ngIf="max_ex <= 0 || i < max_ex"
-        [resources]="r" [selected]="r[1] == selectedResource"
-        (click)="onSelect(r[1])">
+        [resources]="r" [selected]="r == selectedResource"
+        (click)="onSelect(r)">
       </app-resource-card>
     </div>
     <button type="button" *ngIf="max_ex == max_shown_suggestions"
@@ -128,14 +128,14 @@
         New resource from reference metadata
       </h4>
       <app-resource-card [resources]="newResource"
-      [selected]="newResource[1] === selectedResource"
-      (click)="onSelect(newResource[1])">
+      [selected]="newResource == selectedResource"
+      (click)="onSelect(newResource)">
       </app-resource-card>
     </div>
   </div>
 </div>
 
-<div class="row" *ngIf="newResource[1] == null">
+<div class="row" *ngIf="newResource[0] == null && newResource[1] == null">
   <div class="col-md-12">
     <button type="button" class="btn btn-secondary"
     (click)="openModal(template)" [disabled]="!entry">
@@ -148,7 +148,7 @@
 <!-- Panel footer allowing actions -->
 <div class="card-footer">
   <div class="text-right">
-    <button type="button" class="btn btn-primary" [disabled]="!selectedResource"
+    <button type="button" class="btn btn-primary" [disabled]="selectedResource == [null,null]"
     (click)="commit()">
       <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
       Commit Link
