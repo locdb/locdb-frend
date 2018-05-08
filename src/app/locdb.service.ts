@@ -214,7 +214,10 @@ export class LocdbService {
     }
     let target = null
     if (resources[0] != undefined && resources[0] != null){
-      let resource = resources[0]
+      let resource = resources[0];
+      if(resources[1] != undefined && resources[1] != null){
+        resource.data.partOf = resources[1]._id;
+      }
       const target = await this.maybePostResource(resource).toPromise();
     }
     await this.updateTargetResource(entry, target_parent._id);
