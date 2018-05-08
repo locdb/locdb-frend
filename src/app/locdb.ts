@@ -130,7 +130,10 @@ export function isoFullDate(date: Date | string): string {
   // used in forms to provide initial value
   // we could also use Angular DatePipe here
 
-  console.log("Date: ", date)
+  // console.log("Date: ", date)
+  if(date == undefined || date == null){
+    return ""
+  }
 
   return moment(date).format("YYYY-MM-DD");
 }
@@ -348,7 +351,6 @@ export class TypedResourceView implements Metadata {
     const strDate = this.data[this._prefix + 'publicationDate'];
     // console.log("getDate", strDate)
     if (strDate == undefined){
-      console.log("Date undefined");
       return null;
     }
     const mom = moment(strDate);
@@ -366,10 +368,10 @@ export class TypedResourceView implements Metadata {
       this.data[this._prefix + 'publicationDate'] = undefined
     }
     else{
-      console.log("setDate", newDate)
+      // console.log("setDate", newDate)
       const dateMoment = moment(newDate);
       const isoFullDate = dateMoment.format("YYYY-MM-DD");
-      console.log("isoFullDate ", isoFullDate)
+      // console.log("isoFullDate ", isoFullDate)
       this.data[this._prefix + 'publicationDate'] = isoFullDate;
     }
   }

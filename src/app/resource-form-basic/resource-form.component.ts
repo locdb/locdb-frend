@@ -54,16 +54,6 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     nameFromAgent(agent: models.ResponsibleAgent): string {
         // forward to locdb.ts method for unified treatment everywhere
         return composeName(agent);
-
-      // if (agent.familyName) {
-      //   return agent.familyName + ', ' + agent.givenName;
-      // } else {
-      //   if (agent.nameString) {
-      //     return agent.nameString;
-      //   } else {
-      //     return ' ';
-      //   }
-      // }
     }
 
     agentFromName(forminput: string): models.ResponsibleAgent {
@@ -72,13 +62,6 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         // decompose only yields familyName givenName and nameString
         agent.identifiers = [];
         return agent;
-      // const [lastname, firstname, ...other] = forminput.split(', ');
-      // return {
-      //   identifiers: [],
-      //   givenName: firstname,
-      //   familyName: lastname,
-      //   nameString: forminput // retain original input
-      // }
     }
 
     // clean array treatment
@@ -131,7 +114,8 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     }
 
     ngOnChanges()  {
-        console.log('ngOnChanges', this.resource);
+        // console.log('ngOnChanges', this.resource);
+        // console.log("Set publicationyear: ",  this.resource.publicationDate)
         this.resourceForm.reset( {
             title: this.resource.title,
             subtitle: this.resource.subtitle,
@@ -141,11 +125,12 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
             publicationyear: isoFullDate(this.resource.publicationDate),
             // containerTitle: this.resource.containerTitle // still in progress
         });
+        // console.log("publicationyear: ",  this.resourceForm.value.publicationyear)
         // new clean set contribs
         this.setContributors(this.resource.contributors);
         this.setIdentifiers(this.resource.identifiers);
-        console.log('Contribs in resource:', this.resource.contributors);
-        console.log('Contribs in form:', this.contributors);
+        // console.log('Contribs in resource:', this.resource.contributors);
+        // console.log('Contribs in form:', this.contributors);
     }
 
     onSubmit() {
@@ -184,7 +169,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         // Form values need deep copy, else shallow copy is enough
         const formModel = this.resourceForm.value;
         const contribsDeepCopy = formModel.contributors.map((elem: {name: string, role: string }) =>
-        elem.name == "UNK"? this.reconstructAgentRole("", elem.role): this.reconstructAgentRole(elem.name, elem.role));
+        elem.name == "UNK" ? this.reconstructAgentRole("", elem.role): this.reconstructAgentRole(elem.name, elem.role));
         const identsDeepCopy = formModel.identifiers.map(
           (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
         );
@@ -192,22 +177,21 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
           type: formModel.resourcetype as string, partOf: this.resource.partOf,
           parts: this.resource.parts, cites: this.resource.cites,
           status: this.resource.status})
-          resource.identifiers = identsDeepCopy;
-          resource.title = formModel.title as string || '';
-          resource.subtitle = formModel.subtitle as string || '';
-          resource.edition = formModel.edition as string || '';
-          // containerType ~> containerTitle
-          // additional dropdown when type is selected, according to containertypes
-            // container Title does not need to be editable atm
-          // resource.containerTitle = formModel.containerTitle as string || '';
-          resource.number = formModel.resourcenumber as string || '';
-          resource.contributors = contribsDeepCopy;
-          console.log("pubyear", formModel.publicationyear)
-          resource.publicationDate = formModel.publicationyear;
-            // partOf: formModel.partof as string || '',
-            // warning: retain internal identifiers (dont show primary keys to the user)
-            // not editable, but copied values
-          resource.embodiedAs = this.resource.embodiedAs;
+        resource.identifiers = identsDeepCopy;
+        resource.title = formModel.title as string || '';
+        resource.subtitle = formModel.subtitle as string || '';
+        resource.edition = formModel.edition as string || '';
+        // containerType ~> containerTitle
+        // additional dropdown when type is selected, according to containertypes
+          // container Title does not need to be editable atm
+        // resource.containerTitle = formModel.containerTitle as string || '';
+        resource.number = formModel.resourcenumber as string || '';
+        resource.contributors = contribsDeepCopy;
+        resource.publicationDate = formModel.publicationyear;
+          // partOf: formModel.partof as string || '',
+          // warning: retain internal identifiers (dont show primary keys to the user)
+          // not editable, but copied values
+        resource.embodiedAs = this.resource.embodiedAs;
 
         return resource;
     }

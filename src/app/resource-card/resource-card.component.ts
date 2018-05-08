@@ -19,11 +19,9 @@ export class ResourceCardComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {
-      console.log('init')
     }
 
     ngOnChanges() {
-      console.log('on changes')
       // this.open = false;
     }
 
@@ -38,9 +36,7 @@ export class ResourceCardComponent implements OnInit {
       // }
 
       toggleOpen(){
-        console.log("toggle, toggle, ...")
         this.open = !this.open;
-        console.log(this.open)
       }
 
   }

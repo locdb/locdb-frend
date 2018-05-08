@@ -19,7 +19,7 @@ export class TodoComponent {
               private router: Router) {}
 
   ngOnChanges(){
-    console.log(this.todo)
+    // console.log(this.todo)
   }
 
   inspectReferences(){

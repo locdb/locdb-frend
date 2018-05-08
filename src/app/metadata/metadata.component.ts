@@ -29,4 +29,8 @@ export class MetadataComponent implements OnInit, OnChanges {
   ngOnChanges() {
     this.in = findContainerMetadata(this.in);
   }
+
+  open_link(link: string) {
+    window.open(link, "_blank");
+  }
 }

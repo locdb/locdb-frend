@@ -35,21 +35,20 @@ export class EditViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("init");
     this.sub = this.route
       .queryParams
       .subscribe(params => {
         // Defaults to 0 if no query param provided.
         this.resource_id = params['resource'] || '0';
         this.entry_id = params['entry'] || '0';
-          console.log("got params", this.resource_id, this.entry_id)
+          // console.log("got params", this.resource_id, this.entry_id)
         if(this.resource_id != '0'){
-          console.log("enter if resource id")
+          // console.log("enter if resource id")
           this.locdbService.bibliographicResource(this.resource_id).subscribe(
               (trv) => {
                 if(trv){
                   this.resource = trv;
-                    console.log("got trv back: ", this.resource)
+                    // console.log("got trv back: ", this.resource)
               }
               this.request_answered = true
             },
@@ -58,11 +57,11 @@ export class EditViewComponent implements OnInit {
                         });
         }
         if(this.entry_id != '0'){
-          console.log("enter if entry id")
+          // console.log("enter if entry id")
           this.locdbService.bibliographicResource(this.resource_id).subscribe(
             (res) => {
               if( res ){
-                console.log("got res: ", res)
+                // console.log("got res: ", res)
                 this.resource = res
                 console.log("Resource ", this.resource)
                 for (const part of res.parts) {

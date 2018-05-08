@@ -7,8 +7,11 @@
   {{ of.contributors | publisher }}
   .
   <span class="badge badge-info" *ngFor="let ident of of.identifiers">
-    {{ident.scheme}}: {{ident.literalValue}}
-  </span>
+    <span *ngIf="ident.scheme != 'URI'"> {{ident.scheme}}: {{ident.literalValue}} </span>
+    <u *ngIf="ident.scheme == 'URI'" (click)="open_link(ident.literalValue)">
+      {{ident.scheme}}: {{ident.literalValue.split("/")[2]}}</u>
+</span>
+<span class="badge badge-warning" *ngIf="of">{{of.data.source}}</span>
   <span *ngIf="in">
     <em>In:</em>
     {{ in.contributors | editors }}
@@ -16,4 +19,5 @@
     {{ in.title }}
     .
   </span>
+  <span class="badge badge-warning" *ngIf="in && !of">{{in.data.source}}</span>
 </p>

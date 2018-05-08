@@ -99,7 +99,8 @@
     <div *ngIf="externalSuggestions">
     <div *ngFor="let r of externalSuggestions;let i = index">
       <app-resource-card *ngIf="max_ex <= 0 || i < max_ex"
-        [resources]="r" [selected]="r[1] == selectedResource" (click)="onSelect(r[1])">
+        [resources]="r" [selected]="r[1] == selectedResource"
+        (click)="onSelect(r[1])">
       </app-resource-card>
     </div>
     <button type="button" *ngIf="max_ex == max_shown_suggestions"
@@ -126,7 +127,9 @@
       <h4 class="card-title">
         New resource from reference metadata
       </h4>
-      <app-resource-card [resources]="newResource" [selected]="newResource[1] === selectedResource" (click)="onSelect(newResource[1])">
+      <app-resource-card [resources]="newResource"
+      [selected]="newResource[1] === selectedResource"
+      (click)="onSelect(newResource[1])">
       </app-resource-card>
     </div>
   </div>
@@ -134,7 +137,8 @@
 
 <div class="row" *ngIf="newResource[1] == null">
   <div class="col-md-12">
-    <button type="button" class="btn btn-secondary" (click)="openModal(template)" [disabled]="!entry">
+    <button type="button" class="btn btn-secondary"
+    (click)="openModal(template)" [disabled]="!entry">
       <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
       Create Resource
     </button>

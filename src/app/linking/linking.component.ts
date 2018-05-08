@@ -107,9 +107,9 @@ export class LinkingComponent implements OnInit {
       }else{
         tracking[status] = false;}
         pos += 1
-      console.log("status", status)
+      // console.log("status", status)
     }
-    console.log("tracking", tracking)
+    // console.log("tracking", tracking)
     this.tracking = tracking;
   }
 

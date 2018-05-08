@@ -77,7 +77,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnChanges(changes: SimpleChanges | any) {
         // Input todo and this method should replace manual calling of updateDisplay
-        console.log('ngOnChanges in display');
+        // console.log('ngOnChanges in display');
         if (this.entries && this.entries.length) {
             // extract rectanlges and so on
             // this.extractRects(this.entries);
@@ -92,7 +92,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
-        console.log('oninit:', this.img_src)
+        console.log('Image source:', this.img_src)
         this._hotkeysService.add(new Hotkey('j', (event: KeyboardEvent): boolean => {
             let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
             if (current === -1 || current >= this.rects.length - 1) { return false }; // not in array or at bounds
