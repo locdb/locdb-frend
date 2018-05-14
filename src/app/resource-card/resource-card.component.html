@@ -4,11 +4,9 @@
   <div class="card-header" [class]="selected && selectable ? 'card-header bg-light' : 'card-header border-default  bg-light'">
     <div class="row">
       <div class="col-9">
-    <!-- <p>{{ resource.title }}
-      <span *ngIf="resource.type" class="badge badge-info">{{resource.type}}</span>
-      <span *ngIf="resource.provenance" class="badge badge-warning">{{resource.provenance}}</span>
-    </p> -->
-    <app-metadata [of]="resources[1]" [in]="resources[0]"></app-metadata>
+    <app-metadata [of]="resources[1]" [in]="resources[0]">
+      <!-- <span class="badge badge-warning"> {{resources[1].source}}</span> -->
+    </app-metadata>
   </div>
 
     <div class="col-2">
@@ -26,7 +24,6 @@
       (submitStatus)="disabled=!$event; open = $event">
   </app-resource-editable>
 
-  <!-- TODO FIXME put ng-content here -->
   <ng-content>
   </ng-content>
 </div>
