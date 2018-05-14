@@ -12,7 +12,7 @@ export class PublisherPipe implements PipeTransform {
     if(contributors != undefined){
       const publisher = contributors.filter(x => x.roleType === enums.roleType.publisher);
       if (!publisher.length) { return ''; }
-      const publisherString = composeName(publisher[0]);
+      const publisherString = composeName(publisher[0].heldBy);
       return publisherString;
     } else {
       return ""
