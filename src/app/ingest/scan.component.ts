@@ -11,7 +11,7 @@ import { enums, enum_values, models } from '../locdb';
 import { REQUIRED_IDENTIFIERS, requiresPageNumbers } from './constraints';
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-scan',
   templateUrl: './scan.component.html',
   styleUrls: ['./scan.component.css'],

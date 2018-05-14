@@ -14,7 +14,7 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 // display of the scan
 
 @Component({
-    moduleId: module.id,
+    // moduleId: module.id,
     selector: 'app-display',
     templateUrl: './display.component.html',
     styleUrls: ['./display.component.css'],
