@@ -16,12 +16,12 @@ export const NAME_SEPARATOR = ', '
 export function invert_enum(obj: Object) {
   const inverse = new Object();
   for (const key of Object.keys(obj)) {
-    const val = obj[key]
+    const val = obj[key];
     if (inverse.hasOwnProperty(val)) {
       // Error("Mapping not invertible. Duplicate value: " + val);
       console.log('Error inverting enum, yet proceeding');
     }
-    inverse[val] = key
+    inverse[val] = key;
   }
   return inverse;
 }
