@@ -16,6 +16,7 @@ export enum identifier {
   isbn = "ISBN",
     issn = "ISSN",
     swb_ppn = "SWB_PPN",
+    urlSbw = "URL_SWB",
     olc_ppn = "OLC_PPN",
     zdb_ppn = "ZDB_PPN",
     zdb_id = "ZDB_ID",
@@ -25,7 +26,9 @@ export enum identifier {
     gndId = "GND_ID",
     swbGndId = "SWB_GND_ID",
     oclcId = "OCLC_ID",
-    uri = "URI"
+    uri = "URI",
+    urlCrossref = "URL_CROSSREF",
+
 }
 export enum roleType {
   author = "AUTHOR",

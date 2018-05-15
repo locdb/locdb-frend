@@ -45,7 +45,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     set currentTarget(target: [TypedResourceView, TypedResourceView] | TypedResourceView){
       if (target instanceof TypedResourceView){
-        this._currentTarget = [null, target]
+        this._currentTarget = [target, null]
       }
       else{
         this._currentTarget = target
@@ -107,7 +107,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     refresh() {
       // when search button is triggered
-      this.loggingService.logSearchIssued(this.entry, this.selectedResource[1], this.query, [0,1])
+      this.loggingService.logSearchIssued(this.entry, this.selectedResource[0], this.query, [0,1])
       this.newResource = [null, null];
       this.fetchInternalSuggestions();
       this.fetchExternalSuggestions();
@@ -184,11 +184,11 @@ export class SuggestionComponent implements OnInit, OnChanges {
     // }
 
     onSelect(br?: [TypedResourceView, TypedResourceView]): void {
-        this.loggingService.logReferenceTargetSelected(this.entry, br[1])
+        this.loggingService.logReferenceTargetSelected(this.entry, br[0])
         // <--------------------------------------------------------------------
         this.selectedResource = br;
         this.committed = false;
-        this.suggest.emit(br[1]);
+        this.suggest.emit(br[0]);
     }
 
     saveInternal(sgt: Array<[TypedResourceView, TypedResourceView]>) {
@@ -216,12 +216,12 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     commit() {
       console.log('Start commit', this.selectedResource)
-      const pr = this.selectedResource[1];
+      const pr = this.selectedResource[0];
       console.log("selected Resource ", pr )
       console.log("entry ", this.entry)
       const provenance = pr.provenance;
       console.log('Call Logging');
-      this.loggingService.logCommitPressed(this.entry, this.selectedResource[1], provenance);
+      this.loggingService.logCommitPressed(this.entry, this.selectedResource[0], provenance);
       const pinnedResource = this.selectedResource;
       console.log('Commit');
       this.locdbService.safeCommitLink(this.entry, this.selectedResource).then(
@@ -229,7 +229,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
           this.currentTarget = res;
           this.onSelect(this.currentTarget);
           console.log('Log after commit');
-          this.loggingService.logCommited(this.entry, this._currentTarget[1], provenance);
+          this.loggingService.logCommited(this.entry, this._currentTarget[0], provenance);
         })
         .catch(err => {
           alert('Something went wrong during commit: ' + err);
@@ -255,7 +255,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
   queryFromEntry(entry: models.BibliographicEntry): string {
     let dois = entry.identifiers.filter(x => x.scheme === enums.identifier.doi);
-    if (dois[0].literalValue) {
+    if (dois.length > 0 && dois[0].literalValue) {
       return dois[0].literalValue;
     } else if (entry.ocrData && entry.ocrData.title){
       return entry.ocrData.title;
@@ -280,13 +280,13 @@ export class SuggestionComponent implements OnInit, OnChanges {
     const metadata = OCR2MetaData(this.entry.ocrData);
     let nresource = new TypedResourceView({type: metadata.type});
     nresource.set_from(metadata)
-    this.newResource = [null,nresource]
+    this.newResource = [nresource, null]
     this.modalRef = this.modalService.show(template);
   }
 
   create_resourse(resource: TypedResourceView){
     console.log("create me", this.entry, resource);
-    this.newResource = [null, resource];
+    this.newResource = [resource, null];
     this.modalRef.hide();
     this.onSelect(this.newResource);
   }

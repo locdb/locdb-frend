@@ -113,7 +113,8 @@ export class LocdbService {
    embodimentType);
  }
 
- packTypedPair(parentAndChild: models.BibliographicResource[]): [TypedResourceView | null, TypedResourceView] {
+  /* we expect the similar format of a tuple of [child, parent] or [child, null] if there is no parent */
+ packTypedPair(parentAndChild: models.BibliographicResource[]): [TypedResourceView, TypedResourceView | null] {
    /*
    Properly pack an array of bibliographic resources as returned by
    suggestion services into a **Pair** of parent and child typed resources
@@ -121,7 +122,7 @@ export class LocdbService {
    if (parentAndChild.length == 1) {
      // The single entry of the array is a stand-alone resource,
      // we therefore return null as parent.
-     const tuple: [TypedResourceView, TypedResourceView] = [null, new TypedResourceView(parentAndChild[0])]
+     const tuple: [TypedResourceView, TypedResourceView] = [new TypedResourceView(parentAndChild[0]), null]
      return tuple;
    }
 
