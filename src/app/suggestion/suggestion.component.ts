@@ -254,7 +254,10 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
   queryFromEntry(entry: models.BibliographicEntry): string {
-    if (entry.ocrData && entry.ocrData.title){
+    let dois = entry.identifiers.filter(x => x.scheme === enums.identifier.doi);
+    if (dois[0].literalValue) {
+      return dois[0].literalValue;
+    } else if (entry.ocrData && entry.ocrData.title){
       return entry.ocrData.title;
     } else if (entry.bibliographicEntryText) {
         return entry.bibliographicEntryText;
