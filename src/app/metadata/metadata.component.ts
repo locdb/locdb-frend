@@ -6,7 +6,7 @@ import {
 import { LocdbService } from '../locdb.service';
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 
-import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
+import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe, ContainerPipe} from '../pipes';
 
 
 

@@ -195,9 +195,12 @@ export class TypedResourceView implements Metadata {
     this.publicationDate = other.publicationDate;
   }
 
+  getTypedPropertyWrap(type: enums.resourceType, property: string){
+    return this.getTypedProperty(type, '_' + property)
+  }
   getTypedProperty(type: enums.resourceType, property: string) {
     const prefix = PropertyPrefixByType[type];
-    const typed_property = prefix + 'property';
+    const typed_property = prefix + property;
     return this.data[typed_property];
   }
 

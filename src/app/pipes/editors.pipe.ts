@@ -14,7 +14,7 @@ export class EditorsPipe implements PipeTransform {
       const editorString = editors.map(x => composeName(x.heldBy)).join(seperator);
       return editorString;
     } else {
-      return ""
+      return ''
     }
   }
 }

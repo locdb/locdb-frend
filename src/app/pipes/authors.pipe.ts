@@ -14,7 +14,7 @@ export class AuthorsPipe implements PipeTransform {
       const authorString = authors.map(x => composeName(x.heldBy)).join(seperator);
       return authorString;
     } else {
-      return "(no contributors)";
+      return '';
     }
   }
 }

@@ -57,7 +57,8 @@ import { LoggingService } from './logging.service';
 import { ResourceCardComponent } from './resource-card/resource-card.component';
 import { BrowseComponent } from './browse/browse.component'
 
-import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe } from './pipes';
+import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe,
+ContainerPipe, IdentifierPipe} from './pipes';
 
 
 import {
@@ -150,6 +151,8 @@ const appRoutes: Routes = [
     EditorsPipe,
     PublisherPipe,
     EmbracePipe,
+    ContainerPipe,
+    IdentifierPipe,
     EditViewComponent
   ],
   providers: [

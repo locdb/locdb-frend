@@ -15,7 +15,7 @@ export class PublisherPipe implements PipeTransform {
       const publisherString = composeName(publisher[0].heldBy);
       return publisherString;
     } else {
-      return ""
+      return ''
     }
   }
 }
