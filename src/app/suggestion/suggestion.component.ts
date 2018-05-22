@@ -254,15 +254,15 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
   queryFromEntry(entry: models.BibliographicEntry): string {
-    let dois = entry.identifiers.filter(x => x.scheme === enums.identifier.doi);
+    const dois = entry.identifiers.filter(x => x.scheme === enums.identifier.doi);
     if (dois.length > 0 && dois[0].literalValue) {
       return dois[0].literalValue;
-    } else if (entry.ocrData && entry.ocrData.title){
-      return entry.ocrData.title;
+    } else if (entry.ocrData && entry.ocrData.title) {
+      return `${entry.ocrData.title} ${entry.ocrData.date}`;
     } else if (entry.bibliographicEntryText) {
         return entry.bibliographicEntryText;
     }
-    return "";
+    return '';
   }
 
   agentFromName(forminput: string): models.ResponsibleAgent {
