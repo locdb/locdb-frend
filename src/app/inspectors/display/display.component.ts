@@ -50,6 +50,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     title = 'Scan Display';
     currentIndex = 0;
     zoom: any;
+    selection: any;
 
     rects: Rect[] = [];
     imgX = 1500;    // initvalues no relevance if new picture is set
@@ -62,17 +63,38 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     initSVGZoom() {
-        const zoom = d3.zoom().on('zoom', function () {
-            svgContainer.attr('transform', 'translate(' +
-                              d3.event.transform.x + ', ' + d3.event.transform.y +
-                              ')scale(' + d3.event.transform.k + ')')
+        // let zoom = d3.zoom().on('zoom', function () {
+        //     svgContainer.attr('transform', 'translate(' +
+        //                       d3.event.transform.x + ', ' + d3.event.transform.y +
+        //                       ')scale(' + d3.event.transform.k + ')')
+        // })
+        // .scaleExtent([1, 5])
+        // .translateExtent([[0, 0], [this.imgX, this.imgY]])
+        // .duration(250);
+        let zoom = d3.zoom().on("zoom", function () {
+          svgContainer.attr("transform", d3.event.transform)
         })
         .scaleExtent([1, 5])
         .translateExtent([[0, 0], [this.imgX, this.imgY]])
         .duration(250);
-        const svgContainer = d3.select(this.zoomSVG.nativeElement);
-        svgContainer.attr('width', '100%').attr('height', '100%').call(zoom);
+        let svgContainer = d3.select(this.zoomSVG.nativeElement);
+        this.selection = svgContainer
+                        .attr('width', '100%')
+                        .attr('height', '100%')
+                        .call(zoom)
+                        .on("dblclick.zoom", null)
+                        .on("wheel.zoom", null);
         this.zoom = zoom;
+    }
+
+    zoomIn(){
+      this.zoom.scaleBy(this.selection, 1.2)
+    }
+    zoomOut(){
+      this.zoom.scaleBy(this.selection, 0.8)
+    }
+    zoomReset(){
+      this.selection.transition().duration(500).call(this.zoom.transform, d3.zoomIdentity);
     }
 
 
