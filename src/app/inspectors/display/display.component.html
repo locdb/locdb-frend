@@ -1,6 +1,6 @@
 <figure>
     <svg  xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + imgX + ' ' + imgY">
-        <g #zoomSVG>
+      <g #zoomSVG>
             <image [attr.xlink:href]="img_src" [attr.height]="imgY + 'px'" [attr.width]="imgX + 'px'" (load)="imageOnload()"/>
             <rect *ngFor="let rect of rects; let i=index" [attr.x]="rect.x"
             [attr.y]="rect.y" [attr.height]="rect.height"

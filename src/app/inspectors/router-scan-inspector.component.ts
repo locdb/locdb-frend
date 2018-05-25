@@ -41,6 +41,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   loading = false;
   embodiment_id: string;
   scan_id: string;
+  imgheight: Number = 0
 
 
   constructor(private location: Location, private locdbService: LocdbService, private route: ActivatedRoute, private router: Router) { }
@@ -134,6 +135,12 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   updateTarget(e){
     console.log("eee", e)
   }
+
+  setHeight(height: Number){
+    this.imgheight = height
+
+  }
+
   async triggerEdit(params){
     await this.router.navigate([], {
         queryParams: {list: 1}

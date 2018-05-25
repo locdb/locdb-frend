@@ -21,10 +21,11 @@
     <p> {{sorry_text}} </p>
   </div>
   <div class="card-body"  *ngIf="!sorry_text">
-    <div [hidden]="!scanIsVisible" style="height: 800px; overflow-y: scroll;">
+    <div [hidden]="!scanIsVisible" [style.height]="imgheight" style="overflow-y: scroll;">
       <app-display [img_src]="getScanImage()" [entries]="refs" [selectedEntry]="selected_entry_list"
           (entry)="display_trigger_selected_entry($event)"
-          *ngIf="scan_content_type == 'image'"></app-display>
+          *ngIf="scan_content_type == 'image'"
+          (imglength)="setHeight()"></app-display>
       <p *ngIf="scan_content_type && scan_content_type != 'image'"> Received {{scan_content_type}}-type </p>
     </div>
     <div [hidden]="scanIsVisible">

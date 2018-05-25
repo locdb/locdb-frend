@@ -55,6 +55,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     imgX = 1500;    // initvalues no relevance if new picture is set
     imgY = 1500;
 
+    @Output() imglength: EventEmitter<Number> = new EventEmitter();
     @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
 
     constructor( private locdbService: LocdbService, private _hotkeysService: HotkeysService) {
@@ -167,6 +168,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         console.log('Image Loaded, Dimensions: ', realDim); // e.g 4299, 3035
         this.imgX = realDim.naturalWidth;
         this.imgY = realDim.naturalHeight;
+        this.imglength.emit(this.imgY)
         if ((this.imgX + this.imgY) <= 0) {
             console.log('Image size = 0', realDim);
         }
