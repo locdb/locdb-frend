@@ -195,7 +195,8 @@ export class LocdbService {
   }
 
   bibliographicResource(identifier: string): Observable<TypedResourceView> {
-    return this.bibliographicResourceService.get(identifier).map( br => new TypedResourceView(br)).retryWhen(error => error.delay(500)).take(5);
+    return this.bibliographicResourceService.get(identifier).map( br => new
+      TypedResourceView(br)).retryWhen(error => error.delay(500)).take(5);
   }
 
   parentResource(br: TypedResourceView | models.BibliographicResource): Observable<TypedResourceView> {
@@ -208,21 +209,29 @@ export class LocdbService {
   ): Promise<[TypedResourceView, TypedResourceView]> {
     /* if necessary, creates target resource before updating the reference of the entry */
     /* 1-3 requests */
-    let target_parent = null
-    if(resources[1] != undefined && resources[1] != null){
-      let target_resource = resources[1]
-      target_parent = await this.maybePostResource(target_resource).toPromise();
+    let [child, parent] = resources;
+    if (parent) {
+      parent = await this.maybePostResource(parent).toPromise();
     }
-    let target = null
-    if (resources[0] != undefined && resources[0] != null){
-      let resource = resources[0];
-      if(resources[1] != undefined && resources[1] != null){
-        resource.data.partOf = resources[1]._id;
-      }
-      const target = await this.maybePostResource(resource).toPromise();
+    child = await this.maybePostResource(child).toPromise();
+    if (parent) {
+      child.data.partOf = parent._id;
     }
-    await this.updateTargetResource(entry, target_parent._id);
-    return [target, target_parent];
+    // let target_parent = null
+    // if(resources[1] != undefined && resources[1] != null){
+    //   let target_resource = resources[1]
+    //   target_parent = await this.maybePostResource(target_resource).toPromise();
+    // }
+    // let target = null
+    // if (resources[0] != undefined && resources[0] != null) {
+    //   let resource = resources[0];
+    //   if (resources[1] != undefined && resources[1] != null) {
+    //     resource.data.partOf = resources[1]._id;
+    //   }
+    //   const target = await this.maybePostResource(resource).toPromise();
+    // }
+    await this.updateTargetResource(entry, child._id);
+    return [child, parent];
   }
 
 
@@ -236,8 +245,11 @@ export class LocdbService {
     if (!resource._id) {
       return Observable.of(resource);
     } else {
+      // TODO FIXME this should not be necessary
       resource.publicationDate = resource.publicationDate //correct date format if it was set incorrectly
-      return this.bibliographicResourceService.update(resource._id, <models.BibliographicResource>resource.data).map( br => new TypedResourceView(br) );
+      return this.bibliographicResourceService.update(resource._id,
+        <models.BibliographicResource>resource.data).map( br => new
+          TypedResourceView(br) );
     }
   }
 
@@ -256,25 +268,27 @@ export class LocdbService {
     }
   }
 
-  getBibliographicResource(id:string): Observable<TypedResourceView> {
+  getBibliographicResource(id: string): Observable<TypedResourceView> {
     return this.bibliographicResourceService.get(id).map(br => new TypedResourceView(br)).retryWhen(error => error.delay(750)).take(8);
   }
 
   // DEPRECATED or integrate in Maybe Methods
   putBibliographicResource(resource: TypedResourceView): Observable<TypedResourceView> {
-    return this.bibliographicResourceService.update(resource._id, <models.BibliographicResource>resource.data).map( br => new TypedResourceView(br));
+    return this.bibliographicResourceService.update(resource._id,
+      <models.BibliographicResource>resource.data).map( br => new
+        TypedResourceView(br));
   }
 
   pushBibligraphicResource(resource: TypedResourceView): Observable<TypedResourceView> {
     return this.bibliographicResourceService.save(<models.BibliographicResource>resource.data).map( br => new TypedResourceView(br));
   }
 
-  deleteBibliographicResource(resource: TypedResourceView) : Observable<models.SuccessResponse> {
+  deleteBibliographicResource(resource: TypedResourceView): Observable<models.SuccessResponse> {
     return this.bibliographicResourceService.deleteSingle(resource._id);
   }
   /* Resources API end */
 
-  deleteBibliographicEntry(entry: models.BibliographicEntry) : Observable<models.BibliographicEntry> {
+  deleteBibliographicEntry(entry: models.BibliographicEntry): Observable<models.BibliographicEntry> {
     return this.bibliographicEntryService.remove(entry._id);
   }
 
