@@ -7,7 +7,7 @@ import { LocdbService } from '../../locdb.service';
 import * as d3 from 'd3';
 import { PopoverModule } from 'ngx-popover/index';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 // Display component consists of file upload, todo item selection and actual

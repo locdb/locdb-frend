@@ -1,3 +1,5 @@
+import {Observable, of} from 'rxjs';
+import {delay, take, retryWhen,  map } from 'rxjs/operators';
 // basic angular http client stuff
 import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angular/http';
@@ -10,11 +12,6 @@ import {
   ScanService, UserService
 } from './typescript-angular-client/api/api';
 
-// advanced rxjs async handling;
-import {Observable} from 'rxjs/Rx';
-// import { Observable } from 'rxjs/Observable';
-// import 'rxjs/add/operator/catch';
-// import 'rxjs/add/operator/map';
 
 // new types
 import { models } from './locdb';
@@ -27,7 +24,7 @@ import { models } from './locdb';
 // import { MOCK_TODOBRS } from './mock-todos';
 // import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
 
-import 'rxjs/add/operator/toPromise';
+
 
 import { environment } from 'environments/environment';
 
@@ -81,7 +78,7 @@ export class LocdbService {
 
   getToDo(statuses: Array<enums.status>): Observable<TypedResourceView[]> {
     // acquire todo items and scans
-    return this.scanService.getToDo(statuses).map((todos) => todos.map( (todo) => new TypedResourceView(todo) ));
+    return this.scanService.getToDo(statuses).pipe(map((todos) => todos.map( (todo) => new TypedResourceView(todo) )));
   }
 
   // /* Returns all ToDo items */
@@ -140,7 +137,7 @@ export class LocdbService {
     const suggestions$ = external ?
     entryService.getExternalSuggestionsByQueryString(query, threshold) :
     entryService.getInternalSuggestionsByQueryString(query, threshold);
-    return suggestions$.map(suggestions => suggestions.map(pair => this.packTypedPair(pair)));
+    return suggestions$.pipe(map(suggestions => suggestions.map(pair => this.packTypedPair(pair))));
   }
 
 
@@ -166,11 +163,11 @@ export class LocdbService {
 
   /* Resources API end */
   addTargetBibliographicResource(entry: models.BibliographicEntry, resource_id: string): Observable<TypedResourceView> {
-    return this.bibliographicEntryService.addTargetBibliographicResource(entry._id, resource_id).map( br => new TypedResourceView(br) );
+    return this.bibliographicEntryService.addTargetBibliographicResource(entry._id, resource_id).pipe(map( br => new TypedResourceView(br) ));
   }
 
   removeTargetBibliographicResource(entry: models.BibliographicEntry): Observable<TypedResourceView> {
-    return this.bibliographicEntryService.removeTargetBibliographicResource(entry._id).map( br => new TypedResourceView(br) );
+    return this.bibliographicEntryService.removeTargetBibliographicResource(entry._id).pipe(map( br => new TypedResourceView(br) ));
   }
 
   async updateTargetResource(
@@ -195,8 +192,8 @@ export class LocdbService {
   }
 
   bibliographicResource(identifier: string): Observable<TypedResourceView> {
-    return this.bibliographicResourceService.get(identifier).map( br => new
-      TypedResourceView(br)).retryWhen(error => error.delay(500)).take(5);
+    return this.bibliographicResourceService.get(identifier).pipe(map( br => new
+      TypedResourceView(br)),retryWhen(error => error.pipe(delay(500))),take(5),);
   }
 
   parentResource(br: TypedResourceView | models.BibliographicResource): Observable<TypedResourceView> {
@@ -243,13 +240,13 @@ export class LocdbService {
     /* Update the resource if it is known to the backend
      * 0-1 */
     if (!resource._id) {
-      return Observable.of(resource);
+      return of(resource);
     } else {
       // TODO FIXME this should not be necessary
-      resource.publicationDate = resource.publicationDate //correct date format if it was set incorrectly
+      resource.publicationDate = resource.publicationDate; // correct date format if it was set incorrectly
       return this.bibliographicResourceService.update(resource._id,
-        <models.BibliographicResource>resource.data).map( br => new
-          TypedResourceView(br) );
+        <models.BibliographicResource>resource.data).pipe(map( br => new
+          TypedResourceView(br) ));
     }
   }
 
@@ -260,27 +257,27 @@ export class LocdbService {
     if (!tr._id) {
       // !!! Never ever forget this when on righthand-side, they should never be external
       // 19.03.2018: Dont do this, we would corrupt todo item..
-      tr.publicationDate = tr.publicationDate //correct date format if it was set incorrectly
+      tr.publicationDate = tr.publicationDate; // correct date format if it was set incorrectly
       tr.status = enums.status.valid;
-      return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).map( br => new TypedResourceView(br) );
+      return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).pipe(map( br => new TypedResourceView(br) ));
     } else {
-      return Observable.of(tr);
+      return of(tr);
     }
   }
 
   getBibliographicResource(id: string): Observable<TypedResourceView> {
-    return this.bibliographicResourceService.get(id).map(br => new TypedResourceView(br)).retryWhen(error => error.delay(750)).take(8);
+    return this.bibliographicResourceService.get(id).pipe(map(br => new TypedResourceView(br)),retryWhen(error => error.pipe(delay(750))),take(8),);
   }
 
   // DEPRECATED or integrate in Maybe Methods
   putBibliographicResource(resource: TypedResourceView): Observable<TypedResourceView> {
     return this.bibliographicResourceService.update(resource._id,
-      <models.BibliographicResource>resource.data).map( br => new
-        TypedResourceView(br));
+      <models.BibliographicResource>resource.data).pipe(map( br => new
+        TypedResourceView(br)));
   }
 
   pushBibligraphicResource(resource: TypedResourceView): Observable<TypedResourceView> {
-    return this.bibliographicResourceService.save(<models.BibliographicResource>resource.data).map( br => new TypedResourceView(br));
+    return this.bibliographicResourceService.save(<models.BibliographicResource>resource.data).pipe(map( br => new TypedResourceView(br)));
   }
 
   deleteBibliographicResource(resource: TypedResourceView): Observable<models.SuccessResponse> {

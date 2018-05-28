@@ -1,3 +1,5 @@
+
+import {map} from 'rxjs/operators';
 import { Component, OnInit, Input } from '@angular/core';
 import { LocdbService } from '../../locdb.service';
 import { FeedService } from '../feed.service';
@@ -32,9 +34,9 @@ export class FeedComponent implements OnInit {
   ngOnInit() {
     console.log('Feed says hi', this.http);
     console.log("URL: ", this.rssToJsonServiceBaseUrl + encodeURIComponent(this.url))
-    this.http.get(this.rssToJsonServiceBaseUrl + encodeURIComponent("https://"+this.url), { withCredentials: false }).map(
+    this.http.get(this.rssToJsonServiceBaseUrl + encodeURIComponent("https://"+this.url), { withCredentials: false }).pipe(map(
     //this.http.get("https://" + this.url, { withCredentials: false }).map(
-        res => res.json()).subscribe(
+        res => res.json())).subscribe(
         (res) => this.processFeedJson(res)
       );
 }
