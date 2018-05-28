@@ -1,23 +1,25 @@
-<p *ngIf="of">
-  <span class="badge badge-primary"> {{ of.type }} </span>
-  {{ of.contributors | authors }}
-  <span class="badge badge-secondary"> {{ of.publicationDate | date:'yyyy' }}</span>
-  <b>{{of.title}} {{ of.subtitle }}</b>
-  ,
-  {{ of.contributors | publisher }}
-  .
-  <span class="badge badge-info" *ngFor="let ident of of.identifiers">
-    <span *ngIf="ident.scheme != 'URI'
-              && ident.scheme != 'URL_CROSSREF'
-              && ident.scheme != 'URL_SWB'"> {{ident.scheme}}: {{ident.literalValue}} </span>
-    <u *ngIf="ident.scheme == 'URI'
-              || ident.scheme == 'URL_CROSSREF'
-              || ident.scheme == 'URL_SWB'" (click)="open_link(ident.literalValue)">
-      {{ident.scheme}}: {{ident.literalValue.split("/")[2]}}</u>
+<p>
+  <span *ngIf="of">
+    <span class="badge badge-primary"> {{ of.type }} </span>
+    {{ of.contributors | authors }}
+    <span class="badge badge-secondary"> {{ of.publicationDate | date:'yyyy' }} </span>
+    <strong> {{of.title}} {{ of.subtitle }}</strong>
+    ,
+    {{ of.contributors | publisher }}
+    <!-- <span class="badge badge-info" *ngFor="let ident of of.identifiers"> -->
+    <!--   <span *ngIf="ident.scheme != 'URI' -->
+    <!--   && ident.scheme != 'URL_CROSSREF' -->
+    <!--   && ident.scheme != 'URL_SWB'"> {{ident.scheme}}: {{ident.literalValue}} </span> -->
+    <!--   <u *ngIf="ident.scheme == 'URI' -->
+    <!--   || ident.scheme == 'URL_CROSSREF' -->
+    <!--   || ident.scheme == 'URL_SWB'" (click)="open_link(ident.literalValue)"> -->
+    <!--     {{ident.scheme}}: {{ident.literalValue.split("/")[2]}}</u> -->
+    <!-- </span> -->
+    <span class="badge badge-warning" *ngIf="of">{{of.data.source}}</span>
+    <em *ngIf="in">In:&nbsp;</em>
   </span>
-  <span class="badge badge-warning" *ngIf="of">{{of.data.source}}</span>
-  <em *ngIf="in">In:&nbsp;</em>
   <span *ngIf="in" [innerHtml]="in | container">
   </span>
-  <span class="badge badge-warning" *ngIf="in">{{in.data.source}}</span>
+  <span class="badge badge-warning" *ngIf="in && !of">{{in.data.source}}</span>
+  .
 </p>

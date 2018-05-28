@@ -10,19 +10,19 @@ import { Router, ActivatedRoute} from '@angular/router';
   providers: [ LocdbService ],
 })
 export class TodoComponent {
-  @Input() todo: TypedResourceView;
-  @Input() container: TypedResourceView;
+  @Input() todo: TypedResourceView = null;
+  @Input() container: TypedResourceView = null;
   @Output() scan: EventEmitter<[models.ResourceEmbodiment, models.Scan]> = new EventEmitter();
   @Output() refs: EventEmitter<Array<models.BibliographicEntry>> = new EventEmitter();
 
   constructor(private route: ActivatedRoute,
               private router: Router) {}
 
-  ngOnChanges(){
+  ngOnChanges() {
     // console.log(this.todo)
   }
 
-  inspectReferences(){
+  inspectReferences() {
     this.refs.emit(this.todo.parts);
   }
 
