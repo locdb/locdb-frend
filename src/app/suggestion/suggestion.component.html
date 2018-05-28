@@ -57,21 +57,22 @@
       </div> -->
   </div>
 </div>
-<div class="card-body" style="height: 800px; overflow-y: scroll;">
+<div class="card-body" style="height: 1200px; overflow-y: scroll;">
   <!-- Panel body providing suggestions -->
   <div class="row" *ngIf="currentTarget">
-  <div class="col-md-12">
-  <div *ngIf="currentTarget" class="card-block">
-    <h5 class="card-title">
-      Currently references
-    </h5>
-    <app-resource-card [(resources)]="currentTarget"
-        [selected]="currentTarget == selectedResource"
-    (click)="onSelect(currentTarget)">
-    </app-resource-card>
+    <div class="col-md-12">
+      <div *ngIf="currentTarget" class="card-block">
+        <h4 class="card-title">
+          Currently references
+        </h4>
+        <app-resource-card [(resources)]="currentTarget"
+            [selected]="currentTarget == selectedResource"
+            (click)="onSelect(currentTarget)">
+        </app-resource-card>
+      </div>
+    </div>
   </div>
-</div>
-</div>
+<hr/>
 <div class="row">
 <div class="col-md-12">
   <div class="card-block">

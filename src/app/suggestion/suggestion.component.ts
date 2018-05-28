@@ -39,22 +39,22 @@ export class SuggestionComponent implements OnInit, OnChanges {
     internalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
     externalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
     _currentTarget: [TypedResourceView, TypedResourceView];
-    get currentTarget(){
-      return this._currentTarget
+
+    get currentTarget() {
+      return this._currentTarget;
     }
 
-    set currentTarget(target: [TypedResourceView, TypedResourceView] | TypedResourceView){
-      if (target instanceof TypedResourceView){
-        this._currentTarget = [target, null]
-      }
-      else{
-        this._currentTarget = target
+    set currentTarget(target: [TypedResourceView, TypedResourceView] | TypedResourceView) {
+      if (target instanceof TypedResourceView) {
+        this._currentTarget = [target, null];
+      } else {
+        this._currentTarget = target;
       }
 
     }
 
     modalRef: BsModalRef;
-    newResource: [TypedResourceView, TypedResourceView] = [null,null];
+    newResource: [TypedResourceView, TypedResourceView] = [null, null];
 
     committed = false;
     max_shown_suggestions = 5
@@ -91,7 +91,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
             // entry already has a link
             this.locdbService.bibliographicResource(this.entry.references).subscribe(
               (trv) => {
-                this.currentTarget = [null,trv];
+                this.currentTarget = [trv, null];
                 this.onSelect(this.currentTarget);
               },
               (err) => { console.log('Invalid entry.references pointer', this.entry.references) });
