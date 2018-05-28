@@ -3,6 +3,7 @@
     <div class="row">
       <div class="col-md-9"><app-metadata [of]="this.todo" [in]="this.container"></app-metadata></div>
       <div class="col-md-3">
+        <!-- TODO: Put dropdown scan selector here.. -->
         <div class="text-right">
           <button type="button" class="btn btn-secondary btn-sm" (click)="edit()"><i class="fa fa-edit"></i> Edit </button>&nbsp;
           <button type="button" class="btn btn-secondary btn-sm" (click)="inspectReferences()" [disabled]="this.todo.parts.length < 1"><i class="fa fa-list"></i> References </button>

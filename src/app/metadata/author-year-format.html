@@ -16,16 +16,8 @@
       {{ident.scheme}}: {{ident.literalValue.split("/")[2]}}</u>
   </span>
   <span class="badge badge-warning" *ngIf="of">{{of.data.source}}</span>
-  <em *ngIf="in">In:</em>
+  <em *ngIf="in">In:&nbsp;</em>
   <span *ngIf="in" [innerHtml]="in | container">
-    <!-- <em>In:</em>
-
-      {{ in | container }} -->
-    <!--
-    {{ in.contributors | editors }}
-    :
-    {{ in.title }}
-    . -->
   </span>
-  <span class="badge badge-warning" *ngIf="in && !of">{{in.data.source}}</span>
+  <span class="badge badge-warning" *ngIf="in">{{in.data.source}}</span>
 </p>
