@@ -1,3 +1,5 @@
+
+import {throwError as observableThrowError} from 'rxjs';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { Http, Response } from '@angular/http';
@@ -196,7 +198,7 @@ export class LoggingService {
       errMsg = error.message ? error.message : error.toString();
     }
     console.error(errMsg);
-    return Observable.throw(errMsg);
+    return observableThrowError(errMsg);
   }
 
 

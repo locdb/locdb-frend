@@ -4,7 +4,7 @@ import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angul
 
 // advanced rxjs async handling;
 import {Observable} from 'rxjs/Rx';
-// import { Observable } from 'rxjs/Observable';
+// import { Observable } from 'rxjs';
 // import 'rxjs/add/operator/catch';
 // import 'rxjs/add/operator/map';
 
