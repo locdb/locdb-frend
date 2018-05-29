@@ -119,6 +119,11 @@ export class ScanComponent {
     }
   }
 
+  extractIdAndScheme(name: any): [string, string] {
+    // not implemented
+    return null;
+  }
+
 
   extractidandPages(name: any): [string, number, number] {
     // do some magic
@@ -127,8 +132,8 @@ export class ScanComponent {
     const pages_re = /0*([1-9][0-9]+)([-_.+]0*([1-9][0-9]+))?/; // unused, also in ppn_re
     let _id = null, first = null, last = null;
     try {
-      const match = ppn_re.exec(name)
-      console.log(match)
+      const match = ppn_re.exec(name);
+      console.log(match);
       _id = match[1];
       // 2 ..
       first = Number(match[3]) || null;
