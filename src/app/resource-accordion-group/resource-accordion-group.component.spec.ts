@@ -9,8 +9,10 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ResourceCardComponent } from '../resource-card/resource-card.component';
 import { ResourceFormBasicComponent } from '../resource-form-basic/resource-form.component';
 
+import { StandardPipe } from '../pipes/type-pipes';
+
 import { MetadataComponent } from '../metadata/metadata.component'
-import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
+import { AuthorsPipe, ContainerPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
 
 describe('ResourceAccordionGroupComponent', () => {
   let component: ResourceAccordionGroupComponent;
@@ -27,7 +29,8 @@ describe('ResourceAccordionGroupComponent', () => {
         AuthorsPipe,
         EditorsPipe,
         PublisherPipe,
-        EmbracePipe, ]
+        EmbracePipe,
+      StandardPipe, ContainerPipe]
     })
     .compileComponents();
   }));

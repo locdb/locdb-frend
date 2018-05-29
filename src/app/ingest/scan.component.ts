@@ -90,10 +90,10 @@ export class ScanComponent {
   }
 
   confirmBatch() {
-    for (const file of this.batch){
+    for (const file of this.batch) {
       const [_id, first, last] = this.extractidandPages(file.name);
-      let rtype = this.batchInformation.resourceType;
-      let identifierScheme = this.batchInformation.identifierScheme;
+      const rtype = this.batchInformation.resourceType;
+      const identifierScheme = this.batchInformation.identifierScheme;
       this.listoffiles.push(
         new ToDoScansWithMeta(
           {
@@ -121,12 +121,13 @@ export class ScanComponent {
 
 
   extractidandPages(name: any): [string, number, number] {
-    // do same magic
-    const re = /([0-9]{8}[0-9X])([-_.+]0*([1-9][0-9]+)([-_.+]0*([1-9][0-9]+))?)?/;
-    console.log('extracting id and pages from filename');
+    // do some magic
+    const ppn_re = /([0-9]{8}[0-9X])([-_.+]0*([1-9][0-9]+)([-_.+]0*([1-9][0-9]+))?)?/;
+    const doi_re = /(10\.\d{4-9}\/[-._;()\/:A-Z0-9]+)/; // doi regexp, unused so far
+    const pages_re = /0*([1-9][0-9]+)([-_.+]0*([1-9][0-9]+))?/; // unused, also in ppn_re
     let _id = null, first = null, last = null;
     try {
-      const match = re.exec(name)
+      const match = ppn_re.exec(name)
       console.log(match)
       _id = match[1];
       // 2 ..

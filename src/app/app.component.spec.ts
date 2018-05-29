@@ -58,7 +58,8 @@ import {
 } from './locdb';
 import { Component, Input } from '@angular/core';
 
-import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from './pipes';
+import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe, ContainerPipe} from './pipes';
+import { StandardPipe } from './pipes/type-pipes';
 // resource related
 // import { ResourceComponent } from './resource/resource.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
@@ -157,6 +158,8 @@ describe('AppComponent with TCB', function () {
           EditorsPipe,
           PublisherPipe,
           EmbracePipe,
+          StandardPipe,
+          ContainerPipe,
           AgendaComponent,
           ScanInspectorComponent,
           RefsInspectorComponent,

@@ -23,9 +23,11 @@ import { LocdbService, CredentialsService } from '../locdb.service';
 import { PopoverModule } from 'ngx-popover';
 import { LoggingService } from '../logging.service';
 
-import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
+import { AuthorsPipe, ContainerPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
+import { StandardPipe } from '../pipes/type-pipes';
 
-import { HttpClientModule }                           from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+
 describe('BrowseComponent', () => {
   let component: BrowseComponent;
   let fixture: ComponentFixture<BrowseComponent>;
@@ -53,6 +55,8 @@ describe('BrowseComponent', () => {
         EditorsPipe,
         PublisherPipe,
         EmbracePipe,
+        StandardPipe,
+        ContainerPipe
       ],
       providers: [
         LocdbService,

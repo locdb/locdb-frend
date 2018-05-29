@@ -15,13 +15,14 @@ import { LocdbService, CredentialsService } from '../locdb.service';
 import { PopoverModule } from 'ngx-popover';
 import { LoggingService } from '../logging.service';
 import { ResourceCardComponent } from '../resource-card/resource-card.component'
-import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
+import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe, ContainerPipe} from '../pipes';
 // api
 import { ScanService } from '../typescript-angular-client/api/scan.service'
 import { UserService } from '../typescript-angular-client/api/user.service'
 import { UtilsService } from '../typescript-angular-client/api/utils.service'
 import { BibliographicEntryService } from '../typescript-angular-client/api/bibliographicEntry.service'
 import { BibliographicResourceService } from '../typescript-angular-client/api/bibliographicResource.service'
+import { StandardPipe } from '../pipes/type-pipes';
 
 import { HttpClientModule }  from '@angular/common/http';
 describe('SuggestionComponent', () => {
@@ -53,6 +54,8 @@ describe('SuggestionComponent', () => {
         EditorsPipe,
         PublisherPipe,
         EmbracePipe,
+        StandardPipe,
+        ContainerPipe
       ],
       providers: [ LocdbService, CredentialsService, LoggingService,
         ScanService,
