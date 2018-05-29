@@ -1,11 +1,14 @@
 <p>
   <span *ngIf="of">
-    <span class="badge badge-primary"> {{ of.type }} </span>
-    {{ of.contributors | authors }}
-    <span class="badge badge-secondary"> {{ of.publicationDate | date:'yyyy' }} </span>
-    <strong> {{of.title}} {{ of.subtitle }}</strong>
-    ,
+    <span *ngIf="of.type" class="badge badge-primary"> {{ of.type }} </span>
+    <span *ngIf="!of.title" [innerHtml]="of | standard">
+    </span>
+    <span *ngIf="of.contributors"> {{ of.contributors | authors }} </span>
+    <span *ngIf="of.publicationDate" class="badge badge-secondary"> {{ of.publicationDate | date:'yyyy' }} </span>
+    <strong *ngIf="of.title || of.subtitle"> {{of.title}} {{ of.subtitle }}</strong>
+    <span *ngIf="of.contributors.length > 0">,
     {{ of.contributors | publisher }}
+    </span>
     <!-- <span class="badge badge-info" *ngFor="let ident of of.identifiers"> -->
     <!--   <span *ngIf="ident.scheme != 'URI' -->
     <!--   && ident.scheme != 'URL_CROSSREF' -->
@@ -16,7 +19,6 @@
     <!--     {{ident.scheme}}: {{ident.literalValue.split("/")[2]}}</u> -->
     <!-- </span> -->
     <span class="badge badge-warning" *ngIf="of">{{of.data.source}}</span>
-    <em *ngIf="in">In:&nbsp;</em>
   </span>
   <span *ngIf="in" [innerHtml]="in | container">
   </span>

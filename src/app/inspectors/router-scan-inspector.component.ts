@@ -1,5 +1,5 @@
 
-import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
+import { ViewChild, Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
 import { models, enums, TypedResourceView } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import {Observable} from 'rxjs/Rx';
@@ -18,6 +18,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   // @Input() scan: models.Scan = null;
   // @Input() resource: TypedResourceView;
   // if sorry_text is set it is shows instead of the app display in the card body
+  @ViewChild('display') display;
   sorry_text = "";
   _id: string;
   scan: models.Scan = null;
@@ -148,6 +149,15 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     console.log("Edit: ", params)
     this.router.navigate(['/edit/'],{ queryParams: params});
 
+  }
+  zoomIn(){
+      this.display.zoomIn();
+  }
+  zoomOut(){
+      this.display.zoomOut();
+  }
+  zoomReset(){
+      this.display.zoomReset();
   }
 
 }

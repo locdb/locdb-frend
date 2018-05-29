@@ -46,8 +46,8 @@ export class ContainerPipe implements PipeTransform {
       standardString = standardPepe.transform(typedResource, enums.resourceType.bookSeries)
       containerString += (standardString.trim().length > 0 ? seperator + standardString : '')
     }
-    console.log("Typed References", typedResource)
-    console.log("Container String", containerString)
+    // console.log("Typed References", typedResource)
+    // console.log("Container String", containerString)
     return containerString;
   } else {
       return "(no resource)";

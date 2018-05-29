@@ -59,6 +59,7 @@ import { BrowseComponent } from './browse/browse.component'
 
 import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe,
 ContainerPipe, IdentifierPipe} from './pipes';
+import { StandardPipe } from './pipes';
 
 
 import {
@@ -153,6 +154,7 @@ const appRoutes: Routes = [
     EmbracePipe,
     ContainerPipe,
     IdentifierPipe,
+    StandardPipe,
     EditViewComponent
   ],
   providers: [
