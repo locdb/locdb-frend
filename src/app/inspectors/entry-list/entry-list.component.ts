@@ -25,13 +25,14 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() entries: models.BibliographicEntry[];
 
   _selectedEntry: models.BibliographicEntry = null;
-  get selectedEntry(){
-    if(this._selectedEntry)
-    return this._selectedEntry
+  get selectedEntry() {
+    return this._selectedEntry;
   }
-  @Input() set selectedEntry(val: models.BibliographicEntry){
-    if(val)
-    this._selectedEntry = val
+
+  @Input() set selectedEntry(val: models.BibliographicEntry) {
+    if (val) {
+      this._selectedEntry = val;
+    }
   }
 
   // first argument : true makes event emitter async
@@ -62,7 +63,7 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges | any) {
-    console.log("onNgChanges entry list")
+    console.log('onNgChanges entry list')
     if (!this.entries || !this.entries.length || this.selectedEntry) { return; } // guard
     setTimeout(() => {
       this.selectedEntry = this.entries.find(e => !e.references);
@@ -80,9 +81,10 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
 
 
   addEntry() {
-    //const entry = new BibliographicEntry();
+    // TODO FIXME
+    // const entry = new BibliographicEntry();
     console.log('missing implementation')
-    //this.onSelectReference(entry);
+    // this.onSelectReference(entry);
   }
 
   deleteEntry() {

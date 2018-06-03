@@ -16,7 +16,7 @@
       <app-display [img_src]="getScanImage()" [entries]="entries" (entry)="forwardEntry($event)"></app-display>
     </div>
     <div [hidden]="scanIsVisible">
-      <app-entry-list [resource]="in" [entries]="entries" (entry)="forwardEntry($event)"></app-entry-list>
+      <app-entry-list [resource]="resource" [entries]="entries" (entry)="forwardEntry($event)"></app-entry-list>
     </div>
     <div *ngIf="loading" class="loader">
     </div>
