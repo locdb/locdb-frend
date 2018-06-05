@@ -35,4 +35,41 @@ export class TodoComponent {
 
   }
 
+  unpackFirstPage(emsc){
+    return emsc[0].firstPage
+  }
+
+  unpackLastPage(emsc){
+    return emsc[0].lastPage
+  }
+
+  unpackType(emsc){
+    return emsc[0].type
+  }
+
+  unpackFormat(emsc){
+    return emsc[0].format
+  }
+
+  unpackScanName(emsc){
+    return emsc[1].scanName
+  }
+
+  getScans(embodiments: [models.ResourceEmbodiment]){
+    let scans: Array<[models.ResourceEmbodiment, models.Scan]> = []
+    for(let embodiment of embodiments){
+      if(embodiment.scans.length > 0){
+        for(let scan of embodiment.scans){
+          scans.push([embodiment, scan])
+        }
+      }
+    }
+    return scans
+  }
+
+  dummy(s){
+    console.log("dummy " , s)
+  }
+
+
 }

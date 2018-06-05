@@ -12,47 +12,22 @@
         <button type="button" class="btn btn-primary" (click)="refresh()"> Refresh </button>
       </div>
     </div>
+
     <div class="card-body">
       <div class="card mb-3" *ngFor="let todo of todos">
-        <div class="card-header" >
+        <div class="card-header">
             <app-todo [todo]="todo" [container]="todo" (refs)="inspectRefs(todo)" (scan)="inspectScan($event[1], $event[0], todo)">
             </app-todo>
         </div>
         <div class="card-body" *ngIf="todo.children() && todo.children().length">
-            <app-todo *ngFor="let child of todo.children()" [todo]="child" [container]="todo" (refs)="inspectRefs(child, todo)" (scan)="inspectScan($event[1], $event[0], child, todo)">
+          <div *ngFor="let child of todo.children(); let i = index">
+            <app-todo [todo]="child" [container]="todo" (refs)="inspectRefs(child, todo)" (scan)="inspectScan($event[1], $event[0], child, todo)">
             </app-todo>
+            <br *ngIf="i < todo.children().length-1">
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
-
-  <!--
-  <div class="card">
-  <div class="card-header">
-  <h3 class="card-title">{{ title }}</h3>
-  <div class="refresh-panel">
-  <ul>
-  <li *ngFor="let status of statuses">
-  <label><input type="checkbox" [(ngModel)]="tracking[status]">
-  <b> {{ status}} </b> </label>
-</li>
-</ul>
-<button type="button" class="btn btn-primary" (click)="refresh()"> Refresh </button>
-</div>
-</div>
-<div class="card-body">
-<div class="card" *ngFor="let todo of todos">
-<div class="card-header">
-<app-todo [todo]="todo" (refs)="inspectRefs(todo)" (scan)="inspectScan($event[1], $event[0], todo)">
-</app-todo>
-</div>
-<div class="card-body" *ngIf="todo.children() && todo.children().length">
-<div class="card card-body" *ngFor="let child of todo.children()">
-<app-todo [todo]="child" (refs)="inspectRefs(child, todo)" (scan)="inspectScan($event[1], $event[0], child, todo)">
-</app-todo>
-</div>
-</div>
-</div>
-</div>
-</div> -->

@@ -3,6 +3,7 @@ import { LocdbService } from '../locdb.service';
 import { TypedResourceView, enums, enum_values, models} from '../locdb';
 import { TodoComponent } from './todo.component'
 import { Router } from '@angular/router';
+import {DropdownModule} from "ngx-dropdown";
 
 export interface Tracking {
   [key: string ]: boolean;
@@ -97,10 +98,6 @@ export class AgendaComponent implements OnInit, OnChanges {
     // this.scanWithContext.emit([scan, { mode: 'scan', source: resource, embodiment: embodiment, parent:parent || null }])
     this.router.navigate(['/linking/ScanInspector/', resource._id]);
   }
-
-
-
-
 
   // guard(t: ToDo | ToDoParts ) {
   //   /* Guard needs rework */

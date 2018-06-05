@@ -1,24 +1,30 @@
-<div class="card mb-2">
-  <div class="card-header">
     <div class="row">
       <div class="col-md-9"><app-metadata [of]="this.todo" [in]="this.container"></app-metadata></div>
       <div class="col-md-3">
-        <!-- TODO: Put dropdown scan selector here.. -->
         <div class="text-right">
           <button type="button" class="btn btn-secondary btn-sm" (click)="edit()"><i class="fa fa-edit"></i> Edit </button>&nbsp;
           <button type="button" class="btn btn-secondary btn-sm" (click)="inspectReferences()" [disabled]="this.todo.parts.length < 1"><i class="fa fa-list"></i> References </button>
         </div>
+        <!-- TODO: Put dropdown scan selector here.. -->
+          <select class="form-control" [disabled]="todo.embodiedAs.length<1">
+            <option value="" selected disabled hidden>availiable scans</option>
+            <option *ngFor="let emsc of getScans(todo.embodiedAs)" (click)="inspectScan(emsc)">
+              {{ this.unpackFirstPage(emsc) }} - {{this.unpackLastPage(emsc)}},
+              {{ this.unpackType(emsc)}} {{ this.unpackFormat(emsc)}}; {{ unpackScanName(emsc)}}
+              <!-- <app-embodiment [embodiment]="emsc[0]" (onSelect)="inspectScan($event)"></app-embodiment> -->
+            </option>
+          </select>
       </div>
     </div>
-  </div>
-  <ul class="list-group list-group-flush" *ngIf="todo.embodiedAs && todo.embodiedAs.length">
+
+
+  <!-- <ul class="list-group list-group-flush" *ngIf="todo.embodiedAs && todo.embodiedAs.length">
     <div *ngFor="let embodiment of todo.embodiedAs">
       <li *ngIf="embodiment.scans.length" class="list-group-item">
         <app-embodiment [embodiment]="embodiment" (onSelect)="inspectScan($event)"></app-embodiment>
       </li>
     </div>
-  </ul>
-</div>
+  </ul> -->
 
   <!--
   <app-metadata [of]="this.todo"></app-metadata>
