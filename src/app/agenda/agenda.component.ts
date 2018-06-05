@@ -3,7 +3,6 @@ import { LocdbService } from '../locdb.service';
 import { TypedResourceView, enums, enum_values, models} from '../locdb';
 import { TodoComponent } from './todo.component'
 import { Router } from '@angular/router';
-import {DropdownModule} from "ngx-dropdown";
 
 export interface Tracking {
   [key: string ]: boolean;

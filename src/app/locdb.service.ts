@@ -252,7 +252,6 @@ export class LocdbService {
 
   maybePostResource(tr: TypedResourceView): Observable<TypedResourceView> {
     /* Post the resource if it is not stored in back-end yet
-     * TODO potential problem here, when resource is incomplete
      * 0-1 backend requests */
     if (!tr._id) {
       // !!! Never ever forget this when on righthand-side, they should never be external

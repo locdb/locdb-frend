@@ -16,7 +16,6 @@ import * as d3 from 'd3';
 // ngx-bootstrap
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import {DropdownModule} from "ngx-dropdown";
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 
@@ -105,7 +104,6 @@ const appRoutes: Routes = [
   imports: [
     AccordionModule.forRoot(),
     BsDropdownModule.forRoot(),
-    DropdownModule,
     ModalModule.forRoot(),
     CollapseModule.forRoot(),
     HotkeyModule.forRoot(),
