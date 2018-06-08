@@ -1,7 +1,7 @@
 import {
     TypedResourceView,
   Metadata,
-  findContainerMetadata
+  // findContainerMetadata
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
@@ -27,10 +27,10 @@ export class MetadataComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    this.in = findContainerMetadata(this.in);
+    // this.in = findContainerMetadata(this.in);
   }
 
   open_link(link: string) {
-    window.open(link, "_blank");
+    window.open(link, '_blank');
   }
 }

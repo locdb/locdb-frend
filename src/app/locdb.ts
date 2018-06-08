@@ -152,6 +152,7 @@ export class TypedResourceView implements Metadata {
   readonly data: models.BibliographicResource | models.ToDo;
   private _prefix: string;
   readonly viewport_: string;
+  children: Array<TypedResourceView> | undefined;
 
   constructor(brOrToDo: models.BibliographicResource | models.ToDo, astype?: string) {
     // this will throw if type is invalid!, but that s not too bad.
@@ -159,21 +160,33 @@ export class TypedResourceView implements Metadata {
     // console.log(this.viewport_);
     this._prefix = PropertyPrefixByType[this.viewport_] + '_';
     this.data = brOrToDo;
+
+
+    // New: directly make children also typed resources
+    if (brOrToDo.hasOwnProperty('children')) {
+      const todo = <models.ToDo>brOrToDo;
+      // WARNING: this is essentially recursive, child resources should not
+      // have too many levels of children
+      this.children = todo.children.map(child => new TypedResourceView(child));
+    } else {
+      this.children = undefined;
+    }
+
   }
 
-  /** ToDo Specific **/
-  children(typed: boolean = true): Array<models.BibliographicResource> | Array<TypedResourceView> {
-    if (this.data.hasOwnProperty('children')) {
-      const children = (<models.ToDo>this.data).children;
-      if (typed) {
-        return children.map(child => new TypedResourceView(child));
-      } else {
-        // return as plain BRs
-        return children;
-      }
-    }
-    return null;
-  }
+  /** ToDo Specific (DEPRECATED) TODO REMOVE**/
+  // children(typed: boolean = true): Array<models.BibliographicResource> | Array<TypedResourceView> {
+  //   if (this.data.hasOwnProperty('children')) {
+  //     const children = (<models.ToDo>this.data).children;
+  //     if (typed) {
+  //       return children.map(child => new TypedResourceView(child));
+  //     } else {
+  //       // return as plain BRs
+  //       return children;
+  //     }
+  //   }
+  //   return null;
+  // }
 
   /* Short-hand to decide whether the underlying resource is a ToDo item.
   This is preferred over checking for childrens directly, as the types and
@@ -401,7 +414,7 @@ export function findContainerMetadata(trv: TypedResourceView, checkInitial = tru
   if (!trv) { return null; };
   if (checkInitial && trv.title) { return trv; };
 
-  console.log("Find correct container meta for", trv);
+  console.log('DeprecationWarning: findContainerMetadata');
   const validTypes = containerTypes(trv.type);
   for (const candidateType of validTypes) {
     const view = trv.astype(candidateType);

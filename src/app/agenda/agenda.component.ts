@@ -43,7 +43,7 @@ export class AgendaComponent implements OnInit, OnChanges {
   // selectedResource : TypedResourceView;
   tracking: Tracking = {};
   statuses: Array<string> = enum_values(enums.todoStatus);
-  title = "Agenda";
+  title = 'Agenda';
 
   constructor(private locdbService: LocdbService, private router: Router) { }
 
@@ -61,17 +61,17 @@ export class AgendaComponent implements OnInit, OnChanges {
   ngOnChanges() {
   }
 
-  fetchTodos(){
-    console.log("Fetching Todos from Backend");
+  fetchTodos() {
+    console.log('Fetching Todos from Backend');
     this.todos = [];
-    let statuses: Array<enums.status> = [];
+    const statuses: Array<enums.status> = [];
     for (const status in this.tracking) {
       if (this.tracking[status]) {
         statuses.push(<enums.status>status);
       }
     }
     this.locdbService.getToDo(statuses).subscribe(
-      (todos) => { this.todos = todos; this.loading = false; console.log("Todos", todos) },
+      (todos) => { this.todos = todos; this.loading = false; console.log('Todos', todos) },
       (err) => { console.log(err); this.loading = false; }
     );
   }
@@ -79,15 +79,15 @@ export class AgendaComponent implements OnInit, OnChanges {
 
   refresh() {
     let bin = '';
-    if(this.tracking['NOT_OCR_PROCESSED']) {bin = bin + '1'} else {bin = bin + '0'}
-    if(this.tracking['OCR_PROCESSING']) {bin = bin + '1'} else {bin = bin + '0'}
-    if(this.tracking['OCR_PROCESSED']) {bin = bin + '1'} else {bin = bin + '0'}
-    if(this.tracking['EXTERNAL']) {bin = bin + '1'} else {bin = bin + '0'}
-    this.router.navigate(['/resolve/',bin]);
+    if (this.tracking['NOT_OCR_PROCESSED']) {bin = bin + '1'} else {bin = bin + '0'}
+    if (this.tracking['OCR_PROCESSING']) {bin = bin + '1'} else {bin = bin + '0'}
+    if (this.tracking['OCR_PROCESSED']) {bin = bin + '1'} else {bin = bin + '0'}
+    if (this.tracking['EXTERNAL']) {bin = bin + '1'} else {bin = bin + '0'}
+    this.router.navigate(['/resolve/', bin]);
     this.fetchTodos()
   }
 
-  inspectRefs(resource:TypedResourceView, parent?:TypedResourceView) {
+  inspectRefs(resource: TypedResourceView, parent?: TypedResourceView) {
     // this.refsWithContext.emit([resource.parts, { mode: 'refs', source: resource, parent: parent || null}]);
     this.router.navigate(['/linking/RefsInspector/', resource._id]);
   }

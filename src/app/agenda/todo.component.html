@@ -1,17 +1,42 @@
 <div class="row">
-    <div class="col-md-9"><app-metadata [of]="this.todo" [in]="this.container"></app-metadata></div>
-    <div class="col-md-3"> <div class="text-right"> <button type="button" class="btn btn-secondary btn-sm" (click)="edit()"><i class="fa fa-edit"></i> Edit </button>&nbsp;
-            <button type="button" class="btn btn-secondary btn-sm" (click)="inspectReferences()" [disabled]="this.todo.parts.length < 1"><i class="fa fa-list"></i> References </button>
-        </div>
+    <div class="col-md-8"><app-metadata [of]="todo" [in]="container"></app-metadata></div>
+    <div class="col-md-4">
+        <div class="text-right">
         <!-- TODO: Put dropdown scan selector here.. -->
-        <select class="form-control" [disabled]="todo.embodiedAs.length<1">
-            <option value="" selected disabled hidden>availiable scans</option>
-            <option *ngFor="let emsc of getScans(todo.embodiedAs)" (click)="inspectScan(emsc)">
-            {{ this.unpackFirstPage(emsc) }} - {{this.unpackLastPage(emsc)}},
-            {{ this.unpackType(emsc)}} {{ this.unpackFormat(emsc)}}; {{ unpackScanName(emsc)}}
-            <!-- <app-embodiment [embodiment]="emsc[0]" (onSelect)="inspectScan($event)"></app-embodiment> -->
-            </option>
-        </select>
+        <!-- <select class="form-control" [disabled]="todo.embodiedAs.length<1"> -->
+        <!--     <option value="" selected disabled hidden>availiable scans</option> -->
+        <!--     <option *ngFor="let emsc of getScans(todo.embodiedAs)" (click)="inspectScan(emsc)"> -->
+        <!--     {{ this.unpackFirstPage(emsc) }} - {{this.unpackLastPage(emsc)}}, -->
+        <!--     {{ this.unpackType(emsc)}} {{ this.unpackFormat(emsc)}}; {{ unpackScanName(emsc)}} -->
+        <!--     <1!-- <app-embodiment [embodiment]="emsc[0]" (onSelect)="inspectScan($event)"></app-embodiment> --1> -->
+        <!--     </option> -->
+        <!-- </select> -->
+
+
+        <div class="btn-group" dropdown [isDisabled]="!embodiment_scans.length">
+            <button id="button-basic" dropdownToggle type="button" class="btn
+                btn-secondary btn-sm dropdown toggle">
+                Scans
+            </button>
+            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                                                  role="menu" aria-labelledby="button-basic">
+                <li *ngFor="let emsc of embodiment_scans" role="menuitem">
+                    <button class="dropdown-item" (click)="inspectScan(emsc)">
+                        {{ this.unpackFirstPage(emsc) }} - {{this.unpackLastPage(emsc)}},
+                        {{ this.unpackType(emsc)}} {{ this.unpackFormat(emsc)}}
+                    </button>
+                </li>
+            </ul>
+        </div>&nbsp;
+        <button type="button" class="btn btn-secondary btn-sm" (click)="inspectReferences()" [disabled]="!todo.parts.length"><i class="fa fa-list"></i>
+            References
+        </button>&nbsp;
+        <button type="button" class="btn btn-secondary btn-sm"
+                              (click)="edit()"><i class="fa fa-edit"></i> Edit
+        </button>
+
+        </div> <!--close text right-->
+
     </div>
 </div>
 
