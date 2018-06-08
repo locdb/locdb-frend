@@ -1,6 +1,8 @@
 import {
-    TypedResourceView,
+  TypedResourceView,
   Metadata,
+  enums,
+  models,
   // findContainerMetadata
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
@@ -32,5 +34,27 @@ export class MetadataComponent implements OnInit, OnChanges {
 
   open_link(link: string) {
     window.open(link, '_blank');
+  }
+
+  getClickableIDURL(identifiers: models.Identifier[]){
+    identifiers = identifiers.filter(i => (['URI','URL_CROSSREF', 'URL_SWB'].indexOf(i.scheme) != -1))
+    if(identifiers.length > 0){
+      // console.log(identifiers)
+      // return '<span class="badge badge-info" href="' + identifiers[0].literalValue + '">'
+      //         + identifiers[0].scheme + ': '
+      //         + identifiers[0].literalValue.split("/")[2] + '</span>'
+      return identifiers[0].literalValue
+    }
+  }
+
+  getClickableIDName(identifiers: models.Identifier[]){
+    identifiers = identifiers.filter(i => (['URI','URL_CROSSREF', 'URL_SWB'].indexOf(i.scheme) != -1))
+    if(identifiers.length > 0){
+      // console.log(identifiers)
+      // return '<span class="badge badge-info" href="' + identifiers[0].literalValue + '">'
+      //         + identifiers[0].scheme + ': '
+      //         + identifiers[0].literalValue.split("/")[2] + '</span>'
+      return identifiers[0].scheme + ': ' + identifiers[0].literalValue.split("/")[2]
+    }
   }
 }
