@@ -8,7 +8,7 @@ import { LocdbService } from '../locdb.service';
   templateUrl: './resource-card.component.html',
   styleUrls: ['./resource-card.component.css'],
 })
-export class ResourceCardComponent implements OnInit {
+export class ResourceCardComponent implements OnInit, OnChanges {
 
     @Input() resources: [TypedResourceView, TypedResourceView] = [null, null];
     @Output() resourceChange = new EventEmitter<TypedResourceView>();

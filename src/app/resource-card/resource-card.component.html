@@ -1,6 +1,5 @@
 <!-- <div> open: </div>{{open}}, active:{{active}}, {{open && active}}, disabled:{{disabled}} -->
-<div class="card" *ngIf="resources[0]" [class]="selected && selectable ? 'card bg-dark' : 'card bg-light'"
-     style="padding-left: 10px"> <!-- [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">-->
+<div class="card" *ngIf="resources[0]" [class]="selected && selectable ? 'card bg-dark' : 'card bg-light'"> <!-- [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">-->
      <div class="card-header" [class]="selected && selectable ? 'card-header bg-light' : 'card-header border-default  bg-light'">
        <div class="row">
          <div class="col-11">
