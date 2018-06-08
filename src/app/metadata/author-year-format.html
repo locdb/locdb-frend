@@ -1,4 +1,4 @@
-<p>
+<span>
   <span *ngIf="of">
     <span *ngIf="of.type" class="badge badge-primary"> {{ of.type }} </span>
     <span *ngIf="!of.title" [innerHtml]="of | standard">
@@ -26,4 +26,4 @@
   <span *ngIf="in" [innerHtml]="in | container">
   </span>.
   <span class="badge badge-warning" *ngIf="in && !of">{{in.data.source}}</span>
-</p>
+</span>
