@@ -12,6 +12,7 @@ import { Router, ActivatedRoute} from '@angular/router';
 export class TodoComponent implements OnChanges {
   @Input() todo: TypedResourceView = null;
   @Input() container: TypedResourceView = null;
+  @Input() showAsContainer = false;
   @Output() scan: EventEmitter<[models.ResourceEmbodiment, models.Scan]> = new EventEmitter();
   @Output() refs: EventEmitter<Array<models.BibliographicEntry>> = new EventEmitter();
   // empty list indicates no scans
@@ -21,7 +22,6 @@ export class TodoComponent implements OnChanges {
               private router: Router) {}
 
   ngOnChanges() {
-    // console.log(this.todo)
     this.embodiment_scans = this.getScans(this.todo.embodiedAs);
   }
 
@@ -50,11 +50,11 @@ export class TodoComponent implements OnChanges {
   }
 
   unpackFormat(emsc) {
-    return emsc[0].format
+    return emsc[0].format;
   }
 
   unpackScanName(emsc) {
-    return emsc[1].scanName
+    return emsc[1].scanName;
   }
 
   getScans(embodiments: Array<models.ResourceEmbodiment>): Array<[models.ResourceEmbodiment, models.Scan]> {
@@ -69,8 +69,8 @@ export class TodoComponent implements OnChanges {
     return scans
   }
 
-  dummy(s){
-    console.log("dummy " , s)
+  dummy(s) {
+    console.log('dummy ' , s);
   }
 
 

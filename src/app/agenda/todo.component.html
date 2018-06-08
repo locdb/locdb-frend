@@ -1,5 +1,12 @@
 <div class="row">
-    <div class="col-md-8"><app-metadata [of]="todo" [in]="container"></app-metadata></div>
+    <div class="col-md-8">
+        <div *ngIf="showAsContainer">
+            <app-metadata [in]="todo"></app-metadata>
+        </div>
+        <div *ngIf="!showAsContainer">
+            <app-metadata [of]="todo" [in]="container"></app-metadata>
+        </div>
+    </div>
     <div class="col-md-4">
         <div class="text-right">
         <div class="btn-group" dropdown [isDisabled]="!embodiment_scans.length">

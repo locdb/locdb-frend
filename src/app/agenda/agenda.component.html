@@ -16,7 +16,7 @@
     <div class="card-body">
       <div class="card mb-3" *ngFor="let todo of todos">
         <div class="card-header">
-          <app-todo [todo]="todo" [container]="todo" (refs)="inspectRefs(todo)" (scan)="inspectScan($event[1], $event[0], todo)">
+          <app-todo [todo]="todo" [showAsContainer]="true" (refs)="inspectRefs(todo)" (scan)="inspectScan($event[1], $event[0], todo)">
           </app-todo>
         </div>
         <div class="card-body" *ngIf="todo.children && todo.children.length">
