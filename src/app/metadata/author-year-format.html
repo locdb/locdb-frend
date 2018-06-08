@@ -9,8 +9,8 @@
     <span *ngIf="of.contributors.length > 0">,
     {{ of.contributors | publisher }}
     </span>
-    <span *ngIf="of.identifiers.length > 0" [innerHtml]="of.identifiers | identifier">
-    </span>
+    <!-- <span *ngIf="of.identifiers.length > 0" [innerHtml]="of.identifiers | identifier">
+    </span> -->
     <!-- <span class="badge badge-info" *ngFor="let ident of of.identifiers">
       <span *ngIf="ident.scheme != 'URI'
       && ident.scheme != 'URL_CROSSREF'

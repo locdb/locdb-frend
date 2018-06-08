@@ -37,23 +37,31 @@ export class MetadataComponent implements OnInit, OnChanges {
   }
 
   getClickableIDURL(identifiers: models.Identifier[]){
-    identifiers = identifiers.filter(i => (['URI','URL_CROSSREF', 'URL_SWB'].indexOf(i.scheme) != -1))
+    identifiers = identifiers.filter(i => (['URL_CROSSREF'].indexOf(i.scheme) != -1))
     if(identifiers.length > 0){
-      // console.log(identifiers)
-      // return '<span class="badge badge-info" href="' + identifiers[0].literalValue + '">'
-      //         + identifiers[0].scheme + ': '
-      //         + identifiers[0].literalValue.split("/")[2] + '</span>'
+      return identifiers[0].literalValue
+    }
+    identifiers = identifiers.filter(i => (['URI'].indexOf(i.scheme) != -1))
+    if(identifiers.length > 0){
+      return identifiers[0].literalValue
+    }
+    identifiers = identifiers.filter(i => (['URL_SWB'].indexOf(i.scheme) != -1))
+    if(identifiers.length > 0){
       return identifiers[0].literalValue
     }
   }
 
   getClickableIDName(identifiers: models.Identifier[]){
-    identifiers = identifiers.filter(i => (['URI','URL_CROSSREF', 'URL_SWB'].indexOf(i.scheme) != -1))
+    identifiers = identifiers.filter(i => (['URL_CROSSREF'].indexOf(i.scheme) != -1))
     if(identifiers.length > 0){
-      // console.log(identifiers)
-      // return '<span class="badge badge-info" href="' + identifiers[0].literalValue + '">'
-      //         + identifiers[0].scheme + ': '
-      //         + identifiers[0].literalValue.split("/")[2] + '</span>'
+      return identifiers[0].scheme + ': ' + identifiers[0].literalValue.split("/")[2]
+    }
+    identifiers = identifiers.filter(i => (['URI'].indexOf(i.scheme) != -1))
+    if(identifiers.length > 0){
+      return identifiers[0].scheme + ': ' + identifiers[0].literalValue.split("/")[2]
+    }
+    identifiers = identifiers.filter(i => (['URL_SWB'].indexOf(i.scheme) != -1))
+    if(identifiers.length > 0){
       return identifiers[0].scheme + ': ' + identifiers[0].literalValue.split("/")[2]
     }
   }
