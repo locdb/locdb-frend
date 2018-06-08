@@ -23,7 +23,7 @@
           <div *ngFor="let child of todo.children; let i = index">
             <app-todo [todo]="child" [container]="todo" (refs)="inspectRefs(child, todo)" (scan)="inspectScan($event[1], $event[0], child, todo)">
             </app-todo>
-            <br *ngIf="i < todo.children.length-1">
+            <hr *ngIf="i < todo.children.length-1"/>
           </div>
         </div>
       </div>
