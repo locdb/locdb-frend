@@ -39,4 +39,8 @@ export class ResourceCardComponent implements OnInit {
         this.open = !this.open;
       }
 
+      forceOpen(){
+        this.open = true
+      }
+
   }

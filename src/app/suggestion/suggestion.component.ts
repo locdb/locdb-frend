@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter} from '@angular/core';
+import { ViewChild, Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter} from '@angular/core';
 import { LocdbService } from '../locdb.service';
 import { LoggingService } from '../logging.service'
 import { MOCK_INTERNAL } from '../mock-bresources'
@@ -22,7 +22,7 @@ import { REQUIRED_IDENTIFIERS } from '../ingest/constraints';
 
 export class SuggestionComponent implements OnInit, OnChanges {
 
-
+    @ViewChild('newResourcePanel') newResourceChild ;
     // retain entry as input, then we can modifiy its 'references' field
     @Input() entry: models.BibliographicEntry;
     @Output() suggest: EventEmitter<models.BibliographicResource> = new EventEmitter();
@@ -275,6 +275,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
   }
 
+  // atm creating new resource
+  // without openning modal
   openModal(template: TemplateRef<any>) {
     // entry -> resource
     const metadata = OCR2MetaData(this.entry.ocrData);
@@ -282,7 +284,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
     nresource.set_from(metadata)
     this.newResource = [nresource, null]
     this.selectedResource = this.newResource
-    
+    // open edit pannel
+    this.newResourceChild.forceOpen()
+
     // this.modalRef = this.modalService.show(template);
   }
 

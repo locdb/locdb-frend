@@ -9,15 +9,26 @@
     <span *ngIf="of.contributors.length > 0">,
     {{ of.contributors | publisher }}
     </span>
-    <!-- <span class="badge badge-info" *ngFor="let ident of of.identifiers"> -->
-    <!--   <span *ngIf="ident.scheme != 'URI' -->
-    <!--   && ident.scheme != 'URL_CROSSREF' -->
-    <!--   && ident.scheme != 'URL_SWB'"> {{ident.scheme}}: {{ident.literalValue}} </span> -->
-    <!--   <u *ngIf="ident.scheme == 'URI' -->
-    <!--   || ident.scheme == 'URL_CROSSREF' -->
-    <!--   || ident.scheme == 'URL_SWB'" (click)="open_link(ident.literalValue)"> -->
-    <!--     {{ident.scheme}}: {{ident.literalValue.split("/")[2]}}</u> -->
-    <!-- </span> -->
+    <span *ngIf="of.identifiers.length > 0" [innerHtml]="of.identifiers | identifier">
+    </span>
+    <!-- <span class="badge badge-info" *ngFor="let ident of of.identifiers">
+      <span *ngIf="ident.scheme != 'URI'
+      && ident.scheme != 'URL_CROSSREF'
+      && ident.scheme != 'URL_SWB'"> {{ident.scheme}}: {{ident.literalValue}} </span>
+      <u *ngIf="ident.scheme == 'URI'
+      || ident.scheme == 'URL_CROSSREF'
+      || ident.scheme == 'URL_SWB'" (click)="open_link(ident.literalValue)">
+        {{ident.scheme}}: {{ident.literalValue.split("/")[2]}}</u>
+    </span> -->
+    <span class="badge badge-info" *ngFor="let ident of of.identifiers">
+      <!-- <span *ngIf="ident.scheme != 'URI'
+      && ident.scheme != 'URL_CROSSREF'
+      && ident.scheme != 'URL_SWB'"> {{ident.scheme}}: {{ident.literalValue}} </span> -->
+      <u *ngIf="ident.scheme == 'URI'
+      || ident.scheme == 'URL_CROSSREF'
+      || ident.scheme == 'URL_SWB'" (click)="open_link(ident.literalValue)">
+        {{ident.scheme}}: {{ident.literalValue.split("/")[2]}}</u>
+    </span>
     <span class="badge badge-warning" *ngIf="of">{{of.data.source}}</span>
   </span>
   <span *ngIf="in" [innerHtml]="in | container">

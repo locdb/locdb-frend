@@ -141,7 +141,7 @@
       </h4>
       <app-resource-card [resources]="newResource"
       [selected]="newResource == selectedResource"
-      (click)="onSelect(newResource)">
+      (click)="onSelect(newResource)" #newResourcePanel>
       </app-resource-card>
     </div>
   </div>
