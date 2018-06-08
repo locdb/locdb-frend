@@ -119,36 +119,84 @@ export class ScanComponent {
     }
   }
 
-  extractIdAndScheme(name: any): [string, string] {
+  extractDOI(name: string): string | null {
     // not implemented
-    return null;
+    const doi_re = /10\.\d{4,9}[-._;()/:A-Z0-9]+/i; // doi regexp, unused so far
+    const match = doi_re.exec(name);
+    // warning match[0] is the full match
+    console.log('DOI regexp yields following matches:', match, 'on filename', name);
+    return match ? match[0] : null;
+  }
+  
+  extractPPN(name: string): [string, string] | [null, string] {
+    const ppn_re = /^([0-9]{8}[0-9X])(.*)/i;
+    const match = ppn_re.exec(name);
+    console.log('PPN regexp yields following matches:', match, 'on filename', name);
+    if (match) {
+      return [match[1], match[2]];
+    } else {
+      return [null, name]
+    }
   }
 
 
-  extractidandPages(name: any): [string, number, number] {
-    // do some magic
-    const ppn_re = /([0-9]{8}[0-9X])([-_.+]0*([1-9][0-9]+)([-_.+]0*([1-9][0-9]+))?)?/;
-    const doi_re = /(10\.\d{4-9}\/[-._;()\/:A-Z0-9]+)/; // doi regexp, unused so far
-    const pages_re = /0*([1-9][0-9]+)([-_.+]0*([1-9][0-9]+))?/; // unused, also in ppn_re
-    let _id = null, first = null, last = null;
-    try {
-      const match = ppn_re.exec(name);
-      console.log(match);
-      _id = match[1];
-      // 2 ..
-      first = Number(match[3]) || null;
-      // and 4 are grouped to make them optional
-      last = Number(match[5]) || null;
-    } catch (err) { console.log(err); }
-    // could pick last number of id as we did not remove it
-    // const pages_re = /([1-9][0-9]+)[-_+]([1-9][0-9]+)/;
-    if (first && !last) {
-      last = first;
+  extractidandPages(name: string): [string, number, number] {
+    // chomp file extension
+    name = name.substring(0, name.lastIndexOf('.'));
+    const [ppn, remainder] = this.extractPPN(name);
+    let first: number = null;
+    let last: number = null;
+    if (ppn) {
+      // PPN Found
+      // now be greedy and try to extract page numbers
+      console.log('Extracting pages from remainder', remainder)
+      const pages_re = /([1-9][0-9]*)[-_.+]([1-9][0-9]*)/;
+      const match = pages_re.exec(remainder);
+      console.log(match)
+      if (match) {
+        first = Number(match[1]) || null;
+        last = Number(match[2]) || null;
+      } else {
+        const spage_re = /[1-9][0-9]+/;
+        console.log('Extracting single page from remainder', remainder)
+        const spage_match = spage_re.exec(remainder);
+        console.log(spage_match)
+        first = last = Number(spage_match) || null;
+      }
+      return [ppn, first, last];
+    } else {
+      // Try to extract DOI
+      const doi = this.extractDOI(name);
+      return [doi, null, null];
     }
-    console.log('extracted:', _id, first, last)
 
-    // some more maybe?
-    return [_id, first, last];
+    // return [_id, first, last];
+
+
+    // // do some magic
+    // const ppn_re = /([0-9]{8}[0-9X])([-_.+]0*([1-9][0-9]+)([-_.+]0*([1-9][0-9]+))?)?/;
+    // let _id = null, first = null, last = null;
+    // try {
+    //   const match = ppn_re.exec(name);
+    //   console.log('PPN RE matches', match)
+    //   _id = match[1];
+    //   // 2 ..
+    //   first = Number(match[3]) || null;
+    //   // and 4 are grouped to make them optional
+    //   last = Number(match[5]) || null;
+    // } catch (err) { console.log('No PPN found, trying to extract DOI'); }
+    // if (first && !last) {
+    //   last = first;
+    // }
+    // if (!_id) {
+    //   // The DOI case
+    //   // currently without page numbers
+    //   _id = this.extractDOI(name);
+    // }
+
+    // console.log('extracted:', _id, first, last)
+    // // some more maybe?
+    // return [_id, first, last];
   }
 
   // nicht mehr als onclick genutzt

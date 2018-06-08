@@ -55,13 +55,29 @@ describe('ScanComponent', () => {
     // with page numbers
   });
 
-  it('should extract', () => {
+  it('should extract with pages', () => {
     expect(component.extractidandPages('123456789_10-12.pdf')).toEqual(['123456789', 10, 12]);
     // difficult since delimiter between PPN and firstpage is the same as between pages itself
     expect(component.extractidandPages('123456789-10-12.pdf')).toEqual(['123456789', 10, 12]);
     // now single page filenames
     expect(component.extractidandPages('123456789-10-10.pdf')).toEqual(['123456789', 10, 10]);
+    expect(component.extractidandPages('123456789_10-12.pdf')).toEqual(['123456789', 10, 12]);
+  });
+
+  it('should extract single page', () => {
     expect(component.extractidandPages('123456789-10.pdf')).toEqual(['123456789', 10, 10]);
+  });
+
+  it('should extract doi', () => {
+    // just ppn
+    expect(component.extractDOI('10.1086.657507')).toEqual('10.1086.657507');
+    // with page numbers
+  });
+
+  it('should extract doi generic', () => {
+    // just ppn
+    expect(component.extractidandPages('10.1086.657507.pdf')[0]).toEqual('10.1086.657507');
+    // with page numbers
   });
 
 });
