@@ -281,7 +281,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
     let nresource = new TypedResourceView({type: metadata.type});
     nresource.set_from(metadata)
     this.newResource = [nresource, null]
-    this.modalRef = this.modalService.show(template);
+    this.selectedResource = this.newResource
+    
+    // this.modalRef = this.modalService.show(template);
   }
 
   create_resourse(resource: TypedResourceView){
