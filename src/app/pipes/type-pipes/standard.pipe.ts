@@ -83,9 +83,11 @@ export class StandardPipe implements PipeTransform {
                           // + (publicationDate ? '(' + publicationDate + ')' + seperator + '' : '')
                           // + (identifiers && identifiers.length != 0 ? identifierPepe.transform(identifiers) + seperator + ' ': '')
                           ;
-    if(standardString.length >= seperator.length+1){
-      standardString = standardString.slice(0, -(seperator.length+1))
-    }
+    // TODO FIXME this caused some trouble! :)
+    // if(standardString.length >= seperator.length+1){
+    //   standardString = standardString.slice(0, -(seperator.length+1))
+    // }
+    
     // we do this in the template so that we can also display only the container
     // if(standardString.length > 1){
     //   standardString = "<em>In:&nbsp;</em>"  + standardString

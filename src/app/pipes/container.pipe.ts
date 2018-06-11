@@ -12,26 +12,24 @@ export class ContainerPipe implements PipeTransform {
   transform(typedResource: TypedResourceView, seperator: string = '; '): string {
     const standardPepe = new StandardPipe()
     if (typedResource != undefined){
-      if(typedResource.partOf != undefined){
-        console.log("Maybe ContainerPipe recieved child...")
+      if (typedResource.partOf != undefined){
+        console.log("Maybe ContainerPipe recieved child...");
       }
       // <Journal>, <Journal Issue>, <Journal Volume>
       // <eigene>, <bookSet>, <bookSeries>
       let containerString = ""
       // if type is Journal, Journal Issue or Journal Volume gather metadata from all three
-      if([enums.resourceType.journal.valueOf(),
+      if ([enums.resourceType.journal.valueOf(),
           enums.resourceType.journalIssue.valueOf(),
           enums.resourceType.journalVolume.valueOf()]
-          .indexOf(typedResource.type) !== -1){
+          .indexOf(typedResource.type) !== -1) {
         let standardString = standardPepe.transform(typedResource, enums.resourceType.journal)
         containerString += (standardString.trim().length > 0 ? standardString + seperator : '')
         standardString = standardPepe.transform(typedResource, enums.resourceType.journalIssue)
         containerString += (standardString.trim().length > 0 ? standardString + seperator : '')
         containerString += standardPepe.transform(typedResource, enums.resourceType.journalVolume)
-      }
+      } else {
       // if not Journal, Journal Issue or Journal Volume just gather metadata from this resourceType
-      else {
-
         containerString = standardPepe.transform(typedResource)
       }
       // additionally if type is nether bookSet nor bookSeries add metadata from this types
