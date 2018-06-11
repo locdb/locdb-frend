@@ -36,8 +36,9 @@
   </span>
   <span *ngIf="of && in">
     <em>in:&nbsp;</em>
+    <span [innerHtml]="in | container:', '"></span>
   </span>
-  <span *ngIf="in" [innerHtml]="in | container">
+  <span *ngIf="in && !of" [innerHtml]="in | container:': '">
   </span>.
   <span class="badge badge-warning" *ngIf="in && in.data.source">{{in.data.source}}</span>
 </span>
