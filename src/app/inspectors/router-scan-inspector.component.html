@@ -21,12 +21,13 @@
     <p> {{sorry_text}} </p>
   </div>
   <div class="card-body"  *ngIf="!sorry_text">
-    <div [hidden]="!scanIsVisible" [style.height]="imgheight" style="overflow-y: scroll;">
+    <div *ngIf="scan_content_type != 'pdf'" [hidden]="!scanIsVisible" [style.height]="imgheight" style="overflow-y: scroll;">
       <app-display [img_src]="getScanImage()" [entries]="refs" [selectedEntry]="selected_entry_list"
           (entry)="display_trigger_selected_entry($event)"
-          *ngIf="scan_content_type == 'image'"
           (imglength)="setHeight()" #display></app-display>
-      <p *ngIf="scan_content_type && scan_content_type != 'image'"> Received {{scan_content_type}}-type </p>
+    </div>
+    <div [hidden]="!scanIsVisible" *ngIf="scan_content_type && scan_content_type == 'pdf'">
+      <p> Received {{scan_content_type}}, OCR processing requiered</p>
     </div>
     <div [hidden]="scanIsVisible">
       <app-entry-list [resource]="resource" [entries]="refs" [selectedEntry]="selected_entry_display"
