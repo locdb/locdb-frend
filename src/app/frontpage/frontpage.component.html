@@ -6,7 +6,7 @@
       </h2>
       <p class="card-text">
         Ingest data by uploading scanned images, pdfs or supplying a web
-        identifier of an electronic journal article. 
+        identifier of an electronic journal article.
       </p>
       <a class="btn btn-primary btn-lg" routerLink="/ingest">
         <i class="fa fa-upload fa-lg" aria-hidden="true"></i>
@@ -23,7 +23,7 @@
       <p class="card-text">
         Link references to the correct target resources.
       </p>
-      <a class="btn btn-primary btn-lg" routerLink="/resolve">
+      <a class="btn btn-primary btn-lg" [routerLink]="['/resolve']" [queryParams]="{ OCR_PROCESSED: true}">
         <i class="fa fa-magic fa-lg" aria-hidden="true"></i>
         Start resolving references</a> </div>
   </div>
