@@ -27,6 +27,7 @@ export class AgendaComponent implements OnInit, OnChanges {
   @Output() refsWithContext: EventEmitter<[Array<models.BibliographicEntry>, Context]> = new EventEmitter();
   @Output() scanWithContext: EventEmitter<[models.Scan, Context]> = new EventEmitter()
   @Input() set routerTracking(rtracking: Tracking){
+    console.log("rt: ", rtracking)
     if(!(typeof rtracking === 'undefined')){
       this.loading = true;
       this.tracking[enums.status.ocrProcessed] = rtracking[enums.status.ocrProcessed];
@@ -55,7 +56,7 @@ export class AgendaComponent implements OnInit, OnChanges {
   }
 
   fetchTodos() {
-    console.log('Fetching Todos from Backend');
+    console.log('Fetching Todos from Backend', this.tracking);
     this.todos = [];
     const statuses: Array<enums.status> = [];
     for (const status in this.tracking) {
@@ -80,7 +81,7 @@ export class AgendaComponent implements OnInit, OnChanges {
       OCR_PROCESSED:this.tracking['OCR_PROCESSED'],
       EXTERNAL:this.tracking['EXTERNAL']
     }
-    this.router.navigate(['/resolve/', queryParams]);
+    this.router.navigate(['/resolve/'], {queryParams: queryParams});
     this.fetchTodos()
   }
 

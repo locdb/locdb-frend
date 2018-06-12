@@ -33,13 +33,18 @@ export class LinkingComponent implements OnInit {
     this.sub = this.route
       .queryParams
       .subscribe(params => {
-        // Defaults to 0 if no query param provided.
-        this.tracking[enums.status.notOcrProcessed] = params['NOT_OCR_PROCESSED'] || false;
-        this.tracking[enums.status.ocrProcessing] = params['OCR_PROCESSING'] || false;
-        this.tracking[enums.status.ocrProcessed] = params['OCR_PROCESSED'] || true;
-        this.tracking[enums.status.external] = params['EXTERNAL'] || false;
+        console.log(params)
+        // Defaults if no query param provided.
+        this.tracking[enums.status.notOcrProcessed] = params['NOT_OCR_PROCESSED'] == "true" || false;
+        this.tracking[enums.status.ocrProcessing] = params['OCR_PROCESSING'] == "true" || false;
+        this.tracking[enums.status.ocrProcessed] = params['OCR_PROCESSED'] == "true" || false;
+        this.tracking[enums.status.external] = params['EXTERNAL'] == "true" || false;
 
       })
+  }
+
+  stringToBool(s: string){
+    return s == "true"
   }
 
   get isInspecting () {

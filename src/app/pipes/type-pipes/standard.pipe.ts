@@ -126,7 +126,7 @@ export class StandardPipe implements PipeTransform {
     // I put it this way, such that we dont have to deal with leftover seperators
     for (const attr of [title, subtitle, number, edition, publisher]) {
       if (attr && attr.trim()) {
-        console.log('attr', attr);
+        //console.log('attr', attr);
         otherAttributes.push(attr);
       }
     }
