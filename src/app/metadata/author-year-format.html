@@ -32,7 +32,6 @@
     <span class="badge badge-info" *ngIf="getClickableIDURL(of.identifiers)" (click)="open_link(getClickableIDURL(of.identifiers))">
       {{getClickableIDName(of.identifiers)}}
     </span>
-    <span class="badge badge-warning" *ngIf="of && of.data.source">{{of.data.source}}</span>
   </span>
   <span *ngIf="of && in">
     <em>in:&nbsp;</em>
@@ -40,5 +39,5 @@
   </span>
   <span *ngIf="in && !of" [innerHtml]="in | container:': '">
   </span>.
-  <span class="badge badge-warning" *ngIf="in && in.data.source">{{in.data.source}}</span>
+  <span class="badge badge-warning" *ngIf="in || of">{{in?.data?.source || of?.data?.source}}</span>
 </span>
