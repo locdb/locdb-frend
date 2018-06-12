@@ -29,9 +29,6 @@
       || ident.scheme == 'URL_SWB'" (click)="open_link(ident.literalValue)">
         {{ident.scheme}}: {{ident.literalValue.split("/")[2]}}</u>
     </span> -->
-    <span class="badge badge-info" *ngIf="getClickableIDURL(of.identifiers)" (click)="open_link(getClickableIDURL(of.identifiers))">
-      {{getClickableIDName(of.identifiers)}}
-    </span>
     <span class="badge badge-warning" *ngIf="of && of.data.source">{{of.data.source}}</span>
   </span>
   <span *ngIf="of && in">
@@ -41,4 +38,9 @@
   <span *ngIf="in && !of" [innerHtml]="in | container:': '">
   </span>.
   <span class="badge badge-warning" *ngIf="in && in.data.source">{{in.data.source}}</span>
+</span>
+<span *ngIf="of">
+<span class="badge badge-info" *ngIf="getClickableIDURL(of.identifiers)" (click)="open_link(getClickableIDURL(of.identifiers))">
+  <i class="fa fa-external-link"></i> {{getClickableIDName(of.identifiers)}}
+</span>
 </span>
