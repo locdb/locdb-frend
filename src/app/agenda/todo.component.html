@@ -17,7 +17,7 @@
             <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
                                                   role="menu" aria-labelledby="button-basic">
                 <li *ngFor="let emsc of embodiment_scans" role="menuitem">
-                    <button class="dropdown-item" (click)="inspectScan(emsc)">
+                    <button class="dropdown-item" (click)="inspectScan(emsc)" [disabled]="this.unpackScanName(emsc).split('.')[1] == 'pdf'">
                         {{ this.unpackFirstPage(emsc) }} - {{this.unpackLastPage(emsc)}},
                         {{ this.unpackType(emsc)}} {{ this.unpackFormat(emsc)}}
                     </button>
