@@ -42,6 +42,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   loading = false;
   embodiment_id: string;
   scan_id: string;
+  scanName: string;
   imgheight: Number = 0
 
 
@@ -67,7 +68,9 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
         let ewsScansLength = embodiment_with_scans.scans.length
         if (ewsScansLength>0){
           this.scan_id = embodiment_with_scans.scans[ewsScansLength-1]._id
+          this.scanName = embodiment_with_scans.scans[ewsScansLength-1].scanName
           console.log("Scan_id ", this.scan_id)
+          console.log("ScanName ", this.scanName)
           // check wether scan is an image or something else
           this.locdbService.checkScanImage(this.scan_id).subscribe(data => {
               this.scan_content_type = data.headers.get("content-type").split('/')[0]

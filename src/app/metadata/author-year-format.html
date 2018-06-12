@@ -41,3 +41,8 @@
   </span>.
   <span class="badge badge-warning" *ngIf="in || of">{{in?.data?.source || of?.data?.source}}</span>
 </span>
+<span *ngIf="of">
+  <span class="badge badge-info" *ngIf="getClickableIDURL(of.identifiers)" (click)="open_link(getClickableIDURL(of.identifiers))">
+    <i class="fa fa-external-link"></i> {{getClickableIDName(of.identifiers)}}
+  </span>
+</span>
