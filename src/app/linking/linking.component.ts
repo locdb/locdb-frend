@@ -26,12 +26,20 @@ export class LinkingComponent implements OnInit {
   mode: 'refs' | 'scan' | 'agenda' = 'agenda';
   tracking: Tracking = {};
 
+  sub;
   constructor (private locdbService: LocdbService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
-    this.getTrackingFromRoute()
+    this.sub = this.route
+      .queryParams
+      .subscribe(params => {
+        // Defaults to 0 if no query param provided.
+        this.tracking[enums.status.notOcrProcessed] = params['NOT_OCR_PROCESSED'] || false;
+        this.tracking[enums.status.ocrProcessing] = params['OCR_PROCESSING'] || false;
+        this.tracking[enums.status.ocrProcessed] = params['OCR_PROCESSED'] || true;
+        this.tracking[enums.status.external] = params['EXTERNAL'] || false;
 
-    // this.visualState = 0;
+      })
   }
 
   get isInspecting () {
@@ -96,39 +104,4 @@ export class LinkingComponent implements OnInit {
   testScans(){
     this.router.navigate(['/linking/ScanInspector/', "5ab4c039e841b54dabf4d427"]);
   }
-  getTrackingFromRoute(){
-    let statuses = enum_values(enums.todoStatus);;
-    let tracking: Tracking = {};
-    let bin = this.route.snapshot.params['bin']
-    let pos = 0;
-    for (let status of statuses){
-      if (bin.charAt(pos) == '1'){
-        tracking[status] = true; //this.route.snapshot.params[status];
-      }else{
-        tracking[status] = false;}
-        pos += 1
-      // console.log("status", status)
-    }
-    // console.log("tracking", tracking)
-    this.tracking = tracking;
-  }
-
-
-  /* Are the functions below used? */
-
-  // roundUp(num, precision) {
-  //     return Math.ceil(num * precision) / precision;
-  // }
-
-  // pathStart() {
-  //     console.log('pathStart');
-  // }
-
-  // pathSelectResource() {
-  //     console.log('pathSelectResource');
-  // }
-
-  // pathEditAndSubmit() {
-  //     console.log('pathEditAndSubmit');
-  // }
 }

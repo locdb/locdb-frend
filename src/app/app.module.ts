@@ -72,7 +72,7 @@ import { EditViewComponent } from './edit-view/edit-view.component'
 
 const appRoutes: Routes = [
   // { path: 'resolve/:NOT_OCR_PROCESSED/:OCR_PROCESSING/:OCR_PROCESSED/:EXTERNAL', component: LinkingComponent },
-  { path: 'resolve/:bin', component: LinkingComponent },
+  { path: 'resolve', component: LinkingComponent },
   { path: 'ingest', component: ScanComponent},
   { path: 'browse', component: BrowseComponent},
   { path: 'frontpage', component: FrontpageComponent},
@@ -91,10 +91,6 @@ const appRoutes: Routes = [
     redirectTo: '/frontpage',
     pathMatch: 'full'
    },
-   { path: 'resolve',
-     redirectTo: '/resolve/0010',
-     pathMatch: 'full'
-    },
   { path: '**', redirectTo: '/frontpage' }
 ];
 

@@ -2,7 +2,7 @@ import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angu
 import { LocdbService } from '../locdb.service';
 import { TypedResourceView, enums, enum_values, models} from '../locdb';
 import { TodoComponent } from './todo.component'
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export interface Tracking {
   [key: string ]: boolean;
@@ -45,16 +45,9 @@ export class AgendaComponent implements OnInit, OnChanges {
   statuses: Array<string> = enum_values(enums.todoStatus);
   title = 'Agenda';
 
-  constructor(private locdbService: LocdbService, private router: Router) { }
+  constructor(private locdbService: LocdbService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    // this.loading = true;
-    // reasonable defaults
-    // this.tracking[enums.status.ocrProcessed] = true;
-    // this.tracking[enums.status.external] = true;
-    // this.tracking[enums.status.valid] = false;
-    // this.tracking[enums.status.notOcrProcessed] = false;
-    // this.tracking[enums.status.ocrProcessing] = false;
 
   }
 
@@ -77,14 +70,17 @@ export class AgendaComponent implements OnInit, OnChanges {
   }
 
 
-  async refresh() {
-    await this.delay(10);
-    let bin = '';
-    if (this.tracking['NOT_OCR_PROCESSED']) {bin = bin + '1'} else {bin = bin + '0'}
-    if (this.tracking['OCR_PROCESSING']) {bin = bin + '1'} else {bin = bin + '0'}
-    if (this.tracking['OCR_PROCESSED']) {bin = bin + '1'} else {bin = bin + '0'}
-    if (this.tracking['EXTERNAL']) {bin = bin + '1'} else {bin = bin + '0'}
-    this.router.navigate(['/resolve/', bin]);
+  refresh(status) {
+
+    console.log("status: ", status);
+    this.tracking[status] = !this.tracking[status]
+    let queryParams = {
+      NOT_OCR_PROCESSED:this.tracking['NOT_OCR_PROCESSED'],
+      OCR_PROCESSING:this.tracking['OCR_PROCESSING'],
+      OCR_PROCESSED:this.tracking['OCR_PROCESSED'],
+      EXTERNAL:this.tracking['EXTERNAL']
+    }
+    this.router.navigate(['/resolve/', queryParams]);
     this.fetchTodos()
   }
 
@@ -99,9 +95,6 @@ export class AgendaComponent implements OnInit, OnChanges {
     this.router.navigate(['/linking/ScanInspector/', resource._id]);
   }
 
-  delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
-  }
 
   // guard(t: ToDo | ToDoParts ) {
   //   /* Guard needs rework */

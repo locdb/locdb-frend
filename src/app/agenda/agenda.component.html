@@ -5,11 +5,10 @@
       <div class="refresh-panel">
         <ul>
           <li *ngFor="let status of statuses">
-            <label><input type="checkbox" [(ngModel)]="tracking[status]" (click)="refresh()">
+            <label><input type="checkbox" [(ngModel)]="tracking[status]" (click)="refresh(status)">
               <b> {{ status}} </b> </label>
           </li>
         </ul>
-        <button type="button" class="btn btn-primary" (click)="refresh()"> Refresh </button>
       </div>
     </div>
 
