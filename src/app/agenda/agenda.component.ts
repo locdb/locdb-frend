@@ -77,7 +77,8 @@ export class AgendaComponent implements OnInit, OnChanges {
   }
 
 
-  refresh() {
+  async refresh() {
+    await this.delay(10);
     let bin = '';
     if (this.tracking['NOT_OCR_PROCESSED']) {bin = bin + '1'} else {bin = bin + '0'}
     if (this.tracking['OCR_PROCESSING']) {bin = bin + '1'} else {bin = bin + '0'}
@@ -96,6 +97,10 @@ export class AgendaComponent implements OnInit, OnChanges {
               resource: TypedResourceView, parent?: TypedResourceView) {
     // this.scanWithContext.emit([scan, { mode: 'scan', source: resource, embodiment: embodiment, parent:parent || null }])
     this.router.navigate(['/linking/ScanInspector/', resource._id]);
+  }
+
+  delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
   // guard(t: ToDo | ToDoParts ) {

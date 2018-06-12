@@ -137,7 +137,7 @@ export class StandardPipe implements PipeTransform {
     // if(standardString.length >= seperator.length+1){
     //   standardString = standardString.slice(0, -(seperator.length+1))
     // }
-    
+
     // we do this in the template so that we can also display only the container
     // if(standardString.length > 1){
     //   standardString = "<em>In:&nbsp;</em>"  + standardString
