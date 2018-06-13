@@ -46,7 +46,7 @@ export class EmbodimentComponent {
   }
 
   ocrprocess(scan: models.Scan){
-    scan.status = enums.status.ocrProcessing
+    scan.status = enums.status.ocrProcessing;
     console.log("process", scan)
     this.locdbService.triggerOcrProcessing(scan._id).subscribe((res) => {
       console.log("Result: ", res)
