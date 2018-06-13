@@ -1,8 +1,7 @@
 <span>
   <span *ngIf="of">
     <span *ngIf="of.type" class="badge badge-primary"> {{ of.type }} </span>
-    <span *ngIf="!of.title" [innerHtml]="of | standard">
-    </span>
+    <span *ngIf="!of.title" [innerHtml]="of | standard"></span>
     <span *ngIf="of.contributors"> {{ of.contributors | authors }} </span>
     <span *ngIf="of.publicationDate" class="badge badge-secondary"> {{ of.publicationDate | date:'yyyy' }} </span>
     <strong *ngIf="of.title || of.subtitle"> {{of.title}} {{ of.subtitle }}</strong>
@@ -37,8 +36,9 @@
     <em>in:&nbsp;</em>
     <span [innerHtml]="in | container:', '"></span>
   </span>
-  <span *ngIf="in && !of" [innerHtml]="in | container:': '">
-  </span>.
+  <span *ngIf="in && !of" [innerHtml]="in | container:true"></span>
+
+  <span *ngIf="in && in.publicationDate" class="badge badge-secondary"> {{ in.publicationDate | date:'yyyy' }}</span>
 </span>
 <span *ngIf="of">
   <a class="badge badge-info" *ngIf="getClickableIDURL(of.identifiers)" [href]="getClickableIDURL(of.identifiers)" target="_blank">

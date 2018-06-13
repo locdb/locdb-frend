@@ -16,7 +16,7 @@ export class TodoComponent implements OnChanges {
   @Output() scan: EventEmitter<[models.ResourceEmbodiment, models.Scan]> = new EventEmitter();
   @Output() refs: EventEmitter<Array<models.BibliographicEntry>> = new EventEmitter();
   // empty list indicates no scans
-  embodiment_scans = [];
+  embodiment_scans: Array<[models.ResourceEmbodiment, models.Scan]> = [];
 
   constructor(private route: ActivatedRoute,
     private router: Router,
