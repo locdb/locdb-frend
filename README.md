@@ -54,7 +54,7 @@ npm install
     "spec": {},
     "options": {
       "modelPropertyNaming": "original",
-      "ngVersion": "5.2"
+      "ngVersion": "6.0"
     },
     "swaggerUrl": "https://locdb.bib.uni-mannheim.de/locdb-dev/swagger",
     "authorizationValue": {
@@ -76,6 +76,6 @@ npm install
 ## Development Resources
 
 - [Angular Docs](https://angular.io/docs)
-- [Bootstrap 4 Introduction]([https://getbootstrap.com/docs/4.0/getting-started/introduction/)
+- [Bootstrap 4 Introduction]([https://getbootstrap.com)
 - [Jasmine Introduction](https://jasmine.github.io/edge/introduction.html)
 - [OCC Metadata Model](https://figshare.com/articles/Metadata_for_the_OpenCitations_Corpus/3443876)
