@@ -16,7 +16,7 @@ import { HttpClient, HttpHeaders, HttpParams,
          HttpResponse, HttpEvent }                           from '@angular/common/http';
 import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
-import { Observable }                                        from 'rxjs';
+import { Observable }                                        from 'rxjs/Observable';
 
 import { BibliographicEntry } from '../model/bibliographicEntry';
 import { BibliographicResource } from '../model/bibliographicResource';
@@ -178,14 +178,14 @@ export class BibliographicEntryService {
      * 
      * Retrieves external br suggestions for a given query string related to a bibliographic entry.
      * @param query The query string for which the suggestions shall be retrieved
-     * @param threshold The sring similarity (dice coefficient) between the query string and the title + subtile + contributors above which suggestions shall be retrieved
+     * @param k Top k results that shall be retrieved (the default value is 10)
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getExternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<Array<BibliographicResource>>>;
-    public getExternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Array<BibliographicResource>>>>;
-    public getExternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Array<BibliographicResource>>>>;
-    public getExternalSuggestionsByQueryString(query: string, threshold?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getExternalSuggestionsByQueryString(query: string, k?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<Array<BibliographicResource>>>;
+    public getExternalSuggestionsByQueryString(query: string, k?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Array<BibliographicResource>>>>;
+    public getExternalSuggestionsByQueryString(query: string, k?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Array<BibliographicResource>>>>;
+    public getExternalSuggestionsByQueryString(query: string, k?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (query === null || query === undefined) {
             throw new Error('Required parameter query was null or undefined when calling getExternalSuggestionsByQueryString.');
         }
@@ -194,8 +194,8 @@ export class BibliographicEntryService {
         if (query !== undefined) {
             queryParameters = queryParameters.set('query', <any>query);
         }
-        if (threshold !== undefined) {
-            queryParameters = queryParameters.set('threshold', <any>threshold);
+        if (k !== undefined) {
+            queryParameters = queryParameters.set('k', <any>k);
         }
 
         let headers = this.defaultHeaders;
@@ -232,14 +232,14 @@ export class BibliographicEntryService {
      * 
      * Retrieves internal br suggestions for a given query string related to a bibliographic entry.
      * @param query The query string for which the suggestions shall be retrieved
-     * @param threshold The elastic relevance score for above which entrys shall be retrieved
+     * @param k Top k results that shall be retrieved (the default value is 10)
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getInternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<Array<BibliographicResource>>>;
-    public getInternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Array<BibliographicResource>>>>;
-    public getInternalSuggestionsByQueryString(query: string, threshold?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Array<BibliographicResource>>>>;
-    public getInternalSuggestionsByQueryString(query: string, threshold?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getInternalSuggestionsByQueryString(query: string, k?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<Array<BibliographicResource>>>;
+    public getInternalSuggestionsByQueryString(query: string, k?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Array<BibliographicResource>>>>;
+    public getInternalSuggestionsByQueryString(query: string, k?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Array<BibliographicResource>>>>;
+    public getInternalSuggestionsByQueryString(query: string, k?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (query === null || query === undefined) {
             throw new Error('Required parameter query was null or undefined when calling getInternalSuggestionsByQueryString.');
         }
@@ -248,8 +248,8 @@ export class BibliographicEntryService {
         if (query !== undefined) {
             queryParameters = queryParameters.set('query', <any>query);
         }
-        if (threshold !== undefined) {
-            queryParameters = queryParameters.set('threshold', <any>threshold);
+        if (k !== undefined) {
+            queryParameters = queryParameters.set('k', <any>k);
         }
 
         let headers = this.defaultHeaders;
@@ -274,6 +274,50 @@ export class BibliographicEntryService {
         return this.httpClient.get<Array<Array<BibliographicResource>>>(`${this.basePath}/getInternalSuggestionsByQueryString`,
             {
                 params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * Retrieves external br suggestions (precalculated) for a given bibliographic entry.
+     * @param id The id of the be for which the precalculated suggestions shall be retrieved
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getPrecalculatedSuggestions(id: string, observe?: 'body', reportProgress?: boolean): Observable<Array<Array<BibliographicResource>>>;
+    public getPrecalculatedSuggestions(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Array<BibliographicResource>>>>;
+    public getPrecalculatedSuggestions(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Array<BibliographicResource>>>>;
+    public getPrecalculatedSuggestions(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getPrecalculatedSuggestions.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json',
+            'image/png',
+            'application/pdf'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json',
+            'multipart/form-data'
+        ];
+
+        return this.httpClient.get<Array<Array<BibliographicResource>>>(`${this.basePath}/getPrecalculatedSuggestions/${encodeURIComponent(String(id))}`,
+            {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
