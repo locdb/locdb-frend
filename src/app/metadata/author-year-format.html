@@ -5,9 +5,7 @@
     <span *ngIf="of.contributors"> {{ of.contributors | authors }} </span>
     <span *ngIf="of.publicationDate" class="badge badge-secondary"> {{ of.publicationDate | date:'yyyy' }} </span>
     <strong *ngIf="of.title || of.subtitle"> {{of.title}} {{ of.subtitle }}</strong>
-    <span *ngIf="of.contributors.length > 0">,
-    {{ of.contributors | publisher }}
-    </span>
+    <span *ngIf="of.contributors.length > 0">, {{ of.contributors | publisher }} </span>
     <!-- <span *ngIf="of.identifiers.length > 0" [innerHtml]="of.identifiers | identifier">
     </span> -->
     <!-- <span class="badge badge-info" *ngFor="let ident of of.identifiers">

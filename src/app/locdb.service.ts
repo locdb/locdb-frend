@@ -1,5 +1,5 @@
 import {Observable, of} from 'rxjs';
-import {delay, take, retryWhen,  map } from 'rxjs/operators';
+import {delay, take, retryWhen,  map, flatMap } from 'rxjs/operators';
 // basic angular http client stuff
 import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angular/http';
@@ -270,7 +270,10 @@ export class LocdbService {
   }
 
   getBibliographicResource(id: string): Observable<TypedResourceView> {
-    return this.bibliographicResourceService.get(id).pipe(map(br => new TypedResourceView(br)),retryWhen(error => error.pipe(delay(750))),take(8),);
+    return this.bibliographicResourceService.get(id).pipe(map(br => new TypedResourceView(br)),
+      retryWhen(error => error.pipe(delay(750))),
+      take(8),
+    );
   }
 
   // DEPRECATED or integrate in Maybe Methods

@@ -5,8 +5,11 @@
     <!-- <button type="button" class="btn btn-secondary" (click)="showrefs()">
       Ref view
     </button> -->
+    <h4> {{title }} </h4>
+    <p><app-metadata [of]="resource" [in]="parent"></app-metadata></p>
+
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar">
-      <div class="btn-group" role="group" aria-label="Toggle scan view">
+      <div class="btn-group btn-group-sm" role="group" aria-label="Toggle scan view">
         <button type="button" class="btn btn-secondary" (click)="showScan()" [class.active]="scanIsVisible">
           Scan view
         </button>
@@ -15,7 +18,6 @@
         </button>
       </div>
     </div>
-    <app-metadata [of]="resource" [in]="parent"></app-metadata>
   </div>
   <div class="card-header" *ngIf="sorry_text">
     <p> {{sorry_text}} </p>

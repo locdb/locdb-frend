@@ -77,7 +77,7 @@ const appRoutes: Routes = [
   { path: 'browse', component: BrowseComponent},
   { path: 'frontpage', component: FrontpageComponent},
   { path: 'linking/RefsInspector/:id', component: RouterRefsInspectorComponent},
-  { path: 'linking/ScanInspector/:id', component: RouterScanInspectorComponent},
+  { path: 'linking/ScanInspector/:resid/:scanid', component: RouterScanInspectorComponent},
   { path: 'edit', component: EditViewComponent},
   // { path: 'feedreader', component: FeedReaderComponent},
   // { path: 'hero/:id',      component: HeroDetailComponent },
