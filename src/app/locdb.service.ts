@@ -140,6 +140,11 @@ export class LocdbService {
     return suggestions$.pipe(map(suggestions => suggestions.map(pair => this.packTypedPair(pair))));
   }
 
+  precalculatedSuggestions(entry: models.BibliographicEntry): Observable<Array<[TypedResourceView, TypedResourceView]>> {
+    const suggestions$ = this.bibliographicEntryService.getPrecalculatedSuggestions(entry._id);
+    return suggestions$.pipe(map(suggestions => suggestions.map(pair => this.packTypedPair(pair))));
+  }
+
 
   triggerOcrProcessing(scanId: string) {
     return this.scanService.triggerOcrProcessing(scanId);
