@@ -65,8 +65,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
     internalInProgress = false;
 
 
-    internalThreshold = 0.1;
-    externalThreshold = 0.5;
+    internalThreshold = 1;
+    externalThreshold = 1;
 
 
 
@@ -84,13 +84,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       this.query = this.queryFromEntry(this.entry);
       // this.refresh();
       this.fetchInternalSuggestions();
-      this.locdbService.precalculatedSuggestions(this.entry).subscribe(
-        (suggestions) => {
-          this.externalSuggestions = suggestions;
-          console.log('Received Precalculated External Suggestions:', suggestions)
-        },
-        (err) => this.fetchExternalSuggestions() // if there was an error, fall back to normal suggs
-      );
+      this.fetchPrecalculatedSuggestions();
       // add new Resource
       // does not work with new datamodel
       // this.newResource = this.resourceFromEntry(this.entry);
@@ -127,6 +121,24 @@ export class SuggestionComponent implements OnInit, OnChanges {
     this.fetchExternalSuggestions();
   }
 
+  fetchPrecalculatedSuggestions(): void {
+    if (!this.entry) { return; }
+    const pinnedEntry = this.entry;
+    this.externalInProgress = true;
+    console.log('Fetching precalculated suggestions for:', this.entry)
+    this.locdbService.precalculatedSuggestions(this.entry).subscribe(
+      (suggestions) => {
+        Object.is(this.entry, pinnedEntry) ? this.saveExternal(suggestions) : console.log('Discard precalc suggestions');
+        console.log('Received Precalculated External Suggestions:', suggestions)
+      },
+      (err) => {
+        console.log('Precalculated suggestions errored, fetching standard external suggestions');
+        this.fetchExternalSuggestions() // if there was an error, fall back to normal suggs
+      }
+    );
+
+  }
+
     fetchInternalSuggestions(): void {
       if (this.query) {
         const oldEntry = this.entry;
@@ -155,8 +167,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
           (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions')
                       // this.loggingService.logSuggestionsArrived(this.entry, sug, false)
                     },
-          (err) => { this.externalInProgress = false;
-                    console.log(err)}
+          (err) => { this.externalInProgress = false; console.log(err)}
         );
       }
     }
