@@ -43,8 +43,9 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   embodiment_id: string;
   scan_id: string;
   scanName: string;
-  imgheight: Number = 0
-
+  imgheight: Number = 0;
+  pdf_src: string;
+  pageVariable: Number = 1;
 
   constructor(private location: Location, private locdbService: LocdbService, private route: ActivatedRoute, private router: Router) { }
 
@@ -73,6 +74,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
           console.log("ScanName ", this.scanName)
           // check wether scan is an image or something else
           this.scan_content_type = this.scanName.split('.')[1].trim()
+
           console.log("content type:", "'" + this.scan_content_type + "'")
         //   this.locdbService.checkScanImage(this.scan_id).subscribe(data => {
         //       this.scan_content_type = data.headers.get("content-type").split('/')[0]
@@ -157,13 +159,29 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
 
   }
   zoomIn(){
+    if (this.scan_content_type == 'pdf'){
+
+    }
+    else {
       this.display.zoomIn();
+    }
+
   }
   zoomOut(){
+    if (this.scan_content_type == 'pdf'){
+
+    }
+    else {
       this.display.zoomOut();
+    }
   }
   zoomReset(){
+    if (this.scan_content_type == 'pdf'){
+
+    }
+    else {
       this.display.zoomReset();
+    }
   }
 
 }

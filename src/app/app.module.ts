@@ -70,6 +70,9 @@ import {
 import { BASE_PATH } from './typescript-angular-client/variables';
 import { EditViewComponent } from './edit-view/edit-view.component'
 
+
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+
 const appRoutes: Routes = [
   // { path: 'resolve/:NOT_OCR_PROCESSED/:OCR_PROCESSING/:OCR_PROCESSED/:EXTERNAL', component: LinkingComponent },
   { path: 'resolve', component: LinkingComponent },
@@ -109,6 +112,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     ReactiveFormsModule,
     PopoverModule,
+    PdfViewerModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only

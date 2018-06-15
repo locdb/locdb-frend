@@ -28,6 +28,10 @@
     </div>
     <div [hidden]="!scanIsVisible" *ngIf="scan_content_type && scan_content_type == 'pdf'">
       <p> Received {{scan_content_type}}, OCR processing requiered</p>
+      <p> {{pageVariable}} </p>
+      <pdf-viewer [src]="getScanImage()"
+             [render-text]="true"
+             style="display: block;"></pdf-viewer>
     </div>
     <div [hidden]="scanIsVisible">
       <app-entry-list [resource]="resource" [entries]="refs" [selectedEntry]="selected_entry_display"
