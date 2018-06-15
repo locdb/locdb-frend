@@ -102,7 +102,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     );
     // Probe scan image for content type
     this.locdbService.checkScanImage(this.scan_id).subscribe(
-      (data) => { this.scan_content_type = data.headers.get('content-type').split('/')[0]
+      (data) => { this.scan_content_type = data.headers.get('content-type').split('/')[1]
         console.log('Scan content type: ', this.scan_content_type)
       },
       (err) => {
