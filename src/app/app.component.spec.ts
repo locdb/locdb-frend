@@ -85,15 +85,18 @@ import { EditViewComponent } from './edit-view/edit-view.component'
 import { HttpClient, HttpHeaders, HttpParams,
          HttpResponse, HttpEvent, HttpClientModule }                           from '@angular/common/http';
 
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 ////////  SPECS  /////////////
 
 const appRoutes: Routes = [
-  { path: 'resolve/:bin', component: LinkingComponent },
+  // { path: 'resolve/:NOT_OCR_PROCESSED/:OCR_PROCESSING/:OCR_PROCESSED/:EXTERNAL', component: LinkingComponent },
+  { path: 'resolve', component: LinkingComponent },
   { path: 'ingest', component: ScanComponent},
   { path: 'browse', component: BrowseComponent},
   { path: 'frontpage', component: FrontpageComponent},
   { path: 'linking/RefsInspector/:id', component: RouterRefsInspectorComponent},
-  { path: 'linking/ScanInspector/:id', component: RouterScanInspectorComponent},
+  { path: 'linking/ScanInspector/:resid/:scanid', component: RouterScanInspectorComponent},
+  { path: 'edit', component: EditViewComponent},
   // { path: 'feedreader', component: FeedReaderComponent},
   // { path: 'hero/:id',      component: HeroDetailComponent },
   // {
@@ -101,16 +104,13 @@ const appRoutes: Routes = [
   //   component: HeroListComponent,
   //   data: { title: 'Heroes List' }
   // },
-    { path: '',
-      redirectTo: '/frontpage',
-      pathMatch: 'full'
-     },
-     { path: 'resolve',
-       redirectTo: '/resolve/0010',
-       pathMatch: 'full'
-      },
-    { path: '**', redirectTo: '/frontpage' }
-  ];
+
+  { path: '',
+    redirectTo: '/frontpage',
+    pathMatch: 'full'
+   },
+  { path: '**', redirectTo: '/frontpage' }
+];
 
 /// Delete this
 describe('Smoke test', () => {
@@ -191,6 +191,7 @@ describe('AppComponent with TCB', function () {
           // HttpHeaders,
           // HttpParams,
           // HttpResponse,
+          PdfViewerModule,
           HttpClientModule,
           RouterModule.forRoot(
             appRoutes,
