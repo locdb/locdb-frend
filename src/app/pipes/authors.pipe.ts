@@ -16,7 +16,7 @@ export class AuthorsPipe implements PipeTransform {
 
     if (!contributors) { return ''; }
     const authors = contributors.filter(x => x.roleType === enums.roleType.author);
-    if (!authors) { return ''; }
+    if (!authors.length) { return ''; }
     let authorString = authors.map(x => composeName(x.heldBy)).join(seperator);
     if (author_suffix) {
       authorString += author_suffix;

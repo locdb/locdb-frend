@@ -15,7 +15,7 @@ export class EditorsPipe implements PipeTransform {
   ): string {
     if (!contributors) { return ''; }
     const editors = contributors.filter(x => x.roleType === enums.roleType.editor);
-    if (!editors) { return ''; }
+    if (!editors.length) { return ''; }
     let editorString = editors.map(x => composeName(x.heldBy)).join(seperator);
     if (editorString) {
       editorString += editor_suffix;
