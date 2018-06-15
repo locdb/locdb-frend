@@ -25,7 +25,7 @@ export class ContainerPipe implements PipeTransform {
     let containerString = '';
 
     // always show the real type of the resource
-    containerString += '<span class="badge badge-secondary">' + typedResource.type + '</span> ';
+    containerString += '<span class="badge badge-primary">' + typedResource.type + '</span> ';
     // containerString += 'TYPE' + typedResource.type;
     console.log('Container pipe called', containerString);
 
@@ -43,18 +43,18 @@ export class ContainerPipe implements PipeTransform {
       // containerString += (standardString.trim().length > 0 ? standardString + seperator : '')
       // containerString += standardPepe.transform(typedResource, enums.resourceType.journalVolume, ', ', author_suffix)
       // handpicked values
-      containerString = journalStandardPepe.transform(typedResource, ', ', standalone)
+      containerString += journalStandardPepe.transform(typedResource, ', ', standalone)
     } else {
       // if not Journal, Journal Issue or Journal Volume just gather metadata from this resourceType
       containerString += standardPepe.transform(typedResource, null, ', ', standalone)
     }
-    // additionally if type is nether bookSet nor bookSeries add metadata from this types
+    // additionally if type is either bookSet nor bookSeries add metadata from this types
     if ([enums.resourceType.bookSet.valueOf(),
-      enums.resourceType.bookSeries.valueOf(),
-      enums.resourceType.journal.valueOf(),
-      enums.resourceType.journalIssue.valueOf(),
-      enums.resourceType.journalVolume.valueOf()]
-      .indexOf(typedResource.type) === -1) {
+      enums.resourceType.bookSeries.valueOf()
+      // enums.resourceType.journal.valueOf(),
+      // enums.resourceType.journalIssue.valueOf(),
+      // enums.resourceType.journalVolume.valueOf()
+    ].indexOf(typedResource.type) !== -1) {
       let standardString = standardPepe.transform(typedResource, enums.resourceType.bookSet, ', ', standalone)
       containerString += (standardString.trim().length > 0 ? seperator + standardString : '')
       standardString = standardPepe.transform(typedResource, enums.resourceType.bookSeries, ', ', standalone)

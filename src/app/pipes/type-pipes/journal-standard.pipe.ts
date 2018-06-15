@@ -22,11 +22,11 @@ export class JournalStandardPipe implements PipeTransform {
     seperator: string = ', ',
     standalone: boolean = false,
   ): string {
-    const author_suffix = standalone ? ': ' : ', ';
     console.log('resource', typedResource)
     const identifierPepe = new IdentifierPipe()
-    const authorsPepe = new AuthorsPipe()
-    const editorsPepe = new EditorsPipe()
+    // const contrib_suffix = standalone ? ': ' : ', '
+    // const authorsPepe = new AuthorsPipe()
+    // const editorsPepe = new EditorsPipe()
     const publisherPepe = new PublisherPipe()
     if (!typedResource) { return '(no resource)'; }
     let journalTitle = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'title')
@@ -44,11 +44,11 @@ export class JournalStandardPipe implements PipeTransform {
     }
     const isoPublicationDate = publicationDate
     const contributors = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'contributors')
-    // const authors = authorsPepe.transform(contributors)
-    // const editors = editorsPepe.transform(contributors)
+    // const authors = authorsPepe.transform(contributors, '; ', contrib_suffix)
+    // const editors = editorsPepe.transform(contributors, '; ', contrib_suffix)
     const issueNumber =  'issue ' + typedResource.getTypedPropertyWrap(enums.resourceType.journalIssue, 'number')
     const volumeNumber =  'volume ' + typedResource.getTypedPropertyWrap(enums.resourceType.journalVolume, 'number')
-    const publisher = publisherPepe.transform(contributors)
+    const publisher = publisherPepe.transform(typedResource.contributors) || publisherPepe.transform(contributors)
     // const identifiers =  typedResource.getTypedPropertyWrap(forced_type, 'identifiers')
     return this.prettyStandardString(
       journalTitle,
@@ -61,7 +61,6 @@ export class JournalStandardPipe implements PipeTransform {
       volumeNumber,
       publisher,
       seperator,
-      author_suffix,
       standalone
     )
   }
@@ -74,11 +73,10 @@ export class JournalStandardPipe implements PipeTransform {
     isoPublicationDate,
     // editors,
     // authors,
-    number,
-    edition,
+    number, // issue number
+    edition, // volume number
     publisher,
     seperator,
-    author_suffix = ': ',
     standalone
   ) {
     let s = '';
@@ -89,6 +87,7 @@ export class JournalStandardPipe implements PipeTransform {
     // }
     const otherAttributes = new Array<string>();
     if (standalone) {
+      // If shown as standalone, make titles bold font
       if (journalTitle && journalTitle.trim()) {
         otherAttributes.push('<b>' + journalTitle + '</b>')
       }
@@ -96,6 +95,7 @@ export class JournalStandardPipe implements PipeTransform {
         otherAttributes.push('<b>' + issueTitle + '</b>')
       }
     } else {
+      // if shown as container, leave Titles as is
       if (journalTitle && journalTitle.trim()) {
         otherAttributes.push(journalTitle)
       }
@@ -104,7 +104,7 @@ export class JournalStandardPipe implements PipeTransform {
       }
     }
     // I put it this way, such that we dont have to deal with leftover seperators
-    for (const attr of [journalTitle, issueTitle, volumeTitle, number, edition, publisher]) {
+    for (const attr of [edition, number, publisher]) {
       if (attr && attr.trim()) {
         console.log('attr', attr);
         otherAttributes.push(attr);

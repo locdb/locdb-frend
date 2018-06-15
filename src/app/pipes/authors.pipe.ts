@@ -8,13 +8,19 @@ import { models, enums, composeName } from '../locdb';
 
 @Pipe({name: 'authors'})
 export class AuthorsPipe implements PipeTransform {
-  transform(contributors: Array<models.AgentRole>, seperator: string = '; '): string {
-    if (contributors) {
-      const authors = contributors.filter(x => x.roleType === enums.roleType.author);
-      const authorString = authors.map(x => composeName(x.heldBy)).join(seperator);
-      return authorString;
-    } else {
-      return '';
+  transform(
+    contributors: Array<models.AgentRole>,
+    seperator: string = '; ',
+    author_suffix: string = null
+  ): string {
+
+    if (!contributors) { return ''; }
+    const authors = contributors.filter(x => x.roleType === enums.roleType.author);
+    if (!authors) { return ''; }
+    let authorString = authors.map(x => composeName(x.heldBy)).join(seperator);
+    if (author_suffix) {
+      authorString += author_suffix;
     }
+    return authorString;
   }
 }

@@ -23,8 +23,9 @@ export class StandardPipe implements PipeTransform {
     seperator: string = ', ',
     standalone: boolean = false,
   ): string {
-    const author_suffix = standalone ? ': ' : ', ';
     if (!typedResource) { return '(no resource)'; }
+    /* Suffix for contributors, use colon (:) in standalone variants, else a comma (,) */
+    const contrib_suffix = standalone ? ': ' : ', ';
     const identifierPepe = new IdentifierPipe()
     const authorsPepe = new AuthorsPipe()
     const editorsPepe = new EditorsPipe()
@@ -36,14 +37,11 @@ export class StandardPipe implements PipeTransform {
       let publicationDate = typedResource.getTypedPropertyWrap(forced_type, 'publicationDate')
       if (typeof publicationDate !== 'string') {
         publicationDate = moment(publicationDate).format('YYYY-MM-DD');
-      } else {
-        // is this really necessary?
-        publicationDate = publicationDate
       }
       const isoPublicationDate = publicationDate
       const contributors = typedResource.getTypedPropertyWrap(forced_type, 'contributors')
-      const authors = authorsPepe.transform(contributors)
-      const editors = editorsPepe.transform(contributors)
+      const authors = authorsPepe.transform(contributors, '; ', contrib_suffix)
+      const editors = editorsPepe.transform(contributors, '; ', contrib_suffix)
       const publisher = publisherPepe.transform(contributors)
       const number =  typedResource.getTypedPropertyWrap(forced_type, 'number')
       const edition =  typedResource.getTypedPropertyWrap(forced_type, 'edition')
@@ -58,7 +56,6 @@ export class StandardPipe implements PipeTransform {
         number,
         edition,
         seperator,
-        author_suffix,
         standalone
       )
     } else {
@@ -66,15 +63,12 @@ export class StandardPipe implements PipeTransform {
       const subtitle = typedResource.subtitle
       let publicationDate = typedResource.publicationDate
       if (typeof publicationDate !== 'string') {
-        publicationDate = moment(publicationDate).format('YYYY-MM-DD');
-      } else {
-        // is this really necessary?
-        publicationDate = publicationDate
-      }
+        publicationDate = moment(publicationDate).format('YYYY');
+      } 
       const isoPublicationDate = publicationDate;
       const contributors = typedResource.contributors;
-      const authors = authorsPepe.transform(contributors);
-      const editors = editorsPepe.transform(contributors);
+      const authors = authorsPepe.transform(contributors, '; ', contrib_suffix);
+      const editors = editorsPepe.transform(contributors, '; ', contrib_suffix);
       const publisher = publisherPepe.transform(contributors);
       const number =  typedResource.number;
       const edition =  typedResource.edition;
@@ -89,7 +83,6 @@ export class StandardPipe implements PipeTransform {
         number,
         edition,
         seperator,
-        author_suffix,
         standalone
       )
     }
@@ -107,34 +100,29 @@ export class StandardPipe implements PipeTransform {
     number,
     edition,
     seperator,
-    author_suffix = ': ',
     standalone) {
-    // const standardString = (editors.length != 0 ? editors + " (ed.)" + author_suffix + '' :
-    //                           authors.length != 0 ? authors + author_suffix + '' : '')
-    //                       + (title && title.trim().length != 0 ? title + seperator + '' : '')
-    //                       + (subtitle && subtitle.trim().length != 0 ? subtitle + seperator + '' : '')
-    //                       + (number && number.trim().length != 0 ? number + seperator + '' : '')
-    //                       + (edition && edition.trim().length != 0 ? edition + seperator + '' : '')
-    //                       + (publisher.length != 0 ? publisher + seperator + '' : '')
-    //                       // + (publicationDate ? '(' + publicationDate + ')' + seperator + '' : '')
-    //                       // + (identifiers && identifiers.length != 0 ? identifierPepe.transform(identifiers) + seperator + ' ': '')
-    //                       ;
     let s = '';
-    if (editors && editors.trim()) {
-      s += editors + ' (ed.)' + author_suffix;
-    } else if (authors && authors.trim()) {
-      s += authors + author_suffix;
+    if (publicationDate) {
+      s += '<span class="badge badge-info">' + publicationDate + '</span> ';
     }
+    if (editors && editors.trim()) {
+      s += editors;
+    } else if (authors && authors.trim()) {
+      s += authors;
+    }
+
     const otherAttributes = new Array<string>();
-    if (title && title.trim()) {
-      if (standalone) {
-        otherAttributes.push('<b>' + title + '</b>');
-      } else {
-        otherAttributes.push(title);
+    for (const attr of [title, subtitle]) {
+      if (attr && attr.trim()) {
+        if (standalone) {
+          otherAttributes.push('<b>' + attr + '</b>');
+        } else {
+          otherAttributes.push(attr);
+        }
       }
     }
-    // I put it this way, such that we dont have to deal with leftover seperators
-    for (const attr of [subtitle, number, edition, publisher]) {
+
+    for (const attr of [number, edition, publisher]) {
       if (attr && attr.trim()) {
         // console.log('attr', attr);
         otherAttributes.push(attr);
