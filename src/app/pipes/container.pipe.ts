@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { models, enums, composeName, TypedResourceView } from '../locdb';
-import { StandardPipe }from './type-pipes';
+import { StandardPipe, JournalStandardPipe }from './type-pipes';
 
 
 /*
@@ -13,6 +13,7 @@ export class ContainerPipe implements PipeTransform {
     // Use colon ':' when its a standalone resource, else ',' by default
     const author_suffix = standalone ? ': ' : ', ';
     const standardPepe = new StandardPipe()
+    const journalStandardPepe = new JournalStandardPipe()
     // !<something> catches null and undefined
     if (!typedResource) { return '(no resource)'; }
 
@@ -35,14 +36,17 @@ export class ContainerPipe implements PipeTransform {
       enums.resourceType.journalIssue.valueOf(),
       enums.resourceType.journalVolume.valueOf()]
       .indexOf(typedResource.type) !== -1) {
-      let standardString = standardPepe.transform(typedResource, enums.resourceType.journal, ', ', author_suffix)
-      containerString += (standardString.trim().length > 0 ? standardString + seperator : '')
-      standardString = standardPepe.transform(typedResource, enums.resourceType.journalIssue, ', ', author_suffix)
-      containerString += (standardString.trim().length > 0 ? standardString + seperator : '')
-      containerString += standardPepe.transform(typedResource, enums.resourceType.journalVolume, ', ', author_suffix)
+      // truely awesome stuff
+      // let standardString = standardPepe.transform(typedResource, enums.resourceType.journal, ', ', author_suffix)
+      // containerString += (standardString.trim().length > 0 ? standardString + seperator : '')
+      // standardString = standardPepe.transform(typedResource, enums.resourceType.journalIssue, ', ', author_suffix)
+      // containerString += (standardString.trim().length > 0 ? standardString + seperator : '')
+      // containerString += standardPepe.transform(typedResource, enums.resourceType.journalVolume, ', ', author_suffix)
+      // handpicked values
+      containerString = journalStandardPepe.transform(typedResource, ', ', author_suffix, standalone)
     } else {
       // if not Journal, Journal Issue or Journal Volume just gather metadata from this resourceType
-      containerString += standardPepe.transform(typedResource, null, ', ', author_suffix)
+      containerString += standardPepe.transform(typedResource, null, ', ', author_suffix, standalone)
     }
     // additionally if type is nether bookSet nor bookSeries add metadata from this types
     if ([enums.resourceType.bookSet.valueOf(),
@@ -51,9 +55,9 @@ export class ContainerPipe implements PipeTransform {
       enums.resourceType.journalIssue.valueOf(),
       enums.resourceType.journalVolume.valueOf()]
       .indexOf(typedResource.type) === -1) {
-      let standardString = standardPepe.transform(typedResource, enums.resourceType.bookSet, ', ', author_suffix)
+      let standardString = standardPepe.transform(typedResource, enums.resourceType.bookSet, ', ', author_suffix, standalone)
       containerString += (standardString.trim().length > 0 ? seperator + standardString : '')
-      standardString = standardPepe.transform(typedResource, enums.resourceType.bookSeries, ', ', author_suffix)
+      standardString = standardPepe.transform(typedResource, enums.resourceType.bookSeries, ', ', author_suffix, standalone)
       containerString += (standardString.trim().length > 0 ? seperator + standardString : '')
     }
     return containerString;
