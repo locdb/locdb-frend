@@ -15,11 +15,12 @@ export class RefsInspectorComponent implements OnInit, OnChanges {
   @Input() resource: TypedResourceView;
   @Input() refs: Array<models.BibliographicEntry>;
   @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
+  title = 'Reference Inspector';
 
   constructor( private locdbService: LocdbService) { }
 
   ngOnInit() {
-    console.log("RefsInspector onInit")
+    console.log('RefsInspector onInit');
   }
 
   ngOnChanges(changes: SimpleChanges | any) {

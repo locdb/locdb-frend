@@ -17,10 +17,15 @@
             <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
                                                   role="menu" aria-labelledby="button-basic">
                 <li *ngFor="let emsc of embodiment_scans" role="menuitem">
+<<<<<<< HEAD
                     <button class="dropdown-item" (click)="inspectScan(emsc)" [disabled]="this.unpackScanName(emsc).split('.')[1] == 'pdf'">
+=======
+                    <a class="dropdown-item" (click)="inspectScan(emsc); false">
+>>>>>>> c01283f2b1a67657a73dc635182413d732ffa484
                         {{ this.unpackFirstPage(emsc) }} - {{this.unpackLastPage(emsc)}},
                         {{ this.unpackType(emsc)}} {{ this.unpackFormat(emsc)}}
-                    </button>
+                        <i *ngIf="isOcrTriggerable(emsc)" class="fa fa-play-circle" aria-hidden="true" (click)="triggerOcrProcessing(emsc[1]); $event.stopPropagation()"></i>
+                    </a>
                 </li>
             </ul>
         </div>&nbsp;

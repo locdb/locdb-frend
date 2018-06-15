@@ -17,35 +17,46 @@ export class RouterRefsInspectorComponent implements OnInit, OnChanges {
   // @Input() refs: Array<models.BibliographicEntry>;
   // @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
   // if sorry_text is set it is shows instead of the app entry list in the card body
-  sorry_text = "";
+  title = 'Reference Inspector';
+  sorry_text = '';
   _id: string;
   resource: TypedResourceView;
+  parent: TypedResourceView = null;
   refs: Array<models.BibliographicEntry> = [];
-  entry: models.BibliographicEntry; //EventEmitter<models.BibliographicEntry> = new EventEmitter();
+  entry: models.BibliographicEntry; // EventEmitter<models.BibliographicEntry> = new EventEmitter();
   selected_entry_display: models.BibliographicEntry;
-  display_trigger_selected_entry(entry: models.BibliographicEntry){
-    this.entry= entry;
+  selected_entry_list: models.BibliographicEntry;
+  constructor( private locdbService: LocdbService, private route: ActivatedRoute, private router: Router) { }
+  display_trigger_selected_entry(entry: models.BibliographicEntry) {
+    this.entry = entry;
     this.selected_entry_display = entry;
   }
-  selected_entry_list: models.BibliographicEntry;
-  list_trigger_selected_entry(entry: models.BibliographicEntry){
-    this.entry= entry;
+
+  list_trigger_selected_entry(entry: models.BibliographicEntry) {
+    this.entry = entry;
     this.selected_entry_list = entry;
   }
-  constructor( private locdbService: LocdbService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this._id = this.route.snapshot.params.id;
-    console.log("Resource laden... ")
+    console.log('Resource laden... ')
     // load Bibliographic resource because only id is passed along the route
     this.locdbService.getBibliographicResource(this._id).subscribe((res) => {
       this.resource = res
-      console.log("Resource ", res)
+      console.log('Resource ', res)
       this.refs = res.parts
-      console.log("refs", this.refs)
+      console.log('refs', this.refs)
+      if (this.resource.partOf) {
+        console.log('Retrieving parent with id', this.resource.partOf)
+        this.locdbService.getBibliographicResource(this.resource.partOf).subscribe(
+          (parent_trv) => this.parent = parent_trv,
+          (error) => console.log('Error occurred while retrieving parent resource', error)
+        )
+
+      }
     },
-    (err) => { this.sorry_text = "No resource found with id " + this._id;
-              console.log("err, no br") });
+    (err) => { this.sorry_text = 'No resource found with id ' + this._id;
+              console.log('err, no br') });
 
   }
 

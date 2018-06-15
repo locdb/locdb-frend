@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-body">
     <h4 class="card-title">
-      Refs Inspector
+      {{ title }}
     </h4>
     <app-entry-list [resource]="resource" [entries]="refs" (entry)="forwardEntry($event)"></app-entry-list>
   </div>

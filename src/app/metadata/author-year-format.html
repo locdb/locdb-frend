@@ -1,14 +1,11 @@
 <span>
   <span *ngIf="of">
     <span *ngIf="of.type" class="badge badge-primary"> {{ of.type }} </span>
-    <span *ngIf="!of.title" [innerHtml]="of | standard">
-    </span>
+    <span *ngIf="!of.title" [innerHtml]="of | standard"></span>
     <span *ngIf="of.contributors"> {{ of.contributors | authors }} </span>
     <span *ngIf="of.publicationDate" class="badge badge-secondary"> {{ of.publicationDate | date:'yyyy' }} </span>
     <strong *ngIf="of.title || of.subtitle"> {{of.title}} {{ of.subtitle }}</strong>
-    <span *ngIf="of.contributors.length > 0">,
-    {{ of.contributors | publisher }}
-    </span>
+    <span *ngIf="of.contributors.length > 0">, {{ of.contributors | publisher }} </span>
     <!-- <span *ngIf="of.identifiers.length > 0" [innerHtml]="of.identifiers | identifier">
     </span> -->
     <!-- <span class="badge badge-info" *ngFor="let ident of of.identifiers">
@@ -29,18 +26,21 @@
       || ident.scheme == 'URL_SWB'" (click)="open_link(ident.literalValue)">
         {{ident.scheme}}: {{ident.literalValue.split("/")[2]}}</u>
     </span> -->
-    <span class="badge badge-warning" *ngIf="of && of.data.source">{{of.data.source}}</span>
+    <!-- <span class="badge badge-info" *ngIf="getClickableIDURL(of.identifiers)" (click)="open_link(getClickableIDURL(of.identifiers))"> -->
+    <!--   {{getClickableIDName(of.identifiers)}} -->
+    <!-- </span> -->
   </span>
   <span *ngIf="of && in">
     <em>in:&nbsp;</em>
     <span [innerHtml]="in | container:', '"></span>
   </span>
-  <span *ngIf="in && !of" [innerHtml]="in | container:': '">
-  </span>.
-  <span class="badge badge-warning" *ngIf="in && in.data.source">{{in.data.source}}</span>
+  <span *ngIf="in && !of" [innerHtml]="in | container:true"></span>
+
+  <span *ngIf="in && in.publicationDate" class="badge badge-secondary"> {{ in.publicationDate | date:'yyyy' }}</span>
 </span>
 <span *ngIf="of">
-<span class="badge badge-info" *ngIf="getClickableIDURL(of.identifiers)" (click)="open_link(getClickableIDURL(of.identifiers))">
-  <i class="fa fa-external-link"></i> {{getClickableIDName(of.identifiers)}}
+  <a class="badge badge-info" *ngIf="getClickableIDURL(of.identifiers)" [href]="getClickableIDURL(of.identifiers)" target="_blank">
+    <i class="fa fa-external-link"></i>Online
+  </a>
 </span>
-</span>
+<span class="badge badge-warning" *ngIf="in || of">{{in?.data?.source || of?.data?.source}}</span>

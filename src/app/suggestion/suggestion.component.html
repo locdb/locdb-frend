@@ -23,20 +23,20 @@
   <!-- <div class="row" style="" *ngIf="search_extended"> -->
     <div class="row" *ngIf="search_extended">
       <div class="form-group col-md-5">
-        <label for="internalThreshold" class="center-block">Confidence threshold for internal</label>
+        <label for="internalThreshold" class="center-block">Top-k interal Suggestions</label>
       </div>
       <div class="form-group col-md-5">
-        <label for="externalThreshold" class="center-block">... and for external Suggestions</label>
+        <label for="externalThreshold" class="center-block">Top-k external Suggestions</label>
     </div>
     <div class="col-md-2">
     </div>
   </div>
     <div class="row" *ngIf="search_extended">
       <div class="form-group col-md-5">
-        <input class="form-control" type="number" min=0.0 step=0.1 name="internalThreshold" [(ngModel)]="internalThreshold">
+        <input class="form-control" type="number" min=1 step=1 name="internalThreshold" [(ngModel)]="internalThreshold">
       </div>
       <div class="form-group col-md-5">
-        <input class="form-control" type="number" min=0.0 step=0.1 max=1.0 name="externalThreshold" [(ngModel)]="externalThreshold">
+        <input class="form-control" type="number" min=1 step=1 name="externalThreshold" [(ngModel)]="externalThreshold">
     </div>
     <div class="col-md-2">
       <popover-content #searchPopover [closeOnClickOutside]="true">
@@ -57,7 +57,8 @@
       </div> -->
   </div>
 </div>
-<div class="card-body" style="height: 1200px; overflow-y: scroll;">
+<!-- <div class="card-body" style="height: 1200px; overflow-y: scroll;"> -->
+<div class="card-body">
   <!-- Panel body providing suggestions -->
   <div class="row" *ngIf="currentTarget">
     <div class="col-md-12">

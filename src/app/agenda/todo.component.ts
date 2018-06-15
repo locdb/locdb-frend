@@ -16,10 +16,12 @@ export class TodoComponent implements OnChanges {
   @Output() scan: EventEmitter<[models.ResourceEmbodiment, models.Scan]> = new EventEmitter();
   @Output() refs: EventEmitter<Array<models.BibliographicEntry>> = new EventEmitter();
   // empty list indicates no scans
-  embodiment_scans = [];
+  embodiment_scans: Array<[models.ResourceEmbodiment, models.Scan]> = [];
 
   constructor(private route: ActivatedRoute,
-              private router: Router) {}
+    private router: Router,
+    private locdbService: LocdbService
+  ) {}
 
   ngOnChanges() {
     this.embodiment_scans = this.getScans(this.todo.embodiedAs);
@@ -35,6 +37,14 @@ export class TodoComponent implements OnChanges {
 
   edit() {
     this.router.navigate(['/edit/'], { queryParams: { resource: this.todo._id} });
+  }
+
+  isOcrTriggerable(emsc: [models.ResourceEmbodiment, models.Scan]): boolean {
+    const [emb, scan] = emsc;
+    if (scan.status === enums.status.notOcrProcessed) {
+      return true;
+    }
+    return false;
   }
 
   unpackFirstPage(emsc) {
@@ -71,6 +81,17 @@ export class TodoComponent implements OnChanges {
 
   dummy(s) {
     console.log('dummy ' , s);
+  }
+
+  triggerOcrProcessing(scan: models.Scan) {
+    scan.status = enums.status.ocrProcessing;
+    console.log('Triggered ocr processing of', scan)
+    this.locdbService.triggerOcrProcessing(scan._id).subscribe((res) => {
+      console.log('OCR Processing succeeded: ', res)
+      scan.status = enums.status.ocrProcessed;
+    },
+    (err) => { scan.status = enums.status.notOcrProcessed
+                console.log('OCR Processing failed, ', err) });
   }
 
 

@@ -30,7 +30,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     // make this visible to template
     environment = environment;
 
-    selectedResource: [TypedResourceView, TypedResourceView] = [null,null];
+    selectedResource: [TypedResourceView, TypedResourceView] = [null, null];
     query: string;
 
     search_extended = false;
@@ -65,8 +65,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
     internalInProgress = false;
 
 
-    internalThreshold = 0.1;
-    externalThreshold = 0.5;
+    internalThreshold = 10;
+    externalThreshold = 10;
 
 
 
@@ -77,44 +77,70 @@ export class SuggestionComponent implements OnInit, OnChanges {
     ngOnInit() {
     }
 
-    ngOnChanges(changes: SimpleChanges | any) {
-        if (this.entry) {
-          console.log("entry: ", this.entry)
-          this.query = this.queryFromEntry(this.entry);
-          if (this.query) {
-           this.refresh();
-          }
-          // add new Resource
-          // does not work with new datamodel
-          // this.newResource = this.resourceFromEntry(this.entry);
-          if (this.entry.references) {
-            // entry already has a link
-            this.locdbService.bibliographicResource(this.entry.references).subscribe(
-              (trv) => {
-                this.currentTarget = [trv, null];
-                this.onSelect(this.currentTarget);
-              },
-              (err) => { console.log('Invalid entry.references pointer', this.entry.references) });
-          } else {
-            // entry was not linked yet
-            this._currentTarget = null;
-            // this.onSelect(this.newResource);
-          }
-        } else {
-          this.query = '';
-        }
-    }
-
-    refresh() {
-      // when search button is triggered
-      this.loggingService.logSearchIssued(this.entry, this.selectedResource[0], this.query, [0,1])
-      this.newResource = [null, null];
+  ngOnChanges(changes: SimpleChanges | any) {
+    // This is called every time the input this.entry changes //
+    if (this.entry) {
+      console.log('Entry: ', this.entry)
+      this.query = this.queryFromEntry(this.entry);
+      // this.refresh();
       this.fetchInternalSuggestions();
-      this.fetchExternalSuggestions();
+      this.fetchPrecalculatedSuggestions();
+      // add new Resource
+      // does not work with new datamodel
+      // this.newResource = this.resourceFromEntry(this.entry);
+      if (this.entry.references) {
+        // entry already has a link
+        this.locdbService.bibliographicResource(this.entry.references).subscribe(
+          (trv) => {
+            // is null parent correct here or should we also retrieve it
+            this.currentTarget = [trv, null];
+            this.onSelect(this.currentTarget);
+          },
+          (err) => { console.log('Invalid entry.references pointer', this.entry.references) });
+      } else {
+        // entry was not linked yet
+        this._currentTarget = null;
+        // this.onSelect(this.newResource);
+      }
+    } else {
+      this.query = '';
     }
+  }
+
+  refresh() {
+    // when search button is triggered
+    this.loggingService.logSearchIssued(
+      this.entry,
+      this.selectedResource[0],
+      this.query,
+      [0, 1]
+    );
+    // Why would we reset the newResource here
+    // this.newResource = [null, null];
+    this.fetchInternalSuggestions();
+    this.fetchExternalSuggestions();
+  }
+
+  fetchPrecalculatedSuggestions(): void {
+    if (!this.entry) { return; }
+    const pinnedEntry = this.entry;
+    this.externalInProgress = true;
+    console.log('Fetching precalculated suggestions for:', this.entry)
+    this.locdbService.precalculatedSuggestions(this.entry).subscribe(
+      (suggestions) => {
+        Object.is(this.entry, pinnedEntry) ? this.saveExternal(suggestions) : console.log('Discard precalc suggestions');
+        console.log('Received Precalculated External Suggestions:', suggestions)
+      },
+      (err) => {
+        console.log('Precalculated suggestions errored, fetching standard external suggestions');
+        this.fetchExternalSuggestions() // if there was an error, fall back to normal suggs
+      }
+    );
+
+  }
 
     fetchInternalSuggestions(): void {
-      if(this.query){
+      if (this.query) {
         const oldEntry = this.entry;
         this.internalInProgress = true; // loading icon
         this.internalSuggestions = [];
@@ -131,7 +157,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
     fetchExternalSuggestions(): void {
-      if(this.query){
+      if (this.query) {
         const oldEntry = this.entry;
         this.externalInProgress = true; // loading icon
         this.externalSuggestions = [];
@@ -141,8 +167,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
           (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions')
                       // this.loggingService.logSuggestionsArrived(this.entry, sug, false)
                     },
-          (err) => { this.externalInProgress = false;
-                    console.log(err)}
+          (err) => { this.externalInProgress = false; console.log(err)}
         );
       }
     }
@@ -217,8 +242,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
     commit() {
       console.log('Start commit', this.selectedResource)
       const pr = this.selectedResource[0];
-      console.log("selected Resource ", pr )
-      console.log("entry ", this.entry)
+      console.log('selected Resource ', pr )
+      console.log('entry ', this.entry)
       const provenance = pr.provenance;
       console.log('Call Logging');
       this.loggingService.logCommitPressed(this.entry, this.selectedResource[0], provenance);

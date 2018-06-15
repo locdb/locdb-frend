@@ -93,7 +93,7 @@ export class AgendaComponent implements OnInit, OnChanges {
   inspectScan(scan: models.Scan, embodiment: models.ResourceEmbodiment,
               resource: TypedResourceView, parent?: TypedResourceView) {
     // this.scanWithContext.emit([scan, { mode: 'scan', source: resource, embodiment: embodiment, parent:parent || null }])
-    this.router.navigate(['/linking/ScanInspector/', resource._id]);
+    this.router.navigate(['/linking/ScanInspector/', resource._id, scan._id]);
   }
 
 

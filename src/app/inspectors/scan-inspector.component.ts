@@ -18,6 +18,7 @@ export class ScanInspectorComponent implements OnInit, OnChanges {
   entries: models.BibliographicEntry[] = [];
   @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
   loading = false;
+  title = 'Scan Inspector';
 
 
   constructor( private locdbService: LocdbService) { }

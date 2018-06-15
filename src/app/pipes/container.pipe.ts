@@ -9,7 +9,9 @@ import { StandardPipe }from './type-pipes';
 
 @Pipe({name: 'container'})
 export class ContainerPipe implements PipeTransform {
-  transform(typedResource: TypedResourceView, author_suffix: string = ': '): string {
+  transform(typedResource: TypedResourceView, standalone: boolean = false): string {
+    // Use colon ':' when its a standalone resource, else ',' by default
+    const author_suffix = standalone ? ': ' : ', ';
     const standardPepe = new StandardPipe()
     // !<something> catches null and undefined
     if (!typedResource) { return '(no resource)'; }
@@ -20,6 +22,13 @@ export class ContainerPipe implements PipeTransform {
     // <Journal>, <Journal Issue>, <Journal Volume>
     // <eigene>, <bookSet>, <bookSeries>
     let containerString = '';
+
+    // always show the real type of the resource
+    containerString += '<span class="badge badge-secondary">' + typedResource.type + '</span> ';
+    // containerString += 'TYPE' + typedResource.type;
+    console.log('Container pipe called', containerString);
+
+
     const seperator = ' '; // semicolon should be only used to separate authors
     // if type is Journal, Journal Issue or Journal Volume gather metadata from all three
     if ([enums.resourceType.journal.valueOf(),
@@ -33,7 +42,7 @@ export class ContainerPipe implements PipeTransform {
       containerString += standardPepe.transform(typedResource, enums.resourceType.journalVolume, ', ', author_suffix)
     } else {
       // if not Journal, Journal Issue or Journal Volume just gather metadata from this resourceType
-      containerString = standardPepe.transform(typedResource, null, ', ', author_suffix)
+      containerString += standardPepe.transform(typedResource, null, ', ', author_suffix)
     }
     // additionally if type is nether bookSet nor bookSeries add metadata from this types
     if ([enums.resourceType.bookSet.valueOf(),
@@ -47,8 +56,6 @@ export class ContainerPipe implements PipeTransform {
       standardString = standardPepe.transform(typedResource, enums.resourceType.bookSeries, ', ', author_suffix)
       containerString += (standardString.trim().length > 0 ? seperator + standardString : '')
     }
-    // console.log("Typed References", typedResource)
-    // console.log("Container String", containerString)
     return containerString;
   }
 }
