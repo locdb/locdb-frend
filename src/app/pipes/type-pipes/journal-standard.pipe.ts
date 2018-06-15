@@ -35,12 +35,11 @@ export class JournalStandardPipe implements PipeTransform {
     }
     const issueTitle = typedResource.getTypedPropertyWrap(enums.resourceType.journalIssue, 'title')
     const volumeTitle = typedResource.getTypedPropertyWrap(enums.resourceType.journalVolume, 'title')
-    let publicationDate = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'publicationDate')
+    // journals do not have a publication date themselves, rather on the issue level
+    // let publicationDate = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'publicationDate')
+    let publicationDate = typedResource.getTypedPropertyWrap(enums.resourceType.journalIssue, 'publicationDate')
     if (typeof publicationDate !== 'string') {
-      publicationDate = moment(publicationDate).format('YYYY-MM-DD');
-    } else {
-      // is this really necessary?
-      publicationDate = publicationDate
+      publicationDate = moment(publicationDate).format('YYYY');
     }
     const isoPublicationDate = publicationDate
     const contributors = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'contributors')
@@ -85,6 +84,9 @@ export class JournalStandardPipe implements PipeTransform {
     // } else if (authors && authors.trim()) {
     //   s += authors + author_suffix;
     // }
+    if (standalone && isoPublicationDate) {
+      s += '<span class="badge badge-info">' + isoPublicationDate + '</span>';
+    }
     const otherAttributes = new Array<string>();
     if (standalone) {
       // If shown as standalone, make titles bold font
@@ -106,11 +108,10 @@ export class JournalStandardPipe implements PipeTransform {
     // I put it this way, such that we dont have to deal with leftover seperators
     for (const attr of [edition, number, publisher]) {
       if (attr && attr.trim()) {
-        console.log('attr', attr);
         otherAttributes.push(attr);
       }
     }
-    s += otherAttributes.join(seperator);
+    s += ' ' + otherAttributes.join(seperator);
     console.log('jStandard pipe result after joining:', s);
 
 

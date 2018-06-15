@@ -13,6 +13,10 @@ export { enums };
 
 export const NAME_SEPARATOR = ', '
 
+export function isValidDate(d) {
+  return d instanceof Date && !isNaN(d.getTime());
+}
+
 export function invert_enum(obj: Object) {
   const inverse = new Object();
   for (const key of Object.keys(obj)) {
@@ -33,6 +37,12 @@ export function enum_values(obj) {
     values.push(obj[prop]);
   }
   return values;
+}
+
+export function isoFullDate(date: Date): string {
+  const dateMoment = moment(date);
+  const isoDate = dateMoment.format('YYYY-MM-DD');
+  return isoDate;
 }
 
 
@@ -110,7 +120,7 @@ export function authors2contributors (authors: string[]): models.AgentRole[] {
 
 export function OCR2MetaData(ocr: models.OCRData): Metadata {
   console.log("Extracting OCR data from", ocr);
-  const ocrDate = moment(ocr.date, "YYYY").toDate();
+  const ocrDate = moment(ocr.date, 'YYYY').toDate();
   const obj =  {
     title: ocr.title || '',
     subtitle: '',
@@ -124,18 +134,6 @@ export function OCR2MetaData(ocr: models.OCRData): Metadata {
   console.log("Extracted", obj);
   return obj;
 
-}
-
-export function isoFullDate(date: Date | string): string {
-  // used in forms to provide initial value
-  // we could also use Angular DatePipe here
-
-  // console.log("Date: ", date)
-  if(date == undefined || date == null){
-    return ""
-  }
-
-  return moment(date).format("YYYY-MM-DD");
 }
 
 /* Our own enum for provenance data */
@@ -208,12 +206,13 @@ export class TypedResourceView implements Metadata {
     this.publicationDate = other.publicationDate;
   }
 
-  getTypedPropertyWrap(type: enums.resourceType, property: string){
-    return this.getTypedProperty(type, '_' + property)
+  getTypedPropertyWrap(type: enums.resourceType, property: string) {
+    console.log('raise DeprecationWarning, use getTypedProperty, wrapper is now obsolete');
+    return this.getTypedProperty(type, property)
   }
+
   getTypedProperty(type: enums.resourceType, property: string) {
-    const prefix = PropertyPrefixByType[type];
-    const typed_property = prefix + property;
+    const typed_property = typedProperty(type, property);
     return this.data[typed_property];
   }
 
@@ -265,20 +264,21 @@ export class TypedResourceView implements Metadata {
     return s;
   }
 
-  get provenance(): Provenance {
-    // could cache, yet identifiers may change ;)
-    let prov = Provenance.unknown;
-    if (this._id) {
-      prov = Provenance.locdb;
-    } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.swb)) {
-      prov =  Provenance.swb;
-    } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.crossref )) {
-      prov = Provenance.crossref
-    } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.gScholar)) {
-      prov = Provenance.gScholar;
-    }
-    return prov;
-  }
+  // DEPRECATED
+  // get provenance(): Provenance {
+  //   // could cache, yet identifiers may change ;)
+  //   let prov = Provenance.unknown;
+  //   if (this._id) {
+  //     prov = Provenance.locdb;
+  //   } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.swb)) {
+  //     prov =  Provenance.swb;
+  //   } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.crossref )) {
+  //     prov = Provenance.crossref
+  //   } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.gScholar)) {
+  //     prov = Provenance.gScholar;
+  //   }
+  //   return prov;
+  // }
 
 
   // forward native attributes
@@ -361,14 +361,12 @@ export class TypedResourceView implements Metadata {
     this.data[this._prefix + 'contributors'] = newContributors;
   }
 
-  get publicationDate(): Date  | string {
+  get publicationDate(): Date {
     // rely on moment library to do the conversion from string
     // moment can deal with both the initial date-time and later on full-date
     const strDate = this.data[this._prefix + 'publicationDate'];
     // console.log("getDate", strDate)
-    if (strDate == undefined){
-      return null;
-    }
+    if (!strDate) { return null; }
     const mom = moment(strDate);
     const date = mom.toDate();
     // console.log("moment null", isoFullDate(moment(null).format("YYYY-MM-DD")))
@@ -379,16 +377,17 @@ export class TypedResourceView implements Metadata {
     return date;
   }
 
-  set publicationDate(newDate: Date | string) {
-    if (newDate == undefined || newDate == null || newDate == "" || newDate == " "){
-      this.data[this._prefix + 'publicationDate'] = undefined
-    }
-    else{
+  set publicationDate(newDate: Date) {
+    console.log('Setting publicationDate', newDate);
+    // if (!newDate) {
+    if (!isValidDate(newDate)) {
+      this.data[this._prefix + 'publicationDate'] = undefined;
+    } else {
       // console.log("setDate", newDate)
       const dateMoment = moment(newDate);
-      const isoFullDate = dateMoment.format("YYYY-MM-DD");
+      const isoDate = dateMoment.format('YYYY-MM-DD');
       // console.log("isoFullDate ", isoFullDate)
-      this.data[this._prefix + 'publicationDate'] = isoFullDate;
+      this.data[this._prefix + 'publicationDate'] = isoDate;
     }
   }
 

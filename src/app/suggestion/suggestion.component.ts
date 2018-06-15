@@ -131,10 +131,14 @@ export class SuggestionComponent implements OnInit, OnChanges {
       (suggestions) => {
         Object.is(this.entry, pinnedEntry) ? this.saveExternal(suggestions) : console.log('Discard precalc suggestions');
         console.log('Received Precalculated External Suggestions:', suggestions)
+        if (!suggestions.length) {
+          console.log('Empty precalc. suggestions: falling back to standard retrieval');
+          this.fetchExternalSuggestions();
+        }
       },
       (err) => {
         console.log('Precalculated suggestions errored, fetching standard external suggestions');
-        this.fetchExternalSuggestions() // if there was an error, fall back to normal suggs
+        this.fetchExternalSuggestions(); // if there was an error, fall back to normal suggs
       }
     );
 

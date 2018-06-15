@@ -18,7 +18,7 @@ export class ContainerPipe implements PipeTransform {
     if (!typedResource) { return '(no resource)'; }
 
     if (typedResource.partOf !== undefined) {
-      console.log('Maybe ContainerPipe recieved child...');
+      console.log('[warning] Maybe ContainerPipe received child...');
     }
     // <Journal>, <Journal Issue>, <Journal Volume>
     // <eigene>, <bookSet>, <bookSeries>
