@@ -30,7 +30,7 @@ export class JournalStandardPipe implements PipeTransform {
     const publisherPepe = new PublisherPipe()
     if (!typedResource) { return '(no resource)'; }
     let journalTitle = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'title')
-    if (bold_title) {
+    if (standalone) {
       journalTitle = '<b>' + journalTitle + '</b>';
     }
     const issueTitle = typedResource.getTypedPropertyWrap(enums.resourceType.journalIssue, 'title')
@@ -62,7 +62,7 @@ export class JournalStandardPipe implements PipeTransform {
       publisher,
       seperator,
       author_suffix,
-      bold_title
+      standalone
     )
   }
 
@@ -79,7 +79,7 @@ export class JournalStandardPipe implements PipeTransform {
     publisher,
     seperator,
     author_suffix = ': ',
-    bold_title
+    standalone
   ) {
     let s = '';
     // if (editors && editors.trim()) {
@@ -88,11 +88,20 @@ export class JournalStandardPipe implements PipeTransform {
     //   s += authors + author_suffix;
     // }
     const otherAttributes = new Array<string>();
-    if (bold_title && journalTitle && journalTitle.trim().length > 0){
-      "<b>" + journalTitle + "</b>"
-    }
-    if (bold_title && issueTitle && issueTitle.trim().length > 0){
-      "<b>" + issueTitle + "</b>"
+    if (standalone) {
+      if (journalTitle && journalTitle.trim()) {
+        otherAttributes.push('<b>' + journalTitle + '</b>')
+      }
+      if (issueTitle && issueTitle.trim()) {
+        otherAttributes.push('<b>' + issueTitle + '</b>')
+      }
+    } else {
+      if (journalTitle && journalTitle.trim()) {
+        otherAttributes.push(journalTitle)
+      }
+      if (issueTitle && issueTitle.trim()) {
+        otherAttributes.push(issueTitle)
+      }
     }
     // I put it this way, such that we dont have to deal with leftover seperators
     for (const attr of [journalTitle, issueTitle, volumeTitle, number, edition, publisher]) {

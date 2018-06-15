@@ -55,9 +55,9 @@ export class ContainerPipe implements PipeTransform {
       enums.resourceType.journalIssue.valueOf(),
       enums.resourceType.journalVolume.valueOf()]
       .indexOf(typedResource.type) === -1) {
-      let standardString = standardPepe.transform(typedResource, enums.resourceType.bookSet, ', ', author_suffix, standalone)
+      let standardString = standardPepe.transform(typedResource, enums.resourceType.bookSet, ', ', standalone)
       containerString += (standardString.trim().length > 0 ? seperator + standardString : '')
-      standardString = standardPepe.transform(typedResource, enums.resourceType.bookSeries, ', ', author_suffix, standalone)
+      standardString = standardPepe.transform(typedResource, enums.resourceType.bookSeries, ', ', standalone)
       containerString += (standardString.trim().length > 0 ? seperator + standardString : '')
     }
     return containerString;

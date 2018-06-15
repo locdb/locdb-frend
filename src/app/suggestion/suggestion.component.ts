@@ -61,10 +61,11 @@ export class SuggestionComponent implements OnInit, OnChanges {
     max_ex = -1;
     max_in = -1;
 
+    /* Flags for loading indicators */
     externalInProgress = false;
     internalInProgress = false;
 
-
+    /* Default top-k thresholds */
     internalThreshold = 10;
     externalThreshold = 10;
 
