@@ -1,6 +1,6 @@
 <span>
   <span *ngIf="of">
-    <span *ngIf="of.type" class="badge badge-primary"> {{ of.type }} </span>&nbsp;
+    <span *ngIf="of.type" class="badge badge-primary"> {{ of.type }} </span>
     <span *ngIf="of.publicationDate" class="badge badge-info"> {{ of.publicationDate | date:'yyyy' }}</span>
     <span *ngIf="of.contributors"> {{ of.contributors | authors:'; ':': ' }} </span>
     <b *ngIf="of.title || of.subtitle"> {{of.title}} {{ of.subtitle }} </b>
