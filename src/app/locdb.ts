@@ -96,7 +96,7 @@ export interface Metadata {
   edition: string;
   number: string;
   contributors: Array<models.AgentRole>;
-  publicationDate: Date | string;
+  publicationDate: Date;
 }
 export function authors2contributors (authors: string[]): models.AgentRole[] {
   if (!authors) {return []};
@@ -119,7 +119,7 @@ export function authors2contributors (authors: string[]): models.AgentRole[] {
 }
 
 export function OCR2MetaData(ocr: models.OCRData): Metadata {
-  console.log("Extracting OCR data from", ocr);
+  console.log('Extracting OCR data from', ocr);
   const ocrDate = moment(ocr.date, 'YYYY').toDate();
   const obj =  {
     title: ocr.title || '',
@@ -131,12 +131,13 @@ export function OCR2MetaData(ocr: models.OCRData): Metadata {
     type: enums.resourceType.report,
     edition: '',
   };
-  console.log("Extracted", obj);
+  console.log('Extracted', obj);
   return obj;
 
 }
 
 /* Our own enum for provenance data */
+// DEPRECATED, use data.source instead
 export enum Provenance {
   unknown = 'Unknown',
   gScholar = 'Google Scholar',

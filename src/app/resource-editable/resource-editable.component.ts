@@ -19,23 +19,20 @@ export class ResourceEditableComponent implements OnInit {
 
   constructor(private loggingService: LoggingService, private locdbService: LocdbService) { }
 
-  ngOnInit(){ }
+  ngOnInit() { }
 
 
   showForm(val: boolean) {
     this.resource = <TypedResourceView> this.resource
     // Display the form or stop displaying it
     // this.editing = val;
-    if (this.resource instanceof TypedResourceView){
-      let provenance = this.resource.provenance;
-
-        if (this.editing){
-          this.loggingService.logStartEditing(this.resource, provenance)
-        } else{
-          this.loggingService.logEndEditing(this.resource, provenance)
+    if (this.resource instanceof TypedResourceView) {
+        if (this.editing) {
+          this.loggingService.logStartEditing(this.resource, null)
+        } else {
+          this.loggingService.logEndEditing(this.resource, null)
         }
-    }
-    else {
+    } else {
     // if (this.editing){
     //  this.loggingService.logStartEditing(this.resource)
     // } else{

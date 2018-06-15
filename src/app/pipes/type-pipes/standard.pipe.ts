@@ -61,11 +61,8 @@ export class StandardPipe implements PipeTransform {
     } else {
       const title = typedResource.title
       const subtitle = typedResource.subtitle
-      let publicationDate = typedResource.publicationDate
-      if (typeof publicationDate !== 'string') {
-        publicationDate = moment(publicationDate).format('YYYY');
-      }
-      const isoPublicationDate = publicationDate;
+      const publicationDate = typedResource.publicationDate
+      const isoPublicationDate = moment(publicationDate).format('YYYY')
       const contributors = typedResource.contributors;
       const authors = authorsPepe.transform(contributors, '; ', contrib_suffix);
       const editors = editorsPepe.transform(contributors, '; ', contrib_suffix);
