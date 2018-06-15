@@ -43,10 +43,10 @@ export class ContainerPipe implements PipeTransform {
       // containerString += (standardString.trim().length > 0 ? standardString + seperator : '')
       // containerString += standardPepe.transform(typedResource, enums.resourceType.journalVolume, ', ', author_suffix)
       // handpicked values
-      containerString = journalStandardPepe.transform(typedResource, ', ', author_suffix, standalone)
+      containerString = journalStandardPepe.transform(typedResource, ', ', standalone)
     } else {
       // if not Journal, Journal Issue or Journal Volume just gather metadata from this resourceType
-      containerString += standardPepe.transform(typedResource, null, ', ', author_suffix, standalone)
+      containerString += standardPepe.transform(typedResource, null, ', ', standalone)
     }
     // additionally if type is nether bookSet nor bookSeries add metadata from this types
     if ([enums.resourceType.bookSet.valueOf(),

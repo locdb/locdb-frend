@@ -20,16 +20,19 @@ export class JournalStandardPipe implements PipeTransform {
   transform(
     typedResource: TypedResourceView,
     seperator: string = ', ',
-    author_suffix = ': ',  // we need to make this special, it should be ':' per default but ',' in containers.
-    bold_title: boolean = false,
+    standalone: boolean = false,
   ): string {
-    console.log("resource", typedResource)
+    const author_suffix = standalone ? ': ' : ', ';
+    console.log('resource', typedResource)
     const identifierPepe = new IdentifierPipe()
     const authorsPepe = new AuthorsPipe()
     const editorsPepe = new EditorsPipe()
     const publisherPepe = new PublisherPipe()
     if (!typedResource) { return '(no resource)'; }
-    const journalTitle = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'title')
+    let journalTitle = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'title')
+    if (bold_title) {
+      journalTitle = '<b>' + journalTitle + '</b>';
+    }
     const issueTitle = typedResource.getTypedPropertyWrap(enums.resourceType.journalIssue, 'title')
     const volumeTitle = typedResource.getTypedPropertyWrap(enums.resourceType.journalVolume, 'title')
     let publicationDate = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'publicationDate')
@@ -43,8 +46,8 @@ export class JournalStandardPipe implements PipeTransform {
     const contributors = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'contributors')
     // const authors = authorsPepe.transform(contributors)
     // const editors = editorsPepe.transform(contributors)
-    const issueNumber =  "issue " + typedResource.getTypedPropertyWrap(enums.resourceType.journalIssue, 'number')
-    const volumeNumber =  "volume " + typedResource.getTypedPropertyWrap(enums.resourceType.journalVolume, 'number')
+    const issueNumber =  'issue ' + typedResource.getTypedPropertyWrap(enums.resourceType.journalIssue, 'number')
+    const volumeNumber =  'volume ' + typedResource.getTypedPropertyWrap(enums.resourceType.journalVolume, 'number')
     const publisher = publisherPepe.transform(contributors)
     // const identifiers =  typedResource.getTypedPropertyWrap(forced_type, 'identifiers')
     return this.prettyStandardString(

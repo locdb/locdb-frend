@@ -21,9 +21,9 @@ export class StandardPipe implements PipeTransform {
     typedResource: TypedResourceView,
     forced_type: enums.resourceType = null,
     seperator: string = ', ',
-    author_suffix = ': ',  // we need to make this special, it should be ':' per default but ',' in containers.
-    bold_title: boolean = false,
+    standalone: boolean = false,
   ): string {
+    const author_suffix = standalone ? ': ' : ', ';
     if (!typedResource) { return '(no resource)'; }
     const identifierPepe = new IdentifierPipe()
     const authorsPepe = new AuthorsPipe()
@@ -59,7 +59,7 @@ export class StandardPipe implements PipeTransform {
         edition,
         seperator,
         author_suffix,
-        bold_title
+        standalone
       )
     } else {
       const title = typedResource.title
@@ -90,7 +90,7 @@ export class StandardPipe implements PipeTransform {
         edition,
         seperator,
         author_suffix,
-        bold_title
+        standalone
       )
     }
     return standardString;
@@ -108,7 +108,7 @@ export class StandardPipe implements PipeTransform {
     edition,
     seperator,
     author_suffix = ': ',
-    bold_title) {
+    standalone) {
     // const standardString = (editors.length != 0 ? editors + " (ed.)" + author_suffix + '' :
     //                           authors.length != 0 ? authors + author_suffix + '' : '')
     //                       + (title && title.trim().length != 0 ? title + seperator + '' : '')
@@ -126,11 +126,15 @@ export class StandardPipe implements PipeTransform {
       s += authors + author_suffix;
     }
     const otherAttributes = new Array<string>();
-    if (bold_title && title && title.trim().length > 0){
-      "<b>" + title + "</b>"
+    if (title && title.trim()) {
+      if (standalone) {
+        otherAttributes.push('<b>' + title + '</b>');
+      } else {
+        otherAttributes.push(title);
+      }
     }
     // I put it this way, such that we dont have to deal with leftover seperators
-    for (const attr of [title, subtitle, number, edition, publisher]) {
+    for (const attr of [subtitle, number, edition, publisher]) {
       if (attr && attr.trim()) {
         // console.log('attr', attr);
         otherAttributes.push(attr);
