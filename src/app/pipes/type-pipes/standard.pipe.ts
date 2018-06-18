@@ -1,10 +1,11 @@
 import * as moment from 'moment';
 import { Pipe, PipeTransform } from '@angular/core';
-import { models, enums, composeName, TypedResourceView } from '../../locdb';
-import { IdentifierPipe } from "../identifier.pipe";
-import { AuthorsPipe } from "../authors.pipe";
-import { EditorsPipe } from "../editors.pipe";
-import { PublisherPipe } from "../publisher.pipe";
+import { DatePipe } from '@angular/common';
+import { models, enums, composeName, TypedResourceView} from '../../locdb';
+import { IdentifierPipe } from '../identifier.pipe';
+import { AuthorsPipe } from '../authors.pipe';
+import { EditorsPipe } from '../editors.pipe';
+import { PublisherPipe } from '../publisher.pipe';
 
 
 /*
@@ -26,63 +27,42 @@ export class StandardPipe implements PipeTransform {
     if (!typedResource) { return '(no resource)'; }
     /* Suffix for contributors, use colon (:) in standalone variants, else a comma (,) */
     const contrib_suffix = standalone ? ': ' : ', ';
-    const identifierPepe = new IdentifierPipe()
-    const authorsPepe = new AuthorsPipe()
-    const editorsPepe = new EditorsPipe()
-    const publisherPepe = new PublisherPipe()
+    const identifierPepe = new IdentifierPipe();
+    const authorsPepe = new AuthorsPipe();
+    const editorsPepe = new EditorsPipe();
+    const publisherPepe = new PublisherPipe();
+    const datePepe = new DatePipe('en'); // locale
     let standardString = '';
+    let trv = typedResource;
     if (forced_type != null) {
-      const title = typedResource.getTypedPropertyWrap(forced_type, 'title')
-      const subtitle = typedResource.getTypedPropertyWrap(forced_type, 'subtitle')
-      let publicationDate = typedResource.getTypedPropertyWrap(forced_type, 'publicationDate')
-      if (typeof publicationDate !== 'string') {
-        publicationDate = moment(publicationDate).format('YYYY-MM-DD');
-      }
-      const isoPublicationDate = publicationDate
-      const contributors = typedResource.getTypedPropertyWrap(forced_type, 'contributors')
-      const authors = authorsPepe.transform(contributors, '; ', contrib_suffix)
-      const editors = editorsPepe.transform(contributors, '; ', contrib_suffix)
-      const publisher = publisherPepe.transform(contributors)
-      const number =  typedResource.getTypedPropertyWrap(forced_type, 'number')
-      const edition =  typedResource.getTypedPropertyWrap(forced_type, 'edition')
-      // const identifiers =  typedResource.getTypedPropertyWrap(forced_type, 'identifiers')
-      standardString = this.prettyStandardString(
-        title,
-        subtitle,
-        isoPublicationDate,
-        editors,
-        authors,
-        publisher,
-        number,
-        edition,
-        seperator,
-        standalone
-      )
-    } else {
-      const title = typedResource.title
-      const subtitle = typedResource.subtitle
-      const publicationDate = typedResource.publicationDate
-      const isoPublicationDate = moment(publicationDate).format('YYYY')
-      const contributors = typedResource.contributors;
-      const authors = authorsPepe.transform(contributors, '; ', contrib_suffix);
-      const editors = editorsPepe.transform(contributors, '; ', contrib_suffix);
-      const publisher = publisherPepe.transform(contributors);
-      const number =  typedResource.number;
-      const edition =  typedResource.edition;
-      // const identifiers =  typedResource.identifiers
-      standardString = this.prettyStandardString(
-        title,
-        subtitle,
-        isoPublicationDate,
-        editors,
-        authors,
-        publisher,
-        number,
-        edition,
-        seperator,
-        standalone
-      )
+      // Change the view on the resource to the forced type
+      trv = trv.astype(forced_type);
     }
+    const title = typedResource.title
+    const subtitle = typedResource.subtitle
+    const publicationDate = typedResource.publicationDate
+    console.log('Date for title', title, publicationDate);
+    const isoPublicationDate = datePepe.transform(publicationDate, 'yyyy');
+    console.log('YYYY date', title, isoPublicationDate);
+    const contributors = typedResource.contributors;
+    const authors = authorsPepe.transform(contributors, '; ', contrib_suffix);
+    const editors = editorsPepe.transform(contributors, '; ', contrib_suffix);
+    const publisher = publisherPepe.transform(contributors);
+    const number =  typedResource.number;
+    const edition =  typedResource.edition;
+    // const identifiers =  typedResource.identifiers
+    standardString = this.prettyStandardString(
+      title,
+      subtitle,
+      isoPublicationDate,
+      editors,
+      authors,
+      publisher,
+      number,
+      edition,
+      seperator,
+      standalone
+    )
     return standardString;
   }
 
@@ -125,7 +105,7 @@ export class StandardPipe implements PipeTransform {
         otherAttributes.push(attr);
       }
     }
-    console.log('Standard pipe result before joining:', s);
+    // console.log('Standard pipe result before joining:', s);
     s += otherAttributes.join(seperator);
 
 

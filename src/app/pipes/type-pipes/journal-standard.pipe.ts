@@ -1,10 +1,11 @@
 import * as moment from 'moment';
 import { Pipe, PipeTransform } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { models, enums, composeName, TypedResourceView } from '../../locdb';
-import { IdentifierPipe } from "../identifier.pipe";
-import { AuthorsPipe } from "../authors.pipe";
-import { EditorsPipe } from "../editors.pipe";
-import { PublisherPipe } from "../publisher.pipe";
+import { IdentifierPipe } from '../identifier.pipe';
+import { AuthorsPipe } from '../authors.pipe';
+import { EditorsPipe } from '../editors.pipe';
+import { PublisherPipe } from '../publisher.pipe';
 
 
 /*
@@ -28,6 +29,7 @@ export class JournalStandardPipe implements PipeTransform {
     // const authorsPepe = new AuthorsPipe()
     // const editorsPepe = new EditorsPipe()
     const publisherPepe = new PublisherPipe()
+    const datePepe = new DatePipe('en'); // locale
     if (!typedResource) { return '(no resource)'; }
     let journalTitle = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'title')
     if (standalone) {
@@ -37,11 +39,9 @@ export class JournalStandardPipe implements PipeTransform {
     const volumeTitle = typedResource.getTypedPropertyWrap(enums.resourceType.journalVolume, 'title')
     // journals do not have a publication date themselves, rather on the issue level
     // let publicationDate = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'publicationDate')
-    let publicationDate = typedResource.getTypedPropertyWrap(enums.resourceType.journalIssue, 'publicationDate')
-    if (typeof publicationDate !== 'string') {
-      publicationDate = moment(publicationDate).format('YYYY');
-    }
-    const isoPublicationDate = publicationDate
+    // go with astype to get proper date treatment from the accessor
+    const publicationDate = typedResource.astype(enums.resourceType.journalIssue).publicationDate;
+    const isoPublicationDate = datePepe.transform(publicationDate, 'yyyy');
     const contributors = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'contributors')
     // const authors = authorsPepe.transform(contributors, '; ', contrib_suffix)
     // const editors = editorsPepe.transform(contributors, '; ', contrib_suffix)
@@ -112,7 +112,7 @@ export class JournalStandardPipe implements PipeTransform {
       }
     }
     s += ' ' + otherAttributes.join(seperator);
-    console.log('jStandard pipe result after joining:', s);
+    // console.log('jStandard pipe result after joining:', s);
 
 
     // TODO FIXME this caused some trouble! :)

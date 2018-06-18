@@ -370,6 +370,10 @@ export class TypedResourceView implements Metadata {
     if (!strDate) { return null; }
     const mom = moment(strDate);
     const date = mom.toDate();
+    if (!isValidDate(date)) {
+      // return null if not valid
+      return null;
+    }
     // console.log("moment null", isoFullDate(moment(null).format("YYYY-MM-DD")))
     // console.log("moment undefined", moment(undefined).format("YYYY-MM-DD"))
     // console.log("moment ''", moment("").format("YYYY-MM-DD"))
