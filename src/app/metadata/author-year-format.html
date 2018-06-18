@@ -1,7 +1,7 @@
 <p class="mb-0">
   <span *ngIf="of">
-    <span *ngIf="of.type" class="badge badge-primary mr-1"> {{ of.type }}</span>
-    <span *ngIf="of.publicationDate" class="badge badge-info"> {{ of.publicationDate | date:'yyyy' }}</span>
+    <span *ngIf="of.type" class="badge badge-primary"> {{ of.type }}</span>
+    <span *ngIf="of.publicationDate" class="badge badge-info ml-1"> {{ of.publicationDate | date:'yyyy' }}</span>
     {{ of.contributors | authors:'; ':': ' }} 
     <b *ngIf="of.title || of.subtitle"> {{of.title}} {{ of.subtitle }} </b>
     <!-- Only show publisher if not contained in some other resource -->
