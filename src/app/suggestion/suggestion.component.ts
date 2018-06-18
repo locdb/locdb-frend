@@ -66,7 +66,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     internalInProgress = false;
 
     /* Default top-k thresholds */
-    internalThreshold = 10;
+    internalThreshold = 1;
     externalThreshold = 10;
 
 

@@ -33,8 +33,7 @@ export class BrowseComponent implements OnInit, OnChanges {
       max_in = -1;
 
       internalInProgress = false;
-
-      internalThreshold = 0.1;
+      internalThreshold = 20;
 
       searchentry: models.BibliographicEntry = {}
 
