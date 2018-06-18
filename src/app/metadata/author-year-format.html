@@ -34,7 +34,7 @@
     <!-- Both child and parent are given -->
     <em> in:&nbsp;</em>
     <span [innerHtml]="in | container:false"></span>
-    <span *ngIf="of.embodiedAs && of.embodiedAs.length">, pp. {{ of.embodiedAs[0].firstPage}}-{{ of.embodiedAs[0].lastPage}}</span>
+    <span *ngIf="of.embodiedAs && of.embodiedAs.length && of.embodiedAs[0].firstPage && of.embodiedAs[0].lastPage">, pp. {{ of.embodiedAs[0].firstPage}}-{{ of.embodiedAs[0].lastPage}}</span>
   </span>
   <span *ngIf="in && !of" [innerHtml]="in | container:true">
     <!-- Only parent is given -->
