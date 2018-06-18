@@ -31,11 +31,16 @@
           <!-- </span> -->
   </span>
   <span *ngIf="of && in">
+    <!-- Both child and parent are given -->
     <em> in:&nbsp;</em>
     <span [innerHtml]="in | container:false"></span>
+    <span *ngIf="of.embodiedAs && of.embodiedAs.length">, pp. {{ of.embodiedAs[0].firstPage}}-{{ of.embodiedAs[0].lastPage}}</span>
   </span>
-  <span *ngIf="in && !of" [innerHtml]="in | container:true"></span>
+  <span *ngIf="in && !of" [innerHtml]="in | container:true">
+    <!-- Only parent is given -->
+  </span>.
   <span *ngIf="of">
+    <!-- Some information that is only available when child is given -->
     <a class="badge badge-secondary ml-1" *ngIf="getClickableIDURL(of.identifiers)" [href]="getClickableIDURL(of.identifiers)" target="_blank">
       <i class="fa fa-external-link"></i> Online
     </a>
