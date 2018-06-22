@@ -11,6 +11,10 @@ import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 
+import { Observable } from 'rxjs/Rx'
+import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
+import { StandardPipe }from '../pipes/type-pipes';
+
 @Component( {
     selector: 'app-resource-form-basic',
     templateUrl: './resource-form.component.html',
@@ -29,10 +33,39 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     resourceTypes: string[] = enum_values(enums.resourceType);
     identifierTypes: string[] = enum_values(enums.identifier);
 
+    dataSourcePartOf: Observable<any>
+    // queryPartOf: string;
+
     constructor(
         private fb: FormBuilder,
         private locdbService: LocdbService
-    ) { this.createForm(); }
+    )
+    {
+    this.createForm();
+        this.dataSourcePartOf = Observable.create((observer: any) => {
+          // Runs on every search
+        observer.next(this.resourceForm.get('partOf').value); // input field with two way bind
+        }).mergeMap((token: string) => this.getStatesAsObservable(token))
+          .map(r => r.map( s => this.extractTypeahead(s)));
+          // write id of selected resource in partof
+          // maybe show name in form
+ }
+
+ extractTypeahead(typedTuple: [TypedResourceView,TypedResourceView]){
+   return new typeaheadObj(typedTuple[0])
+   }
+
+ getStatesAsObservable(token: string): Observable<any> {
+     return this.locdbService.suggestionsByQuery(token, false, 0)
+ }
+
+
+   typeaheadOnSelectPartOf(e: TypeaheadMatch): void {
+     // console.log('Selected value: ', e.item.id,  e.item.name);
+     this.resourceForm.get('partOf').setValue(e.item.name)
+     this.resourceForm.value.partOf = e.item.id
+     console.log(this.prepareSaveResource())
+   }
 
     createForm()  {
         this.resourceForm = this.fb.group( {
@@ -44,6 +77,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
             publicationyear: '',  // is this default ok?
             contributors: this.fb.array([]),
             identifiers: this.fb.array([]),
+            partOf: '',
         });
     }
 
@@ -123,6 +157,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
             edition: this.resource.edition,
             resourcenumber: this.resource.number,
             publicationyear: isoFullDate(this.resource.publicationDate),
+            partOf: this.resource.partOf,
             // containerTitle: this.resource.containerTitle // still in progress
         });
         // console.log("publicationyear: ",  this.resourceForm.value.publicationyear)
@@ -174,7 +209,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
           (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
         );
         const resource: TypedResourceView =  new TypedResourceView({_id: this.resource._id,
-          type: formModel.resourcetype as string, partOf: this.resource.partOf,
+          type: formModel.resourcetype as string, partOf: formModel.partOf || this.resource.partOf,
           parts: this.resource.parts, cites: this.resource.cites,
           status: this.resource.status})
         resource.identifiers = identsDeepCopy;
@@ -228,4 +263,18 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         }
     }
 
+}
+
+class typeaheadObj {
+    private id;
+    private name;
+
+    constructor(tr: TypedResourceView){
+      this.id = tr._id
+      this.name = (new StandardPipe().transform(tr)).replace(/<.*?>/, '').replace(/<\/.*?>/, '')
+    }
+
+    public toString (): string {
+      return this.name
+    }
 }

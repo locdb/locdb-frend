@@ -72,6 +72,7 @@ import { EditViewComponent } from './edit-view/edit-view.component'
 
 
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { TypeaheadModule } from 'ngx-bootstrap';
 
 const appRoutes: Routes = [
   // { path: 'resolve/:NOT_OCR_PROCESSED/:OCR_PROCESSING/:OCR_PROCESSED/:EXTERNAL', component: LinkingComponent },
@@ -101,6 +102,7 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports: [
+    TypeaheadModule.forRoot(),
     AccordionModule.forRoot(),
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),

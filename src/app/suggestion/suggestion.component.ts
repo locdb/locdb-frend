@@ -13,6 +13,14 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { enums, models, TypedResourceView, Metadata, OCR2MetaData } from '../locdb';
 import { REQUIRED_IDENTIFIERS } from '../ingest/constraints';
 
+import { fromEvent } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
+import { map, filter, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs/Rx'
+import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
+
+import { StandardPipe }from '../pipes/type-pipes';
+
 
 @Component({
     selector: 'app-suggestion',
@@ -27,6 +35,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     @Input() entry: models.BibliographicEntry;
     @Output() suggest: EventEmitter<models.BibliographicResource> = new EventEmitter();
 
+
     // make this visible to template
     environment = environment;
 
@@ -34,7 +43,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
     query: string;
 
     search_extended = false;
-
 
     internalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
     externalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
@@ -68,15 +76,65 @@ export class SuggestionComponent implements OnInit, OnChanges {
     /* Default top-k thresholds */
     internalThreshold = 1;
     externalThreshold = 10;
-
+    dataSource: Observable<any>
 
 
     constructor(private locdbService: LocdbService,
       private loggingService: LoggingService,
-      private modalService: BsModalService) { }
+      private modalService: BsModalService) {
+      this.dataSource = Observable.create((observer: any) => {
+      // Runs on every search
+      observer.next(this.query);
+    }).mergeMap((token: string) => this.getStatesAsObservable(token)).map(r => r.map( s => this.extractTypeahead(s)));
+  }
 
-    ngOnInit() {
+  extractTypeahead(typedTuple: [TypedResourceView,TypedResourceView]){
+    return new typeaheadObj(typedTuple[0])
     }
+
+  getStatesAsObservable(token: string): Observable<any> {
+      return this.locdbService.suggestionsByQuery(token, false, this.internalThreshold)
+  }
+
+  typeaheadOnSelect(e: TypeaheadMatch): void {
+    console.log('Selected value: ', e.item.id);
+    this.query = e.item.id
+    this.refresh()
+    //e.item._id
+  }
+
+      ngOnInit() {
+  }
+
+    getTypeaheadSuggestions(value, index){
+      return this.locdbService.suggestionsByQuery(value, false, this.internalThreshold)
+    }
+
+  //   ngOnInit() {
+  //     const searchBox = <HTMLTextAreaElement> document.getElementById('searcharea');
+  //     console.log("searchBox", searchBox)
+  //     const typeahead = fromEvent(searchBox, 'input').pipe(
+  //       map((e: KeyboardEvent) => (<HTMLTextAreaElement> e.target).value),
+  //       filter(text => text.length > 2),
+  //       debounceTime(10),
+  //       distinctUntilChanged(),
+  //       switchMap((value, index) => this.getTypeaheadSuggestions(value, index))
+  //     );
+  //     const oldEntry = this.entry;
+  //     typeahead.subscribe(
+  //      // Handle the data from the API
+  //      (sug) => {   console.log("Typeahead data: ", sug)
+  //                   Object.is(this.entry, oldEntry) ? console.log(sug) : console.log('discarded suggestions')
+  //                    // this.loggingService.logSuggestionsArrived(this.entry, sug, true)
+  //                  },
+  //     (err) => { this.internalInProgress = false;
+  //                  console.log(err) }
+  //     );
+  //   }
+  //
+  // getTypeaheadSuggestions(value, index){
+  //   return this.locdbService.suggestionsByQuery(value, false, this.internalThreshold)
+  // }
 
   ngOnChanges(changes: SimpleChanges | any) {
     // This is called every time the input this.entry changes //
@@ -334,4 +392,18 @@ export class SuggestionComponent implements OnInit, OnChanges {
     this.search_extended = !this.search_extended
   }
 
+}
+
+class typeaheadObj {
+    private id;
+    private name;
+
+    constructor(tr: TypedResourceView){
+      this.id = tr._id
+      this.name = (new StandardPipe().transform(tr)).replace(/<.*?>/, '').replace(/<\/.*?>/, '')
+    }
+
+    public toString (): string {
+      return this.name
+    }
 }
