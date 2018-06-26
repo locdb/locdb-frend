@@ -89,7 +89,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   extractTypeahead(typedTuple: [TypedResourceView,TypedResourceView]){
-    return new typeaheadObj(typedTuple[0])
+    return new typeaheadObj(typedTuple)
     }
 
   getStatesAsObservable(token: string): Observable<any> {
@@ -99,7 +99,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
   typeaheadOnSelect(e: TypeaheadMatch): void {
     console.log('Selected value: ', e.item.id);
     this.query = e.item.id
-    this.refresh()
+    this.internalSuggestions = [e.item.typedTuple]
+    this.selectedResource = e.item.typedTuple
     //e.item._id
   }
 
@@ -372,8 +373,11 @@ export class SuggestionComponent implements OnInit, OnChanges {
 class typeaheadObj {
     private id;
     private name;
+    private typedTuple;
 
-    constructor(tr: TypedResourceView){
+    constructor(typedTuple: [TypedResourceView,TypedResourceView]){
+      this.typedTuple = typedTuple
+      let tr = typedTuple[0]
       this.id = tr._id
       this.name = (new StandardPipe().transform(tr)).replace(/<.*?>/, '').replace(/<\/.*?>/, '')
     }

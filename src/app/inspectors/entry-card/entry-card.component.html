@@ -2,7 +2,11 @@
 style="padding-left: 10px"> <!-- [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">-->
     <div class="card-header" [class]="active ? 'card-header bg-light' : 'card-header border-default  bg-light'">
       <div class="row">
-        <div class="col-11">
+      <div class="col-1">
+        <i *ngIf="!entry.references" class="fa fa-square fa-lg" aria-hidden="true"></i>
+        <i *ngIf="entry.references" class="fa fa-check-square fa-lg" aria-hidden="true"></i>
+      </div>
+        <div class="col-10">
           {{ short()}}
     </div>
       <div class="col-1">
