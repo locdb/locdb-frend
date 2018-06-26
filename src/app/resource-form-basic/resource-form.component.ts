@@ -33,7 +33,8 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     resourceTypes: string[] = enum_values(enums.resourceType);
     identifierTypes: string[] = enum_values(enums.identifier);
 
-    dataSourcePartOf: Observable<any>
+    dataSourcePartOf: Observable<any>;
+    placeholderPartOf: string = "Enter name to search for parent"
     // queryPartOf: string;
 
     constructor(
@@ -83,7 +84,6 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     ngOnInit()  {
     }
-
 
     nameFromAgent(agent: models.ResponsibleAgent): string {
         // forward to locdb.ts method for unified treatment everywhere
@@ -160,6 +160,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
             partOf: this.resource.partOf,
             // containerTitle: this.resource.containerTitle // still in progress
         });
+        this.placeholderPartOf = this.resource.partOf || "Enter name to search for parent"
         // console.log("publicationyear: ",  this.resourceForm.value.publicationyear)
         // new clean set contribs
         this.setContributors(this.resource.contributors);

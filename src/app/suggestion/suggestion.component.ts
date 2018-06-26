@@ -1,4 +1,4 @@
-import { ViewChild, Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter} from '@angular/core';
+import { ViewChild, Component, OnInit, OnChanges, AfterViewInit, SimpleChanges, Input, Output, EventEmitter} from '@angular/core';
 import { LocdbService } from '../locdb.service';
 import { LoggingService } from '../logging.service'
 import { MOCK_INTERNAL } from '../mock-bresources'
@@ -110,32 +110,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
       return this.locdbService.suggestionsByQuery(value, false, this.internalThreshold)
     }
 
-  //   ngOnInit() {
-  //     const searchBox = <HTMLTextAreaElement> document.getElementById('searcharea');
-  //     console.log("searchBox", searchBox)
-  //     const typeahead = fromEvent(searchBox, 'input').pipe(
-  //       map((e: KeyboardEvent) => (<HTMLTextAreaElement> e.target).value),
-  //       filter(text => text.length > 2),
-  //       debounceTime(10),
-  //       distinctUntilChanged(),
-  //       switchMap((value, index) => this.getTypeaheadSuggestions(value, index))
-  //     );
-  //     const oldEntry = this.entry;
-  //     typeahead.subscribe(
-  //      // Handle the data from the API
-  //      (sug) => {   console.log("Typeahead data: ", sug)
-  //                   Object.is(this.entry, oldEntry) ? console.log(sug) : console.log('discarded suggestions')
-  //                    // this.loggingService.logSuggestionsArrived(this.entry, sug, true)
-  //                  },
-  //     (err) => { this.internalInProgress = false;
-  //                  console.log(err) }
-  //     );
-  //   }
-  //
-  // getTypeaheadSuggestions(value, index){
-  //   return this.locdbService.suggestionsByQuery(value, false, this.internalThreshold)
-  // }
-
   ngOnChanges(changes: SimpleChanges | any) {
     // This is called every time the input this.entry changes //
     if (this.entry) {
@@ -165,6 +139,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       this.query = '';
     }
   }
+
 
   refresh() {
     // when search button is triggered
