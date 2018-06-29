@@ -116,18 +116,17 @@ export class LocdbService {
    Properly pack an array of bibliographic resources as returned by
    suggestion services into a **Pair** of parent and child typed resources
    */
-   if (parentAndChild.length == 1) {
-     // The single entry of the array is a stand-alone resource,
-     // we therefore return null as parent.
-     const tuple: [TypedResourceView, TypedResourceView] = [new TypedResourceView(parentAndChild[0]), null]
-     return tuple;
+   let tuple: [TypedResourceView, TypedResourceView];
+   if (!parentAndChild[0]) {
+     console.log('Warning, received undefined or null child resource, should never happen');
    }
-
-   if (parentAndChild.length > 2) {
-     console.log("WARNING: more than 2 resources in [parent, child] relation")
+   if (!parentAndChild[1]) {
+     // if parent is none or not even defined
+     tuple = [new TypedResourceView(parentAndChild[0]), null];
+   } else {
+     tuple = [new TypedResourceView(parentAndChild[0]), new TypedResourceView(parentAndChild[1])];
    }
-   // this is super annoying to create an actual typle
-   const tuple: [TypedResourceView, TypedResourceView] = [new TypedResourceView(parentAndChild[0]), new TypedResourceView(parentAndChild[1])]
+   console.log('Packed tuple:', tuple);
    return tuple;
  }
 
@@ -212,13 +211,15 @@ export class LocdbService {
     /* if necessary, creates target resource before updating the reference of the entry */
     /* 1-3 requests */
     let [child, parent] = resources;
+    console.log('Child:', child)
+    console.log('Parent:', parent)
     if (parent) {
+      console.log('Pushing parent:', parent)
       parent = await this.maybePostResource(parent).toPromise();
-    }
-    child = await this.maybePostResource(child).toPromise();
-    if (parent) {
       child.data.partOf = parent._id;
     }
+    child = await this.maybePostResource(child).toPromise();
+    console.log('Child after commit, before updating target', child)
     // let target_parent = null
     // if(resources[1] != undefined && resources[1] != null){
     //   let target_resource = resources[1]
