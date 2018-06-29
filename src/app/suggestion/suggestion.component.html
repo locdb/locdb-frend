@@ -10,7 +10,7 @@
   </div>
     <div class="col-md-10" style="padding: 0px">
       <div class="form-group">
-        <textarea id="searcharea"
+        <!-- <textarea id="searcharea"
                   [(ngModel)]="query"
                   class="form-control"
                   (keyup.enter)="refresh()"
@@ -22,7 +22,16 @@
                   [typeaheadOptionsLimit]="7"
                   typeaheadWaitMs="500"
                   typeaheadOptionField="name"
-                  placeholder="Locations loaded with timeout"></textarea>
+                  placeholder="Locations loaded with timeout"></textarea> -->
+
+        <textarea id="searcharea"
+                  [(ngModel)]="query"
+                  class="form-control"
+                  (keyup.enter)="refresh()"
+                  rows="3"
+                  style="resize: none;"
+                  ></textarea>
+
       </div>
     </div>
     <div class="col-md-1" style="padding-left: 0px">
