@@ -210,14 +210,16 @@ export class LocdbService {
   ): Promise<[TypedResourceView, TypedResourceView]> {
     /* if necessary, creates target resource before updating the reference of the entry */
     /* 1-3 requests */
-    let [child, parent] = resources;
+    let [child, container] = resources;
     console.log('Child:', child)
-    console.log('Parent:', parent)
-    if (parent) {
-      console.log('Pushing parent:', parent)
-      parent = await this.maybePostResource(parent).toPromise();
-      child.data.partOf = parent._id;
+    console.log('Parent:', container)
+    if (container) {
+      console.log('Pushing parent:', container)
+      container.fixDate();
+      container = await this.maybePostResource(container).toPromise();
+      child.data.partOf = container._id;
     }
+    child.fixDate();
     child = await this.maybePostResource(child).toPromise();
     console.log('Child after commit, before updating target', child)
     // let target_parent = null
@@ -233,6 +235,7 @@ export class LocdbService {
     //   }
     //   const target = await this.maybePostResource(resource).toPromise();
     // }
+    console.log('Linking to id', child._id)
     await this.updateTargetResource(entry, child._id);
     return [child, parent];
   }
@@ -259,15 +262,21 @@ export class LocdbService {
   maybePostResource(tr: TypedResourceView): Observable<TypedResourceView> {
     /* Post the resource if it is not stored in back-end yet
      * 0-1 backend requests */
-    if (!tr._id) {
-      // !!! Never ever forget this when on righthand-side, they should never be external
-      // 19.03.2018: Dont do this, we would corrupt todo item..
-      tr.publicationDate = tr.publicationDate; // correct date format if it was set incorrectly
-      tr.status = enums.status.valid;
-      return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).pipe(map( br => new TypedResourceView(br) ));
-    } else {
-      return of(tr);
-    }
+    return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).pipe(map( br => new TypedResourceView(br) )).catch(
+      (err) => { console.log(err.msg); return of(tr)}
+    );
+    // ALT dont use anymore since checking for ._id is not safe at the moment (Precalculated suggestions)
+    // if (tr._id) {
+    //   console.log('Suggestion has no _id. Inserting it into the backend.', tr);
+    //   // !!! Never ever forget this when on righthand-side, they should never be external
+    //   // 19.03.2018: Dont do this, we would corrupt todo item..
+    //   tr.publicationDate = tr.publicationDate; // correct date format if it was set incorrectly
+    //   tr.status = enums.status.valid;
+    //   return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).pipe(map( br => new TypedResourceView(br) ));
+    // } else {
+    //   console.log('Suggestion has _id. Proceeding...', tr);
+    //   return of(tr);
+    // }
   }
 
   getBibliographicResource(id: string): Observable<TypedResourceView> {

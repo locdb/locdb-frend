@@ -404,6 +404,11 @@ export class TypedResourceView implements Metadata {
     this.data[this._prefix + 'embodiedAs'] = newEmbodiments;
   }
 
+  fixDate() {
+    // Apply getter and setter to fix the date.... n/c
+    this.publicationDate = this.publicationDate;
+  }
+
 }
 
 export function findContainerMetadata(trv: TypedResourceView, checkInitial = true): TypedResourceView {
