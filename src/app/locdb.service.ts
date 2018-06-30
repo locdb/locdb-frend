@@ -111,22 +111,30 @@ export class LocdbService {
  }
 
   /* we expect the similar format of a tuple of [child, parent] or [child, null] if there is no parent */
- packTypedPair(parentAndChild: models.BibliographicResource[]): [TypedResourceView, TypedResourceView | null] {
+ packTypedPair(childAndParent: models.BibliographicResource[], removeId: boolean=false): [TypedResourceView, TypedResourceView | null] {
    /*
    Properly pack an array of bibliographic resources as returned by
    suggestion services into a **Pair** of parent and child typed resources
    */
    let tuple: [TypedResourceView, TypedResourceView];
-   if (!parentAndChild[0]) {
+   if (!childAndParent[0]) {
      console.log('Warning, received undefined or null child resource, should never happen');
    }
-   if (!parentAndChild[1]) {
+   if (!childAndParent[1]) {
      // if parent is none or not even defined
-     tuple = [new TypedResourceView(parentAndChild[0]), null];
+     if (removeId) {
+       console.log('Removing id(s) for child')
+       childAndParent[0]._id = undefined;
+     }
+     tuple = [new TypedResourceView(childAndParent[0]), null];
    } else {
-     tuple = [new TypedResourceView(parentAndChild[0]), new TypedResourceView(parentAndChild[1])];
+     if (removeId) {
+       console.log('Removing id(s) for pair')
+       childAndParent[0]._id = undefined;
+       childAndParent[1]._id = undefined;
+     }
+     tuple = [new TypedResourceView(childAndParent[0]), new TypedResourceView(childAndParent[1])];
    }
-   console.log('Packed tuple:', tuple);
    return tuple;
  }
 
@@ -141,7 +149,7 @@ export class LocdbService {
 
   precalculatedSuggestions(entry: models.BibliographicEntry): Observable<Array<[TypedResourceView, TypedResourceView]>> {
     const suggestions$ = this.bibliographicEntryService.getPrecalculatedSuggestions(entry._id);
-    return suggestions$.pipe(map(suggestions => suggestions.map(pair => this.packTypedPair(pair))));
+    return suggestions$.pipe(map(suggestions => suggestions.map(pair => this.packTypedPair(pair, true))));
   }
 
 
@@ -215,11 +223,9 @@ export class LocdbService {
     console.log('Parent:', container)
     if (container) {
       console.log('Pushing parent:', container)
-      container.fixDate();
       container = await this.maybePostResource(container).toPromise();
       child.data.partOf = container._id;
     }
-    child.fixDate();
     child = await this.maybePostResource(child).toPromise();
     console.log('Child after commit, before updating target', child)
     // let target_parent = null
@@ -237,7 +243,7 @@ export class LocdbService {
     // }
     console.log('Linking to id', child._id)
     await this.updateTargetResource(entry, child._id);
-    return [child, parent];
+    return [child, container];
   }
 
 
@@ -248,11 +254,11 @@ export class LocdbService {
   ): Observable<TypedResourceView> {
     /* Update the resource if it is known to the backend
      * 0-1 */
-    if (!resource._id) {
+    if (!resource._id || resource._id === undefined) {
       return of(resource);
     } else {
       // TODO FIXME this should not be necessary
-      resource.publicationDate = resource.publicationDate; // correct date format if it was set incorrectly
+      resource.fixDate(); // correct date format if it was set incorrectly
       return this.bibliographicResourceService.update(resource._id,
         <models.BibliographicResource>resource.data).pipe(map( br => new
           TypedResourceView(br) ));
@@ -262,21 +268,21 @@ export class LocdbService {
   maybePostResource(tr: TypedResourceView): Observable<TypedResourceView> {
     /* Post the resource if it is not stored in back-end yet
      * 0-1 backend requests */
-    return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).pipe(map( br => new TypedResourceView(br) )).catch(
-      (err) => { console.log(err.msg); return of(tr)}
-    );
+    // return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).pipe(map( br => new TypedResourceView(br) )).catch(
+    //   (err) => { console.log(err.msg); return of(tr)}
+    // );
     // ALT dont use anymore since checking for ._id is not safe at the moment (Precalculated suggestions)
-    // if (tr._id) {
-    //   console.log('Suggestion has no _id. Inserting it into the backend.', tr);
-    //   // !!! Never ever forget this when on righthand-side, they should never be external
-    //   // 19.03.2018: Dont do this, we would corrupt todo item..
-    //   tr.publicationDate = tr.publicationDate; // correct date format if it was set incorrectly
-    //   tr.status = enums.status.valid;
-    //   return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).pipe(map( br => new TypedResourceView(br) ));
-    // } else {
-    //   console.log('Suggestion has _id. Proceeding...', tr);
-    //   return of(tr);
-    // }
+    if (!tr._id || tr._id === undefined) {
+      console.log('Suggestion has no _id. Inserting it into the backend.', tr);
+      // !!! Never ever forget this when on righthand-side, they should never be external
+      // 19.03.2018: Dont do this, we would corrupt todo item..
+      tr.fixDate(); // correct date format if it was set incorrectly
+      tr.status = enums.status.valid;
+      return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).pipe(map( br => new TypedResourceView(br) ));
+    } else {
+      console.log('Suggestion has _id. Proceeding...', tr._id);
+      return of(tr);
+    }
   }
 
   getBibliographicResource(id: string): Observable<TypedResourceView> {
