@@ -160,7 +160,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
             partOf: this.resource.partOf,
             // containerTitle: this.resource.containerTitle // still in progress
         });
-        this.placeholderPartOf = this.resource.partOf || "Enter name to search for parent"
+        this.placeholderPartOf = this.resource.partOf || 'Enter name to search for parent'
         // console.log("publicationyear: ",  this.resourceForm.value.publicationyear)
         // new clean set contribs
         this.setContributors(this.resource.contributors);

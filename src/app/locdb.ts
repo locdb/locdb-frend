@@ -385,11 +385,12 @@ export class TypedResourceView implements Metadata {
   set publicationDate(newDate: Date) {
     console.log('Setting publicationDate', newDate);
     // if (!newDate) {
-    if (!isValidDate(newDate)) {
+    const dateMoment = moment(newDate);
+    if (!isValidDate(dateMoment.toDate())) {
+      console.log('Date was not valid, discarding', newDate);
       this.data[this._prefix + 'publicationDate'] = undefined;
     } else {
       // console.log("setDate", newDate)
-      const dateMoment = moment(newDate);
       const isoDate = dateMoment.format('YYYY-MM-DD');
       // console.log("isoFullDate ", isoFullDate)
       this.data[this._prefix + 'publicationDate'] = isoDate;
