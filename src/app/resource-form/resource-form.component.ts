@@ -18,8 +18,9 @@ import { FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
 export class ResourceFormComponent implements OnInit, OnChanges  {
 
     // if this is a string, we can try to dereference it from the back-end
-    @Input() resource: TypedResourceView //BibliographicResource | ProvenResource | ToDo = null;
-    @Output() resourceChange = new EventEmitter<TypedResourceView>();
+
+    @Input() resources: [TypedResourceView, TypedResourceView];
+    @Output() resourcesChange = new EventEmitter<[TypedResourceView, TypedResourceView]>();
 
     // this should not be here, the resource should only rely on itself and not
     // some entries TODO FIXME
@@ -39,16 +40,17 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
 
     ngOnChanges()  {
-        console.log("ngOnChanges", this.resource);
+        console.log("ngOnChanges", this.resources[0]);
     }
 
     onSubmit(resourceCopy) {
+      console.log("trigger resource form")
         // need to first store locally until saved
         this.submitting = true;
         this.locdbService.maybePutResource(resourceCopy).subscribe(
             (r) =>  {
                 // here better than this.resource = r, since reference is retained
-                Object.assign(this.resource, r);
+                Object.assign(this.resources[0], r);
                 this.ngOnChanges();
                 this.submitting = false;
                 this.submitted = true;
@@ -67,10 +69,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     deleteResource() {
         // Deletes the whole currently selected resouces
-        if (confirm('Are you sure to delete resource ' + this.resource._id)) {
-            this.locdbService.deleteBibliographicResource(this.resource).subscribe(
-                (res) => {console.log('Deleted'); this.resource = null; this.resourceChange.emit(this.resource)},
-                (err) => {alert("Error deleting resource " + this.resource._id)}
+        if (confirm('Are you sure to delete resource ' + this.resources[0]._id)) {
+            this.locdbService.deleteBibliographicResource(this.resources[0]).subscribe(
+                (res) => {console.log('Deleted'); this.resources[0] = null;}, // this.resourceChange.emit(this.resources[0])},
+                (err) => {alert("Error deleting resource " + this.resources[0]._id)}
             );
         }
 
@@ -83,9 +85,9 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
     short() {
         // A shorthand name for accordion heading
-        if (this.resource) {
+        if (this.resources[0]) {
             // resource already present
-            const br = this.resource;
+            const br = this.resources[0];
             let s = br.title;
             if (br.publicationDate) {
                 s += ` (${br.publicationDate})`

@@ -12,31 +12,34 @@ import { LocdbService } from '../locdb.service';
   styleUrls: ['./resource-editable.component.css'],
 })
 export class ResourceEditableComponent implements OnInit {
-  @Input() resource: TypedResourceView = null;
+  @Input() resources: [TypedResourceView, TypedResourceView];
+  @Output() resourcesChange = new EventEmitter<[TypedResourceView, TypedResourceView]>();
   @Input() editing = true;
 
   @Output() submitStatus: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private loggingService: LoggingService, private locdbService: LocdbService) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    console.log("On init edible", this.resources)
+      }
 
 
   showForm(val: boolean) {
-    this.resource = <TypedResourceView> this.resource
+    this.resources[0] = <TypedResourceView> this.resources[0]
     // Display the form or stop displaying it
     // this.editing = val;
-    if (this.resource instanceof TypedResourceView) {
+    if (this.resources[0] instanceof TypedResourceView) {
         if (this.editing) {
-          this.loggingService.logStartEditing(this.resource, null)
+          this.loggingService.logStartEditing(this.resources[0], null)
         } else {
-          this.loggingService.logEndEditing(this.resource, null)
+          this.loggingService.logEndEditing(this.resources[0], null)
         }
     } else {
     // if (this.editing){
     //  this.loggingService.logStartEditing(this.resource)
     // } else{
-      this.loggingService.logEndEditing(this.resource)
+      this.loggingService.logEndEditing(this.resources[0])
 
     // }
   }

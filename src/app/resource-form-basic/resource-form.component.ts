@@ -23,9 +23,9 @@ import { StandardPipe }from '../pipes/type-pipes';
 
 export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
-    @Input() resource: TypedResourceView
-    @Output() resourceChanged = new EventEmitter<TypedResourceView>();
-
+    @Input() resources: [TypedResourceView, TypedResourceView];
+    @Output() resourcesChange = new EventEmitter<[TypedResourceView, TypedResourceView]>();
+    @Output() updateResource = new EventEmitter<TypedResourceView>();
 
     resourceForm: FormGroup;
     embodiments: FormGroup[] = [];
@@ -83,6 +83,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     }
 
     ngOnInit()  {
+      console.log("On init form", this.resources)
     }
 
     nameFromAgent(agent: models.ResponsibleAgent): string {
@@ -148,30 +149,30 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     }
 
     ngOnChanges()  {
-        // console.log('ngOnChanges', this.resource);
+        console.log('ngOnChanges', this.resources[0]);
         // console.log("Set publicationyear: ",  this.resource.publicationDate)
         this.resourceForm.reset( {
-            title: this.resource.title,
-            subtitle: this.resource.subtitle,
-            resourcetype: this.resource.type,
-            edition: this.resource.edition,
-            resourcenumber: this.resource.number,
-            publicationyear: isoFullDate(this.resource.publicationDate),
-            partOf: this.resource.partOf,
+            title: this.resources[0].title,
+            subtitle: this.resources[0].subtitle,
+            resourcetype: this.resources[0].type,
+            edition: this.resources[0].edition,
+            resourcenumber: this.resources[0].number,
+            publicationyear: isoFullDate(this.resources[0].publicationDate),
+            partOf: this.resources[0].partOf,
             // containerTitle: this.resource.containerTitle // still in progress
         });
-        this.placeholderPartOf = this.resource.partOf || 'Enter name to search for parent'
+        this.placeholderPartOf = this.resources[0].partOf || 'Enter name to search for parent'
         // console.log("publicationyear: ",  this.resourceForm.value.publicationyear)
         // new clean set contribs
-        this.setContributors(this.resource.contributors);
-        this.setIdentifiers(this.resource.identifiers);
+        this.setContributors(this.resources[0].contributors);
+        this.setIdentifiers(this.resources[0].identifiers);
         // console.log('Contribs in resource:', this.resource.contributors);
         // console.log('Contribs in form:', this.contributors);
     }
 
     onSubmit() {
-        const resource = this.prepareSaveResource();
-        this.resourceChanged.emit(resource)
+        let resource = this.prepareSaveResource();
+        this.updateResource.emit(resource)
     }
 
     revert() {
@@ -209,10 +210,10 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         const identsDeepCopy = formModel.identifiers.map(
           (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
         );
-        const resource: TypedResourceView =  new TypedResourceView({_id: this.resource._id,
-          type: formModel.resourcetype as string, partOf: formModel.partOf || this.resource.partOf,
-          parts: this.resource.parts, cites: this.resource.cites,
-          status: this.resource.status})
+        const resource: TypedResourceView =  new TypedResourceView({_id: this.resources[0]._id,
+          type: formModel.resourcetype as string, partOf: formModel.partOf || this.resources[0].partOf,
+          parts: this.resources[0].parts, cites: this.resources[0].cites,
+          status: this.resources[0].status})
         resource.identifiers = identsDeepCopy;
         resource.title = formModel.title as string || '';
         resource.subtitle = formModel.subtitle as string || '';
@@ -227,7 +228,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
           // partOf: formModel.partof as string || '',
           // warning: retain internal identifiers (dont show primary keys to the user)
           // not editable, but copied values
-        resource.embodiedAs = this.resource.embodiedAs;
+        resource.embodiedAs = this.resources[0].embodiedAs;
 
         return resource;
     }
@@ -250,9 +251,9 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     short() {
         // A shorthand name for accordion heading
-        if (this.resource) {
-            // resource already present
-            const br = this.resource;
+        if (this.resources[0]) {
+            // resources[0] already present
+            const br = this.resources[0];
             let s = br.title;
             if (br.publicationDate) {
                 s += ` (${br.publicationDate})`

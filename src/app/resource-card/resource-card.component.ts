@@ -10,8 +10,8 @@ import { LocdbService } from '../locdb.service';
 })
 export class ResourceCardComponent implements OnInit, OnChanges {
 
-    @Input() resources: [TypedResourceView, TypedResourceView] = [null, null];
-    @Output() resourceChange = new EventEmitter<TypedResourceView>();
+    @Input() resources: [TypedResourceView, TypedResourceView];
+    @Output() resourcesChange = new EventEmitter<[TypedResourceView, TypedResourceView]>();
     @Input() selected = false;
     @Input() selectable = true;
     @Output() externalReferences: any = new EventEmitter();
@@ -19,6 +19,7 @@ export class ResourceCardComponent implements OnInit, OnChanges {
     constructor() { }
 
     ngOnInit() {
+      console.log("On init card", this.resources)
     }
 
     ngOnChanges() {

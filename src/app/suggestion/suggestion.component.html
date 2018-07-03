@@ -87,7 +87,7 @@
         <h4 class="card-title">
           Current citation target
         </h4>
-        <app-resource-card [(resources)]="currentTarget"
+        <app-resource-card [resources]="currentTarget"
             [selected]="currentTarget == selectedResource"
             (click)="onSelect(currentTarget)">
         </app-resource-card>
@@ -209,7 +209,7 @@
         <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
         </select> -->
 
-        <app-resource-form-basic [resource]="newResource[0]" (resourceChanged)="create_resourse($event)"></app-resource-form-basic>
+        <app-resource-form-basic [resources]="newResource"></app-resource-form-basic>
       <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
   </div>
   <!-- <div class="modal-footer">
