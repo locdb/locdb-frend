@@ -83,7 +83,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     }
 
     ngOnInit()  {
-      console.log("On init form", this.resources)
+      // console.log("On init form", this.resources)
     }
 
     nameFromAgent(agent: models.ResponsibleAgent): string {

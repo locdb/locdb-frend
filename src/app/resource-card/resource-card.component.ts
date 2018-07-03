@@ -19,7 +19,7 @@ export class ResourceCardComponent implements OnInit, OnChanges {
     constructor() { }
 
     ngOnInit() {
-      console.log("On init card", this.resources)
+      // console.log("On init card", this.resources)
     }
 
     ngOnChanges() {

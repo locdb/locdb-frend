@@ -21,7 +21,7 @@ export class ResourceEditableComponent implements OnInit {
   constructor(private loggingService: LoggingService, private locdbService: LocdbService) { }
 
   ngOnInit() {
-    console.log("On init edible", this.resources)
+    // console.log("On init edible", this.resources)
       }
 
 

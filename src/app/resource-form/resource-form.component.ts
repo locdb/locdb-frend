@@ -40,10 +40,11 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     }
 
     ngOnChanges()  {
-        console.log("ngOnChanges", this.resources[0]);
+        // console.log("ngOnChanges", this.resources[0]);
     }
 
     onSubmit(resourceCopy) {
+
       console.log("trigger resource form")
         // need to first store locally until saved
         this.submitting = true;
@@ -59,11 +60,41 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             },
             (err) => { console.log('error submitting resource', err) ;
                 this.submitting = false });
+
+        if(!this.checkParent(this.resources[1], resourceCopy)){
+          console.log("requesting new parent")
+          this.locdbService.bibliographicResource(resourceCopy.partOf).subscribe(
+            (trv) => {
+              // is null parent correct here or should we also retrieve it
+              this.resources[1] = trv
+            },
+            (err) => { console.log('Invalid resourceCopy.partOf', resourceCopy.partOf) });
+        }
     }
 
     cancel() {
         this.submitted = true; // effectively closes the form
         this.submitStatus.emit(false)
+    }
+
+    checkParent(parent: TypedResourceView, resource: TypedResourceView) {
+      if (parent){
+        if (resource.partOf){
+          console.log(parent, resource)
+          return resource.partOf ==  parent._id
+        }
+        else{
+          return false
+        }
+      }
+      else {
+        if (resource.partOf){
+          return false
+        }
+        else{
+          return true
+        }
+      }
     }
 
 
