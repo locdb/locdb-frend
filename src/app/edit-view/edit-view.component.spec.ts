@@ -12,6 +12,7 @@ import { BibliographicEntryService } from '../typescript-angular-client/api/bibl
 import { BibliographicResourceService } from '../typescript-angular-client/api/bibliographicResource.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
+import { TypeaheadModule } from 'ngx-bootstrap';
 
 import { RouterModule, Routes } from '@angular/router';
 import { ResourceFormBasicComponent } from '../resource-form-basic/resource-form.component'
@@ -47,6 +48,7 @@ describe('EditViewComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        TypeaheadModule.forRoot(),
         HttpModule,
         HttpClientModule,
         BrowserModule,
