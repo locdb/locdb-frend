@@ -76,6 +76,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     // Retrieve child and then parent resource
     this.locdbService.getBibliographicResource(this._id).subscribe((trv) => {
       this.resource = trv;
+      console.log('scans: ', trv.embodiedAs)
       if (this.resource.partOf) {
         this.locdbService.getBibliographicResource(this.resource.partOf).subscribe(
           (parent_trv) => this.parent = parent_trv,

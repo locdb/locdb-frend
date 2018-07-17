@@ -33,8 +33,13 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     resourceTypes: string[] = enum_values(enums.resourceType);
     identifierTypes: string[] = enum_values(enums.identifier);
 
+    migrating = false
+
     dataSourcePartOf: Observable<any>;
     placeholderPartOf: string = "Enter name to search for parent"
+
+    dataSourceMigration: Observable<any>;
+    placeholderMigration: string = "Enter name to search for resource to migrate"
     // queryPartOf: string;
 
     constructor(
@@ -50,6 +55,10 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
           .map(r => r.map( s => this.extractTypeahead(s)));
           // write id of selected resource in partof
           // maybe show name in form
+        this.dataSourceMigration = Observable.create((observer: any) => {
+        observer.next(this.resourceForm.get('migration').value);
+        }).mergeMap((token: string) => this.getStatesAsObservable(token))
+          .map(r => r.map( s => this.extractTypeahead(s)));
  }
 
  extractTypeahead(typedTuple: [TypedResourceView,TypedResourceView]){
@@ -61,12 +70,20 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
  }
 
 
-   typeaheadOnSelectPartOf(e: TypeaheadMatch): void {
-     // console.log('Selected value: ', e.item.id,  e.item.name);
-     this.resourceForm.get('partOf').setValue(e.item.name)
-     this.resourceForm.value.partOf = e.item.id
-     console.log(this.prepareSaveResource())
-   }
+ typeaheadOnSelectPartOf(e: TypeaheadMatch): void {
+   // console.log('Selected value: ', e.item.id,  e.item.name);
+   this.resourceForm.get('partOf').setValue(e.item.name)
+   this.resourceForm.value.partOf = e.item.id
+   console.log(this.prepareSaveResource())
+ }
+ typeaheadOnSelectMigration(e: TypeaheadMatch): void {
+   // console.log('Selected value: ', e.item.id,  e.item.name);
+   this.resourceForm.get('migration').setValue(e.item.name)
+   this.setIdentifiers(this.resourceForm.get('identifiers').value.concat(e.item.identifiers))
+   //this.resourceForm.value.partOf = e.item.id
+   //console.log(this.prepareSaveResource())
+   this.migrate()
+ }
 
     createForm()  {
         this.resourceForm = this.fb.group( {
@@ -79,6 +96,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
             contributors: this.fb.array([]),
             identifiers: this.fb.array([]),
             partOf: '',
+            migration: false,
         });
     }
 
@@ -265,15 +283,21 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         }
     }
 
+    migrate(){
+      this.migrating = !this.migrating
+    }
+
 }
 
 class typeaheadObj {
-    private id;
-    private name;
+    private id: string;
+    private name: string;
+    private identifiers: models.Identifier[];
 
     constructor(tr: TypedResourceView){
       this.id = tr._id
       this.name = (new StandardPipe().transform(tr)).replace(/<.*?>/, '').replace(/<\/.*?>/, '')
+      this.identifiers = tr.identifiers
     }
 
     public toString (): string {

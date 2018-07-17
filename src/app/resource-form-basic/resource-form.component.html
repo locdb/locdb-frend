@@ -119,10 +119,39 @@
         <input class="form-control" formControlName="literalValue">
       </div>
     </div>
-    <button type="button" class="btn btn-secondary btn-sm" aria-label="Add Identifier" (click)="addIdentifier()">
-      Add Identifier
-    </button>
+    <div *ngIf="!migrating">
+      <button type="button" class="btn btn-secondary btn-sm" aria-label="Add Identifier" (click)="addIdentifier()">
+        Add Identifier
+      </button>
+      <button type="button" class="btn btn-secondary btn-sm pull-right" aria-label="Add Identifier" (click)="migrate()">
+        Migrate Identifier ...
+      </button>
+    </div>
   </div>
+    <div *ngIf="migrating" class="form-group row">
+      <div class="col-sm-1">
+      <button type="button" class="btn btn-secondary btn-sm" aria-label="Add Identifier" (click)="migrate()">
+        cancel
+      </button>
+      </div>
+      <div class="col-sm-11">
+
+        <input id="mig"
+              autocomplete="off"
+              formControlName="migration"
+              class="form-control"
+
+              [typeahead]="dataSourceMigration"
+              (typeaheadOnSelect)="typeaheadOnSelectMigration($event)"
+              [typeaheadOptionsLimit]="7"
+              typeaheadWaitMs="1000"
+              typeaheadOptionField="name"
+              [placeholder]="placeholderMigration">
+
+      </div>
+
+    </div>
+
   <div style="margin: 1rem; margin-bottom: 0rem;">
   <div class="row justify-content-between" style="margin-top: 1rem;">
     <div class="col-xs-6 text-left">
