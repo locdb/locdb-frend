@@ -10,7 +10,7 @@
 (click)="toggleDisabled(); $event.stopPropagation()"> {{!open ? 'Edit' : 'Cancel'}}</button>
   </div>
 
-  <app-resource-editable [resource]="resource" (resourceChange)="resource=$event; resourceChange.emit($event)"
+  <app-resource-editable [resources]="[resource, null]" (resourceChange)="resource=$event; resourceChange.emit($event)"
       (submitStatus)="disabled=!$event; open = $event">
   </app-resource-editable>
 

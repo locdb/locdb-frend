@@ -21,7 +21,7 @@
     </div>
     <div class="card-body">
       <div class="container" *ngIf='resource'>
-        <app-resource-form-basic [resource]="resource" (resourceChanged)="save_resourse($event)"></app-resource-form-basic>
+        <app-resource-form [resources]="[resource, null]"></app-resource-form>
       </div>
     </div>
   </div>
