@@ -23,6 +23,7 @@ import { UtilsService } from '../typescript-angular-client/api/utils.service'
 import { BibliographicEntryService } from '../typescript-angular-client/api/bibliographicEntry.service'
 import { BibliographicResourceService } from '../typescript-angular-client/api/bibliographicResource.service'
 import { StandardPipe } from '../pipes/type-pipes';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 import { HttpClientModule }  from '@angular/common/http';
 describe('SuggestionComponent', () => {
@@ -32,6 +33,7 @@ describe('SuggestionComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        TypeaheadModule.forRoot(),
         ModalModule.forRoot(),
         AccordionModule.forRoot(),
         ReactiveFormsModule,

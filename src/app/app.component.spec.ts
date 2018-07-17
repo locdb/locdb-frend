@@ -23,6 +23,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { TypeaheadModule } from 'ngx-bootstrap';
 
 // misc
 import { PopoverModule } from 'ngx-popover';
@@ -177,6 +178,7 @@ describe('AppComponent with TCB', function () {
           EditViewComponent,
         ],
         imports: [
+          TypeaheadModule.forRoot(),
           AccordionModule.forRoot(),
           BsDropdownModule.forRoot(),
           ModalModule.forRoot(),

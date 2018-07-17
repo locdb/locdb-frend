@@ -22,6 +22,7 @@ import { HttpModule } from '@angular/http';
 import { LocdbService, CredentialsService } from '../locdb.service';
 import { PopoverModule } from 'ngx-popover';
 import { LoggingService } from '../logging.service';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 import { AuthorsPipe, ContainerPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
 import { StandardPipe } from '../pipes/type-pipes';
@@ -35,6 +36,7 @@ describe('BrowseComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        TypeaheadModule.forRoot(),
         ModalModule.forRoot(),
         AccordionModule.forRoot(),
         ReactiveFormsModule,

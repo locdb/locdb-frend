@@ -10,6 +10,7 @@ import { ResourceCardComponent } from '../resource-card/resource-card.component'
 import { ResourceFormBasicComponent } from '../resource-form-basic/resource-form.component';
 
 import { StandardPipe } from '../pipes/type-pipes';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 import { MetadataComponent } from '../metadata/metadata.component'
 import { AuthorsPipe, ContainerPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
@@ -20,8 +21,11 @@ describe('ResourceAccordionGroupComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AccordionModule, ReactiveFormsModule ],
-      declarations: [ ResourceAccordionGroupComponent,
+      imports: [
+        TypeaheadModule.forRoot(),
+        AccordionModule, ReactiveFormsModule ],
+      declarations: [
+        ResourceAccordionGroupComponent,
         // ResourceComponent,
         ResourceFormBasicComponent,
         ResourceFormComponent, ResourceEditableComponent,

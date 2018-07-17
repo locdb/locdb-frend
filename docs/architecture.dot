@@ -1,0 +1,50 @@
+digraph G {
+	penwidth=3.0;
+	label="AppModule";
+	AppComponent -> FrontpageComponent;
+	subgraph cluster_ignest {
+		label="ingest";
+		ScanComponent;
+		FeedReaderComponent [style=dashed];
+		Constraints;
+	}
+	FrontpageComponent -> BrowseComponent, AgendaComponent, ScanComponent;
+	subgraph cluster_inspectors {
+		ScanInspector;
+		RefsInspector;
+		label="inspectors";
+	}
+	AgendaComponent -> TodoComponent;
+	TodoComponent -> RefsInspector, ScanInspector, MetadataComponent, EditViewComponent;
+	ScanInspector, RefsInspector -> SuggestionComponent;
+	ScanInspector, RefsInspector -> EntryListComponent -> EntryCardComponent;
+	ScanInspector ->  DisplayComponent;
+	SuggestionComponent -> ResourceCardComponent -> ResourceFormComponent;
+	ResourceCardComponent -> MetadataComponent;
+	MetadataComponent, ResourceFormComponent;
+	EditViewComponent, ResourceFormComponent -> MetadataComponent;
+	Constraints -> ScanComponent -> FeedReaderComponent;
+	BrowseComponent -> ResourceCardComponent;
+	Locdb -> LocdbService;
+	MetadataComponent -> ContainerPipe, StandardPipe, JournalStandardPipe, EditorsPipe, AuthorsPipe, PublisherPipe;
+	ContainerPipe -> StandardPipe, JournalStandardPipe;
+	StandardPipe, JournalStandardPipe -> EditorsPipe, AuthorsPipe, PublisherPipe;
+	subgraph cluster_pipes {
+		EditorsPipe;
+		AuthorsPipe;
+		PublisherPipe;
+		ContainerPipe;
+		label="pipes";
+		subgraph cluster_type_pipes {
+			label="type-pipes";
+			StandardPipe;
+			JournalStandardPipe;
+		}
+
+	}
+	subgraph cluster_core {
+		label="core";
+		Locdb, LocdbService, Router;
+
+	}
+}
