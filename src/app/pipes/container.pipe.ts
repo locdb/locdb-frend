@@ -27,7 +27,7 @@ export class ContainerPipe implements PipeTransform {
     // always show the real type of the resource
     containerString += '<span class="badge badge-primary">' + typedResource.type + '</span> ';
     // containerString += 'TYPE' + typedResource.type;
-    console.log('Container pipe called', containerString);
+    // console.log('Container pipe called', containerString);
 
 
     const seperator = ' '; // semicolon should be only used to separate authors

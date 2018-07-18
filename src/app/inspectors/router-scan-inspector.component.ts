@@ -67,7 +67,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
-    console.log('ScanInspector onInit');
+    //console.log('ScanInspector onInit');
     this._id = this.route.snapshot.params.resid;
     this.scan_id = this.route.snapshot.params.scanid;
     // load Bibliographic resource because only id is passed along the route

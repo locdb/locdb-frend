@@ -63,7 +63,7 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges | any) {
-    console.log('onNgChanges entry list')
+    //console.log('onNgChanges entry list')
     if (!this.entries || !this.entries.length || this.selectedEntry) { return; } // guard
     setTimeout(() => {
       this.selectedEntry = this.entries.find(e => !e.references);

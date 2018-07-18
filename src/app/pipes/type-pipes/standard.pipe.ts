@@ -41,9 +41,9 @@ export class StandardPipe implements PipeTransform {
     const title = typedResource.title
     const subtitle = typedResource.subtitle
     const publicationDate = typedResource.publicationDate
-    console.log('Date for title', title, publicationDate);
+    // console.log('Date for title', title, publicationDate);
     const isoPublicationDate = datePepe.transform(publicationDate, 'yyyy');
-    console.log('YYYY date', title, isoPublicationDate);
+    // console.log('YYYY date', title, isoPublicationDate);
     const contributors = typedResource.contributors;
     const authors = authorsPepe.transform(contributors, '; ', contrib_suffix);
     const editors = editorsPepe.transform(contributors, '; ', contrib_suffix);
