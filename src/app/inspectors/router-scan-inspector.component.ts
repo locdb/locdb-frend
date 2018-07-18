@@ -8,6 +8,7 @@ import { EntryListComponent } from './entry-list/entry-list.component';
 import { DisplayComponent } from './display/display.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { ScanListService } from './router-scan-inspector.service'
 
 @Component({
   selector: 'app-rou-scan-inspector',
@@ -39,7 +40,13 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   selected_entry_list: models.BibliographicEntry;
   pdf_src: string;
 
-  constructor(private location: Location, private locdbService: LocdbService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private location: Location,
+              private locdbService: LocdbService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private scanListService: ScanListService) {
+    console.log(scanListService.scans)
+              }
 
   display_trigger_selected_entry(entry: models.BibliographicEntry) {
     this.entry = entry;
@@ -58,6 +65,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     for (const embodiment of embodiments) {
       for (const scan of embodiment.scans) {
         if (scan._id === scan_id) {
+          this.scanListService.scans = embodiment.scans
           return scan;
         }
       }
@@ -86,6 +94,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
       }
       // extract the correct scan
       this.scan = this.findScanById(this.scan_id, this.resource.embodiedAs);
+      console.log(this.scanListService.scans)
     },
       (error) => {
         console.log('Error occurred while retrieving resource', error);

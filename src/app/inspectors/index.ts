@@ -6,3 +6,4 @@ export { EntryFormComponent } from './entry-form/entry-form.component';
 export { DisplayComponent } from './display/display.component';
 export { RouterRefsInspectorComponent } from './router-refs-inspector.component';
 export { RouterScanInspectorComponent } from './router-scan-inspector.component';
+export { ScanListService } from  './router-scan-inspector.service';

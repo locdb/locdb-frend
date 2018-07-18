@@ -7,7 +7,8 @@
     </button> -->
     <h4> {{title }} </h4>
     <p><app-metadata [of]="resource" [in]="parent"></app-metadata></p>
-
+    <div class="row">
+        <div class="col-sm-4">
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar">
       <div class="btn-group btn-group-sm" role="group" aria-label="Toggle scan view">
         <button type="button" class="btn btn-secondary" (click)="showScan()" [class.active]="scanIsVisible">
@@ -18,6 +19,13 @@
         </button>
       </div>
     </div>
+  </div>
+  <div class="col-sm-8">
+    <div class="pull-right">
+      <p *ngFor="let scan of scanListService.scans"> {{scan._id}} </p>
+  </div>
+</div>
+  </div>
   </div>
   <div class="card-header" *ngIf="sorry_text">
     <p> {{sorry_text}} </p>

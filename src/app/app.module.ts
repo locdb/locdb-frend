@@ -39,7 +39,7 @@ import { AgendaComponent, TodoComponent, EmbodimentComponent } from './agenda';
 
 // inspector related
 import { RouterRefsInspectorComponent, RouterScanInspectorComponent, RefsInspectorComponent,
-  ScanInspectorComponent, EntryListComponent, EntryCardComponent, DisplayComponent,
+  ScanInspectorComponent, ScanListService, EntryListComponent, EntryCardComponent, DisplayComponent,
   EntryFormComponent} from './inspectors';
 
 // feeds
@@ -169,7 +169,8 @@ const appRoutes: Routes = [
     BibliographicEntryService,
     BibliographicResourceService,
     ScanService,
-    UserService
+    UserService,
+    ScanListService
   ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
