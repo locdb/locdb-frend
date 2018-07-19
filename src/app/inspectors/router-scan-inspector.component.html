@@ -21,9 +21,11 @@
     </div>
   </div>
   <div class="col-sm-8">
-    <div class="pull-right">
-      <p *ngFor="let scan of scanListService.scans"> {{scan._id}} </p>
-  </div>
+    <div class="pull-right" *ngIf="scanIsVisible">
+    <pagination [totalItems]="totalScans*10" [(ngModel)]="paginationPos"></pagination>
+      <!-- {{scanListService.totalScans}} -->
+      <!-- <p *ngFor="let scan of scanListService.scans"> {{scan._id}} </p> -->
+</div>
 </div>
   </div>
   </div>
@@ -31,7 +33,7 @@
     <p> {{sorry_text}} </p>
   </div>
   <div class="card-body"  *ngIf="!sorry_text">
-    <div *ngIf="scan_content_type != 'pdf'" [hidden]="!scanIsVisible" [style.height]="imgheight" style="overflow-y: scroll;">
+    <div *ngIf="scan_content_type != 'pdf'" [hidden]="!scanIsVisible" [style.height]="imgheight">
       <app-display [img_src]="getScanImage()" [entries]="refs" [selectedEntry]="selected_entry_list"
           (entry)="display_trigger_selected_entry($event)"
           (imglength)="setHeight()" #display></app-display>
