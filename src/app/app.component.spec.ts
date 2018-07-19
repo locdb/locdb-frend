@@ -85,6 +85,7 @@ import { EditViewComponent } from './edit-view/edit-view.component'
 
 import { HttpClient, HttpHeaders, HttpParams,
          HttpResponse, HttpEvent, HttpClientModule }                           from '@angular/common/http';
+import { PaginationModule } from 'ngx-bootstrap';
 
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 ////////  SPECS  /////////////
@@ -178,6 +179,7 @@ describe('AppComponent with TCB', function () {
           EditViewComponent,
         ],
         imports: [
+          PaginationModule.forRoot(),
           TypeaheadModule.forRoot(),
           AccordionModule.forRoot(),
           BsDropdownModule.forRoot(),
