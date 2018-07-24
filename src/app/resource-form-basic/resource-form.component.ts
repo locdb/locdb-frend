@@ -10,6 +10,9 @@ import {
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { TemplateRef } from '@angular/core';
 
 import { Observable } from 'rxjs/Rx'
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
@@ -28,12 +31,14 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     @Output() updateResource = new EventEmitter<TypedResourceView>();
 
     resourceForm: FormGroup;
+    agentRoleIdForm: FormGroup;
     embodiments: FormGroup[] = [];
     roles: string[] =  enum_values(enums.roleType);
     resourceTypes: string[] = enum_values(enums.resourceType);
     identifierTypes: string[] = enum_values(enums.identifier);
 
     migrating = false
+    modalRef: BsModalRef;
 
     dataSourcePartOf: Observable<any>;
     placeholderPartOf: string = "Enter name to search for parent"
@@ -44,7 +49,8 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     constructor(
         private fb: FormBuilder,
-        private locdbService: LocdbService
+        private locdbService: LocdbService,
+        private modalService: BsModalService
     )
     {
     this.createForm();
@@ -98,6 +104,50 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
             partOf: '',
             migration: false,
         });
+        this.agentRoleIdForm = this.fb.group({
+        // you can also set initial formgroup inside if you like
+        agentRoles: this.fb.array([]),
+        })
+    }
+
+    addNewRole() {
+      let control = <FormArray>this.agentRoleIdForm.controls.agentRoles;
+      control.push(
+        this.fb.group({
+          roleType: '',
+          // nested form array, you could also add a form group initially
+          identifiers: this.fb.array([]),
+          role: this.fb.group({
+            // you can also set initial formgroup inside if you like
+            givenName: '',
+            familyName: '',
+            nameString: '',
+            identifiers: this.fb.array([])
+          })
+        })
+      )
+    }
+
+    setAgentRoles(roles: models.AgentRole[]) {
+        const agentRoleFGs = roles ? roles.filter(arole => arole != null).map(
+            arole => this.fb.group(
+                {roleType: arole.roleType, identifiers: this.fb.array(arole.identifiers),
+                  role: this.fb.group({
+                    givenName: arole.heldBy.givenName,
+                    familyName: arole.heldBy.familyName,
+                    nameString: arole.heldBy.nameString,
+                    identifiers: this.fb.array(arole.heldBy.identifiers)
+                  }
+                  )}
+            )
+        ) : [];
+        const agentRoleFormArray = this.fb.array(agentRoleFGs);
+        this.agentRoleIdForm.setControl('agentRoles', agentRoleFormArray);
+    }
+
+    deleteRole(index) {
+      let control = <FormArray>this.agentRoleIdForm.controls.companies;
+      control.removeAt(index)
     }
 
     ngOnInit()  {
@@ -184,6 +234,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         // new clean set contribs
         this.setContributors(this.resources[0].contributors);
         this.setIdentifiers(this.resources[0].identifiers);
+        this.setAgentRoles(this.resources[0].contributors);
         // console.log('Contribs in resource:', this.resource.contributors);
         // console.log('Contribs in form:', this.contributors);
     }
@@ -285,6 +336,11 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     migrate(){
       this.migrating = !this.migrating
+    }
+
+    openModal(template: TemplateRef<any>) {
+
+        this.modalRef = this.modalService.show(template);
     }
 
 }

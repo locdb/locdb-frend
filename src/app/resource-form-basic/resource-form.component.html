@@ -70,6 +70,9 @@
     <button type="button" class="btn btn-secondary btn-sm" aria-label="Add Contributor" (click)="addContributor()">
       Add Contributor
     </button>
+    <button type="button" class="btn btn-secondary btn-sm pull-right" aria-label="Add Identifier" (click)="openModal(template)">
+      Edit Contributor Identifiers ...
+    </button>
   </div>
 
   <div class="form-group row">
@@ -161,7 +164,7 @@
       <button type="button" class="btn btn-warning" (click)="revert()">
         <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset Form
       </button>
-</div>
+    </div>
     <div class="col-xs-6 text-right">
       <button type="button" class="btn btn-primary" (click)="onSubmit()">
         <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Confirm
@@ -170,5 +173,53 @@
     </div>
   </div>
 </form>
+
+<!-- TODO add possibility to add new identifier (role and resp.agent)
+    TODO formatting-->
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Identifiers</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+  </div>
+  <div class="modal-body">
+  <form [formGroup]="agentRoleIdForm">
+    <div formArrayName="agentRoles">
+      <div *ngFor="let role of agentRoleIdForm.get('agentRoles').controls; let i=index">
+        <h3>ROLE {{i+1}}: </h3>
+        <div [formGroupName]="i">
+          <input formControlName="roleType" />
+          <div formArrayName="identifiers">
+            <div *ngFor="let agent of role.get('identifiers').controls; let k=index">
+              <h4>ROLEID {{k+1}}</h4>
+              <div [formGroupName]="k">
+                <input formControlName="scheme" />
+                <input formControlName="literalValue" />
+              </div>
+            </div>
+          </div>
+          <div formGroupName="role">
+            <input formControlName="nameString" />
+            <input formControlName="givenName" />
+            <input formControlName="familyName" />
+            <div formArrayName="identifiers">
+              <div *ngFor="let agent of role.get('identifiers').controls; let j=index">
+                <h4>AGENTID {{j+1}}</h4>
+                <div [formGroupName]="j">
+                  <input formControlName="scheme" />
+                  <input formControlName="literalValue" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>
+
+</ng-template>
 
 <!-- </accordion-group> -->

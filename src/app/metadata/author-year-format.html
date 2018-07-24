@@ -2,7 +2,7 @@
   <span *ngIf="of">
     <span *ngIf="of.type" class="badge badge-primary"> {{ of.type }}</span>
     <span *ngIf="of.publicationDate" class="badge badge-info ml-1"> {{ of.publicationDate | date:'yyyy' }}</span>
-    {{ of.contributors | authors:'; ':': ' }} 
+    {{ of.contributors | authors:'; ':': ' }}
     <b *ngIf="of.title || of.subtitle"> {{of.title}} {{ of.subtitle }} </b>
     <!-- Only show publisher if not contained in some other resource -->
     <span *ngIf="!in">{{ of.contributors | publisher:', ' }}</span>
@@ -34,13 +34,14 @@
     <!-- Both child and parent are given -->
     <em> in:&nbsp;</em>
     <span [innerHtml]="in | container:false"></span>
-    <span *ngIf="of.embodiedAs && of.embodiedAs.length && of.embodiedAs[0].firstPage && of.embodiedAs[0].lastPage">, pp. {{ of.embodiedAs[0].firstPage}}-{{ of.embodiedAs[0].lastPage}}</span>
-  </span>
+    </span>
   <span *ngIf="in && !of" [innerHtml]="in | container:true">
     <!-- Only parent is given -->
   </span>.
   <span *ngIf="of">
     <!-- Some information that is only available when child is given -->
+    <span *ngIf="of.embodiedAs && of.embodiedAs.length && of.embodiedAs[0].firstPage && of.embodiedAs[0].lastPage">
+       pp. {{ of.embodiedAs[0].firstPage}}-{{ of.embodiedAs[0].lastPage}}</span>
     <a class="badge badge-secondary ml-1" *ngIf="getClickableIDURL(of.identifiers)" [href]="getClickableIDURL(of.identifiers)" target="_blank">
       <i class="fa fa-external-link"></i> Online
     </a>
