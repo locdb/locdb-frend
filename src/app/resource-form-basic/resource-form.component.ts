@@ -128,6 +128,10 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
       )
     }
 
+    addAgentIdentifier(role){
+      role.controls.identifiers.push(this.fb.group({scheme:'', literalValue:''}))
+    }
+
     setAgentRoles(roles: models.AgentRole[]) {
         const agentRoleFGs = roles ? roles.filter(arole => arole != null).map(
             arole => this.fb.group(
@@ -136,7 +140,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
                     givenName: arole.heldBy.givenName,
                     familyName: arole.heldBy.familyName,
                     nameString: arole.heldBy.nameString,
-                    identifiers: this.fb.array(arole.heldBy.identifiers)
+                    identifiers: this.fb.array(arole.heldBy.identifiers || [])
                   }
                   )}
             )
