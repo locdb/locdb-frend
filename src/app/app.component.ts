@@ -1,10 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 
-import { ToDo, ToDoParts, ToDoScans, BibliographicEntry, BibliographicResource } from './locdb';
 import { LocdbService } from './locdb.service';
-import { FeedService } from './feed.service';
-import { Feed } from './locdb'
-import { environment } from 'environments/environment';
+import { FeedService } from './ingest/feed.service';
 
 @Component({
     selector: 'app-root',
@@ -14,7 +11,7 @@ import { environment } from 'environments/environment';
 
 /* Main App Component for whole LOCDB Frontend */
 export class AppComponent implements OnInit {
-  feeds: Feed[];
+  // feeds: Feed[];
 
   constructor(private feedService: FeedService) {
 
@@ -24,13 +21,11 @@ export class AppComponent implements OnInit {
 
   }
 
-  updateFeeds(event: Feed[]) {
-    console.log('updateFeeds: ', event[1]);
-    let f: any
-    for (f of event) {
-      console.log('send feed ', f)
-      this.feedService.pushFeed(f)
-  }
-}
-
+  // updateFeeds(event: Feed[]) {
+  //   console.log('updateFeeds: ', event[1]);
+  //   let f: any
+  //   for (f of event) {
+  //     console.log('send feed ', f)
+  //     this.feedService.pushFeed(f)
+  // }
 }

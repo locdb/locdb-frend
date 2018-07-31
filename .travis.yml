@@ -23,8 +23,7 @@ before_install:
 
 before_script:
 - npm install -g @angular/cli@latest
-- npm install -g karma
 - npm install
 - ng build
 
-script: ./node_modules/.bin/karma start --single-run --browsers Chrome
+script: ng test --watch false --browsers Chrome

@@ -1,9 +1,10 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, InjectionToken } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 // import { APP_BASE_HREF } from '@angular/common';
 
 import { AppComponent } from './app.component';
@@ -25,45 +26,65 @@ import { PopoverModule } from 'ngx-popover';
 import { HotkeyModule } from 'angular2-hotkeys';
 
 // own
-import { ScanComponent } from './scan.component';
-import { DisplayComponent } from './display/display.component';
+import { ScanComponent } from './ingest/scan.component';
 import { LocdbService } from './locdb.service';
 import { SuggestionComponent } from './suggestion/suggestion.component';
 import { LoginComponent } from './login/login.component';
 import { VisualComponent } from './visual/visual.component';
 import { CommitComponent } from './commit/commit.component';
+import { ResourceFormBasicComponent } from './resource-form-basic/resource-form.component'
 
-// todo related
-import { TodoComponent } from './todo.component';
-import { TodoDetailComponent } from './todo-detail/todo-detail.component';
-import { TodoListComponent } from './todo-list/todo-list.component';
-import { TodoLeafComponent } from './todo-leaf/todo-leaf.component';
+// agenda related
+import { AgendaComponent, TodoComponent, EmbodimentComponent } from './agenda';
+
+// inspector related
+import { RouterRefsInspectorComponent, RouterScanInspectorComponent, RefsInspectorComponent,
+  ScanInspectorComponent, ScanListService, EntryListComponent, EntryCardComponent, DisplayComponent,
+  EntryFormComponent} from './inspectors';
 
 // feeds
-import { FeedComponent, FeedReaderComponent } from './feed-reader/feed-reader.component';
-
-// entries
-import { EntryListComponent } from './entry-list/entry-list.component';
-import { EntryFormComponent } from './entry-form/entry-form.component';
+import { FeedComponent, FeedReaderComponent } from './ingest/feed-reader/feed-reader.component';
 
 // resource related
-import { ResourceComponent } from './resource/resource.component';
+import { MetadataComponent } from './metadata/metadata.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
 import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
 import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
-import { AppwrapperComponent } from './appwrapper/appwrapper.component';
+import { LinkingComponent } from './linking/linking.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 
 import { LoggingService } from './logging.service';
-import { ResourceCardGroupComponent } from './resource-card-group/resource-card-group.component';
-import { EntryCardGroupComponent } from './entry-card-group/entry-card-group.component'
+import { ResourceCardComponent } from './resource-card/resource-card.component';
 import { BrowseComponent } from './browse/browse.component'
 
+import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe,
+ContainerPipe, IdentifierPipe} from './pipes';
+import { StandardPipe, JournalStandardPipe } from './pipes';
+
+
+import {
+  BibliographicEntryService, BibliographicResourceService,
+  ScanService, UserService
+} from './typescript-angular-client/api/api';
+
+import { BASE_PATH } from './typescript-angular-client/variables';
+import { EditViewComponent } from './edit-view/edit-view.component'
+
+
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { TypeaheadModule } from 'ngx-bootstrap';
+
+import { PaginationModule } from 'ngx-bootstrap';
+
 const appRoutes: Routes = [
-  { path: 'resolve', component: AppwrapperComponent },
+  // { path: 'resolve/:NOT_OCR_PROCESSED/:OCR_PROCESSING/:OCR_PROCESSED/:EXTERNAL', component: LinkingComponent },
+  { path: 'resolve', component: LinkingComponent },
   { path: 'ingest', component: ScanComponent},
   { path: 'browse', component: BrowseComponent},
   { path: 'frontpage', component: FrontpageComponent},
+  { path: 'linking/RefsInspector/:id', component: RouterRefsInspectorComponent},
+  { path: 'linking/ScanInspector/:resid/:scanid', component: RouterScanInspectorComponent},
+  { path: 'edit', component: EditViewComponent},
   // { path: 'feedreader', component: FeedReaderComponent},
   // { path: 'hero/:id',      component: HeroDetailComponent },
   // {
@@ -71,6 +92,7 @@ const appRoutes: Routes = [
   //   component: HeroListComponent,
   //   data: { title: 'Heroes List' }
   // },
+
   { path: '',
     redirectTo: '/frontpage',
     pathMatch: 'full'
@@ -82,6 +104,8 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports: [
+    TypeaheadModule.forRoot(),
+    PaginationModule.forRoot(),
     AccordionModule.forRoot(),
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
@@ -90,8 +114,10 @@ const appRoutes: Routes = [
     BrowserModule,
     FormsModule,
     HttpModule,
+    HttpClientModule,
     ReactiveFormsModule,
     PopoverModule,
+    PdfViewerModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only
@@ -102,32 +128,52 @@ const appRoutes: Routes = [
     ScanComponent,
     TodoComponent,
     DisplayComponent,
-    EntryFormComponent,
     SuggestionComponent,
     ResourceFormComponent,
+    ResourceFormBasicComponent,
     LoginComponent,
     VisualComponent,
     CommitComponent,
     FeedReaderComponent,
     FeedComponent,
     EntryListComponent,
-    TodoDetailComponent,
-    TodoListComponent,
-    TodoLeafComponent,
-    ResourceComponent,
+    RefsInspectorComponent,
+    ScanInspectorComponent,
+    RouterRefsInspectorComponent,
+    RouterScanInspectorComponent,
+    MetadataComponent,
     ResourceAccordionGroupComponent,
     ResourceEditableComponent,
-    AppwrapperComponent,
+    LinkingComponent,
     FrontpageComponent,
-    ResourceCardGroupComponent,
-    EntryCardGroupComponent,
+    ResourceCardComponent,
+    EntryCardComponent,
+    EntryFormComponent,
     BrowseComponent,
+    AgendaComponent,
+    TodoComponent,
+    EmbodimentComponent,
+    AuthorsPipe,
+    EditorsPipe,
+    PublisherPipe,
+    EmbracePipe,
+    ContainerPipe,
+    IdentifierPipe,
+    StandardPipe,
+    JournalStandardPipe,
+    EditViewComponent
   ],
   providers: [
+    { provide: BASE_PATH, useValue: environment.locdbUrl},
     LocdbService,
     CredentialsService,
     // {provide: APP_BASE_HREF, useValue : bhref}
     LoggingService,
+    BibliographicEntryService,
+    BibliographicResourceService,
+    ScanService,
+    UserService,
+    ScanListService
   ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

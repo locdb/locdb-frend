@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-6 col-md-6">
+    <div class="card">
+      <div class="card-header" *ngIf="!sorry_text">
+        <h3> {{ title }} </h3>
+        <!-- <button type="button" class="btn btn-secondary" (click)="showScan()">
+          Scan view
+          </button> -->
+          <p><app-metadata [of]="resource" [in]="parent"></app-metadata></p>
+      </div>
+      <div class="card-body" *ngIf="sorry_text">
+        <p> {{sorry_text}} </p>
+      </div>
+      <div class="card-body" *ngIf="!sorry_text">
+
+        <app-entry-list [resource]="resource" [entries]="refs" [selectedEntry]="selected_entry_display"
+           (entry)="list_trigger_selected_entry($event)"
+           (openEdit)="triggerEdit($event)"></app-entry-list>
+        <p *ngIf="refs.length < 1"> No references availiable. </p>
+      </div>
+      <div class="card-footer" *ngIf="!sorry_text">
+        <div class="text-right">
+          <button type="button" class="btn btn-primary" (click)="newEntry()">
+            <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Add Entry
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-6">
+    <!-- <app-suggestion [entry]="entry" (suggest)='updateTarget($event)'></app-suggestion> -->
+    <app-suggestion [entry]="entry"></app-suggestion>
+  </div>
+</div>

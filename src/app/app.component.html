@@ -28,7 +28,7 @@
         <a class="nav-link" routerLink="/ingest" routerLinkActive="active">Ingest</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/resolve" routerLinkActive="active">Resolve</a>
+      <a class="nav-link"  [routerLink]="['/resolve']" [queryParams]="{ OCR_PROCESSED: true}" routerLinkActive="active">Resolve</a>
       </li>
       <li class="nav-item">
         <a class="nav-link disabled" routerLink="/browse" routerLinkActive="active">Browse</a>
@@ -52,7 +52,7 @@
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form> -->
-    <app-login (feeds)=updateFeeds($event)></app-login>
+    <app-login></app-login>
   </div>
 </nav>
 <section class="container-fluid mt-3">

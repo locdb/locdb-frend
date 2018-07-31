@@ -1,0 +1,44 @@
+<!-- <h1><b>{{title}}</b></h1> -->
+
+<!-- <section class="container-fluid"> -->
+<nav *ngIf="context" aria-label="breadcrumb" role="navigation">
+  <ol class="breadcrumb" style="font-size: 75%;">
+    <li *ngIf="context.parent" class="breadcrumb-item active" aria-current="page">{{context.parent}}</li>
+    <li class="breadcrumb-item active" aria-current="page">{{context.resource}}</li>
+    <li *ngIf="context.embodiment" class="breadcrumb-item active" aria-current="page">{{context.embodiment}}</li>
+  </ol>
+</nav>
+
+<div [hidden]="isInspecting">
+<!-- <p (click)="testRefs()"> TestRefs </p>
+  <p (click)="testScans()"> TestScans </p> -->
+<app-agenda [routerTracking]="tracking" (refsWithContext)="startInspectRefs($event[0], $event[1])" (scanWithContext)="startInspectScan($event[0], $event[1])">
+</app-agenda>
+</div>
+
+
+<div class="row" *ngIf="isInspecting">
+  <div class="col-xs-12 col-sm-6 col-md-6">
+    <app-scan-inspector *ngIf="scan" [resource]="context.source" [scan]="scan" (entry)="updateEntry($event)"></app-scan-inspector>
+    <app-refs-inspector *ngIf="refs" [resource]="context.source" [refs]="refs" (entry)="updateEntry($event)"></app-refs-inspector>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-6">
+    <app-suggestion [entry]="entry" (suggest)='updateTarget($event)'></app-suggestion>
+  </div>
+</div>
+
+
+  <!-- <div class='row'> -->
+  <!--   <div class='col-xs-12 col-sm-6 col-md-6'> -->
+  <!--     <app-todo [hidden]="todo" (todo)="updateTodo($event)" (resourceTrack)="updateTrack($event)"></app-todo> -->
+  <!--     <app-todo-detail *ngIf="todo" [todo]="todo" [resourceTrack]="resourceTrack" (goBack)="updateTodo(null); updateTrack(null)" (entry)="updateEntry($event)"></app-todo-detail> -->
+  <!--     <div style="margin-top: 1rem;"> -->
+  <!--     </div> -->
+  <!--   </div> -->
+  <!--   <div class="col-xs-12 col-sm-6 col-md-6"> -->
+  <!--     <div *ngIf='entry'> -->
+  <!--       <app-suggestion [entry]='entry' (suggest)='updateTarget($event)'></app-suggestion> -->
+  <!--     </div> -->
+  <!--   </div> -->
+  <!-- </div> -->
+<!-- </section> -->

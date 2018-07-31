@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { BibliographicResource, ProvenResource, ToDo, Origin, Provenance } from '../locdb';
+import { models, TypedResourceView } from '../locdb';
 import { LoggingService } from '../logging.service'
 import { LocdbService } from '../locdb.service';
 
@@ -12,34 +12,34 @@ import { LocdbService } from '../locdb.service';
   styleUrls: ['./resource-editable.component.css'],
 })
 export class ResourceEditableComponent implements OnInit {
-  @Input() resource: BibliographicResource | ProvenResource | ToDo = null;
+  @Input() resources: [TypedResourceView, TypedResourceView];
+  @Output() resourcesChange = new EventEmitter<[TypedResourceView, TypedResourceView]>();
   @Input() editing = true;
 
   @Output() submitStatus: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private loggingService: LoggingService, private locdbService: LocdbService) { }
 
-  ngOnInit(){ }
+  ngOnInit() {
+    // console.log("On init edible", this.resources)
+      }
 
 
   showForm(val: boolean) {
-    this.resource = <BibliographicResource> this.resource
+    this.resources[0] = <TypedResourceView> this.resources[0]
     // Display the form or stop displaying it
     // this.editing = val;
-    if (this.resource instanceof ProvenResource){
-      let provenance = this.resource.provenance;
-
-        if (this.editing){
-          this.loggingService.logStartEditing(this.resource, provenance)
-        } else{
-          this.loggingService.logEndEditing(this.resource, provenance)
+    if (this.resources[0] instanceof TypedResourceView) {
+        if (this.editing) {
+          this.loggingService.logStartEditing(this.resources[0], null)
+        } else {
+          this.loggingService.logEndEditing(this.resources[0], null)
         }
-    }
-    else {
+    } else {
     // if (this.editing){
     //  this.loggingService.logStartEditing(this.resource)
     // } else{
-      this.loggingService.logEndEditing(this.resource)
+      this.loggingService.logEndEditing(this.resources[0])
 
     // }
   }

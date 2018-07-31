@@ -1,11 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResourceAccordionGroupComponent } from './resource-accordion-group.component';
-import { ResourceComponent } from '../resource/resource.component';
+// import { ResourceComponent } from '../resource/resource.component';
 import { ResourceFormComponent } from '../resource-form/resource-form.component';
 import { ResourceEditableComponent } from '../resource-editable/resource-editable.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { ResourceCardComponent } from '../resource-card/resource-card.component';
+import { ResourceFormBasicComponent } from '../resource-form-basic/resource-form.component';
+
+import { StandardPipe } from '../pipes/type-pipes';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+
+import { MetadataComponent } from '../metadata/metadata.component'
+import { AuthorsPipe, ContainerPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
 
 describe('ResourceAccordionGroupComponent', () => {
   let component: ResourceAccordionGroupComponent;
@@ -13,8 +21,20 @@ describe('ResourceAccordionGroupComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AccordionModule, ReactiveFormsModule ],
-      declarations: [ ResourceAccordionGroupComponent, ResourceComponent, ResourceFormComponent, ResourceEditableComponent ]
+      imports: [
+        TypeaheadModule.forRoot(),
+        AccordionModule, ReactiveFormsModule ],
+      declarations: [
+        ResourceAccordionGroupComponent,
+        // ResourceComponent,
+        ResourceFormBasicComponent,
+        ResourceFormComponent, ResourceEditableComponent,
+        MetadataComponent,
+        AuthorsPipe,
+        EditorsPipe,
+        PublisherPipe,
+        EmbracePipe,
+      StandardPipe, ContainerPipe]
     })
     .compileComponents();
   }));

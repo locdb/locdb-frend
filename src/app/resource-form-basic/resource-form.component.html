@@ -1,0 +1,246 @@
+<form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
+  <div class="form-group row">
+
+    <label for="resourcetype" class="col-sm-2 col-form-label">Type</label>
+    <div class="col-sm-10">
+
+      <select id="resourcetype" class="form-control" formControlName="resourcetype">
+        <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
+      </select>
+
+    </div>
+
+  </div>
+  <div class="form-group row">
+    <label for="title" class="col-sm-2 col-form-label">Title</label>
+    <div class="col-sm-10">
+      <textarea class="form-control" id="title" formControlName="title" style="resize: none;" ></textarea>
+    </div>
+  </div>
+  <div class="form-group row">
+
+    <label for="subtitle" class="col-sm-2 col-form-label">Subtitle</label>
+    <div class="col-sm-10">
+      <input id="subtitle" class="form-control" formControlName="subtitle">
+
+    </div>
+
+  </div>
+  <!-- typeahead partOf -->
+  <div class="form-group row">
+
+    <label for="pof" class="col-sm-2 col-form-label">part of</label>
+    <div class="col-sm-10">
+
+      <input id="pof"
+            autocomplete="off"
+            formControlName="partOf"
+            class="form-control"
+
+            [typeahead]="dataSourcePartOf"
+            (typeaheadOnSelect)="typeaheadOnSelectPartOf($event)"
+            [typeaheadOptionsLimit]="7"
+            typeaheadWaitMs="1000"
+            typeaheadOptionField="name"
+            [placeholder]="placeholderPartOf">
+
+    </div>
+
+  </div>
+  <!--   contribs   -->
+  <label for="contributors">Contributors</label>
+  <div id="contributors" formArrayName="contributors" class="mb-2">
+    <!-- <table class="table-condensed" style="width: 100%;"> -->
+      <!--   <tbody> -->
+        <div class="form-group row" *ngFor="let contributor of contributors.controls; let j = index" [formGroupName]="j">
+          <button (click)="removeContributor(j)" type="button" class="close" aria-label="Remove Contributor">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="col">
+            <select class="form-control" formControlName="role">
+              <option *ngFor="let r of roles" [value]="r">{{r}}</option>
+            </select>
+          </div>
+          <div class="col">
+            <input class="form-control" formControlName="name">
+          </div>
+        </div>
+        <!-- </tbody> -->
+      <!-- </table> -->
+    <button type="button" class="btn btn-secondary btn-sm" aria-label="Add Contributor" (click)="addContributor()">
+      Add Contributor
+    </button>
+    <button type="button" class="btn btn-secondary btn-sm pull-right" aria-label="Add Identifier" (click)="openModal(template)">
+      Edit Contributor Identifiers ...
+    </button>
+  </div>
+
+  <div class="form-group row">
+
+    <label for="edition" class="col-sm-2 col-form-label">Edition</label>
+    <div class="col-sm-10">
+
+      <input id="edition" class="form-control" formControlName="edition">
+
+    </div>
+
+  </div>
+  <div class="form-group row">
+
+    <label for="publicationyear" class="col-sm-2 col-form-label">Pub. year</label>
+    <div class="col-sm-10">
+
+      <input type="date" id="publicationyear" class="form-control" formControlName="publicationyear">
+
+    </div>
+
+  </div>
+  <div class="form-group row">
+
+    <label for="resourcenumber" class="col-sm-2 col-form-label">Number</label>
+    <div class="col-sm-10">
+
+      <input id="resourcenumber" class="form-control" formControlName="resourcenumber">
+
+    </div>
+
+  </div>
+  <!--   Idents   -->
+  <label for="identifiers"> Identifiers </label>
+  <div id="identifiers" formArrayName="identifiers" class="mb-2">
+    <div class="form-group row" *ngFor="let identifier of identifiers.controls; let j = index" [formGroupName]="j">
+      <button (click)="removeIdentifier(j)" type="button" class="close" aria-label="Remove Identifier">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <div class="col">
+        <select class="form-control" formControlName="scheme">
+          <option *ngFor="let it of identifierTypes" [value]="it">{{it}}</option>
+        </select>
+        <!-- <input class="form-control" formControlName="scheme"> -->
+      </div>
+      <div class="col">
+        <input class="form-control" formControlName="literalValue">
+      </div>
+    </div>
+    <div *ngIf="!migrating">
+      <button type="button" class="btn btn-secondary btn-sm" aria-label="Add Identifier" (click)="addIdentifier()">
+        Add Identifier
+      </button>
+      <button type="button" class="btn btn-secondary btn-sm pull-right" aria-label="Add Identifier" (click)="migrate()">
+        Migrate Identifier ...
+      </button>
+    </div>
+  </div>
+    <div *ngIf="migrating" class="form-group row">
+      <div class="col-sm-1">
+      <button type="button" class="btn btn-secondary btn-sm" aria-label="Add Identifier" (click)="migrate()">
+        cancel
+      </button>
+      </div>
+      <div class="col-sm-11">
+
+        <input id="mig"
+              autocomplete="off"
+              formControlName="migration"
+              class="form-control"
+
+              [typeahead]="dataSourceMigration"
+              (typeaheadOnSelect)="typeaheadOnSelectMigration($event)"
+              [typeaheadOptionsLimit]="10"
+              typeaheadWaitMs="1000"
+              typeaheadOptionField="name"
+              [placeholder]="placeholderMigration">
+
+      </div>
+
+    </div>
+
+  <div style="margin: 1rem; margin-bottom: 0rem;">
+  <div class="row justify-content-between" style="margin-top: 1rem;">
+    <div class="col-xs-6 text-left">
+      <!-- <button type="button" class="btn btn-warning" (click)="cancel()" [disabled]="submitting"> -->
+        <!--   <span class="glyphicon" aria-hidden="true"></span> Cancel -->
+        <!-- </button> -->
+      <button type="button" class="btn btn-warning" (click)="revert()">
+        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset Form
+      </button>
+    </div>
+    <div class="col-xs-6 text-right">
+      <button type="button" class="btn btn-primary" (click)="onSubmit()">
+        <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Confirm
+      </button>
+    </div>
+    </div>
+  </div>
+</form>
+
+<!-- TODO possibility to save new content
+    TODO formatting
+  TODO change id scheme to selector-->
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Identifiers</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+  </div>
+  <div class="modal-body">
+  <form [formGroup]="agentRoleIdForm">
+    <div formArrayName="agentRoles">
+      <div *ngFor="let role of agentRoleIdForm.get('agentRoles').controls; let i=index">
+        <h3>ROLE {{i+1}}: </h3>
+        <div [formGroupName]="i">
+        <div class="row">
+          <label class="col-sm-3">
+          Rollentyp
+          </label>
+          <input formControlName="roleType" class="col-sm-9"/>
+        </div>
+          <div formArrayName="identifiers">
+            <div *ngFor="let agent of role.get('identifiers').controls; let k=index">
+              <h4>ROLEID {{k+1}}</h4>
+              <div [formGroupName]="k" class="form-group row">
+                <input formControlName="scheme" class="col-sm-4"/>
+                <input formControlName="literalValue" class="col-sm-8"/>
+              </div>
+            </div>
+            <button (click)="addAgentIdentifier(role)">
+              add roleid
+            </button>
+          </div>
+          <div formGroupName="role">
+          <div class="row">
+            <label class="col-sm-3">
+            Name
+            </label>
+            <input formControlName="nameString" class="col-sm-9"/>
+          </div>
+          <div class="row">
+            <label class="col-sm-3"></label>
+            <input formControlName="givenName" class="col-sm-4"/>
+            <label class="col-sm-1"></label>
+            <input formControlName="familyName" class="col-sm-4"/>
+          </div>
+            <div formArrayName="identifiers">
+              <div *ngFor="let agent of role.get('role').controls.identifiers.controls; let j=index">
+                <h4>AGENTID {{j+1}}</h4>
+                <div [formGroupName]="j">
+                  <input formControlName="scheme" />
+                  <input formControlName="literalValue" />
+                </div>
+              </div>
+            </div>
+            <button (click)="addAgentIdentifier(role.get('role'))">
+              add agentid
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>
+
+</ng-template>
+
+<!-- </accordion-group> -->

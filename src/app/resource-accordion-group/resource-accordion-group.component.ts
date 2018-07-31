@@ -1,5 +1,5 @@
 import { EventEmitter, Component, OnInit, ViewEncapsulation, Input, Output } from '@angular/core';
-import { BibliographicResource, ProvenResource, ToDo, } from '../locdb';
+import { TypedResourceView } from '../locdb';
 
 @Component({
   selector: 'app-resource-accordion-group',
@@ -9,8 +9,8 @@ import { BibliographicResource, ProvenResource, ToDo, } from '../locdb';
 })
 export class ResourceAccordionGroupComponent implements OnInit {
 
-  @Input() resource: BibliographicResource | ProvenResource | ToDo;
-  @Output() resourceChange = new EventEmitter<BibliographicResource | ProvenResource | ToDo>();
+  @Input() resource: TypedResourceView;
+  @Output() resourceChange = new EventEmitter<TypedResourceView>();
   @Input() selected: boolean = false;
   disabled = false;
   open = false;
@@ -27,8 +27,8 @@ export class ResourceAccordionGroupComponent implements OnInit {
       // resource already present
       const br = this.resource;
       let s = br.title;
-      if (br.publicationYear) {
-        s += ` (${br.publicationYear})`
+      if (br.publicationDate) {
+        s += ` (${br.publicationDate})`
       }
       if (br.status === 'EXTERNAL') {
         s += ` [${br.type}]`

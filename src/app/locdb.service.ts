@@ -1,37 +1,30 @@
+import {Observable, of} from 'rxjs';
+import {delay, take, retryWhen,  map, flatMap } from 'rxjs/operators';
 // basic angular http client stuff
 import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angular/http';
 
-// advanced rxjs async handling;
-import {Observable} from 'rxjs/Rx';
-// import { Observable } from 'rxjs/Observable';
-// import 'rxjs/add/operator/catch';
-// import 'rxjs/add/operator/map';
+import { TypedResourceView, enums } from './locdb';
+
+
+import {
+  BibliographicEntryService, BibliographicResourceService,
+  ScanService, UserService
+} from './typescript-angular-client/api/api';
+
 
 // new types
-import {
-  Identifier,
-  ToDo,
-  ToDoScans,
-  BibliographicEntry,
-  BibliographicResource,
-  ProvenResource,
-  Feed,
-  ToDoStatus,
-  ResourceStatus,
-  OCRData
-} from './locdb'
+import { models } from './locdb';
 
-import { synCites_ } from './locdb'
 
 // Local testing with credentials
 // import { CredentialsService } from 'angular-with-credentials';
 
 // dummy data
-import { MOCK_TODOBRS } from './mock-todos';
-import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
+// import { MOCK_TODOBRS } from './mock-todos';
+// import { REFERENCES, EXTERNAL_REFERENCES } from './mock-references';
 
-import 'rxjs/add/operator/toPromise';
+
 
 import { environment } from 'environments/environment';
 
@@ -67,6 +60,10 @@ export class LocdbService {
 
   constructor(
     private http: Http,
+    private scanService: ScanService,
+    private userService: UserService,
+    private bibliographicEntryService: BibliographicEntryService,
+    private bibliographicResourceService: BibliographicResourceService,
     private credentials: CredentialsService
   ) {
     if (this.credentials) { // This is here to help with testing so you can pass in null for CredentialsService
@@ -78,389 +75,282 @@ export class LocdbService {
 
 
   // Generic helpers for data extraction and error handling
-  private extractData(res: Response) {
-    console.log('Response', res);
-    const body = res.json();
-    return body;
-  }
 
-  private handleError (error: Response | any) {
-    console.log(error)
-    // In a real world app, you might use a remote logging infrastructure
-    let errMsg: string;
-    if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = body.error || JSON.stringify(body);
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
-    console.error(errMsg);
-    return Observable.throw(errMsg);
-  }
-
-  getToDo(status_: string): Observable<ToDo[]> {
+  getToDo(statuses: Array<enums.status>): Observable<TypedResourceView[]> {
     // acquire todo items and scans
-    const url = `${this.locdbUrl}/getToDo`
-    const params: URLSearchParams = new URLSearchParams();
-    params.set('status', status_);
-    return this.http.get(
-      url,
-      { search: params } // options?
-    ).map(this.extractData).catch(this.handleError);
+    return this.scanService.getToDo(statuses).pipe(map((todos) => todos.map( (todo) => new TypedResourceView(todo) )));
   }
 
-  getToDoBibliographicEntries(scan_id: string): Observable<BibliographicEntry[]> {
+  // /* Returns all ToDo items */
+  // getAgenda(statuses: Array<enums.status>): Observable<TypedResourceView[]> {
+  //   return Observable.from(statuses).flatMap(
+  //     (status) => this.getToDo(status)
+  //     // could sort via map by something
+  //   );
+  // }
+
+  getToDoBibliographicEntries(scan_id: string): Observable<models.BibliographicEntry[]> {
     // fetches list of entries for a scan id
-    const params: URLSearchParams = new URLSearchParams();
-    params.set('scanId', scan_id);
-    const url = `${this.locdbUrl}/getToDoBibliographicEntries`
-    return this.http.get(url, { search: params } )
-    .map(this.extractData)
-    .catch(this.handleError);
+    return this.bibliographicEntryService.getToDoBibliographicEntries(scan_id);
   }
 
-  getToDoBibliographicResources(scan_id: string): Observable<BibliographicResource[]> {
-    // UNUSED //
-    //
-    // fetches list of entries for a scan id
-    const params: URLSearchParams = new URLSearchParams();
-    params.set('scanId', scan_id);
-    console.log('');
-    const url = `${this.locdbUrl}/getToDoBibliographicResources`
-    const res =  this.http.get(url, { search: params } )
-    .map(this.extractData)
-    .catch(this.handleError);
-    console.log('resources: ', res);
-    return res;
+  public saveResource(
+   identifierScheme: string,
+   identifierLiteralValue: string,
+   resourceType: string,
+   firstPage?: number,
+   lastPage?: number,
+   textualPdf?: boolean,
+   binaryFile?: any,
+   stringFile?: string,
+   embodimentType?: string
+ ) {
+   return this.scanService.saveResource(identifierScheme, identifierLiteralValue,
+   resourceType, firstPage, lastPage, textualPdf, binaryFile, stringFile,
+   embodimentType);
+ }
+
+  /* we expect the similar format of a tuple of [child, parent] or [child, null] if there is no parent */
+ packTypedPair(childAndParent: models.BibliographicResource[], removeId: boolean=false): [TypedResourceView, TypedResourceView | null] {
+   /*
+   Properly pack an array of bibliographic resources as returned by
+   suggestion services into a **Pair** of parent and child typed resources
+   */
+   let tuple: [TypedResourceView, TypedResourceView];
+   if (!childAndParent[0]) {
+     console.log('Warning, received undefined or null child resource, should never happen');
+   }
+   if (!childAndParent[1]) {
+     // if parent is none or not even defined
+     if (removeId) {
+       console.log('Removing id(s) for child')
+       childAndParent[0]._id = undefined;
+     }
+     tuple = [new TypedResourceView(childAndParent[0]), null];
+   } else {
+     if (removeId) {
+       console.log('Removing id(s) for pair')
+       childAndParent[0]._id = undefined;
+       childAndParent[1]._id = undefined;
+     }
+     tuple = [new TypedResourceView(childAndParent[0]), new TypedResourceView(childAndParent[1])];
+   }
+   return tuple;
+ }
+
+
+  suggestionsByQuery(query: string, external: boolean, threshold?: number): Observable<Array<[TypedResourceView, TypedResourceView]>> {
+    const entryService = this.bibliographicEntryService;
+    const suggestions$ = external ?
+    entryService.getExternalSuggestionsByQueryString(query, threshold) :
+    entryService.getInternalSuggestionsByQueryString(query, threshold);
+    return suggestions$.pipe(map(suggestions => suggestions.map(pair => this.packTypedPair(pair))));
   }
 
-  saveScan(
-    ppn: string,
-    resourceType: string,
-    textualPdf: boolean,
-    file: File,
-    firstPage?: string,
-    lastPage?: string
-  ): Observable<ToDoScans> {
-    // Take FileWithMetadata object instead
-    const url = `${this.locdbUrl}/saveScan`;
-    const formData: FormData = new FormData();
-    formData.append('ppn', ppn);
-    if (firstPage && lastPage) {
-      formData.append('firstPage', firstPage);
-      formData.append('lastPage', lastPage);
-    }
-    formData.append('textualPdf', textualPdf.toString());
-    formData.append('scan', file);
-    formData.append('resourceType', resourceType);
-    return this.http.post(url, formData).map(
-      (s) => s.json() as ToDoScans
-    ).catch(this.handleError);
-  }
-
-  saveScanForElectronicJournal(
-    scheme: string,
-    value: string,
-    textualPdf: boolean,
-    file: File
-  ): Observable<ToDoScans> {
-    const url = `${this.locdbUrl}/saveScanForElectronicJournal`;
-    const formData: FormData = new FormData();
-    formData.append(scheme, value);
-    formData.append('textualPdf', textualPdf.toString());
-    formData.append('scan', file);
-    return this.http.post(
-      url,
-      formData,
-    ).map((s) => s.json() as ToDoScans).catch(this.handleError);
-  }
-
-
-  saveElectronicJournal(identifier: Identifier): Observable<any> {
-    const url = `${this.locdbUrl}/saveElectronicJournal`
-    const params: URLSearchParams = new URLSearchParams();
-    params.set(identifier.scheme, identifier.literalValue);
-    return this.http.get(
-      url,
-      { search: params}
-    ).map(this.extractData).catch(this.handleError);
-  }
-
-  suggestionsByEntry(be: BibliographicEntry, external?: boolean): Observable<BibliographicResource[]> {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
-
-    const url = external ? `${this.locdbUrl}/getExternalSuggestions` : `${this.locdbUrl}/getInternalSuggestions`
-
-    return this.http.post(url, be, options)
-      .map(response => response.json() as BibliographicResource[])
-      .catch(this.handleError);
-  }
-
-  suggestionsByQuery(query: string, external: boolean, threshold?: string): Observable<BibliographicResource[] | ProvenResource> {
-    const params: URLSearchParams = new URLSearchParams();
-    // we could also use `escape()` here instead of encodeURI
-    params.set('query', encodeURI(query));
-    if (threshold) {
-      params.set('threshold', encodeURI(threshold));
-    }
-
-    console.log(params);
-    const options = new RequestOptions({ search: params });
-
-    if (external) {
-      const url = `${this.locdbUrl}/getExternalSuggestionsByQueryString`;
-      return this.http.get(url, options)
-        .map(response => (response.json() as BibliographicResource[])
-          .map(x => new ProvenResource(x)))
-        .catch(this.handleError);
-    } else {
-      const url = `${this.locdbUrl}/getInternalSuggestionsByQueryString`;
-      return this.http.get(url, options)
-        .map(response => (response.json() as BibliographicResource[])
-          .map(x => new ProvenResource(x)))
-        .catch(this.handleError);
-    }
-
+  precalculatedSuggestions(entry: models.BibliographicEntry): Observable<Array<[TypedResourceView, TypedResourceView]>> {
+    const suggestions$ = this.bibliographicEntryService.getPrecalculatedSuggestions(entry._id);
+    return suggestions$.pipe(map(suggestions => suggestions.map(pair => this.packTypedPair(pair, true))));
   }
 
 
   triggerOcrProcessing(scanId: string) {
-    const params: URLSearchParams = new URLSearchParams();
-    params.set('id', scanId.toString());
-    // const headers = new Headers({ 'Content-Type': 'application/json' });
-    // const options = new RequestOptions(
-    //   { headers: headers, search: params }
-    // );
-    const url = `${this.locdbUrl}/triggerOcrProcessing`;
-    return this.http.get(
-      url,
-      { search: params }
-    ).map(this.extractData).catch(this.handleError);
+    return this.scanService.triggerOcrProcessing(scanId);
   }
 
   getScan(identifier: string) {
+    // we should not rely on LOCDB URL anymore. TODO FIXME
     return `${this.locdbUrl}/scans/${identifier}`;
   }
 
-  deleteScan(scan: ToDoScans) {
-    const url = `${this.locdbUrl}/scans/${scan._id}`
-    return this.http.delete(url).map(this.extractData).catch(this.handleError);
+
+  deleteScan(scan: models.Scan) {
+    return this.bibliographicEntryService.remove(scan._id);
   }
 
-  putBibliographicEntry(entry: BibliographicEntry) {
-    // obsolete by addTarget
-    const url = `${this.locdbUrl}/bibliographicEntries/${entry._id}`;
-    return this.http.put(url, entry).map(this.extractData).catch(this.handleError);
+  checkScanImage(identifier: string){
+    return this.http.get(`${this.locdbUrl}/scans/${identifier}`)
   }
 
-  addTargetBibliographicResource(entry: BibliographicEntry, resource: BibliographicResource):
-  Observable<BibliographicResource> {
-    console.log('add Target', entry, resource);
-    const url = `${this.locdbUrl}/addTargetBibliographicResource`;
-    const params: URLSearchParams = new URLSearchParams();
-    params.set('bibliographicEntryId', entry._id);
-    params.set('bibliographicResourceId', resource._id);
-    return this.http.get(url, { search: params}).map(this.extractData).catch(this.handleError);
+
+
+  /* Resources API end */
+  addTargetBibliographicResource(entry: models.BibliographicEntry, resource_id: string): Observable<TypedResourceView> {
+    return this.bibliographicEntryService.addTargetBibliographicResource(entry._id, resource_id).pipe(map( br => new TypedResourceView(br) ));
   }
 
-  removeTargetBibliographicResource(entry): Promise<any> {
-    const url = `${this.locdbUrl}/removeTargetBibliographicResource`;
-    const params: URLSearchParams = new URLSearchParams();
-    params.set('bibliographicEntryId', entry._id);
-    return this.http.get(url, { search: params}).map(this.extractData).catch(this.handleError).toPromise();
+  removeTargetBibliographicResource(entry: models.BibliographicEntry): Observable<TypedResourceView> {
+    return this.bibliographicEntryService.removeTargetBibliographicResource(entry._id).pipe(map( br => new TypedResourceView(br) ));
   }
-
-  bibliographicResource(identifier: string): Observable<BibliographicResource> {
-    const url = `${this.locdbUrl}/bibliographicResources/${identifier}`;
-    return this.http.get(url).map(this.extractData).catch(this.handleError);
-  }
-
-  async safeCommitLink(
-    entry: BibliographicEntry,
-    resource: BibliographicResource
-  ): Promise<BibliographicResource> {
-    /* if necessary, creates target resource before updating the reference of the entry */
-    /* 1-3 requests */
-    const target = await this.maybePostResource(resource);
-    await this.updateTargetResource(entry, target);
-    return target;
-  }
-
 
   async updateTargetResource(
-    entry: BibliographicEntry,
-    resource: BibliographicResource
-  ): Promise<BibliographicEntry> {
+    entry: models.BibliographicEntry,
+    resource_id: string ): Promise<models.BibliographicEntry> {
     /* adds or update link from entry to resource
      * 1-2 requests */
     if (entry.references) {
       try {
-        await this.removeTargetBibliographicResource(entry);
-        entry.status = 'OCR_PROCESSED'; // back-end does it... TODO FIXME
+        await this.removeTargetBibliographicResource(entry).toPromise();
+        entry.status = enums.status.ocrProcessed; // back-end does it... TODO FIXME
       } catch (e) {
         console.log('References pointer was invalid. Pass...');
       }
       entry.references = '';
     }
-    await this.addTargetBibliographicResource(entry, resource).toPromise();
+    await this.addTargetBibliographicResource(entry, resource_id).toPromise();
     /* to keep view consistent */
-    entry.status = 'VALID';
-    entry.references = resource._id;
-    return entry;
+    entry.status = enums.status.valid;
+    entry.references = resource_id;
+    return Promise.resolve(entry);
   }
+
+  bibliographicResource(identifier: string): Observable<TypedResourceView> {
+    return this.bibliographicResourceService.get(identifier).pipe(map( br => new
+      TypedResourceView(br)),retryWhen(error => error.pipe(delay(500))),take(5),);
+  }
+
+  parentResource(br: TypedResourceView | models.BibliographicResource): Observable<TypedResourceView> {
+    return this.bibliographicResource(br.partOf);
+  }
+
+  async safeCommitLink(
+    entry: models.BibliographicEntry,
+    resources: [TypedResourceView, TypedResourceView]
+  ): Promise<[TypedResourceView, TypedResourceView]> {
+    /* if necessary, creates target resource before updating the reference of the entry */
+    /* 1-3 requests */
+    let [child, container] = resources;
+    console.log('Child:', child)
+    console.log('Parent:', container)
+    if (container) {
+      console.log('Pushing parent:', container)
+      container = await this.maybePostResource(container).toPromise();
+      child.data.partOf = container._id;
+    }
+    child = await this.maybePostResource(child).toPromise();
+    console.log('Child after commit, before updating target', child)
+    // let target_parent = null
+    // if(resources[1] != undefined && resources[1] != null){
+    //   let target_resource = resources[1]
+    //   target_parent = await this.maybePostResource(target_resource).toPromise();
+    // }
+    // let target = null
+    // if (resources[0] != undefined && resources[0] != null) {
+    //   let resource = resources[0];
+    //   if (resources[1] != undefined && resources[1] != null) {
+    //     resource.data.partOf = resources[1]._id;
+    //   }
+    //   const target = await this.maybePostResource(resource).toPromise();
+    // }
+    console.log('Linking to id', child._id)
+    await this.updateTargetResource(entry, child._id);
+    return [child, container];
+  }
+
+
 
 
   maybePutResource(
-    resource: BibliographicResource
-  ): Promise<BibliographicResource> {
+    resource: TypedResourceView
+  ): Observable<TypedResourceView> {
     /* Update the resource if it is known to the backend
      * 0-1 */
-    if (!resource._id) {
-      return Promise.resolve(resource);
+    if (!resource._id || resource._id === undefined) {
+      return of(resource);
     } else {
-      const url = `${this.locdbUrl}/bibliographicResources/${resource._id}`;
-      return this.http.put(
-        url,
-        resource
-      ).map(
-        resp => resp.json() as BibliographicResource
-      ).catch(this.handleError).toPromise();
+      // TODO FIXME this should not be necessary
+      resource.fixDate(); // correct date format if it was set incorrectly
+      return this.bibliographicResourceService.update(resource._id,
+        <models.BibliographicResource>resource.data).pipe(map( br => new
+          TypedResourceView(br) ));
     }
   }
 
-  maybePostResource(resource: BibliographicResource): Promise<BibliographicResource> {
+  maybePostResource(tr: TypedResourceView): Observable<TypedResourceView> {
     /* Post the resource if it is not stored in back-end yet
-     * TODO a problem here, when resource is incomplete
      * 0-1 backend requests */
-    if (!resource._id) {
-      const url = `${this.locdbUrl}/bibliographicResources`;
-      resource.status = ResourceStatus.valid; // they should never be external
-      return this.http.post(
-        url,
-        resource
-      ).map(
-        resp => resp.json() as BibliographicResource
-      ).catch(this.handleError).toPromise();
+    // return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).pipe(map( br => new TypedResourceView(br) )).catch(
+    //   (err) => { console.log(err.msg); return of(tr)}
+    // );
+    // ALT dont use anymore since checking for ._id is not safe at the moment (Precalculated suggestions)
+    if (!tr._id || tr._id === undefined) {
+      console.log('Suggestion has no _id. Inserting it into the backend.', tr);
+      // !!! Never ever forget this when on righthand-side, they should never be external
+      // 19.03.2018: Dont do this, we would corrupt todo item..
+      tr.fixDate(); // correct date format if it was set incorrectly
+      tr.status = enums.status.valid;
+      return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).pipe(map( br => new TypedResourceView(br) ));
     } else {
-      return Promise.resolve(resource);
+      console.log('Suggestion has _id. Proceeding...', tr._id);
+      return of(tr);
     }
   }
 
-
-
-  putBibliographicResource(resource: BibliographicResource) {
-    // we might also need post, to store completely new resources
-    console.log('Put BR for', resource._id);
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
-    const url = `${this.locdbUrl}/bibliographicResources/${resource._id}`;
-    // synCites_(resource) TODO FIXME might be incomplete so it is dangerous to invoke here
-    console.log('JUST BEFORE SUBMISSION:', resource);
-    return this.http.put(url, resource, options).map(this.extractData).catch(this.handleError);
+  getBibliographicResource(id: string): Observable<TypedResourceView> {
+    return this.bibliographicResourceService.get(id).pipe(map(br => new TypedResourceView(br)),
+      retryWhen(error => error.pipe(delay(750))),
+      take(8),
+    );
   }
 
-  pushBibligraphicResource(resource: BibliographicResource) {
-    // we could merge this with the method above, first try put then push.
-    console.log('Push BR', resource);
-    const url = `${this.locdbUrl}/bibliographicResources`;
-    return this.http.post(url, resource).map(this.extractData).catch(this.handleError);
+  // DEPRECATED or integrate in Maybe Methods
+  putBibliographicResource(resource: TypedResourceView): Observable<TypedResourceView> {
+    return this.bibliographicResourceService.update(resource._id,
+      <models.BibliographicResource>resource.data).pipe(map( br => new
+        TypedResourceView(br)));
   }
 
-  deleteBibliographicResource(resource: BibliographicResource) {
-    const url = `${this.locdbUrl}/bibliographicResources/${resource._id}`;
-    console.log('Deleting', resource);
-    return this.http.delete(url).map(this.extractData).catch(this.handleError);
+  pushBibligraphicResource(resource: TypedResourceView): Observable<TypedResourceView> {
+    return this.bibliographicResourceService.save(<models.BibliographicResource>resource.data).pipe(map( br => new TypedResourceView(br)));
   }
 
-  deleteBibliographicEntry(entry: BibliographicEntry) {
-    const url = `${this.locdbUrl}/bibliographicEntries/${entry._id}`;
-    console.log('Deleting', entry, url);
-    return this.http.delete(url).map(this.extractData).catch(this.handleError);
-    }
-  newBibliographicEntry(): BibliographicEntry {
-    const url = `${this.locdbUrl}/newBibliographicEntry/`;
-    console.log('TODO requesting new Entry');
-    // TODO get returned Entry and pass it in return -> entry._id necessary
-    // return this.http.get(url).map(this.extractData).catch(this.handleError);
+  deleteBibliographicResource(resource: TypedResourceView): Observable<models.SuccessResponse> {
+    return this.bibliographicResourceService.deleteSingle(resource._id);
+  }
+  /* Resources API end */
 
-    // had to mock these information for todo-detail.component.html
-    let entry = new BibliographicEntry()
-    entry.ocrData = new OCRData()
-    entry.ocrData.authors = ["dummy"]
-    // had to mock identifiers for new ressource suggestion in suggestion.component.html
-    entry.identifiers = [{scheme: "PPP", literalValue: "2444666668888888"}]
+  deleteBibliographicEntry(entry: models.BibliographicEntry): Observable<models.BibliographicEntry> {
+    return this.bibliographicEntryService.remove(entry._id);
+  }
 
-    return entry
+  updateBibliographicEntry(entry: models.BibliographicEntry) {
+    // status must be set to 'VALID' before, if performed by user.
+    return this.bibliographicEntryService.update(entry._id, entry);
+  }
 
+  createBibliographicEntry(resource_id: string, entry: models.BibliographicEntry): Observable<models.BibliographicEntry> {
+    return this.bibliographicEntryService.create(resource_id, entry);
   }
 
   /* The following needs to be reconsidered, actually we could store login status here */
-
-  fail(err: any): Observable<any> {
-    // array ok? TODO FIXME
-    return Observable.from([{ok: false}]);
-  }
-
   /** User and Instance Management */
 
-  login(user: string, pass: string): Observable<any> {
-    // const headers = new Headers({'Content-Type': 'application/json', 'Accept' : 'application/json' });
-    const options = new RequestOptions({ headers: this.headers });
-    const url = `${this.locdbUrl}/login`
-    // console.log(options)
-    // return this.http.post(url, JSON.stringify({username: user, password: pass}), options).catch(this.fail);
-    return this.http.post(
-      url,
-      JSON.stringify({username: user, password: pass}),
-      options
-    ).catch(this.fail);
+  login(username: string, password: string): Observable<models.User> {
+    const user: models.User = {username: username, password: password};
+    return this.userService.login(user);
   }
 
-  register(user: string, pass: string): Observable<any> {
+  register(username: string, password: string): Observable<models.User> {
     // const headers = new Headers({ 'Content-Type': 'application/json' });
     // const options = new RequestOptions({ headers: headers, withCredentials: true });
-    const url = `${this.locdbUrl}/signup`
-    const options = new RequestOptions({ headers: this.headers  });
-    // return this.http.post(url, {username: user, password: pass}, options).catch(this.fail);
-    return this.http.post(
-      url,
-      {username: user, password: pass},
-      options,
-    ).catch(this.fail);
+    const user: models.User = {username: username, password: password};
+    return this.userService.signup(user);
   }
 
-  logout(): Observable<any> {
-    const url = `${this.locdbUrl}/logout`
-    const options = new RequestOptions({ headers: this.headers  });
-    return this.http.get(
-      url,
-      options
-    );
+  logout(): Observable<models.SuccessResponse> {
+    return this.userService.logout();
   }
 
 
   //
-  addFeed(name: string, url: string): Observable<Feed> {
-    const reqUrl = `${this.locdbUrl}/addFeed`;
-    return this.http.post(
-      reqUrl,
-      {name: name, url}
-    ).map(res => res.json() as Feed);
+  addFeed(feed: models.Feed): Observable<models.User> {
+    return this.userService.addFeed(feed);
   }
 
-  fetchFeeds(): Observable<Feed[]> {
-    const url = `${this.locdbUrl}/fetchFeeds`;
-    return this.http.get(
-      url
-    ).map(res => res.json() as Feed[]);
+  fetchFeeds(): Observable<models.FeedEntry[][]> {
+    return this.userService.fetchFeeds();
   }
 
-  deleteFeed(identifier: string): Observable<Feed[]> {
-    const url = `${this.locdbUrl}/deleteFeed/${identifier}`;
-    return this.http.get(
-      url
-    ).map(res => res.json()['feeds'] as Feed[])
+  deleteFeed(identifier: string): Observable<models.User> {
+    return this.userService.deleteFeed(identifier);
   }
 } // LocdbService

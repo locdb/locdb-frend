@@ -3,9 +3,8 @@
     {{ !editing ? "Edit" : "Cancel" }}
   </button>
 </div> -->
-<app-resource *ngIf="!editing" [resource]="resource">
-</app-resource>
-<app-resource-form *ngIf="editing" [resource]="resource" (submitStatus)="showForm($event); submitStatus.emit($event)">
+<app-metadata *ngIf="!editing" [of]="resource"> </app-metadata>
+<app-resource-form *ngIf="editing" [resources]="resources" (submitStatus)="showForm($event); submitStatus.emit($event)">
 </app-resource-form>
 <div style="margin: 1rem; margin-bottom: 0rem;" *ngIf="!editing">
   <div class="row justify-content-between" style="margin-top: 1rem;">

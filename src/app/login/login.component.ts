@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { LocdbService } from '../locdb.service';
 import {  Response } from '@angular/http';
-import { Feed } from '../locdb'
+import { models } from '../locdb'
 
 @Component({
   selector: 'app-login',
@@ -11,7 +11,7 @@ import { Feed } from '../locdb'
 export class LoginComponent implements OnInit {
   // @Input() instances = [{name: 'LOCDB Dev', url: 'https://locdb.bib.uni-mannheim.de/locdb-dev'},
   //   {name: 'UB Mannheim', url: 'https://locdb.bib.uni-mannheim.de/locdb'}];
-  @Output() feeds: EventEmitter<Feed[]> = new EventEmitter();
+  @Output() feeds: EventEmitter<models.Feed[]> = new EventEmitter();
   @Output() userChanged: EventEmitter<boolean> = new EventEmitter();
   currentUser = null;
   connecting = false;

@@ -1,9 +1,11 @@
+
+import {throwError as observableThrowError} from 'rxjs';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
 
-import { BibliographicEntry, BibliographicResource, ProvenResource, Origin, Provenance } from './locdb';
+import { models, TypedResourceView, Provenance } from './locdb';
 
 
 import {Observable} from 'rxjs/Rx';
@@ -30,7 +32,7 @@ export class LoggingService {
 
   /* Rationale: always log entry ID so that events can be grouped together more easily */
 
-  logReferenceTargetSelected(entry: BibliographicEntry, selectedRessource: BibliographicResource) {
+  logReferenceTargetSelected(entry: models.BibliographicEntry, selectedRessource: TypedResourceView) {
     const logobject = {
       msg: 'REFERENCE TARGET SELECTED',
       title: selectedRessource.title,
@@ -43,7 +45,7 @@ export class LoggingService {
     }
   }
 
-  logReferenceSelected(selectedEntry: BibliographicEntry) {
+  logReferenceSelected(selectedEntry: models.BibliographicEntry) {
     const logobject = { msg: 'REFERENCE SELECTED',
      current_selected_id: selectedEntry._id };
     console.log(logobject);
@@ -51,7 +53,7 @@ export class LoggingService {
       this.sendLog(logobject);}
   }
 
-  logSearchIssued(entry: BibliographicEntry, selectedRessource: BibliographicResource, queryString: string, confidences_values: any){//}[number, number]) {
+  logSearchIssued(entry: models.BibliographicEntry, selectedRessource: TypedResourceView, queryString: string, confidences_values: any){//}[number, number]) {
     if (selectedRessource){
       const logobject = {
         msg: 'SEARCH ISSUED',
@@ -79,8 +81,7 @@ export class LoggingService {
 
   }
 
-  logSuggestionsArrived(entry: BibliographicEntry, sugs: ProvenResource | BibliographicResource[], internal) {
-    if(!(sugs instanceof ProvenResource) && sugs.length>0){
+  logSuggestionsArrived(entry: models.BibliographicEntry, sugs: TypedResourceView[], internal) {
       const logobject = {
         msg: 'SUGGESTIONS ARRIVED',
         entry_id: entry._id,
@@ -89,25 +90,13 @@ export class LoggingService {
       };
       console.log(logobject);
       if(this.log_active){
-        this.sendLog(logobject);}
-
-    }
-    else{
-      const logobject = {
-        msg: 'SUGGESTIONS ARRIVED',
-        entry_id: entry._id,
-        internal: internal,
-        n_suggestions: 0,
-      };
-      console.log(logobject);
-      if(this.log_active){
-        this.sendLog(logobject);}
-    }
+        this.sendLog(logobject);
+      }
 
   }
 
 
-  logCommitPressed(entry: BibliographicEntry, target: BibliographicResource, from_where: Provenance) {
+  logCommitPressed(entry: models.BibliographicEntry, target: TypedResourceView, from_where: Provenance) {
     const logobject = {
       msg: 'COMMIT PRESSED',
       entry_id: entry._id,
@@ -120,7 +109,7 @@ export class LoggingService {
 
   }
 
-  logCommited(entry: BibliographicEntry, newtarget: ProvenResource, from_where: Provenance) {
+  logCommited(entry: models.BibliographicEntry, newtarget: TypedResourceView, from_where: Provenance) {
     const logobject = {
       msg: 'COMMIT SUCCEEDED',
       entry_id: entry._id,
@@ -133,7 +122,7 @@ export class LoggingService {
 
   }
 
-  logStartEditing(resource: BibliographicResource | ProvenResource, from_where?: Provenance) {
+  logStartEditing(resource: TypedResourceView, from_where?: Provenance) {
     const logobject = {
       msg: 'START EDITING',
       resource_id: resource._id,
@@ -146,7 +135,7 @@ export class LoggingService {
       this.sendLog(logobject);}
 
   }
-  logEndEditing(resource: BibliographicResource | ProvenResource, from_where?: Provenance) {
+  logEndEditing(resource: TypedResourceView, from_where?: Provenance) {
     const logobject = {
       msg: 'STOP EDITING',
       resource_id: resource._id,
@@ -160,7 +149,7 @@ export class LoggingService {
 
   }
 
-  logAskOthersPressed(entry: BibliographicEntry, query: String) {
+  logAskOthersPressed(entry: models.BibliographicEntry, query: String) {
     const logobject = {
       msg: 'ASK OTHERS CLICKED',
       entry_id: entry._id,
@@ -209,7 +198,7 @@ export class LoggingService {
       errMsg = error.message ? error.message : error.toString();
     }
     console.error(errMsg);
-    return Observable.throw(errMsg);
+    return observableThrowError(errMsg);
   }
 
 
