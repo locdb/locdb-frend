@@ -27,7 +27,7 @@ export class AgendaComponent implements OnInit, OnChanges {
   @Output() refsWithContext: EventEmitter<[Array<models.BibliographicEntry>, Context]> = new EventEmitter();
   @Output() scanWithContext: EventEmitter<[models.Scan, Context]> = new EventEmitter()
   @Input() set routerTracking(rtracking: Tracking){
-    console.log("rt: ", rtracking)
+    console.log('rt: ', rtracking)
     if(!(typeof rtracking === 'undefined')){
       this.loading = true;
       this.tracking[enums.status.ocrProcessed] = rtracking[enums.status.ocrProcessed];
@@ -46,7 +46,17 @@ export class AgendaComponent implements OnInit, OnChanges {
   statuses: Array<string> = enum_values(enums.todoStatus);
   title = 'Agenda';
 
-  constructor(private locdbService: LocdbService, private router: Router, private route: ActivatedRoute) { }
+  /* A human-readable version of our internal statuses */
+  statusMap = {};
+
+  constructor(private locdbService: LocdbService, private router: Router, private route: ActivatedRoute) {
+    this.statusMap = {};
+    this.statusMap[enums.status.valid] = 'Validated';
+    this.statusMap[enums.status.notOcrProcessed] = 'Waiting';
+    this.statusMap[enums.status.ocrProcessing] = 'In Queue';
+    this.statusMap[enums.status.ocrProcessed] = 'Ready';
+    this.statusMap[enums.status.external] = 'Electronic Journals';
+  }
 
   ngOnInit() {
 
@@ -73,13 +83,13 @@ export class AgendaComponent implements OnInit, OnChanges {
 
   refresh(status) {
 
-    console.log("status: ", status);
+    console.log('status: ', status);
     this.tracking[status] = !this.tracking[status]
-    let queryParams = {
-      NOT_OCR_PROCESSED:this.tracking['NOT_OCR_PROCESSED'],
-      OCR_PROCESSING:this.tracking['OCR_PROCESSING'],
-      OCR_PROCESSED:this.tracking['OCR_PROCESSED'],
-      EXTERNAL:this.tracking['EXTERNAL']
+    const queryParams = {
+      NOT_OCR_PROCESSED: this.tracking['NOT_OCR_PROCESSED'],
+      OCR_PROCESSING: this.tracking['OCR_PROCESSING'],
+      OCR_PROCESSED: this.tracking['OCR_PROCESSED'],
+      EXTERNAL: this.tracking['EXTERNAL']
     }
     this.router.navigate(['/resolve/'], {queryParams: queryParams});
     this.fetchTodos()
