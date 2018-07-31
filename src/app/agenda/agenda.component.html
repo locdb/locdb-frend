@@ -6,7 +6,7 @@
         <ul>
           <li *ngFor="let status of statuses">
             <label><input type="checkbox" [(ngModel)]="tracking[status]" (click)="refresh(status)">
-              <b> {{statusMap[status]}} </b> </label>
+              <b> {{statusMap[status] || status}} </b> </label>
           </li>
         </ul>
       </div>
