@@ -6,11 +6,15 @@
 
 This repository provides a guided user interface for extrapolation of new data
 for the [Linked Open Citation Data Base](https://github.com/locdb/loc-db).
-More specific, two views are provided:
 
-- `FLUP` - An assistant for file upload of reference lists.
-- `Extrapolite` - An assistant for linking bibliographic resources from these
-  reference lists.
+
+## Recent Branch Updates
+
+## Tue Jul 31
+
+- `master` stored in `oldstable`
+- `dev` was merged into  `master`
+
 
 ## Basic setup
 
