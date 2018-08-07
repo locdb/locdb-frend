@@ -54,4 +54,8 @@ export class EmbodimentComponent {
     (err) => { scan.status = enums.status.notOcrProcessed
                 console.log("triggering failed, ", err) });
   }
+
+  getScans(){
+    return this.embodiment.scans.filter(e => e.status === 'OCR_PROCESSED')
+  }
 }

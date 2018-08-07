@@ -66,7 +66,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
       for (const scan of embodiment.scans) {
         if (scan._id === scan_id) {
           console.log("Write scans into ListService", embodiment.scans)
-          this.scanListService.scans = embodiment.scans
+          this.scanListService.scans = embodiment.scans.filter(e => e.status === 'OCR_PROCESSED')
           this.totalScans = this.scanListService.totalScans
           return scan;
         }
@@ -97,6 +97,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
       // extract the correct scan
       this.scan = this.findScanById(this.scan_id, this.resource.embodiedAs);
       console.log(this.scanListService.scans)
+      this.reloadScan()
     },
       (error) => {
         console.log('Error occurred while retrieving resource', error);
