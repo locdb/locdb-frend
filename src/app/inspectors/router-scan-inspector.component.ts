@@ -77,7 +77,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
-    //console.log('ScanInspector onInit');
+    console.log('ScanInspector onInit');
     this._id = this.route.snapshot.params.resid;
     this.scan_id = this.route.snapshot.params.scanid;
     // load Bibliographic resource because only id is passed along the route
@@ -125,8 +125,8 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     );
   }
 
-  reloadScan(){
-    //console.log('ScanInspector onInit');
+  reloadScan() {
+    console.log('ScanInspector reloadScan');
     this._id = this.route.snapshot.params.resid;
     this.scan_id = this.route.snapshot.params.scanid;
     // load Bibliographic resource because only id is passed along the route
@@ -149,7 +149,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   }
 
   getScanImage() {
-    let scan = this.locdbService.getScan(this.scan_id);
+    const scan = this.locdbService.getScan(this.scan_id);
     // console.log("load img", scan)
     return scan
     }
@@ -167,59 +167,50 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   }
 
   newEntry() {
-    console.log("new entry")
-    this.router.navigate(['/edit/'],{ queryParams: { resource: this.resource._id, entry: "create" } });
+    console.log('new entry');
+    this.router.navigate(['/edit/'], { queryParams: { resource: this.resource._id, entry: 'create' } });
   }
 
-  updateTarget(e){
-    console.log("eee", e)
+  updateTarget(e) {
+    console.log('eee', e);
   }
 
-  setHeight(height: Number){
-    this.imgheight = height
-
+  setHeight(height: Number) {
+    this.imgheight = height;
   }
 
-  async triggerEdit(params){
+  async triggerEdit(params) {
     await this.router.navigate([], {
         queryParams: {list: 1}
     });
-    console.log("Edit: ", params)
-    this.router.navigate(['/edit/'],{ queryParams: params});
+    console.log('Edit: ', params);
+    this.router.navigate(['/edit/'], { queryParams: params });
 
   }
-  zoomIn(){
-    if (this.scan_content_type == 'pdf'){
-
-    }
-    else {
+  zoomIn() {
+    if (this.scan_content_type !== 'pdf') {
       this.display.zoomIn();
     }
 
   }
-  zoomOut(){
-    if (this.scan_content_type == 'pdf'){
-
-    }
-    else {
+  zoomOut() {
+    if (this.scan_content_type !== 'pdf') {
       this.display.zoomOut();
     }
   }
-  zoomReset(){
-    if (this.scan_content_type == 'pdf'){
-
-    }
-    else {
+  zoomReset() {
+    if (this.scan_content_type !== 'pdf') {
       this.display.zoomReset();
     }
   }
 
-  get paginationPos(){
-    return this.scanListService.pos
+  get paginationPos() {
+    return this.scanListService.pos;
   }
 
-  set paginationPos(p: number){
-    if (p != this.scanListService.pos){
+  set paginationPos(p: number) {
+    /* always use triple equals for comparison by value */
+    if (p !== this.scanListService.pos) {
       this.scanListService.pos = p
       this.router.navigate(['/linking/ScanInspector/', this._id, this.scanListService.scan._id]);
       this.reloadScan();

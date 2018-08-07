@@ -69,21 +69,21 @@ export class RouterRefsInspectorComponent implements OnInit, OnChanges {
     // this.entry.emit(entry);
   }
 
-  showScan(){
+  showScan() {
     this.router.navigate(['/linking/ScanInspector/', this._id]);
   }
 
 
-    newEntry() {
-        console.log("new entry")
-        this.router.navigate(['/edit/'],{ queryParams: { resource: this.resource._id, entry: "create" } });
-        // this.refs.push(this.locdbService.newBibliographicEntry())
-    }
+  newEntry() {
+    console.log("new entry")
+    this.router.navigate(['/edit/'],{ queryParams: { resource: this.resource._id, entry: "create" } });
+    // this.refs.push(this.locdbService.newBibliographicEntry())
+  }
 
-    triggerEdit(params){
-      console.log("Edit: ", params)
-      this.router.navigate(['/edit/'],{ queryParams: params});
+  triggerEdit(params){
+    console.log("Edit: ", params)
+    this.router.navigate(['/edit/'],{ queryParams: params});
 
-    }
+  }
 
 }
