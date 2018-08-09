@@ -67,6 +67,8 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
         if (scan._id === scan_id) {
           console.log("Write scans into ListService", embodiment.scans)
           this.scanListService.scans = embodiment.scans.filter(e => e.status === 'OCR_PROCESSED')
+          this.scanListService.pos = this.scanListService.scans.indexOf(scan) + 1
+          console.log("initial Index scanlistservice",this.scanListService.scans.indexOf(scan))
           this.totalScans = this.scanListService.totalScans
           return scan;
         }
@@ -77,7 +79,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
-    // console.log('ScanInspector onInit');
+    //console.log('ScanInspector onInit');
     this._id = this.route.snapshot.params.resid;
     this.scan_id = this.route.snapshot.params.scanid;
     // load Bibliographic resource because only id is passed along the route
@@ -206,11 +208,14 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   }
 
   get paginationPos() {
-    return this.scanListService.pos;
+    const p = this.scanListService.pos;
+    console.log("get p in inspect: ", p)
+    return p;
   }
 
   set paginationPos(p: number) {
     /* always use triple equals for comparison by value */
+    console.log("set p in inspect: ", p)
     if (p !== this.scanListService.pos) {
       this.scanListService.pos = p
       this.router.navigate(['/linking/ScanInspector/', this._id, this.scanListService.scan._id]);

@@ -8,23 +8,22 @@ export class ScanListService {
    *
    */
   private _scans: models.Scan[] = [];
-  private _currentScan: number = 1;
+  private _currentScan: number = 0;
 
   get scans() {
     return this._scans;
   }
 
   set scans(scans: models.Scan[]) {
-    console.log("Set scans", scans)
     if (!this.checkContentEquality(this._scans, scans)) {
+      console.log("Set scans", scans)
       this._currentScan = 0;
       this._scans = scans;
     }
   }
 
   get scan() {
-    console.log(this._currentScan)
-    console.log("Returned", this.scans[this._currentScan], "of", this.scans)
+    console.log("Returned nr ",this._currentScan, this.scans[this._currentScan], "of", this.scans)
     return this.scans[this._currentScan]
   }
 
@@ -39,13 +38,13 @@ export class ScanListService {
   }
 
   get pos() {
-    console.log("getpos", this._currentScan)
+    console.log("getpos", this._currentScan, this.scans[this._currentScan])
     return this._currentScan + 1;
   }
 
   set pos(p: number) {
-    console.log("setpos", p)
     this._currentScan = p - 1;
+    console.log("setpos", this._currentScan, this.scans[this._currentScan])
   }
 
   get totalScans() {
