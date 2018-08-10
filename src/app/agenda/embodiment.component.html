@@ -4,7 +4,7 @@
 </p>
 <a *ngIf="embodiment.url" [href]="embodiment.url">Inspect Source</a>
 <ul *ngIf="embodiment.scans">
-  <li *ngFor="let scan of embodiment.scans">
+  <li *ngFor="let scan of getScans()">
     <a href="#" (click)="selectScan(scan); false"> {{ scan.scanName }}</a>
      <i *ngIf="printState(scan) === 'not OCR processed'" class="fa fa-play-circle" aria-hidden="true"  (click)="ocrprocess(scan)"></i>
   </li>

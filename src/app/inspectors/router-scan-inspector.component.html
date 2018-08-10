@@ -21,10 +21,10 @@
     </div>
   </div>
   <div class="col-sm-8">
-    <div class="pull-right" *ngIf="scanIsVisible">
+    <!-- the scan-inspector.service has to be initialized with the correct scan index befor the pagination is loaded,
+            to prevent fallback to first page -->
+    <div class="pull-right" *ngIf="scanIsVisible && paginationInitialized">
     <pagination [totalItems]="totalScans" [itemsPerPage]="1" [(ngModel)]="paginationPos"></pagination>
-      <!-- {{scanListService.totalScans}} -->
-      <!-- <p *ngFor="let scan of scanListService.scans"> {{scan._id}} </p> -->
 </div>
 </div>
   </div>

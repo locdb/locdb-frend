@@ -31,7 +31,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     @Output() updateResource = new EventEmitter<TypedResourceView>();
 
     resourceForm: FormGroup;
-    agentRoleIdForm: FormGroup;
+    agentIdForm: FormGroup;
     embodiments: FormGroup[] = [];
     roles: string[] =  enum_values(enums.roleType);
     resourceTypes: string[] = enum_values(enums.resourceType);
@@ -39,6 +39,8 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     migrating = false
     modalRef: BsModalRef;
+
+    currentContributorForModal = null;
 
     dataSourcePartOf: Observable<any>;
     placeholderPartOf: string = "Enter name to search for parent"
@@ -104,54 +106,28 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
             partOf: '',
             migration: false,
         });
-        this.agentRoleIdForm = this.fb.group({
+        this.agentIdForm = this.fb.group({
         // you can also set initial formgroup inside if you like
-        agentRoles: this.fb.array([]),
+        agentIds: this.fb.array([]),
         })
     }
 
-    addNewRole() {
-      let control = <FormArray>this.agentRoleIdForm.controls.agentRoles;
+    addNewContributorId() {
+      let control = <FormArray>this.agentIdForm.controls.identifiers;
       control.push(
         this.fb.group({
-          roleType: '',
-          // nested form array, you could also add a form group initially
-          identifiers: this.fb.array([]),
-          role: this.fb.group({
-            // you can also set initial formgroup inside if you like
-            givenName: '',
-            familyName: '',
-            nameString: '',
-            identifiers: this.fb.array([])
-          })
+          scheme: '',
+          literalValue: '',
         })
       )
     }
 
-    addAgentIdentifier(role){
-      role.controls.identifiers.push(this.fb.group({scheme:'', literalValue:''}))
+    addContributorIdentifier(contributor){
+      contributor.controls.identifiers.push(this.fb.group({scheme:'', literalValue:''}))
     }
 
-    setAgentRoles(roles: models.AgentRole[]) {
-        const agentRoleFGs = roles ? roles.filter(arole => arole != null).map(
-            arole => this.fb.group(
-                {roleType: arole.roleType, identifiers: this.fb.array(arole.identifiers),
-                  role: this.fb.group({
-                    givenName: arole.heldBy.givenName,
-                    familyName: arole.heldBy.familyName,
-                    nameString: arole.heldBy.nameString,
-                    identifiers: this.fb.array(arole.heldBy.identifiers || [])
-                  }
-                  )}
-            )
-        ) : [];
-        const agentRoleFormArray = this.fb.array(agentRoleFGs);
-        this.agentRoleIdForm.setControl('agentRoles', agentRoleFormArray);
-    }
-
-    deleteRole(index) {
-      let control = <FormArray>this.agentRoleIdForm.controls.companies;
-      control.removeAt(index)
+    removeContributorIdentifier(contributor, index: number) {
+      contributor.controls.identifiers.removeAt(index)
     }
 
     ngOnInit()  {
@@ -173,13 +149,17 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     // clean array treatment
     setContributors(roles: models.AgentRole[]) {
+        console.log("[debug] set contributors ", roles)
         const contribFGs = roles ? roles.filter(arole => arole != null).map(
             arole => this.fb.group(
-                {role: arole.roleType, name: this.nameFromAgent(arole.heldBy)}
+                {role: arole.roleType, name: this.nameFromAgent(arole.heldBy),
+                identifiers: this.fb.array(arole.heldBy.identifiers.map(e => this.fb.group(e)) || []) }
             )
         ) : [];
         const contribFormArray = this.fb.array(contribFGs);
         this.resourceForm.setControl('contributors', contribFormArray);
+        console.log("[debug] set resourceForm ", this.resourceForm)
+
     }
 
     get contributors(): FormArray {
@@ -188,7 +168,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     addContributor() {
         // reference from getter above
-        this.contributors.push(this.fb.group({role: 'AUTHOR', name: 'name'}));
+        this.contributors.push(this.fb.group({role: 'AUTHOR', name: 'name', identifiers: []}));
     }
 
     removeContributor(index: number) {
@@ -196,6 +176,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     }
 
     // clean array treatment end
+
     setIdentifiers(ids: models.Identifier[]) {
         const identsFGs = ids ? ids.map(
             identifier => this.fb.group(
@@ -220,6 +201,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         this.identifiers.removeAt(index);
     }
 
+
     ngOnChanges()  {
         console.log('ngOnChanges', this.resources[0]);
         // console.log("Set publicationyear: ",  this.resource.publicationDate)
@@ -238,13 +220,13 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         // new clean set contribs
         this.setContributors(this.resources[0].contributors);
         this.setIdentifiers(this.resources[0].identifiers);
-        this.setAgentRoles(this.resources[0].contributors);
         // console.log('Contribs in resource:', this.resource.contributors);
         // console.log('Contribs in form:', this.contributors);
     }
 
     onSubmit() {
         let resource = this.prepareSaveResource();
+        console.log("[debug] submit resource: ", resource)
         this.updateResource.emit(resource)
     }
 
@@ -253,17 +235,14 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     }
 
 
-    // cancel() {
-    //     this.submitted = true; // effectively closes the form
-    //     this.submitStatus.emit(false)
-    // }
-
-    reconstructAgentRole(name: string, role: string): models.AgentRole {
+    reconstructAgentRole(name: string, role: string, identifiers: models.Identifier[]): models.AgentRole {
         const agentRole = {
             identifiers: [],
             roleType: role,
             heldBy: this.agentFromName(name)
         }
+        agentRole.heldBy.identifiers = identifiers;
+        console.log("[debug] reconstructed agentRole: ", agentRole)
         return agentRole;
     }
 
@@ -278,8 +257,8 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     prepareSaveResource(): TypedResourceView  {
         // Form values need deep copy, else shallow copy is enough
         const formModel = this.resourceForm.value;
-        const contribsDeepCopy = formModel.contributors.map((elem: {name: string, role: string }) =>
-        elem.name == "UNK" ? this.reconstructAgentRole("", elem.role): this.reconstructAgentRole(elem.name, elem.role));
+        const contribsDeepCopy = formModel.contributors.map((elem: {name: string, role: string, identifiers: models.Identifier[]}) =>
+        elem.name == "UNK" ? this.reconstructAgentRole("", elem.role, elem.identifiers): this.reconstructAgentRole(elem.name, elem.role, elem.identifiers));
         const identsDeepCopy = formModel.identifiers.map(
           (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
         );
@@ -305,22 +284,6 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
         return resource;
     }
-    //
-    // deleteResource() {
-    //     // Deletes the whole currently selected resouces
-    //     if (confirm('Are you sure to delete resource ' + this.resource._id)) {
-    //         this.locdbService.deleteBibliographicResource(this.resource).subscribe(
-    //             (res) => {console.log('Deleted'); this.resource = null; this.resourceChange.emit(this.resource)},
-    //             (err) => {alert("Error deleting resource " + this.resource._id)}
-    //         );
-    //     }
-    //
-    // }
-
-    // showForm(val: boolean) {
-    //     // Display the form or stop displaying it
-    //     this.submitted = !val;
-    // }
 
     short() {
         // A shorthand name for accordion heading
@@ -342,8 +305,11 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
       this.migrating = !this.migrating
     }
 
-    openModal(template: TemplateRef<any>) {
-
+    openModal(template: TemplateRef<any>, contributor) {
+        this.currentContributorForModal = contributor
+        console.log(contributor)
+        this.agentIdForm = contributor
+        console.log(this.agentIdForm)
         this.modalRef = this.modalService.show(template);
     }
 

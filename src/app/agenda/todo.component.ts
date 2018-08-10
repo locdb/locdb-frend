@@ -76,7 +76,7 @@ export class TodoComponent implements OnChanges {
         }
       }
     }
-    return scans
+    return scans.filter(e => e[1].status === 'OCR_PROCESSED')
   }
 
   dummy(s) {

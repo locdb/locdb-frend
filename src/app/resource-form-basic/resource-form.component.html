@@ -64,15 +64,18 @@
           <div class="col">
             <input class="form-control" formControlName="name">
           </div>
+          <button (click)="openModal(template, contributor)" type="button" class="close" aria-label="Inspect Contributor">
+            <span aria-hidden="true">i</span>
+          </button>
         </div>
         <!-- </tbody> -->
       <!-- </table> -->
     <button type="button" class="btn btn-secondary btn-sm" aria-label="Add Contributor" (click)="addContributor()">
       Add Contributor
     </button>
-    <button type="button" class="btn btn-secondary btn-sm pull-right" aria-label="Add Identifier" (click)="openModal(template)">
+    <!-- <button type="button" class="btn btn-secondary btn-sm pull-right" aria-label="Add Identifier" (click)="openModal(template)">
       Edit Contributor Identifiers ...
-    </button>
+    </button> -->
   </div>
 
   <div class="form-group row">
@@ -179,65 +182,35 @@
   TODO change id scheme to selector-->
 <ng-template #template>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">Identifiers</h4>
+    <h4 class="modal-title pull-left">Identifiers of {{agentIdForm.value.name + " (" + agentIdForm.value.role + ")"}}</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
 
   </div>
   <div class="modal-body">
-  <form [formGroup]="agentRoleIdForm">
-    <div formArrayName="agentRoles">
-      <div *ngFor="let role of agentRoleIdForm.get('agentRoles').controls; let i=index">
-        <h3>ROLE {{i+1}}: </h3>
+  <form [formGroup]="agentIdForm">
+    <div formArrayName="identifiers">
+      <div *ngFor="let Id of agentIdForm.get('identifiers').controls; let i=index">
         <div [formGroupName]="i">
-        <div class="row">
-          <label class="col-sm-3">
-          Rollentyp
-          </label>
-          <input formControlName="roleType" class="col-sm-9"/>
-        </div>
-          <div formArrayName="identifiers">
-            <div *ngFor="let agent of role.get('identifiers').controls; let k=index">
-              <h4>ROLEID {{k+1}}</h4>
-              <div [formGroupName]="k" class="form-group row">
-                <input formControlName="scheme" class="col-sm-4"/>
-                <input formControlName="literalValue" class="col-sm-8"/>
+              <div class="pull-left">
+                <button (click)="removeContributorIdentifier(agentIdForm, i)" type="button" class="close" aria-label="Remove Identifier">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+                <label class="col-sm-2" style="padding-left: 0px">Scheme</label>
+                <input formControlName="scheme" class="col-sm-3"/>
+                <label class="col-sm-2">Value</label>
+                <input formControlName="literalValue" class="col-sm-4"/>
               </div>
             </div>
-            <button (click)="addAgentIdentifier(role)">
-              add roleid
+            <button (click)="addContributorIdentifier(agentIdForm)">
+              Add identifier
+            </button>
+            <button (click)="modalRef.hide()" class="pull-right">
+              Confirm
             </button>
           </div>
-          <div formGroupName="role">
-          <div class="row">
-            <label class="col-sm-3">
-            Name
-            </label>
-            <input formControlName="nameString" class="col-sm-9"/>
-          </div>
-          <div class="row">
-            <label class="col-sm-3"></label>
-            <input formControlName="givenName" class="col-sm-4"/>
-            <label class="col-sm-1"></label>
-            <input formControlName="familyName" class="col-sm-4"/>
-          </div>
-            <div formArrayName="identifiers">
-              <div *ngFor="let agent of role.get('role').controls.identifiers.controls; let j=index">
-                <h4>AGENTID {{j+1}}</h4>
-                <div [formGroupName]="j">
-                  <input formControlName="scheme" />
-                  <input formControlName="literalValue" />
-                </div>
-              </div>
-            </div>
-            <button (click)="addAgentIdentifier(role.get('role'))">
-              add agentid
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </form>
   </div>
 

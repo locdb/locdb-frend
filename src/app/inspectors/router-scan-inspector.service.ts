@@ -8,20 +8,24 @@ export class ScanListService {
    *
    */
   private _scans: models.Scan[] = [];
-  private _currentScan: number = 1;
+  private _currentScan: number = 0;
 
   get scans() {
     return this._scans;
   }
 
   set scans(scans: models.Scan[]) {
+    // prevent unnessesary overwriting and shuffeling of the scans array
     if (!this.checkContentEquality(this._scans, scans)) {
-      this._currentScan = 0;
+      console.log("Set scans", scans)
+      if (this._currentScan >= scans.length){
+        this._currentScan = 0;}
       this._scans = scans;
     }
   }
 
   get scan() {
+    console.log("Returned nr ",this._currentScan, this.scans[this._currentScan], "of", this.scans)
     return this.scans[this._currentScan]
   }
 
@@ -35,22 +39,23 @@ export class ScanListService {
     return this.scans[this._currentScan];
   }
 
+  /* position from pagination starts at 1 while array indexing starts at 0,
+      pos getter and setter manage this accordingly*/
   get pos() {
-    return this._currentScan;
+    // console.log("getpos", this._currentScan, this.scans[this._currentScan])
+    return this._currentScan + 1;
   }
 
   set pos(p: number) {
-    this._currentScan = p;
+    if (p < 1){
+      console.log("[warning] index " + p + " out of range")
+    }
+    this._currentScan = p - 1;
+    // console.log("setpos", this._currentScan, this.scans[this._currentScan])
   }
 
   get totalScans() {
     return this._scans.length;
-  }
-
-
-  addScan(scan: string) {
-    // TODO necessary?
-    // Lukas: guess not
   }
 
   checkContentEquality(a: any[], b: any[]) {
