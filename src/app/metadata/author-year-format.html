@@ -37,11 +37,11 @@
     </span>
   <span *ngIf="in && !of" [innerHtml]="in | container:true">
     <!-- Only parent is given -->
-  </span>.
+  </span>
   <span *ngIf="of">
     <!-- Some information that is only available when child is given -->
     <span *ngIf="of.embodiedAs && of.embodiedAs.length && of.embodiedAs[0].firstPage && of.embodiedAs[0].lastPage">
-       pp. {{ of.embodiedAs[0].firstPage}}-{{ of.embodiedAs[0].lastPage}}</span>
+       pp. {{ of.embodiedAs[0].firstPage}}-{{ of.embodiedAs[0].lastPage}}</span>.
     <a class="badge badge-secondary ml-1" *ngIf="getClickableIDURL(of.identifiers)" [href]="getClickableIDURL(of.identifiers)" target="_blank">
       <i class="fa fa-external-link"></i> Online
     </a>
