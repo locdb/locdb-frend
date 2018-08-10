@@ -182,7 +182,7 @@
   TODO change id scheme to selector-->
 <ng-template #template>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">Identifiers</h4>
+    <h4 class="modal-title pull-left">Identifiers of {{agentIdForm.value.name + " (" + agentIdForm.value.role + ")"}}</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -192,14 +192,23 @@
   <form [formGroup]="agentIdForm">
     <div formArrayName="identifiers">
       <div *ngFor="let Id of agentIdForm.get('identifiers').controls; let i=index">
-        <h3>ID {{i+1}}: </h3>
         <div [formGroupName]="i">
-                <input formControlName="scheme" class="col-sm-4"/>
-                <input formControlName="literalValue" class="col-sm-8"/>
+              <div class="pull-left">
+                <button (click)="removeContributorIdentifier(agentIdForm, i)" type="button" class="close" aria-label="Remove Identifier">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+                <label class="col-sm-2" style="padding-left: 0px">Scheme</label>
+                <input formControlName="scheme" class="col-sm-3"/>
+                <label class="col-sm-2">Value</label>
+                <input formControlName="literalValue" class="col-sm-4"/>
               </div>
             </div>
             <button (click)="addContributorIdentifier(agentIdForm)">
               Add identifier
+            </button>
+            <button (click)="modalRef.hide()" class="pull-right">
+              Confirm
             </button>
           </div>
   </form>

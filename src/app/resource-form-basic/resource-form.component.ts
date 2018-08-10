@@ -121,24 +121,13 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         })
       )
     }
-    addFormGroupContributorId(identifier) {
-      let control = <FormArray>this.agentIdForm.controls.identifiers;
-      console.log("push")
-      control.push(identifier)
+
+    addContributorIdentifier(contributor){
+      contributor.controls.identifiers.push(this.fb.group({scheme:'', literalValue:''}))
     }
 
-    addContributorIdentifier(obj){
-      obj.controls.identifiers.push(this.fb.group({scheme:'', literalValue:''}))
-    }
-    logme(me){
-      console.log(
-        me
-      )
-    }
-
-    deleteRole(index) {
-      let control = <FormArray>this.agentIdForm.controls.agentIds;
-      control.removeAt(index)
+    removeContributorIdentifier(contributor, index: number) {
+      contributor.controls.identifiers.removeAt(index)
     }
 
     ngOnInit()  {
@@ -160,14 +149,17 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     // clean array treatment
     setContributors(roles: models.AgentRole[]) {
+        console.log("[debug] set contributors ", roles)
         const contribFGs = roles ? roles.filter(arole => arole != null).map(
             arole => this.fb.group(
                 {role: arole.roleType, name: this.nameFromAgent(arole.heldBy),
-                identifiers: this.fb.array(arole.heldBy.identifiers || []) }
+                identifiers: this.fb.array(arole.heldBy.identifiers.map(e => this.fb.group(e)) || []) }
             )
         ) : [];
         const contribFormArray = this.fb.array(contribFGs);
         this.resourceForm.setControl('contributors', contribFormArray);
+        console.log("[debug] set resourceForm ", this.resourceForm)
+
     }
 
     get contributors(): FormArray {
@@ -209,6 +201,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         this.identifiers.removeAt(index);
     }
 
+
     ngOnChanges()  {
         console.log('ngOnChanges', this.resources[0]);
         // console.log("Set publicationyear: ",  this.resource.publicationDate)
@@ -233,6 +226,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     onSubmit() {
         let resource = this.prepareSaveResource();
+        console.log("[debug] submit resource: ", resource)
         this.updateResource.emit(resource)
     }
 
@@ -241,12 +235,14 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     }
 
 
-    reconstructAgentRole(name: string, role: string): models.AgentRole {
+    reconstructAgentRole(name: string, role: string, identifiers: models.Identifier[]): models.AgentRole {
         const agentRole = {
             identifiers: [],
             roleType: role,
             heldBy: this.agentFromName(name)
         }
+        agentRole.heldBy.identifiers = identifiers;
+        console.log("[debug] reconstructed agentRole: ", agentRole)
         return agentRole;
     }
 
@@ -261,8 +257,8 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     prepareSaveResource(): TypedResourceView  {
         // Form values need deep copy, else shallow copy is enough
         const formModel = this.resourceForm.value;
-        const contribsDeepCopy = formModel.contributors.map((elem: {name: string, role: string }) =>
-        elem.name == "UNK" ? this.reconstructAgentRole("", elem.role): this.reconstructAgentRole(elem.name, elem.role));
+        const contribsDeepCopy = formModel.contributors.map((elem: {name: string, role: string, identifiers: models.Identifier[]}) =>
+        elem.name == "UNK" ? this.reconstructAgentRole("", elem.role, elem.identifiers): this.reconstructAgentRole(elem.name, elem.role, elem.identifiers));
         const identsDeepCopy = formModel.identifiers.map(
           (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
         );
@@ -314,9 +310,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         console.log(contributor)
         this.agentIdForm = contributor
         console.log(this.agentIdForm)
-        // this.addFormGroupContributorId(contributor.)
         this.modalRef = this.modalService.show(template);
-        //contributor.patchValue({name: 'kaaarl'})
     }
 
 }
