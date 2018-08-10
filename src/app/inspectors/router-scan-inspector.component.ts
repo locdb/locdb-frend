@@ -39,6 +39,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   pdf_src: string;
 
   totalScans = 0;
+  paginationInitialized = false;
 
   constructor(private location: Location,
               private locdbService: LocdbService,
@@ -65,11 +66,14 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     for (const embodiment of embodiments) {
       for (const scan of embodiment.scans) {
         if (scan._id === scan_id) {
-          console.log("Write scans into ListService", embodiment.scans)
+          console.log("[debug] Write scans into ListService", embodiment.scans)
           this.scanListService.scans = embodiment.scans.filter(e => e.status === 'OCR_PROCESSED')
+          console.log("[debug] Initial Index scanlistservice",this.scanListService.scans.indexOf(scan))
           this.scanListService.pos = this.scanListService.scans.indexOf(scan) + 1
-          console.log("initial Index scanlistservice",this.scanListService.scans.indexOf(scan))
           this.totalScans = this.scanListService.totalScans
+          if (this.totalScans > 1){
+            this.paginationInitialized = true;
+          }
           return scan;
         }
       }
@@ -92,17 +96,17 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
       if (this.resource.partOf) {
         this.locdbService.getBibliographicResource(this.resource.partOf).subscribe(
           (parent_trv) => this.parent = parent_trv,
-          (error) => console.log('Error occurred while retrieving parent resource', error)
+          (error) => console.log('[error] Error occurred while retrieving parent resource', error)
         )
 
       }
       // extract the correct scan
       this.scan = this.findScanById(this.scan_id, this.resource.embodiedAs);
       console.log(this.scanListService.scans)
-      this.reloadScan()
+      //this.reloadScan()
     },
       (error) => {
-        console.log('Error occurred while retrieving resource', error);
+        console.log('[error] Error occurred while retrieving resource', error);
       }
     );
 
@@ -112,7 +116,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
         (entries) => {this.refs = entries},
       (error) => {
         this.sorry_text = 'Could not retrieve bibliographic entries for scan\n';
-        console.log('Error occurred while retrieving entries for scan', error);
+        console.log('[error] Error occurred while retrieving entries for scan', error);
       }
     );
     // Probe scan image for content type
@@ -122,7 +126,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
       },
       (err) => {
         this.sorry_text = 'Scan image not found ' + this.scan_id + '\n';
-        console.log('err, loading url', err);
+        console.log('[error] err, loading url', err);
         // this.scan_content_type = "image"
       }
     );
@@ -138,11 +142,11 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     // Probe scan image for content type
     this.locdbService.checkScanImage(this.scan_id).subscribe(
       (data) => { this.scan_content_type = data.headers.get('content-type').split('/')[1]
-        console.log('Scan content type: ', this.scan_content_type)
+        console.log('[info] Scan content type: ', this.scan_content_type)
       },
       (err) => {
         this.sorry_text = 'Scan image not found ' + this.scan_id + '\n';
-        console.log('err, loading url', err);
+        console.log('[error] err, loading url', err);
         // this.scan_content_type = "image"
       }
     );
@@ -153,7 +157,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
 
   getScanImage() {
     const scan = this.locdbService.getScan(this.scan_id);
-    console.log("load img", scan)
+    console.log("[debug] Load image in scan inspector", scan)
     return scan
     }
 
@@ -170,14 +174,8 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   }
 
   newEntry() {
-    console.log('new entry');
     this.router.navigate(['/edit/'], { queryParams: { resource: this.resource._id, entry: 'create' } });
   }
-
-  updateTarget(e) {
-    console.log('eee', e);
-  }
-
   setHeight(height: Number) {
     this.imgheight = height;
   }
@@ -186,9 +184,14 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     await this.router.navigate([], {
         queryParams: {list: 1}
     });
-    console.log('Edit: ', params);
+    console.log('[debug] Edit: ', params);
     this.router.navigate(['/edit/'], { queryParams: params });
 
+  }
+  async triggerNewScanId(scanid) {
+    // ensure that new scanid is passed to reloadScan() via URL due to asyncronity of navigate()
+    await this.router.navigate(['/linking/ScanInspector/', this._id, scanid]);
+    this.reloadScan();
   }
   zoomIn() {
     if (this.scan_content_type !== 'pdf') {
@@ -209,17 +212,19 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
 
   get paginationPos() {
     const p = this.scanListService.pos;
-    console.log("get p in inspect: ", p)
+    // console.log("get p in inspect: ", p)
     return p;
   }
 
   set paginationPos(p: number) {
     /* always use triple equals for comparison by value */
-    console.log("set p in inspect: ", p)
     if (p !== this.scanListService.pos) {
+      console.log("[info] Reload with pagination index", p)
       this.scanListService.pos = p
-      this.router.navigate(['/linking/ScanInspector/', this._id, this.scanListService.scan._id]);
-      this.reloadScan();
+      /* the hidden navigation to update the url has to be asyncronous to
+      prevent a race condition between the setting of the new url and
+      the reloadScan() function reading the URL */
+      this.triggerNewScanId(this.scanListService.scan._id)
     }
   }
 
