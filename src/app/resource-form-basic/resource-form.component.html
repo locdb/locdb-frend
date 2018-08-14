@@ -205,7 +205,9 @@
                 </button>
               </div>
                 <label class="col-sm-2" style="padding-left: 0px">Scheme</label>
-                <input formControlName="scheme" class="col-sm-3"/>
+                <select class="form-control" formControlName="scheme" class="col-sm-3">
+                  <option *ngFor="let i of agentIdentifierTypes" [value]="i">{{i}}</option>
+                </select>
                 <label class="col-sm-2">Value</label>
                 <input formControlName="literalValue" class="col-sm-4"/>
               </div>

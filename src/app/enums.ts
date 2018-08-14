@@ -30,6 +30,11 @@ export enum identifier {
     urlCrossref = "URL_CROSSREF",
 
 }
+export enum agentIdentifier {
+    orcid = "ORCID",
+    gndid = "GND-ID",
+
+}
 export enum roleType {
   author = "AUTHOR",
     editor = "EDITOR",

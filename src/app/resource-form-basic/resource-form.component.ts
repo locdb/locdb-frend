@@ -34,6 +34,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     agentIdForm: FormGroup;
     embodiments: FormGroup[] = [];
     roles: string[] =  enum_values(enums.roleType);
+    agentIdentifierTypes: string[] =  enum_values(enums.agentIdentifier);
     resourceTypes: string[] = enum_values(enums.resourceType);
     identifierTypes: string[] = enum_values(enums.identifier);
 
@@ -193,7 +194,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         return array
       }
     }
-    
+
     // clean array treatment end
 
     setIdentifiers(ids: models.Identifier[]) {
