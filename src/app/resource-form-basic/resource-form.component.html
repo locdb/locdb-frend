@@ -53,9 +53,12 @@
     <!-- <table class="table-condensed" style="width: 100%;"> -->
       <!--   <tbody> -->
         <div class="form-group row" *ngFor="let contributor of contributors.controls; let j = index" [formGroupName]="j">
-          <button (click)="removeContributor(j)" type="button" class="close" aria-label="Remove Contributor">
-            <span aria-hidden="true">&times;</span>
-          </button>
+            <button (click)="removeContributor(j)" type="button" class="close" aria-label="Remove Contributor">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <button (click)="moveFormarrayEntry(j, -1)" type="button" class="close" aria-label="Remove Contributor">
+              <span aria-hidden="true">&uarr;</span>
+            </button>
           <div class="col">
             <select class="form-control" formControlName="role">
               <option *ngFor="let r of roles" [value]="r">{{r}}</option>
@@ -64,6 +67,9 @@
           <div class="col">
             <input class="form-control" formControlName="name">
           </div>
+          <button (click)="moveFormarrayEntry(j, 1)" type="button" class="close" aria-label="Remove Contributor">
+            <span aria-hidden="true">&darr;</span>
+          </button>
           <button (click)="openModal(template, contributor)" type="button" class="close" aria-label="Inspect Contributor">
             <span aria-hidden="true">i</span>
           </button>

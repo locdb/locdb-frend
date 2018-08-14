@@ -130,6 +130,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
       contributor.controls.identifiers.removeAt(index)
     }
 
+
     ngOnInit()  {
       // console.log("On init form", this.resources)
     }
@@ -175,6 +176,24 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         this.contributors.removeAt(index);
     }
 
+    //shift an entry in a formarray
+
+    moveFormarrayEntry(index: number, shift: number, array=this.contributors){
+      if(index + shift < 0 || index + shift >= array.length){
+        console.log("[error] Target index not reachable (index: " + index + ", way: " + shift + ")")
+        return array
+      }
+      else{
+        if(shift < 0){
+          shift *= -1
+        	index -= shift
+        }
+        array.insert(index + shift, array[index]);
+        array.removeAt(index)
+        return array
+      }
+    }
+    
     // clean array treatment end
 
     setIdentifiers(ids: models.Identifier[]) {
