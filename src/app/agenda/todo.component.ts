@@ -32,6 +32,7 @@ export class TodoComponent implements OnChanges {
   }
 
   inspectScan(embodiment_scan: [models.ResourceEmbodiment, models.Scan]) {
+    console.log("[debug] in todo.inspectScan: embodiment_scan:", embodiment_scan)
     this.scan.emit([embodiment_scan[0], embodiment_scan[1]]);
   }
 

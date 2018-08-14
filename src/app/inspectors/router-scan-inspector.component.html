@@ -34,6 +34,7 @@
   </div>
   <div class="card-body"  *ngIf="!sorry_text">
     <div *ngIf="scan_content_type !== 'pdf'" [hidden]="!scanIsVisible" [style.height]="imgheight">
+      
       <app-display [img_src]="getScanImage()" [entries]="refs" [selectedEntry]="selected_entry_list"
           (entry)="display_trigger_selected_entry($event)"
           (imglength)="setHeight()" #display></app-display>

@@ -86,23 +86,26 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     //console.log('ScanInspector onInit');
     this._id = this.route.snapshot.params.resid;
     this.scan_id = this.route.snapshot.params.scanid;
+    console.log("[debug] scan inspector received from ids in URL: ")
     // load Bibliographic resource because only id is passed along the route
 
 
     // Retrieve child and then parent resource
     this.locdbService.getBibliographicResource(this._id).subscribe((trv) => {
       this.resource = trv;
+      console.log("[debug] scan inspector received from ids in URL: resource:", this.resource)
       // console.log('scans: ', trv.embodiedAs)
       if (this.resource.partOf) {
         this.locdbService.getBibliographicResource(this.resource.partOf).subscribe(
-          (parent_trv) => this.parent = parent_trv,
+          (parent_trv) => {this.parent = parent_trv
+            console.log("[debug] scan inspector received from ids in URL: parent_resource:", this.parent)},
           (error) => console.log('[error] Error occurred while retrieving parent resource', error)
         )
 
       }
       // extract the correct scan
       this.scan = this.findScanById(this.scan_id, this.resource.embodiedAs);
-      console.log(this.scanListService.scans)
+      console.log("[debug] scan inspector received from ids in URL: scan:", this.scan)
       //this.reloadScan()
     },
       (error) => {
@@ -111,9 +114,12 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     );
 
     // Get entries for specific scan
+    // TODO: entries have to be filtered here,
+    // DEBUG: why are entries not accordingly supplied to scan_id from backend?
     this.locdbService.getToDoBibliographicEntries(this.scan_id).subscribe(
       // DO NOT extract them from resource
-        (entries) => {this.refs = entries},
+        (entries) => {this.refs = entries
+        console.log("[debug] scan inspector received from scan_id: entries:", this.refs)},
       (error) => {
         this.sorry_text = 'Could not retrieve bibliographic entries for scan\n';
         console.log('[error] Error occurred while retrieving entries for scan', error);
