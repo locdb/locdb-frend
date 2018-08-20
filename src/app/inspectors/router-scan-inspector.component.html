@@ -6,7 +6,7 @@
       Ref view
     </button> -->
     <h4> {{title }} </h4>
-    <p><app-metadata [of]="resource" [in]="parent"></app-metadata></p>
+    <p><app-metadata [of]="resource" [in]="parentResource"></app-metadata></p>
     <div class="row">
         <div class="col-sm-4">
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar">
@@ -33,16 +33,16 @@
     <p> {{sorry_text}} </p>
   </div>
   <div class="card-body"  *ngIf="!sorry_text">
-    <div *ngIf="scan_content_type !== 'pdf'" [hidden]="!scanIsVisible" [style.height]="imgheight">
+    <div *ngIf="scanIsDisplayable" [hidden]="!scanIsVisible" [style.height]="imgheight">
       
-      <app-display [img_src]="getScanImage()" [entries]="refs" [selectedEntry]="selected_entry_list"
+      <app-display [img_src]="scanUrl" [entries]="refs" [selectedEntry]="selected_entry_list"
           (entry)="display_trigger_selected_entry($event)"
           (imglength)="setHeight()" #display></app-display>
     </div>
-    <div [hidden]="!scanIsVisible" *ngIf="scan_content_type && scan_content_type == 'pdf'">
-      <p> Received {{scan_content_type}}, OCR processing requiered</p>
+    <div [hidden]="!scanIsVisible" *ngIf="!scanIsDisplayable">
+      <p> OCR processing not finished.</p>
       <p> {{pageVariable}} </p>
-      <pdf-viewer [src]="getScanImage()"
+      <pdf-viewer [src]="scanUrl"
              [render-text]="true"
              style="display: block;"></pdf-viewer>
     </div>

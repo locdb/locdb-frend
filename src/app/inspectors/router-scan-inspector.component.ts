@@ -20,34 +20,64 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   @ViewChild('display') display;
   title = 'Scan Inspector';
   sorry_text = '';
-  _id: string;
-  scan: models.Scan = null;
-  scan_content_type = '';
+
+  /* Resource for showing its metadata and accessing its embodiments */
   resource: TypedResourceView;
-  parent: TypedResourceView;
-  //entries: models.BibliographicEntry[] = [];
+  /* (optional) the container resource */
+  parentResource: TypedResourceView;
+  /* Currently displayed references (should always correspond to scan) */
   refs: Array<models.BibliographicEntry> = [];
+  /* Flag whether the scan or the digital references list is shown */
   scanIsVisible = true;
   // @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
+  //
+  //
   entry: models.BibliographicEntry; // EventEmitter<models.BibliographicEntry> = new EventEmitter();
   selected_entry_display: models.BibliographicEntry;
   loading = false;
-  embodiment_id: string;
-  scan_id: string;
+  // embodiment_id: string; // unused??
   imgheight: Number = 0;
   selected_entry_list: models.BibliographicEntry;
-  pdf_src: string;
+  // pdf_src: string; // unused??
 
   totalScans = 0;
   paginationInitialized = false;
 
+  /* The resource id */
+  @Input() private resourceId: string;
+
+  /*
+   * Overwrite scan_id setter such that scanUrl always point to the correct URL
+   */
+  scanUrl: string;
+  @Input() private _scanId: string;
+  get scanId() { return this._scanId; }
+  set scanId(newId: string) {
+    this._scanId = newId;
+    /* getScanURL prefixes the id with the base hostname and composes the URL */
+    this.scanUrl = this.locdbService.getScanURL(newId);
+  }
+
+  /* A flag to determine whether the scan is displayable (is not a pdf) */
+  scanIsDisplayable: boolean = true;
+  /* Overwrite setter such that scanIsDisplayable is always set correctly */
+  private _scan: models.Scan = null;
+  get scan() { return this._scan; }
+  set scan(newScan: models.Scan) {
+    this._scan = newScan;
+    // Scan is not (only by fallback) properly displayable when its a pdf
+    this.scanIsDisplayable = !newScan.scanName.endsWith('.pdf');
+  }
+
+
+
   constructor(private location: Location,
-              private locdbService: LocdbService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private scanListService: ScanListService) {
+    private locdbService: LocdbService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private scanListService: ScanListService) {
     console.log(scanListService.scans)
-              }
+  }
 
   display_trigger_selected_entry(entry: models.BibliographicEntry) {
     this.entry = entry;
@@ -58,6 +88,9 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     this.selected_entry_list = entry;
   }
 
+  /**
+   * Finds a scan in a list of embodiments WITHOUT side-effects.
+   * */
   findScanById(
     scan_id: string,
     embodiments: Array<models.ResourceEmbodiment>
@@ -66,9 +99,10 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     for (const embodiment of embodiments) {
       for (const scan of embodiment.scans) {
         if (scan._id === scan_id) {
-          console.log("[debug] Write scans into ListService", embodiment.scans)
+          console.log('[debug] Write scans into ListService', embodiment.scans)
+          // scans may not only come from a single embodiment
           this.scanListService.scans = embodiment.scans.filter(e => e.status === 'OCR_PROCESSED')
-          console.log("[debug] Initial Index scanlistservice",this.scanListService.scans.indexOf(scan))
+          console.log('[debug] Initial Index scanlistservice', this.scanListService.scans.indexOf(scan))
           this.scanListService.pos = this.scanListService.scans.indexOf(scan) + 1
           this.totalScans = this.scanListService.totalScans
           if (this.totalScans > 1){
@@ -83,30 +117,62 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
-    //console.log('ScanInspector onInit');
-    this._id = this.route.snapshot.params.resid;
-    this.scan_id = this.route.snapshot.params.scanid;
-    console.log("[debug] scan inspector received from ids in URL: ")
+    console.log('ScanInspector onInit');
+    this.resourceId = this.route.snapshot.params.resid;
+    this.scanId = this.route.snapshot.params.scanid;
+    console.log('[debug] scan inspector received from ids in URL: ')
     // load Bibliographic resource because only id is passed along the route
 
+    this.ngOnChanges(null);
+  }
 
+  reloadScan() {
+    console.log('ScanInspector reloadScan');
+    this.resourceId = this.route.snapshot.params.resid;
+    this.scanId = this.route.snapshot.params.scanid;
+    // load Bibliographic resource because only id is passed along the route
+      // extract the correct scan
+    this.scan = this.findScanById(this.scanId, this.resource.embodiedAs);
+    // Probe scan image for content type
+    // this.locdbService.getScan(this.scan_id, 'response').subscribe(
+    //   (data) => { this.scan_content_type = data.headers.get('content-type').split('/')[1]
+    //     console.log('[info] Scan content type: ', this.scan_content_type)
+    //   },
+    //   (err) => {
+    //     this.sorry_text = 'Scan image not found ' + this.scan_id + '\n';
+    //     console.log('[error] err, loading url', err);
+    //     // this.scan_content_type = "image"
+    //   }
+    // );
+  }
+
+
+  /**
+   * ngOnChanges
+   * 1. Retrieves the `resource` according to `resourceId` from the backend.
+   * 2. Retrieves the container resource `parentResource`, if available.
+   * 3. Sets the `scan` to the object within resource.embodiedAs by matching the `_id` property.
+   */
+
+  ngOnChanges(changes: SimpleChanges | any) {
+    console.log('[debug:ngOnChanges]', changes);
     // Retrieve child and then parent resource
-    this.locdbService.getBibliographicResource(this._id).subscribe((trv) => {
-      this.resource = trv;
-      console.log("[debug] scan inspector received from ids in URL: resource:", this.resource)
+    this.locdbService.getBibliographicResource(this.resourceId).subscribe((trv) => {
+      console.log('[debug] scan inspector received from ids in URL: resource:', this.resource)
       // console.log('scans: ', trv.embodiedAs)
-      if (this.resource.partOf) {
-        this.locdbService.getBibliographicResource(this.resource.partOf).subscribe(
-          (parent_trv) => {this.parent = parent_trv
-            console.log("[debug] scan inspector received from ids in URL: parent_resource:", this.parent)},
+      if (trv.partOf) {
+        this.locdbService.getBibliographicResource(trv.partOf).subscribe(
+          (parent_trv) => {
+            this.parentResource = parent_trv;
+            console.log('[debug] scan inspector received from ids in URL: parent_resource:', this.parentResource)
+          },
           (error) => console.log('[error] Error occurred while retrieving parent resource', error)
         )
-
       }
       // extract the correct scan
-      this.scan = this.findScanById(this.scan_id, this.resource.embodiedAs);
-      console.log("[debug] scan inspector received from ids in URL: scan:", this.scan)
-      //this.reloadScan()
+      this.scan = this.findScanById(this.scanId, trv.embodiedAs);
+      console.log('[debug] scan inspector received from ids in URL: scan:', this.scan)
+      this.resource = trv;
     },
       (error) => {
         console.log('[error] Error occurred while retrieving resource', error);
@@ -116,56 +182,27 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     // Get entries for specific scan
     // TODO: entries have to be filtered here,
     // DEBUG: why are entries not accordingly supplied to scan_id from backend?
-    this.locdbService.getToDoBibliographicEntries(this.scan_id).subscribe(
+    this.locdbService.getToDoBibliographicEntries(this.scanId).subscribe(
       // DO NOT extract them from resource
         (entries) => {this.refs = entries
-        console.log("[debug] scan inspector received from scan_id: entries:", this.refs)},
+        console.log('[debug] scan inspector received from scan_id: entries:', this.refs)},
       (error) => {
         this.sorry_text = 'Could not retrieve bibliographic entries for scan\n';
         console.log('[error] Error occurred while retrieving entries for scan', error);
       }
     );
     // Probe scan image for content type
-    this.locdbService.checkScanImage(this.scan_id).subscribe(
-      (data) => { this.scan_content_type = data.headers.get('content-type').split('/')[1]
-        console.log('Scan content type: ', this.scan_content_type)
-      },
-      (err) => {
-        this.sorry_text = 'Scan image not found ' + this.scan_id + '\n';
-        console.log('[error] err, loading url', err);
-        // this.scan_content_type = "image"
-      }
-    );
+    // this.locdbService.getScan(this.scan_id, 'response').subscribe(
+    //   (data) => { this.scan_content_type = data.headers.get('content-type').split('/')[1]
+    //     console.log('Scan content type: ', this.scan_content_type)
+    //   },
+    //   (err) => {
+    //     this.sorry_text = 'Scan image not found ' + this.scan_id + '\n';
+    //     console.log('[error] err, loading url', err);
+    //     // this.scan_content_type = "image"
+    //   }
+    // );
   }
-
-  reloadScan() {
-    console.log('ScanInspector reloadScan');
-    this._id = this.route.snapshot.params.resid;
-    this.scan_id = this.route.snapshot.params.scanid;
-    // load Bibliographic resource because only id is passed along the route
-      // extract the correct scan
-    this.scan = this.findScanById(this.scan_id, this.resource.embodiedAs);
-    // Probe scan image for content type
-    this.locdbService.checkScanImage(this.scan_id).subscribe(
-      (data) => { this.scan_content_type = data.headers.get('content-type').split('/')[1]
-        console.log('[info] Scan content type: ', this.scan_content_type)
-      },
-      (err) => {
-        this.sorry_text = 'Scan image not found ' + this.scan_id + '\n';
-        console.log('[error] err, loading url', err);
-        // this.scan_content_type = "image"
-      }
-    );
-  }
-
-  ngOnChanges(changes: SimpleChanges | any) {
-  }
-
-  getScanImage() {
-    const scan = this.locdbService.getScan(this.scan_id);
-    console.log("[debug] Load image in scan inspector", scan)
-    return scan
-    }
 
   forwardEntry(entry: models.BibliographicEntry) {
     this.entry = entry
@@ -196,22 +233,22 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   }
   async triggerNewScanId(scanid) {
     // ensure that new scanid is passed to reloadScan() via URL due to asyncronity of navigate()
-    await this.router.navigate(['/linking/ScanInspector/', this._id, scanid]);
+    await this.router.navigate(['/linking/ScanInspector/', this.resourceId, scanid]);
     this.reloadScan();
   }
   zoomIn() {
-    if (this.scan_content_type !== 'pdf') {
+    if (this.scanIsDisplayable) {
       this.display.zoomIn();
     }
 
   }
   zoomOut() {
-    if (this.scan_content_type !== 'pdf') {
+    if (this.scanIsDisplayable) {
       this.display.zoomOut();
     }
   }
   zoomReset() {
-    if (this.scan_content_type !== 'pdf') {
+    if (this.scanIsDisplayable) {
       this.display.zoomReset();
     }
   }
