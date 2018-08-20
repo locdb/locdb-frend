@@ -22,11 +22,12 @@
   </div>
   <div class="col-sm-8">
     <!-- the scan-inspector.service has to be initialized with the correct scan index befor the pagination is loaded,
-            to prevent fallback to first page -->
-    <div class="pull-right" *ngIf="scanIsVisible && paginationInitialized">
-    <pagination [totalItems]="totalScans" [itemsPerPage]="1" [(ngModel)]="paginationPos"></pagination>
-</div>
-</div>
+      to prevent fallback to first page -->
+      <!-- <div class="pull-right" *ngIf="scanIsVisible && paginationInitialized"> -->
+      <div class="pull-right">
+        <pagination [totalItems]="allScans && allScans.length" [itemsPerPage]="1" [(ngModel)]="currentPage" (pageChanged)="pageChanged($event)"></pagination>
+      </div>
+      <!-- </div> -->
   </div>
   </div>
   <div class="card-header" *ngIf="sorry_text">
