@@ -189,8 +189,13 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
           shift *= -1
         	index -= shift
         }
-        array.insert(index + shift, array[index]);
-        array.removeAt(index)
+        let tmp = array.value
+        // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
+        tmp.splice(index + shift + 1, 0, tmp[index]);
+        // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
+        tmp.splice(index, 1)
+        // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
+        array.patchValue(tmp)
         return array
       }
     }
