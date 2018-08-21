@@ -91,6 +91,10 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     this.selected_entry_list = entry;
   }
 
+  select(entry: models.BibliographicEntry) {
+    this.entry = entry;
+  }
+
   // /**
   //  * Finds a scan in a list of embodiments WITHOUT side-effects.
   //  * */
@@ -149,6 +153,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
       }
       this.allScans = this.gatherScans(trv.embodiedAs);
       const scan_idx = this.allScans.findIndex(scan => scan._id === this.scanId )
+      console.log('Finding the index', this.scanId, 'in', this.allScans, ':', scan_idx);
       // If found, select scan else default to first one
       this.scan = scan_idx > 0 ? this.allScans[scan_idx] : this.allScans.length ? this.allScans[0] : null
       // increment by one to obtain the correct current page
@@ -258,6 +263,8 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
   pageChanged(event: PageChangedEvent): void {
     // also: router navigate here?
     this.scan = this.allScans[event.page - 1];
+    this.fetchEntriesForScan(this.scan._id);
+    this.router.navigate(['/linking/ScanInspector/', this.resourceId, this.scan._id]);
   }
 
   // Zooming methods
