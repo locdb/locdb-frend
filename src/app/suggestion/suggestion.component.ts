@@ -35,42 +35,69 @@ export class SuggestionComponent implements OnInit, OnChanges {
     @Input() entry: models.BibliographicEntry;
     @Output() suggest: EventEmitter<models.BibliographicResource> = new EventEmitter();
 
-    filter_options = [{name: 'source', options: []},
-                    {name: 'resource type', options: []},
-                    {name: 'contained', options: []}]
+    // filter: [TypedResourceView, TypedResourceView] => boolean
+    filter_options = {source: [{name: 'All', filter: e => true}],
+                      resource_type: [{name: 'All', filter: e => true}],
+                      contained: [{name: 'All', filter: e => true},
+                        {name: 'Contained',
+                          filter: e => e.some(x => x ? x.source !== undefined &&
+                                                              x.source !== null :
+                                                            false)},
+                        {name: 'Standalone',
+                          filter: e => e.every(x => x ? x.source === undefined ||
+                                                              x.source === null:
+                                                            true)}
+                                                          ]}
+    selection = {source: 'All',
+                  resource_type: 'All',
+                  contained: 'All'}
+
+    search_filter(selection_type: string, selection_name: string){
+      return this.filter_options[selection_type]
+                      .find(e => e.name === selection_name)
+                      .filter
+    }
 
     refreshFilterOptions(){
       for(let suggestion
         of this.internalSuggestions.concat(this.externalSuggestions)){
           if(suggestion){
-          // is contained (yes/no)
-            if(suggestion[1] &&
-              this.filter_options.filter(e=>e.name==='contained')
-                  .every(e=>e.options.indexOf('No') == -1)){
-              this.filter_options.filter(e=>e.name==='contained')
-                                  .map(e=>e.options.push('No'))
-            }
-            if(suggestion[1] &&
-              this.filter_options.filter(e=>e.name==='contained')
-                  .every(e=>e.options.indexOf('Yes') == -1)){
-              this.filter_options.filter(e=>e.name==='contained')
-                                  .map(e=>e.options.push('Yes'))
-            }
             // source selection
-            const source = suggestion[0].data.source
-            console.log("[debug] Check sources: ", source)
-            if(source && this.filter_options.filter(e=>e.name==='source')
-                  .every(e=>e.options.indexOf(source) == -1)){
-              this.filter_options.filter(e=>e.name==='source')
-                                  .map(e=>e.options.push(source))
+            let source = undefined
+            if(suggestion[1]){
+              source = suggestion[1].source
             }
-            console.log(suggestion[0].data.type)
-
-
-            console.log(this.filter_options)
+            else {
+              source = suggestion[0].source
+            }
+            if(source && this.filter_options.source.every(y => y.name !== source)){
+              this.filter_options.source.push({name: source,
+                    filter: e => e.some(x => x ? x.source === source : false)})
+                                }
+            const type = suggestion[0].type
+            if(type && this.filter_options.resource_type.every(y => y.name !== type)){
+              this.filter_options.resource_type.push({name: type,
+                    filter: e => e.some(x => x ? x.type === type : false)})
+            }
           }
       }
     }
+
+    filterSuggestions(suggestions: Array<[TypedResourceView,TypedResourceView]>){
+      if(suggestions !== null && suggestions !== undefined){
+        return suggestions.filter(e => e !== null && e !== undefined)
+                    .filter(this.search_filter('source',
+                                                      this.selection.source))
+                    .filter(this.search_filter('resource_type',
+                                                      this.selection.resource_type))
+                    .filter(this.search_filter('contained',
+                                                      this.selection.contained))
+                  }
+      else{
+        return suggestions
+      }
+      }
+
     // make this visible to template
     environment = environment;
 
@@ -85,8 +112,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
         this._internalSuggestions = suggestions
         this.refreshFilterOptions()
       }
-    get internalSuggestions(){
-      return this._internalSuggestions
+    get internalSuggestions(): Array<[TypedResourceView, TypedResourceView]>{
+      return this.filterSuggestions(this._internalSuggestions)
     }
     private _externalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
     set externalSuggestions(
@@ -95,7 +122,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
         this.refreshFilterOptions()
       }
     get externalSuggestions(){
-      return this._externalSuggestions
+      return this.filterSuggestions(this._externalSuggestions)
     }
 
     private _currentTarget: [TypedResourceView, TypedResourceView];

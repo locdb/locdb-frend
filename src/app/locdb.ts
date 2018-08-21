@@ -405,6 +405,11 @@ export class TypedResourceView implements Metadata {
     this.data[this._prefix + 'embodiedAs'] = newEmbodiments;
   }
 
+  get source(): string {
+      return (<models.BibliographicResource> this.data)['source'];
+  }
+
+
   fixDate() {
     // Apply getter and setter to fix the date.... n/c
     this.publicationDate = this.publicationDate;

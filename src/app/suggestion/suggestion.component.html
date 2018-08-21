@@ -82,9 +82,25 @@
 <div class="card-body">
 
 <div class="row" style="margin-left: 10px"> filter by:
-  <div *ngFor="let opts of filter_options">
-    <select *ngIf="opts.options.length !== 0">
-      <option *ngFor="let opt of opts.options">{{opt}}</option>
+  <div>
+    source
+    <select [(ngModel)]="selection.source">
+      <option *ngFor="let opt of filter_options.source"
+      [value]="opt.name">{{opt.name}}</option>
+    </select>
+  </div>
+  <div>
+    type
+    <select [(ngModel)]="selection.resource_type">
+      <option *ngFor="let opt of filter_options.resource_type"
+      [value]="opt.name">{{opt.name}}</option>
+    </select>
+  </div>
+  <div>
+    contained
+    <select [(ngModel)]="selection.contained">
+      <option *ngFor="let opt of filter_options.contained"
+      [value]="opt.name">{{opt.name}}</option>
     </select>
   </div>
 </div>
@@ -115,7 +131,7 @@
         [resources]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
       </app-resource-card>
     </div>
-    <button type="button" *ngIf="max_in == max_shown_suggestions"
+    <button type="button" *ngIf="max_in == max_shown_suggestions && internalSuggestions.length > max_shown_suggestions"
     class="list-group-item list-group-item-action list-group-item-default text-center"
     (click)="toggle_max_in()">
       <p><em>Show all</em></p>
@@ -145,7 +161,7 @@
         (click)="onSelect(r)">
       </app-resource-card>
     </div>
-    <button type="button" *ngIf="max_ex == max_shown_suggestions"
+    <button type="button" *ngIf="max_ex == max_shown_suggestions  && externalSuggestions.length > max_shown_suggestions"
     class="list-group-item list-group-item-action list-group-item-default text-center"
     (click)="toggle_max_ex()">
       <p><em>Show all</em></p>
