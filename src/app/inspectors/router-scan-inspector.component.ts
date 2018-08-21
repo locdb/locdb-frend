@@ -17,34 +17,41 @@ import { PageChangedEvent } from 'ngx-bootstrap/pagination';
   styleUrls: ['./inspector.css']
 })
 export class RouterScanInspectorComponent implements OnInit {
-  // if sorry_text is set it is shows instead of the app display in the card body
+  // Do we need this?
   @ViewChild('display') display;
   title = 'Scan Inspector';
+  // if sorry_text is set it is shows instead of the app display in the card body
   sorry_text = '';
 
   /* Resource for showing its metadata and accessing its embodiments */
   resource: TypedResourceView;
+
   /* (optional) the container resource */
   parentResource: TypedResourceView;
+
   /* Currently displayed references (should always correspond to scan) */
   refs: Array<models.BibliographicEntry> = [];
+
   /* Flag whether the scan or the digital references list is shown */
   scanIsVisible = true;
-  // @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
-  //
-  //
-  entry: models.BibliographicEntry; // EventEmitter<models.BibliographicEntry> = new EventEmitter();
-  selected_entry_display: models.BibliographicEntry;
-  loading = false;
-  // embodiment_id: string; // unused??
-  imgheight: Number = 0;
-  selected_entry_list: models.BibliographicEntry;
 
+  /* Currently active entry, is passed down to the suggestion component */
+  entry: models.BibliographicEntry;
+
+  /* Indicates loading */
+  loading = false;
+
+  /* Image height, to be set by the display component */
+  imgheight: Number = 640;
+
+  /* Keep track of all associated scans for convenient switching */
   allScans: Array<models.Scan>;
 
+  /* Bound to current Page of Pagination, gets updated when list of scans is retrieved
+   * to match the index of the provided scanId*/
   currentPage = 0;
 
-  /* The resource id */
+  /* The resource id, only required for retrieving it on init */
   private resourceId: string;
 
   /*
@@ -120,6 +127,7 @@ export class RouterScanInspectorComponent implements OnInit {
 
     // Fetch the resource and its container from the backend
     this.locdbService.getBibliographicResource(this.resourceId).subscribe((trv) => {
+      this.loading = true;
       console.log('[debug] scan inspector received from ids in URL: resource:', this.resource)
       // console.log('scans: ', trv.embodiedAs)
       if (trv.partOf) {
@@ -135,16 +143,19 @@ export class RouterScanInspectorComponent implements OnInit {
       const scan_idx = this.allScans.findIndex(scan => scan._id === this.scanId )
       console.log('Finding the index', this.scanId, 'in', this.allScans, ':', scan_idx);
       // If found, select scan else default to first one
-      this.scan = scan_idx > 0 ? this.allScans[scan_idx] : this.allScans.length ? this.allScans[0] : null
+      this.scan = scan_idx > 0 ? this.allScans[scan_idx] : this.allScans.length ? this.allScans[0] : null;
       // increment by one to obtain the correct current page
       this.currentPage = scan_idx + 1;
       // this.scanListService.scans = this.allScans;
       // extract the correct scan
       // this.scan = this.findScanById(this.scanId, trv.embodiedAs);
-      console.log('[debug] scan inspector received from ids in URL: scan:', this.scan)
+      console.log('[debug] scan inspector received from ids in URL: scan:', this.scan);
       this.resource = trv;
+      this.loading = false;
     },
       (error) => {
+        this.loading = false;
+        this.sorry_text = 'An error occurred. could not retrieve resource.';
         console.log('[error] Error occurred while retrieving resource', error);
       }
     );
@@ -152,6 +163,7 @@ export class RouterScanInspectorComponent implements OnInit {
     this.fetchEntriesForScan(this.scanId);
   }
 
+  /* Given a scanId, fetches all associated entries from the backend */
   fetchEntriesForScan(scanId: string): void {
     console.log('Fetching entries for scan with id', scanId);
     this.locdbService.getToDoBibliographicEntries(scanId).subscribe(
