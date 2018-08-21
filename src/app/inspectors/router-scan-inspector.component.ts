@@ -42,7 +42,7 @@ export class RouterScanInspectorComponent implements OnInit {
   loading = false;
 
   /* Image height, to be set by the display component */
-  imgheight: Number = 640;
+  imgheight: Number = 600;
 
   /* Keep track of all associated scans for convenient switching */
   allScans: Array<models.Scan>;
@@ -51,21 +51,8 @@ export class RouterScanInspectorComponent implements OnInit {
    * to match the index of the provided scanId*/
   currentPage = 0;
 
-  /* The resource id, only required for retrieving it on init */
-  private resourceId: string;
-
-  /*
-   * Overwrite scan_id setter such that scanUrl always point to the correct URL
-   */
+  /* The URL that corresponds to currently active scan */
   scanUrl: string;
-  private _scanId: string;
-  get scanId() { return this._scanId; }
-  set scanId(newId: string) {
-    this._scanId = newId;
-    /* getScanURL prefixes the id with the base hostname and composes the URL */
-    this.scanUrl = this.locdbService.getScanURL(newId);
-  }
-
   /* A flag to determine whether the scan is displayable (is not a pdf) */
   scanIsDisplayable = true;
   /* Overwrite setter such that scanIsDisplayable is always set correctly */
@@ -75,9 +62,9 @@ export class RouterScanInspectorComponent implements OnInit {
     this._scan = newScan;
     // Scan is not (only by fallback) properly displayable when its a pdf
     this.scanIsDisplayable = !newScan.scanName.endsWith('.pdf');
-
-    // Super important: also update to the new scan id
-    this.scanId = newScan._id;
+    // Super important: also update the URL
+    // getScanURL prefixes the id with the base hostname and composes the URL
+    this.scanUrl = this.locdbService.getScanURL(newScan._id);
   }
 
 
@@ -122,11 +109,12 @@ export class RouterScanInspectorComponent implements OnInit {
 
   ngOnInit() {
     console.log('ScanInspector onInit');
-    this.resourceId = this.route.snapshot.params.resid;
-    this.scanId = this.route.snapshot.params.scanid;
+    /* Get arguments from route */
+    const resourceId = this.route.snapshot.params.resid;
+    const scanId = this.route.snapshot.params.scanid;
 
     // Fetch the resource and its container from the backend
-    this.locdbService.getBibliographicResource(this.resourceId).subscribe((trv) => {
+    this.locdbService.getBibliographicResource(resourceId).subscribe((trv) => {
       this.loading = true;
       console.log('[debug] scan inspector received from ids in URL: resource:', this.resource)
       // console.log('scans: ', trv.embodiedAs)
@@ -140,15 +128,13 @@ export class RouterScanInspectorComponent implements OnInit {
         )
       }
       this.allScans = this.gatherScans(trv.embodiedAs, x => x.status !== enums.status.obsolete);
-      const scan_idx = this.allScans.findIndex(scan => scan._id === this.scanId )
-      console.log('Finding the index', this.scanId, 'in', this.allScans, ':', scan_idx);
+      // find index of desired scan in id
+      const scan_idx = this.allScans.findIndex(scan => scan._id === scanId )
+      console.log('Finding the index', scanId, 'in', this.allScans, ':', scan_idx);
       // If found, select scan else default to first one
       this.scan = scan_idx > 0 ? this.allScans[scan_idx] : this.allScans.length ? this.allScans[0] : null;
       // increment by one to obtain the correct current page
       this.currentPage = scan_idx + 1;
-      // this.scanListService.scans = this.allScans;
-      // extract the correct scan
-      // this.scan = this.findScanById(this.scanId, trv.embodiedAs);
       console.log('[debug] scan inspector received from ids in URL: scan:', this.scan);
       this.resource = trv;
       this.loading = false;
@@ -160,7 +146,7 @@ export class RouterScanInspectorComponent implements OnInit {
       }
     );
     // Fetch the scans associated with scan id (can be performed in parallel to resource retrieval
-    this.fetchEntriesForScan(this.scanId);
+    this.fetchEntriesForScan(scanId);
   }
 
   /* Given a scanId, fetches all associated entries from the backend */
@@ -201,7 +187,7 @@ export class RouterScanInspectorComponent implements OnInit {
     this.scan = this.allScans[event.page - 1];
     this.fetchEntriesForScan(this.scan._id);
     // We navigate, but the ngOnInit will *not* be called again, since the component is already initialized
-    this.router.navigate(['/linking/ScanInspector/', this.resourceId, this.scan._id]);
+    this.router.navigate(['/linking/ScanInspector/', this.resource._id, this.scan._id]);
   }
 
   // Switch between Scan view and Reference list View
