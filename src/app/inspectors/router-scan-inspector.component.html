@@ -1,78 +1,82 @@
 <div class="row">
+  <!-- {{ scan | json }}<br> -->
+  <!-- {{ currentPage }}<br> -->
   <div class="col-xs-12 col-sm-6 col-md-6">
-<div class="card">
-  <div class="card-header"  *ngIf="!sorry_text">
-    <!-- <button type="button" class="btn btn-secondary" (click)="showrefs()">
-      Ref view
-    </button> -->
-    <h4> {{title }} </h4>
-    <p><app-metadata [of]="resource" [in]="parent"></app-metadata></p>
-    <div class="row">
-        <div class="col-sm-4">
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar">
-      <div class="btn-group btn-group-sm" role="group" aria-label="Toggle scan view">
-        <button type="button" class="btn btn-secondary" (click)="showScan()" [class.active]="scanIsVisible">
-          Scan view
-        </button>
-        <button type="button" class="btn btn-secondary" (click)="hideScan()" [class.active]="!scanIsVisible">
-          Reference list
-        </button>
+    <div class="card">
+      <div class="card-header"  *ngIf="!sorry_text">
+        <!-- <button type="button" class="btn btn-secondary" (click)="showrefs()">
+          Ref view
+          </button> -->
+          <h4> {{title }} </h4>
+          <p><app-metadata [of]="resource" [in]="parentResource"></app-metadata></p>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="btn-toolbar" role="toolbar" aria-label="Toolbar">
+                <div class="btn-group" role="group" aria-label="Toggle scan view">
+                  <button type="button" class="btn btn-secondary" (click)="showScan()" [class.active]="scanIsVisible">
+                    Scan view
+                  </button>
+                  <button type="button" class="btn btn-secondary" (click)="hideScan()" [class.active]="!scanIsVisible">
+                    Reference list
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <!-- the scan-inspector.service has to be initialized with the correct scan index befor the pagination is loaded,
+                to prevent fallback to first page -->
+                <!-- <div class="pull-right" *ngIf="scanIsVisible && paginationInitialized"> -->
+                <div class="pull-right" *ngIf="allScans">
+                  <pagination [totalItems]="allScans.length" [itemsPerPage]="1" [(ngModel)]="currentPage" (pageChanged)="pageChanged($event)"></pagination>
+                </div>
+                <!-- </div> -->
+            </div>
+          </div>
+      </div>
+      <div class="card-header" *ngIf="sorry_text">
+        <p> {{sorry_text}} </p>
+      </div>
+      <div class="card-body"  *ngIf="!sorry_text">
+        <div *ngIf="scanIsDisplayable" [hidden]="!scanIsVisible" [style.height]="imgheight">
+
+          <app-display [img_src]="scanUrl" [entries]="refs" [selectedEntry]="entry"
+           (entry)="selectEntry($event)"
+           (imglength)="setHeight()" #display></app-display>
+        </div>
+        <div [hidden]="!scanIsVisible" *ngIf="!scanIsDisplayable">
+          <p><em> Displaying raw, unprocessed PDF.</em></p>
+          <p> {{pageVariable}} </p>
+          <pdf-viewer [src]="scanUrl"
+           [render-text]="true"
+           style="display: block;"></pdf-viewer>
+        </div>
+        <div [hidden]="scanIsVisible">
+          <app-entry-list [resource]="resource" [entries]="refs" [selectedEntry]="entry"
+           (entry)="selectEntry($event)" (openEdit)="triggerEdit($event)"></app-entry-list>
+        </div>
+        <div *ngIf="loading" class="loader">
+        </div>
+      </div>
+      <div class="card-footer"  *ngIf="!sorry_text">
+        <div class="row">
+          <div class="col-6">
+            <button (click)="zoomIn()" class="btn btn-success"><i *ngIf="!search_extended" class="fa fa-search-plus"></i> </button>
+            <button (click)="zoomOut()" class="btn btn-primary"><i *ngIf="!search_extended" class="fa fa-search-minus"></i></button>
+            <button (click)="zoomReset()" class="btn btn-secondary"> <i *ngIf="!search_extended" class="fa fa-compress"></i> </button>
+          </div>
+          <div class="col-6">
+            <button type="button" class="btn btn-primary float-right" (click)="newEntry()">
+              <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Add Entry
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="col-sm-8">
-    <!-- the scan-inspector.service has to be initialized with the correct scan index befor the pagination is loaded,
-            to prevent fallback to first page -->
-    <div class="pull-right" *ngIf="scanIsVisible && paginationInitialized">
-    <pagination [totalItems]="totalScans" [itemsPerPage]="1" [(ngModel)]="paginationPos"></pagination>
-</div>
-</div>
-  </div>
-  </div>
-  <div class="card-header" *ngIf="sorry_text">
-    <p> {{sorry_text}} </p>
-  </div>
-  <div class="card-body"  *ngIf="!sorry_text">
-    <div *ngIf="scan_content_type !== 'pdf'" [hidden]="!scanIsVisible" [style.height]="imgheight">
-      
-      <app-display [img_src]="getScanImage()" [entries]="refs" [selectedEntry]="selected_entry_list"
-          (entry)="display_trigger_selected_entry($event)"
-          (imglength)="setHeight()" #display></app-display>
-    </div>
-    <div [hidden]="!scanIsVisible" *ngIf="scan_content_type && scan_content_type == 'pdf'">
-      <p> Received {{scan_content_type}}, OCR processing requiered</p>
-      <p> {{pageVariable}} </p>
-      <pdf-viewer [src]="getScanImage()"
-             [render-text]="true"
-             style="display: block;"></pdf-viewer>
-    </div>
-    <div [hidden]="scanIsVisible">
-      <app-entry-list [resource]="resource" [entries]="refs" [selectedEntry]="selected_entry_display"
-          (entry)="list_trigger_selected_entry($event)" (openEdit)="triggerEdit($event)"></app-entry-list>
-    </div>
-    <div *ngIf="loading" class="loader">
+  <div class="col-xs-12 col-sm-6 col-md-6">
+    <!-- <app-suggestion [entry]="entry" (suggest)='updateTarget($event)'></app-suggestion> -->
+    <div *ngIf="entry">
+      <app-suggestion [entry]="entry"></app-suggestion>
     </div>
   </div>
-  <div class="card-footer"  *ngIf="!sorry_text">
-    <div class="row">
-    <div class="col-6">
-      <button (click)="zoomIn()" class="btn btn-success"><i *ngIf="!search_extended" class="fa fa-search-plus"></i> </button>
-      <button (click)="zoomOut()" class="btn btn-primary"><i *ngIf="!search_extended" class="fa fa-search-minus"></i></button>
-      <button (click)="zoomReset()" class="btn btn-secondary"> <i *ngIf="!search_extended" class="fa fa-compress"></i> </button>
-    </div>
-    <div class="col-6">
-      <button type="button" class="btn btn-primary float-right" (click)="newEntry()">
-        <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Add Entry
-      </button>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-<div class="col-xs-12 col-sm-6 col-md-6">
-  <!-- <app-suggestion [entry]="entry" (suggest)='updateTarget($event)'></app-suggestion> -->
-  <div *ngIf="entry">
-    <app-suggestion [entry]="entry"></app-suggestion>
-  </div>
-</div>
 </div>
