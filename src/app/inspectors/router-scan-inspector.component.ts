@@ -16,7 +16,7 @@ import { PageChangedEvent } from 'ngx-bootstrap/pagination';
   templateUrl: './router-scan-inspector.component.html',
   styleUrls: ['./inspector.css']
 })
-export class RouterScanInspectorComponent implements OnInit, OnChanges {
+export class RouterScanInspectorComponent implements OnInit {
   // if sorry_text is set it is shows instead of the app display in the card body
   @ViewChild('display') display;
   title = 'Scan Inspector';
@@ -81,51 +81,31 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     private router: Router) {
   }
 
-
-  display_trigger_selected_entry(entry: models.BibliographicEntry) {
-    this.entry = entry;
-    this.selected_entry_display = entry;
-  }
-  list_trigger_selected_entry(entry: models.BibliographicEntry) {
-    this.entry = entry;
-    this.selected_entry_list = entry;
-  }
-
-  select(entry: models.BibliographicEntry) {
+  /* This method is called when the user clicks on a specific bibliographic entry either in the scan view or in the list view.
+   * It is good that both views operate on the same selection, such that one can toggle the view while the same entry stays active.
+   */
+  selectEntry(entry: models.BibliographicEntry) {
     this.entry = entry;
   }
 
-  // /**
-  //  * Finds a scan in a list of embodiments WITHOUT side-effects.
-  //  * */
-  // findScanById(
-  //   scan_id: string,
-  //   embodiments: Array<models.ResourceEmbodiment>
-  // ): models.Scan | null {
-  //   // goes through all embodiments and returns the matching scan
-  //   for (const embodiment of embodiments) {
-  //     for (const scan of embodiment.scans) {
-  //       if (scan._id === scan_id) {
-  //         console.log('[debug] Write scans into ListService', embodiment.scans)
-  //         // scans may not only come from a single embodiment
-  //         this.scanListService.scans = embodiment.scans.filter(e => e.status === 'OCR_PROCESSED')
-  //         console.log('[debug] Initial Index scanlistservice', this.scanListService.scans.indexOf(scan))
-  //         this.scanListService.pos = this.scanListService.scans.indexOf(scan) + 1
-  //         // this.totalScans = this.scanListService.totalScans
-  //         if (this.totalScans > 1){
-  //           this.paginationInitialized = true;
-  //         }
-  //         return scan;
-  //       }
-  //     }
-  //   }
-  //   return null;
-  // }
 
-  gatherScans(embodiments: Array<models.ResourceEmbodiment>): Array<models.Scan> {
+  /*
+   * We gather all scans from all embodiments to put them in a list for pagination
+   */
+  gatherScans(
+    embodiments: Array<models.ResourceEmbodiment>,
+    filter: (e: models.Scan) => boolean = null
+  ): Array<models.Scan> {
     const allScans: Array<models.Scan> = [];
     for (const embodiment of embodiments) {
-      for (const scan of embodiment.scans) {
+      let scans = embodiment.scans;
+      if (filter) {
+        console.log('[gatherScans] Applying filter', filter);
+        // if filter is specified, apply it to scans before adding them
+        scans = scans.filter(filter);
+      }
+      // add all scans to result list
+      for (const scan of scans) {
         allScans.push(scan)
       }
     }
@@ -151,7 +131,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
           (error) => console.log('[error] Error occurred while retrieving parent resource', error)
         )
       }
-      this.allScans = this.gatherScans(trv.embodiedAs);
+      this.allScans = this.gatherScans(trv.embodiedAs, x => x.status !== enums.status.obsolete);
       const scan_idx = this.allScans.findIndex(scan => scan._id === this.scanId )
       console.log('Finding the index', this.scanId, 'in', this.allScans, ':', scan_idx);
       // If found, select scan else default to first one
@@ -185,59 +165,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     );
   }
 
-
-  // reloadScan() {
-  //   console.log('ScanInspector reloadScan');
-  //   this.resourceId = this.route.snapshot.params.resid;
-    // this.scanId = this.route.snapshot.params.scanid;
-    // load Bibliographic resource because only id is passed along the route
-      // extract the correct scan
-    // this.scan = this.findScanById(this.scanId, this.resource.embodiedAs);
-    // Probe scan image for content type
-    // this.locdbService.getScan(this.scan_id, 'response').subscribe(
-    //   (data) => { this.scan_content_type = data.headers.get('content-type').split('/')[1]
-    //     console.log('[info] Scan content type: ', this.scan_content_type)
-    //   },
-    //   (err) => {
-    //     this.sorry_text = 'Scan image not found ' + this.scan_id + '\n';
-    //     console.log('[error] err, loading url', err);
-    //     // this.scan_content_type = "image"
-    //   }
-    // );
-  // }
-
-  ngOnChanges(changes: SimpleChanges | any) {
-    // console.log('[debug:ngOnChanges]', changes);
-    // Retrieve child and then parent resource
-
-    // Get entries for specific scan
-    // TODO: entries have to be filtered here,
-    // DEBUG: why are entries not accordingly supplied to scan_id from backend?
-    // Probe scan image for content type
-    // this.locdbService.getScan(this.scan_id, 'response').subscribe(
-    //   (data) => { this.scan_content_type = data.headers.get('content-type').split('/')[1]
-    //     console.log('Scan content type: ', this.scan_content_type)
-    //   },
-    //   (err) => {
-    //     this.sorry_text = 'Scan image not found ' + this.scan_id + '\n';
-    //     console.log('[error] err, loading url', err);
-    //     // this.scan_content_type = "image"
-    //   }
-    // );
-  }
-
-  forwardEntry(entry: models.BibliographicEntry) {
-    this.entry = entry
-  }
-
-  showScan() {
-    this.scanIsVisible = true;
-  }
-
-  hideScan() {
-    this.scanIsVisible = false;
-  }
-
+  /** Triggered on button press for adding a new Entry */
   newEntry() {
     this.router.navigate(['/edit/'], { queryParams: { resource: this.resource._id, entry: 'create' } });
   }
@@ -245,6 +173,7 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     this.imgheight = height;
   }
 
+  // does this need to be async?
   async triggerEdit(params) {
     await this.router.navigate([], {
         queryParams: {list: 1}
@@ -253,19 +182,25 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
     this.router.navigate(['/edit/'], { queryParams: params });
 
   }
-  async triggerNewScanId(scanid) {
-    // ensure that new scanid is passed to reloadScan() via URL due to asyncronity of navigate()
-    await this.router.navigate(['/linking/ScanInspector/', this.resourceId, scanid]);
-    // this.reloadScan();
-  }
 
-  // page changed handler
+  /** This handler is called, when the user selects a page from the pagination */
   pageChanged(event: PageChangedEvent): void {
-    // also: router navigate here?
+    // We take care of updating the scan and fetching its entries
     this.scan = this.allScans[event.page - 1];
     this.fetchEntriesForScan(this.scan._id);
+    // We navigate, but the ngOnInit will *not* be called again, since the component is already initialized
     this.router.navigate(['/linking/ScanInspector/', this.resourceId, this.scan._id]);
   }
+
+  // Switch between Scan view and Reference list View
+  showScan() {
+    this.scanIsVisible = true;
+  }
+
+  hideScan() {
+    this.scanIsVisible = false;
+  }
+  // Switch between Scan view and Reference list View END
 
   // Zooming methods
   zoomIn() {
@@ -284,5 +219,6 @@ export class RouterScanInspectorComponent implements OnInit, OnChanges {
       this.display.zoomReset();
     }
   }
+  // Zooming methods END
 
 }
