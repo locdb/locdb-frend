@@ -56,9 +56,6 @@
             <button (click)="removeContributor(j)" type="button" class="close" aria-label="Remove Contributor">
               <span aria-hidden="true">&times;</span>
             </button>
-            <button (click)="moveFormarrayEntry(j, -1)" type="button" class="close" aria-label="Remove Contributor">
-              <span aria-hidden="true">&uarr;</span>
-            </button>
           <div class="col">
             <select class="form-control" formControlName="role">
               <option *ngFor="let r of roles" [value]="r">{{r}}</option>
@@ -67,7 +64,12 @@
           <div class="col">
             <input class="form-control" formControlName="name">
           </div>
-          <button (click)="moveFormarrayEntry(j, 1)" type="button" class="close" aria-label="Remove Contributor">
+          <button (click)="moveFormarrayEntry(j, -1)" type="button" class="close" aria-label="Remove Contributor"
+          style="margin-left: 0px; margin-right: 5px">
+            <span aria-hidden="true">&uarr;</span>
+          </button>
+          <button (click)="moveFormarrayEntry(j, 1)" type="button" class="close" aria-label="Remove Contributor"
+          style="margin-left: 5px; margin-right: 10px">
             <span aria-hidden="true">&darr;</span>
           </button>
           <button (click)="openModal(template, contributor)" type="button" class="close" aria-label="Inspect Contributor">
