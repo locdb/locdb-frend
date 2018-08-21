@@ -80,6 +80,14 @@
 </div>
 <!-- <div class="card-body" style="height: 1200px; overflow-y: scroll;"> -->
 <div class="card-body">
+
+<div class="row" style="margin-left: 10px"> filter by:
+  <div *ngFor="let opts of filter_options">
+    <select *ngIf="opts.options.length !== 0">
+      <option *ngFor="let opt of opts.options">{{opt}}</option>
+    </select>
+  </div>
+</div>
   <!-- Panel body providing suggestions -->
   <div class="row" *ngIf="currentTarget">
     <div class="col-md-12">
