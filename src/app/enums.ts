@@ -29,6 +29,7 @@ export enum identifier {
     oclcId = 'OCLC_ID',
     uri = 'URI',
     urlCrossref = 'URL_CROSSREF',
+    gviId = 'ID_GVI',
 
 }
 export enum agentIdentifier {
