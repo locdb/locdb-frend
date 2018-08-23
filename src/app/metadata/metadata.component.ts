@@ -11,6 +11,8 @@ import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe, ContainerPipe} from '../pipes';
 
 
+const DOI_PREFIX = 'https://doi.org/'
+
 
 @Component({
   selector: 'app-metadata',
@@ -36,33 +38,21 @@ export class MetadataComponent implements OnInit, OnChanges {
     window.open(link, '_blank');
   }
 
-  getClickableIDURL(identifiers: models.Identifier[]){
-    identifiers = identifiers.filter(i => (['URL_CROSSREF'].indexOf(i.scheme) != -1))
-    if(identifiers.length > 0){
-      return identifiers[0].literalValue
-    }
-    identifiers = identifiers.filter(i => (['URI'].indexOf(i.scheme) != -1))
-    if(identifiers.length > 0){
-      return identifiers[0].literalValue
-    }
-    identifiers = identifiers.filter(i => (['URL_SWB'].indexOf(i.scheme) != -1))
-    if(identifiers.length > 0){
-      return identifiers[0].literalValue
-    }
+  /* Gets the value for a specific identifier scheme */
+  findIdentifier(identifiers: Array<models.Identifier>, scheme: enums.identifier = enums.identifier.urlCrossref): string | undefined {
+    const firstMatch = identifiers.find(ident => ident.scheme === scheme);
+    return firstMatch ? firstMatch.literalValue : undefined;
   }
 
-  getClickableIDName(identifiers: models.Identifier[]){
-    identifiers = identifiers.filter(i => (['URL_CROSSREF'].indexOf(i.scheme) != -1))
-    if(identifiers.length > 0){
-      return identifiers[0].scheme + ': ' + identifiers[0].literalValue.split("/")[2]
-    }
-    identifiers = identifiers.filter(i => (['URI'].indexOf(i.scheme) != -1))
-    if(identifiers.length > 0){
-      return identifiers[0].scheme + ': ' + identifiers[0].literalValue.split("/")[2]
-    }
-    identifiers = identifiers.filter(i => (['URL_SWB'].indexOf(i.scheme) != -1))
-    if(identifiers.length > 0){
-      return identifiers[0].scheme + ': ' + identifiers[0].literalValue.split("/")[2]
-    }
+  /* Transforms a DOI into a clickable URL
+   * 10.1111j.1468-4446.2010.01345.x.pdf
+   * to
+   * https://doi.org/10.1111/j.1468-4446.2010.01345.x
+   *
+   * FIXME this WILL go wrong, if the doi has any other format
+   */
+  doi2url(doi: string): string {
+    return DOI_PREFIX + doi.slice(0, 7) + '/' + doi.slice(7);
   }
+
 }
