@@ -52,7 +52,15 @@ export class MetadataComponent implements OnInit, OnChanges {
    * FIXME this WILL go wrong, if the doi has any other format
    */
   doi2url(doi: string): string {
-    return DOI_PREFIX + doi.slice(0, 7) + '/' + doi.slice(7);
+    // UNSAFE
+    // return DOI_PREFIX + doi.slice(0, 7) + '/' + doi.slice(7);
+    if (doi.startsWith('http')) {
+      return doi;
+    } else if (doi.startsWith('doi.org')) {
+      return 'https://' + doi;
+    } else {
+      return 'https://doi.org/' + doi;
+    }
   }
 
 }
