@@ -112,7 +112,10 @@ export class LocdbService {
  }
 
   /* we expect the similar format of a tuple of [child, parent] or [child, null] if there is no parent */
- packTypedPair(childAndParent: models.BibliographicResource[], removeId: boolean=false): [TypedResourceView, TypedResourceView | null] {
+  packTypedPair(
+   childAndParent: models.BibliographicResource[],
+   removeId: boolean = false
+ ): [TypedResourceView, TypedResourceView | null] {
    /*
    Properly pack an array of bibliographic resources as returned by
    suggestion services into a **Pair** of parent and child typed resources
@@ -169,7 +172,7 @@ export class LocdbService {
   }
 
 
-  getScan(identifier: string, observe: any='body') {
+  getScan(identifier: string, observe: any = 'body') {
     return this.scanService.get(identifier, observe);
   }
 
@@ -177,7 +180,10 @@ export class LocdbService {
 
   /* Resources API end */
   addTargetBibliographicResource(entry: models.BibliographicEntry, resource_id: string): Observable<TypedResourceView> {
-    return this.bibliographicEntryService.addTargetBibliographicResource(entry._id, resource_id).pipe(map( br => new TypedResourceView(br) ));
+    return this.bibliographicEntryService.addTargetBibliographicResource(
+      entry._id,
+      resource_id
+    ).pipe(map( br => new TypedResourceView(br) ));
   }
 
   removeTargetBibliographicResource(entry: models.BibliographicEntry): Observable<TypedResourceView> {

@@ -13,6 +13,60 @@ export { enums };
 
 export const NAME_SEPARATOR = ', '
 
+  /*
+   * We gather all scans from all embodiments to put them in a list
+   * This function is invoked at least at two places:
+   *  1. When getting the scans in the agenda for display
+   *  2. When retrieving the scans in the ScanInspector
+   *
+   * Arguments
+   * =========
+   * embodiments: the data source of embodiments
+   * retainEmbodiment: whether to retain the embodiment in which the scan was found,
+   *                   default is false
+   *
+   * Return
+   * ======
+   * Either a list of scans (if retainEmbodiments is false) or a list of [embodiment, scan] pairs
+   */
+export function gatherScans(
+  embodiments: Array<models.ResourceEmbodiment>,
+  scanFilter: (e: models.Scan) => boolean = null
+): Array<models.Scan> {
+  const allScans: Array<any> = [];
+  for (const embodiment of embodiments) {
+    let scans = embodiment.scans;
+    if (scanFilter) {
+      // if filter is specified, apply it to scans before adding them
+      scans = scans.filter(scanFilter);
+    }
+    // add all scans to result list
+    for (const scan of scans) {
+      allScans.push(scan);
+    }
+  }
+  return allScans;
+}
+
+export function gatherScansWithEmbodiment (
+  embodiments: Array<models.ResourceEmbodiment>,
+  scanFilter: (e: models.Scan) => boolean = null
+): Array<[models.ResourceEmbodiment, models.Scan]> {
+  const embodimendScans: Array<any> = [];
+  for (const embodiment of embodiments) {
+    let scans = embodiment.scans;
+    if (scanFilter) {
+      // if filter is specified, apply it to scans before adding them
+      scans = scans.filter(scanFilter);
+    }
+    // add all scans to result list
+    for (const scan of scans) {
+      embodimendScans.push([embodiment, scan]);
+    }
+  }
+  return embodimendScans;
+}
+
 export function isValidDate(d) {
   return d instanceof Date && !isNaN(d.getTime());
 }

@@ -1,6 +1,6 @@
 
 import { ViewChild, Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
-import { models, enums, TypedResourceView } from '../locdb';
+import { models, enums, TypedResourceView, gatherScans } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import {Observable} from 'rxjs/Rx';
 import { SimpleChanges } from '@angular/core';
@@ -82,31 +82,6 @@ export class RouterScanInspectorComponent implements OnInit {
     this.entry = entry;
   }
 
-
-  /*
-   * We gather all scans from all embodiments to put them in a list for pagination
-   */
-  gatherScans(
-    embodiments: Array<models.ResourceEmbodiment>,
-    filter: (e: models.Scan) => boolean = null
-  ): Array<models.Scan> {
-    const allScans: Array<models.Scan> = [];
-    for (const embodiment of embodiments) {
-      let scans = embodiment.scans;
-      if (filter) {
-        console.log('[gatherScans] Applying filter', filter);
-        // if filter is specified, apply it to scans before adding them
-        scans = scans.filter(filter);
-      }
-      // add all scans to result list
-      for (const scan of scans) {
-        allScans.push(scan)
-      }
-    }
-    return allScans;
-  }
-
-
   ngOnInit() {
     console.log('ScanInspector onInit');
     /* Get arguments from route */
@@ -127,7 +102,7 @@ export class RouterScanInspectorComponent implements OnInit {
           (error) => console.log('[error] Error occurred while retrieving parent resource', error)
         )
       }
-      this.allScans = this.gatherScans(trv.embodiedAs, x => x.status !== enums.status.obsolete);
+      this.allScans = gatherScans(trv.embodiedAs, s => s.status !== enums.status.obsolete);
       // find index of desired scan in id
       const scan_idx = this.allScans.findIndex(scan => scan._id === scanId )
       console.log('Finding the index', scanId, 'in', this.allScans, ':', scan_idx);
@@ -151,16 +126,28 @@ export class RouterScanInspectorComponent implements OnInit {
 
   /* Given a scanId, fetches all associated entries from the backend */
   fetchEntriesForScan(scanId: string): void {
+    // fetching new Entries (e.g. on page change, invalidates the current entry //
+    this.entry = null;
     console.log('Fetching entries for scan with id', scanId);
     this.locdbService.getToDoBibliographicEntries(scanId).subscribe(
       // DO NOT extract them from resource
-        (entries) => {this.refs = entries
-        console.log('[debug] scan inspector received from scan_id: entries:', this.refs)},
+      (entries) => {
+        this.refs = entries;
+        this.selectFirst(entries); // here we select an appropriate entry from the new list
+        console.log('[debug] scan inspector received from scan_id: entries:', this.refs)
+      },
       (error) => {
+        this.refs = [];
         this.sorry_text = 'Could not retrieve bibliographic entries for scan\n';
         console.log('[error] Error occurred while retrieving entries for scan', error);
       }
     );
+  }
+
+  selectFirst(entries: Array<models.BibliographicEntry>): void {
+    const entryToSelect = entries.find(e => e !== enums.status.valid);
+    console.log('[ScanInspector] Selecting first entry by heuristic', entryToSelect);
+    this.selectEntry(entryToSelect);
   }
 
   /** Triggered on button press for adding a new Entry */
