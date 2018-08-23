@@ -42,8 +42,11 @@
     <!-- Some information that is only available when child is given -->
     <span *ngIf="of.embodiedAs && of.embodiedAs.length && of.embodiedAs[0].firstPage && of.embodiedAs[0].lastPage">
        pp. {{ of.embodiedAs[0].firstPage}}-{{ of.embodiedAs[0].lastPage}}</span>.
-    <a class="badge badge-secondary ml-1" *ngIf="getClickableIDURL(of.identifiers)" [href]="getClickableIDURL(of.identifiers)" target="_blank">
-      <i class="fa fa-external-link"></i> Online
+    <a class="badge badge-secondary ml-1" *ngIf="findIdentifier(of.identifiers, 'URL_CROSSREF')" [href]="findIdentifier(of.identifiers, 'URL_CROSSREF')" target="_blank">
+      <i class="fa fa-external-link"></i> CrossRef
+    </a>
+    <a class="badge badge-secondary ml-1" *ngIf="findIdentifier(of.identifiers, 'DOI')" [href]="doi2url(findIdentifier(of.identifiers, 'DOI'))" target="_blank">
+      <i class="fa fa-external-link"></i> DOI
     </a>
     <span class="badge badge-warning ml-1" *ngIf="in || of">{{in?.data?.source || of?.data?.source}}</span>
   </span>

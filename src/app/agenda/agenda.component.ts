@@ -95,16 +95,14 @@ export class AgendaComponent implements OnInit, OnChanges {
     this.fetchTodos()
   }
 
-  inspectRefs(resource: TypedResourceView, parent?: TypedResourceView) {
+  inspectRefs(resource: TypedResourceView) {
     // this.refsWithContext.emit([resource.parts, { mode: 'refs', source: resource, parent: parent || null}]);
     this.router.navigate(['/linking/RefsInspector/', resource._id]);
   }
 
-  inspectScan(scan: models.Scan, embodiment: models.ResourceEmbodiment,
-              resource: TypedResourceView, parent?: TypedResourceView) {
+  inspectScan(scan: models.Scan, resource: TypedResourceView) {
     // this.scanWithContext.emit([scan, { mode: 'scan', source: resource, embodiment: embodiment, parent:parent || null }])
-    console.log("[debug] in agenda.inspectScan: scan:", scan,
-      "embodiment:", embodiment, "resource:", resource, "parent:", parent)
+    console.log('[debug] in agenda.inspectScan: scan:', scan,  'resource:', resource);
     this.router.navigate(['/linking/ScanInspector/', resource._id, scan._id]);
   }
 

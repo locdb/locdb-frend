@@ -1,5 +1,8 @@
+If the issue is complex, please try to divide it into smaller units and create one issue for each unit.
+
 Your issue may already be reported!
 Please search on the [issue track](../) before creating one.
+
 
 ## Expected Behavior
 <!--- If you're describing a bug, tell us what should happen -->

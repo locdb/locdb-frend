@@ -1,5 +1,5 @@
 import { OnChanges, Component, Input, Output, EventEmitter} from '@angular/core';
-import { models, enums, TypedResourceView } from '../locdb';
+import { gatherScansWithEmbodiment, models, enums, TypedResourceView } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Router, ActivatedRoute} from '@angular/router';
 
@@ -24,7 +24,7 @@ export class TodoComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
-    this.embodiment_scans = this.getScans(this.todo.embodiedAs);
+    this.embodiment_scans = gatherScansWithEmbodiment(this.todo.embodiedAs, s => s.status !== enums.status.obsolete);
   }
 
   inspectReferences() {
@@ -32,7 +32,7 @@ export class TodoComponent implements OnChanges {
   }
 
   inspectScan(embodiment_scan: [models.ResourceEmbodiment, models.Scan]) {
-    console.log("[debug] in todo.inspectScan: embodiment_scan:", embodiment_scan)
+    console.log('[debug] in todo.inspectScan: embodiment_scan:', embodiment_scan)
     this.scan.emit([embodiment_scan[0], embodiment_scan[1]]);
   }
 
@@ -66,18 +66,6 @@ export class TodoComponent implements OnChanges {
 
   unpackScanName(emsc) {
     return emsc[1].scanName;
-  }
-
-  getScans(embodiments: Array<models.ResourceEmbodiment>): Array<[models.ResourceEmbodiment, models.Scan]> {
-    const scans: Array<[models.ResourceEmbodiment, models.Scan]> = []
-    for (const embodiment of embodiments) {
-      if (embodiment.scans.length > 0) {
-        for (const scan of embodiment.scans) {
-          scans.push([embodiment, scan])
-        }
-      }
-    }
-    return scans.filter(e => e[1].status === 'OCR_PROCESSED')
   }
 
   dummy(s) {
