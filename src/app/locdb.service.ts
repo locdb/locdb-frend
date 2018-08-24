@@ -4,6 +4,7 @@ import {delay, take, retryWhen,  map, flatMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angular/http';
 
+
 import { TypedResourceView, enums } from './locdb';
 
 
@@ -111,7 +112,10 @@ export class LocdbService {
  }
 
   /* we expect the similar format of a tuple of [child, parent] or [child, null] if there is no parent */
- packTypedPair(childAndParent: models.BibliographicResource[], removeId: boolean=false): [TypedResourceView, TypedResourceView | null] {
+  packTypedPair(
+   childAndParent: models.BibliographicResource[],
+   removeId: boolean = false
+ ): [TypedResourceView, TypedResourceView | null] {
    /*
    Properly pack an array of bibliographic resources as returned by
    suggestion services into a **Pair** of parent and child typed resources
@@ -157,7 +161,7 @@ export class LocdbService {
     return this.scanService.triggerOcrProcessing(scanId);
   }
 
-  getScan(identifier: string) {
+  getScanURL(identifier: string) {
     // we should not rely on LOCDB URL anymore. TODO FIXME
     return `${this.locdbUrl}/scans/${identifier}`;
   }
@@ -167,15 +171,19 @@ export class LocdbService {
     return this.bibliographicEntryService.remove(scan._id);
   }
 
-  checkScanImage(identifier: string){
-    return this.http.get(`${this.locdbUrl}/scans/${identifier}`)
+
+  getScan(identifier: string, observe: any = 'body') {
+    return this.scanService.get(identifier, observe);
   }
 
 
 
   /* Resources API end */
   addTargetBibliographicResource(entry: models.BibliographicEntry, resource_id: string): Observable<TypedResourceView> {
-    return this.bibliographicEntryService.addTargetBibliographicResource(entry._id, resource_id).pipe(map( br => new TypedResourceView(br) ));
+    return this.bibliographicEntryService.addTargetBibliographicResource(
+      entry._id,
+      resource_id
+    ).pipe(map( br => new TypedResourceView(br) ));
   }
 
   removeTargetBibliographicResource(entry: models.BibliographicEntry): Observable<TypedResourceView> {

@@ -59,7 +59,7 @@ export class ScanListService {
   }
 
   checkContentEquality(a: any[], b: any[]) {
-    return a.every(e => b.indexOf(e) != -1) && a.length == b.length;
+    return a.every(e => b.indexOf(e) !== -1) && a.length == b.length;
   }
 
 }

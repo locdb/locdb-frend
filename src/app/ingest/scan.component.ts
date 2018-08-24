@@ -120,14 +120,15 @@ export class ScanComponent {
   }
 
   extractDOI(name: string): string | null {
-    // not implemented
-    const doi_re = /10\.\d{4,9}[-._;()/:A-Z0-9]+/i; // doi regexp, unused so far
+    // TODO FIXME
+    // Here the forward slash between \d{4,9} and the remainder is missing, because of filename restrictions
+    const doi_re = /10\.\d{4,9}[-._;()/:A-Z0-9]+/i;
     const match = doi_re.exec(name);
     // warning match[0] is the full match
     console.log('DOI regexp yields following matches:', match, 'on filename', name);
     return match ? match[0] : null;
   }
-  
+
   extractPPN(name: string): [string, string] | [null, string] {
     const ppn_re = /^([0-9]{8}[0-9X])(.*)/i;
     const match = ppn_re.exec(name);
