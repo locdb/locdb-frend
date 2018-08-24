@@ -123,9 +123,10 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
       )
     }
 
-    addContributorIdentifier(contributor){
-      contributor.controls.identifiers.push(this.fb.group({scheme:'', literalValue:''}))
+    addContributorIdentifier(contributor, scheme, literalValue){
+      contributor.controls.identifiers.push(this.fb.group({scheme:scheme, literalValue:literalValue}))
     }
+
 
     removeContributorIdentifier(contributor, index: number) {
       contributor.controls.identifiers.removeAt(index)

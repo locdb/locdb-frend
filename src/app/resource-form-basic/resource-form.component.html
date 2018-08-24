@@ -214,9 +214,18 @@
                 <input formControlName="literalValue" class="col-sm-4"/>
               </div>
             </div>
-            <button (click)="addContributorIdentifier(agentIdForm)">
-              Add identifier
+          <div>
+            <label class="col-sm-2" style="padding-left: 0px">Scheme</label>
+            <select class="form-control" class="col-sm-3" #addSelector>
+              <option *ngFor="let i of agentIdentifierTypes" [value]="i">{{i}}</option>
+            </select>
+            <label class="col-sm-2">Value</label>
+            <input class="col-sm-4" #addLitValue/>
+            <button (click)="addContributorIdentifier(agentIdForm, addSelector.value, addLitValue.value)"
+                      type="button" class="close" aria-label="add Identifier">
+              <span aria-hidden="true">&oplus;</span>
             </button>
+          </div>
             <button (click)="modalRef.hide()" class="pull-right">
               Confirm
             </button>
