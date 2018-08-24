@@ -81,24 +81,29 @@
 <!-- <div class="card-body" style="height: 1200px; overflow-y: scroll;"> -->
 <div class="card-body">
 
-<div class="row" style="margin-left: 10px"> filter by:
-  <div>
-    source
-    <select [(ngModel)]="selection.source">
+<div class="row" style="margin-left: 10px">
+  <label for="source" class="col-form-label" style="margin-right: 15px">
+    Source:</label>
+  <div id="source">
+    <select [(ngModel)]="selection.source" class="form-control" >
       <option *ngFor="let opt of filter_options.source"
       [value]="opt.name">{{opt.name}}</option>
     </select>
   </div>
-  <div>
-    type
-    <select [(ngModel)]="selection.resource_type">
+  <label for="resource_type" class="col-form-label" style="margin-right: 15px;
+          margin-left: 10px">
+    Type:</label>
+  <div id="resource_type">
+    <select [(ngModel)]="selection.resource_type" class="form-control" >
       <option *ngFor="let opt of filter_options.resource_type"
       [value]="opt.name">{{opt.name}}</option>
     </select>
   </div>
-  <div>
-    contained
-    <select [(ngModel)]="selection.contained">
+    <label for="contained" class="col-form-label" style="margin-right: 15px;
+            margin-left: 10px">
+      Contained:</label>
+  <div id="contained">
+    <select [(ngModel)]="selection.contained" class="form-control" >
       <option *ngFor="let opt of filter_options.contained"
       [value]="opt.name">{{opt.name}}</option>
     </select>
