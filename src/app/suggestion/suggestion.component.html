@@ -80,6 +80,35 @@
 </div>
 <!-- <div class="card-body" style="height: 1200px; overflow-y: scroll;"> -->
 <div class="card-body">
+
+<div class="row" style="margin-left: 10px">
+  <label for="source" class="col-form-label" style="margin-right: 15px">
+    Source:</label>
+  <div id="source">
+    <select [(ngModel)]="selection.source" class="form-control" >
+      <option *ngFor="let opt of filter_options.source"
+      [value]="opt.name">{{opt.name}}</option>
+    </select>
+  </div>
+  <label for="resource_type" class="col-form-label" style="margin-right: 15px;
+          margin-left: 10px">
+    Type:</label>
+  <div id="resource_type">
+    <select [(ngModel)]="selection.resource_type" class="form-control" >
+      <option *ngFor="let opt of filter_options.resource_type"
+      [value]="opt.name">{{opt.name}}</option>
+    </select>
+  </div>
+    <label for="contained" class="col-form-label" style="margin-right: 15px;
+            margin-left: 10px">
+      Contained:</label>
+  <div id="contained">
+    <select [(ngModel)]="selection.contained" class="form-control" >
+      <option *ngFor="let opt of filter_options.contained"
+      [value]="opt.name">{{opt.name}}</option>
+    </select>
+  </div>
+</div>
   <!-- Panel body providing suggestions -->
   <div class="row" *ngIf="currentTarget">
     <div class="col-md-12">
@@ -107,7 +136,7 @@
         [resources]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
       </app-resource-card>
     </div>
-    <button type="button" *ngIf="max_in == max_shown_suggestions"
+    <button type="button" *ngIf="max_in == max_shown_suggestions && internalSuggestions.length > max_shown_suggestions"
     class="list-group-item list-group-item-action list-group-item-default text-center"
     (click)="toggle_max_in()">
       <p><em>Show all</em></p>
@@ -137,7 +166,7 @@
         (click)="onSelect(r)">
       </app-resource-card>
     </div>
-    <button type="button" *ngIf="max_ex == max_shown_suggestions"
+    <button type="button" *ngIf="max_ex == max_shown_suggestions  && externalSuggestions.length > max_shown_suggestions"
     class="list-group-item list-group-item-action list-group-item-default text-center"
     (click)="toggle_max_ex()">
       <p><em>Show all</em></p>

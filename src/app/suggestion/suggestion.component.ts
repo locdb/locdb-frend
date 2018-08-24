@@ -35,6 +35,68 @@ export class SuggestionComponent implements OnInit, OnChanges {
     @Input() entry: models.BibliographicEntry;
     @Output() suggest: EventEmitter<models.BibliographicResource> = new EventEmitter();
 
+    // filter: [TypedResourceView, TypedResourceView] => boolean
+    filter_options = {source: [{name: 'All', filter: e => true}],
+                      resource_type: [{name: 'All', filter: e => true}],
+                      contained: [{name: 'All', filter: e => true},
+                        {name: 'Contained',
+                          filter: e => e.some(x => x ? x.source !== undefined &&
+                                                              x.source !== null :
+                                                            false)},
+                        {name: 'Standalone',
+                          filter: e => e.every(x => x ? x.source === undefined ||
+                                                              x.source === null:
+                                                            true)}
+                                                          ]}
+    selection = {source: 'All',
+                  resource_type: 'All',
+                  contained: 'All'}
+
+    search_filter(selection_type: string, selection_name: string){
+      return this.filter_options[selection_type]
+                      .find(e => e.name === selection_name)
+                      .filter
+    }
+
+    refreshFilterOptions(){
+      for(let suggestion
+        of this.internalSuggestions.concat(this.externalSuggestions)){
+          if(suggestion){
+            // source selection
+            let source = undefined
+            if(suggestion[1]){
+              source = suggestion[1].source
+            }
+            else {
+              source = suggestion[0].source
+            }
+            if(source && this.filter_options.source.every(y => y.name !== source)){
+              this.filter_options.source.push({name: source,
+                    filter: e => e.some(x => x ? x.source === source : false)})
+                                }
+            const type = suggestion[0].type
+            if(type && this.filter_options.resource_type.every(y => y.name !== type)){
+              this.filter_options.resource_type.push({name: type,
+                    filter: e => e.some(x => x ? x.type === type : false)})
+            }
+          }
+      }
+    }
+
+    filterSuggestions(suggestions: Array<[TypedResourceView,TypedResourceView]>){
+      if(suggestions !== null && suggestions !== undefined){
+        return suggestions.filter(e => e !== null && e !== undefined)
+                    .filter(this.search_filter('source',
+                                                      this.selection.source))
+                    .filter(this.search_filter('resource_type',
+                                                      this.selection.resource_type))
+                    .filter(this.search_filter('contained',
+                                                      this.selection.contained))
+                  }
+      else{
+        return suggestions
+      }
+      }
 
     // make this visible to template
     environment = environment;
@@ -44,14 +106,29 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     search_extended = false;
 
-    internalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
-    externalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
-    _currentTarget: [TypedResourceView, TypedResourceView];
+    private _internalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
+    set internalSuggestions(
+      suggestions: Array<[TypedResourceView, TypedResourceView]>){
+        this._internalSuggestions = suggestions
+        this.refreshFilterOptions()
+      }
+    get internalSuggestions(): Array<[TypedResourceView, TypedResourceView]>{
+      return this.filterSuggestions(this._internalSuggestions)
+    }
+    private _externalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
+    set externalSuggestions(
+      suggestions: Array<[TypedResourceView, TypedResourceView]>){
+        this._externalSuggestions = suggestions
+        this.refreshFilterOptions()
+      }
+    get externalSuggestions(){
+      return this.filterSuggestions(this._externalSuggestions)
+    }
 
+    private _currentTarget: [TypedResourceView, TypedResourceView];
     get currentTarget() {
       return this._currentTarget;
     }
-
     set currentTarget(target: [TypedResourceView, TypedResourceView] | TypedResourceView) {
       if (target instanceof TypedResourceView) {
         this._currentTarget = [target, null];

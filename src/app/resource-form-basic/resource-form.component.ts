@@ -123,9 +123,10 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
       )
     }
 
-    addContributorIdentifier(contributor){
-      contributor.controls.identifiers.push(this.fb.group({scheme:'', literalValue:''}))
+    addContributorIdentifier(contributor, scheme, literalValue){
+      contributor.controls.identifiers.push(this.fb.group({scheme:scheme, literalValue:literalValue}))
     }
+
 
     removeContributorIdentifier(contributor, index: number) {
       contributor.controls.identifiers.removeAt(index)
@@ -168,6 +169,11 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         return this.resourceForm.get('contributors') as FormArray;
     }
 
+    set contributors(contributorArray: FormArray){
+      this.setContributors(contributorArray.value.map(
+        e => this.reconstructAgentRole(e.name, e.role, e.identifiers)))
+    }
+
     addContributor() {
         // reference from getter above
         this.contributors.push(this.fb.group({role: 'AUTHOR', name: 'name', identifiers: []}));
@@ -179,19 +185,24 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     //shift an entry in a formarray
 
-    moveFormarrayEntry(index: number, shift: number, array=this.contributors){
-      if(index + shift < 0 || index + shift >= array.length){
+    moveFormarrayEntry(index: number, shift: number, ){
+      if(index + shift < 0 || index + shift >= this.contributors.length){
         console.log("[error] Target index not reachable (index: " + index + ", way: " + shift + ")")
-        return array
+        return this.contributors
       }
       else{
         if(shift < 0){
           shift *= -1
         	index -= shift
         }
-        array.insert(index + shift, array[index]);
-        array.removeAt(index)
-        return array
+        let tmp = this.contributors.value
+        // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
+        tmp.splice(index + shift + 1, 0, tmp[index]);
+        // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
+        tmp.splice(index, 1)
+        // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
+        this.contributors = this.fb.array(tmp)
+        return this.contributors
       }
     }
 

@@ -33,8 +33,8 @@ export enum identifier {
 
 }
 export enum agentIdentifier {
-    orcid = 'ORCID',
-    gndid = 'GND-ID',
+    orcid = "ORCID",
+    gndid = "GND_ID",
 
 }
 export enum roleType {
