@@ -18,6 +18,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 // misc
 // import { CredentialsService } from 'angular-with-credentials';
@@ -111,6 +112,7 @@ const appRoutes: Routes = [
     ModalModule.forRoot(),
     CollapseModule.forRoot(),
     HotkeyModule.forRoot(),
+    ButtonsModule.forRoot(),
     BrowserModule,
     FormsModule,
     HttpModule,

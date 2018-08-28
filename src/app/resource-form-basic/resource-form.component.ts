@@ -28,9 +28,10 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     @Input() resources: [TypedResourceView, TypedResourceView];
     @Output() resourcesChange = new EventEmitter<[TypedResourceView, TypedResourceView]>();
-    @Output() updateResource = new EventEmitter<TypedResourceView>();
+    @Output() updateResource = new EventEmitter<[TypedResourceView, TypedResourceView]>();
 
     resourceForm: FormGroup;
+    containerForm: FormGroup;
     agentIdForm: FormGroup;
     embodiments: FormGroup[] = [];
     roles: string[] =  enum_values(enums.roleType);
@@ -48,7 +49,28 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     dataSourceMigration: Observable<any>;
     placeholderMigration: string = "Enter name to search for resource to migrate"
+
+    objectKeys = Object.keys;
+    _resourceRadio = 'Child'
+    set resourceRadio(value: string){
+      if (this._resourceRadio === value){
+
+      } else {
+        if(this._resourceRadio === 'Child'){
+          this.resources[0] = this.prepareSaveResource()
+        }
+        else {
+          this.resources[1] = this.prepareSaveResource()
+        }
+        this._resourceRadio = value
+        this.ngOnChanges()
+      }
+    }
+    get resourceRadio(): string{
+      return this._resourceRadio
+    }
     // queryPartOf: string;
+
 
     constructor(
         private fb: FormBuilder,
@@ -95,6 +117,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
  }
 
     createForm()  {
+        this.containerForm = this.fb.group({});
         this.resourceForm = this.fb.group( {
             title: '',
             resourcetype: ['', Validators.required],
@@ -106,12 +129,15 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
             identifiers: this.fb.array([]),
             partOf: '',
             migration: false,
+            containerData: this.containerForm
         });
         this.agentIdForm = this.fb.group({
         // you can also set initial formgroup inside if you like
         agentIds: this.fb.array([]),
-        })
+      });
     }
+
+
 
     addNewContributorId() {
       let control = <FormArray>this.agentIdForm.controls.identifiers;
@@ -124,7 +150,13 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     }
 
     addContributorIdentifier(contributor, scheme, literalValue){
-      contributor.controls.identifiers.push(this.fb.group({scheme:scheme, literalValue:literalValue}))
+      console.log(contributor)
+      if (contributor.controls.identifiers.value == null){
+        contributor.controls.identifiers = this.fb.array([this.fb.group({scheme:scheme, literalValue:literalValue})])
+      }
+      else {
+        contributor.controls.identifiers.push(this.fb.group({scheme:scheme, literalValue:literalValue}))
+      }
     }
 
 
@@ -153,10 +185,13 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     // clean array treatment
     setContributors(roles: models.AgentRole[]) {
         console.log("[debug] set contributors ", roles)
+
         const contribFGs = roles ? roles.filter(arole => arole != null).map(
             arole => this.fb.group(
                 {role: arole.roleType, name: this.nameFromAgent(arole.heldBy),
-                identifiers: this.fb.array(arole.heldBy.identifiers.map(e => this.fb.group(e)) || []) }
+                identifiers: this.fb.array(arole.heldBy.identifiers != null ?
+                  arole.heldBy.identifiers.map(e => this.fb.group(e)) || [] :
+                  []) }
             )
         ) : [];
         const contribFormArray = this.fb.array(contribFGs);
@@ -232,33 +267,58 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         this.identifiers.removeAt(index);
     }
 
-
+    convertOrphanToParent(){
+      this.resources[1] = this.resources[0]
+      console.log("clone orhan to parent", this.resources)
+      // TODO: create a new resource with id (from backend)
+    }
     ngOnChanges()  {
-        console.log('ngOnChanges', this.resources[0]);
+        const resource = this.resourceRadio === 'Child' ? this.resources[0] : this.resources[1]
+        console.log('ngOnChanges', resource);
         // console.log("Set publicationyear: ",  this.resource.publicationDate)
+
         this.resourceForm.reset( {
-            title: this.resources[0].title,
-            subtitle: this.resources[0].subtitle,
-            resourcetype: this.resources[0].type,
-            edition: this.resources[0].edition,
-            resourcenumber: this.resources[0].number,
-            publicationyear: isoFullDate(this.resources[0].publicationDate),
-            partOf: this.resources[0].partOf,
+            title: resource.title,
+            subtitle: resource.subtitle,
+            resourcetype: resource.type,
+            edition: resource.edition,
+            resourcenumber: resource.number,
+            publicationyear: isoFullDate(resource.publicationDate),
+            partOf: resource.partOf,
             // containerTitle: this.resource.containerTitle // still in progress
         });
-        this.placeholderPartOf = this.resources[0].partOf || 'Enter name to search for parent'
+        this.placeholderPartOf = resource.partOf || 'Enter name to search for parent'
         // console.log("publicationyear: ",  this.resourceForm.value.publicationyear)
         // new clean set contribs
-        this.setContributors(this.resources[0].contributors);
-        this.setIdentifiers(this.resources[0].identifiers);
+        this.setContributors(resource.contributors);
+        this.setIdentifiers(resource.identifiers);
+        // this.setContainers(this.resources[1])
         // console.log('Contribs in resource:', this.resource.contributors);
         // console.log('Contribs in form:', this.contributors);
     }
 
+    setContainers(ContainerResource: TypedResourceView){
+      if (ContainerResource != undefined || ContainerResource != null){
+        this.containerForm = this.fb.group(ContainerResource.getContainerProperties())
+        console.log("[debug] ", this.containerForm)
+      }
+    }
+
     onSubmit() {
-        let resource = this.prepareSaveResource();
-        console.log("[debug] submit resource: ", resource)
-        this.updateResource.emit(resource)
+      // TODO: prepare both resources (non active is stored in this.resources
+      // the other one in formModel)
+      if(this._resourceRadio === 'Child'){
+        this.resources[0] = this.prepareSaveResource()
+      }
+      else {
+        this.resources[1] = this.prepareSaveResource()
+      }
+      // connect them properly (set partOf)
+      // then submit
+
+        console.log("[debug] submit resources: ", this.resources)
+      // TODO change to [TypedResourceView, TypedResourceView]
+        this.updateResource.emit(this.resources)
     }
 
     revert() {
@@ -286,17 +346,19 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     }
 
     prepareSaveResource(): TypedResourceView  {
+      const old_resource = this.resourceRadio === 'Child' ? this.resources[0] : this.resources[1]
         // Form values need deep copy, else shallow copy is enough
         const formModel = this.resourceForm.value;
+        const containerFormModel = this.containerForm.value
         const contribsDeepCopy = formModel.contributors.map((elem: {name: string, role: string, identifiers: models.Identifier[]}) =>
         elem.name == "UNK" ? this.reconstructAgentRole("", elem.role, elem.identifiers): this.reconstructAgentRole(elem.name, elem.role, elem.identifiers));
         const identsDeepCopy = formModel.identifiers.map(
           (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
         );
-        const resource: TypedResourceView =  new TypedResourceView({_id: this.resources[0]._id,
-          type: formModel.resourcetype as string, partOf: formModel.partOf || this.resources[0].partOf,
-          parts: this.resources[0].parts, cites: this.resources[0].cites,
-          status: this.resources[0].status})
+        const resource: TypedResourceView =  new TypedResourceView({_id: old_resource._id,
+          type: formModel.resourcetype as string, partOf: formModel.partOf || old_resource.partOf,
+          parts: old_resource.parts, cites: old_resource.cites,
+          status: old_resource.status})
         resource.identifiers = identsDeepCopy;
         resource.title = formModel.title as string || '';
         resource.subtitle = formModel.subtitle as string || '';
@@ -311,7 +373,11 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
           // partOf: formModel.partof as string || '',
           // warning: retain internal identifiers (dont show primary keys to the user)
           // not editable, but copied values
-        resource.embodiedAs = this.resources[0].embodiedAs;
+        resource.embodiedAs = old_resource.embodiedAs;
+        // let containerResource = this.resources[1]
+        // for(let key in containerFormModel){
+        //   containerResource.setContainerProperty(key, containerFormModel[key])
+        // }
 
         return resource;
     }

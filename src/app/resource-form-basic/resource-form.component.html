@@ -1,3 +1,14 @@
+<div class="btn-group" btnRadioGroup *ngIf="resources" [(ngModel)]="resourceRadio">
+  <label class="btn btn-success" btnRadio="Child"
+         tabindex="0" role="button" [hidden]="resources[1] == null">child</label>
+ <label class="btn btn-success" btnRadio="Child"
+        tabindex="0" role="button" [hidden]="resources[1] != null">orphan</label>
+ <label class="btn btn-success" btnRadio="Child" (click)="convertOrphanToParent()"
+        tabindex="0" role="button" [hidden]="resources[1] != null">make parent</label>
+  <label class="btn btn-success" btnRadio="Parent"
+         tabindex="0" role="button" [hidden]="resources[1] == null">parent</label>
+</div>
+
 <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
   <div class="form-group row">
 
@@ -161,6 +172,18 @@
               typeaheadWaitMs="1000"
               typeaheadOptionField="name"
               [placeholder]="placeholderMigration">
+
+      </div>
+    </div>
+      <div [formGroup]="containerForm">
+      <div class="form-group row" *ngFor="let key of objectKeys(containerForm.value)">
+
+        <label for="resourcenumber" class="col-sm-2 col-form-label">{{key}}</label>
+        <div class="col-sm-10">
+
+          <input class="form-control" [formControlName]="key">
+
+        </div>
 
       </div>
 

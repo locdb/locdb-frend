@@ -10,7 +10,6 @@ export {models};
 import * as enums from './enums';
 export { enums };
 
-
 export const NAME_SEPARATOR = ', '
 
   /*
@@ -104,6 +103,38 @@ export const PropertyPrefixByType = invert_enum(enums.resourceType);
 export function typedProperty(type: string, property: string) {
   return PropertyPrefixByType[type] + '_' + property;
 }
+
+export function foreignPropertiesByType(containerType: enums.resourceType): Array< string > {
+  /*
+   * This is a mapping to obtain relevant (but not own) properties for a flattened container type
+   * It is intended to offer the foreign but relevant fields in a form.
+   *
+   */
+
+  const rtype = enums.resourceType;
+  switch (containerType) {
+    case rtype.journalIssue:
+      // when its an issue, we need properties of volume and journal
+      return [typedProperty(rtype.journal, 'title'),
+              typedProperty(rtype.journal, 'subtitle'),
+              typedProperty(rtype.journalVolume, 'number')];
+
+    case rtype.journalVolume:
+      // if its a volume, we need properties of journal
+      return [typedProperty(rtype.journal, 'title'),
+              typedProperty(rtype.journal, 'subtitle')];
+
+    case rtype.monograph || rtype.editedBook || rtype.book || rtype.referenceBook:
+      // in these cases, the book series and sets are flattened.
+      return [typedProperty(rtype.bookSeries, 'title'),
+              typedProperty(rtype.bookSeries, 'number'),
+              typedProperty(rtype.bookSet, 'title')];
+    default:
+      return [];
+  }
+}
+
+
 
 export function containerTypes (type: enums.resourceType): Array<enums.resourceType> {
   /** Unused at the moment ? */
@@ -270,6 +301,34 @@ export class TypedResourceView implements Metadata {
     const typed_property = typedProperty(type, property);
     return this.data[typed_property];
   }
+
+  getContainerProperties(){
+    let typed_property_array = foreignPropertiesByType(this.type)
+
+    console.log(typed_property_array)
+    let ret = {}
+    for(let elem of typed_property_array){
+      ret[elem] = this.data[elem]
+    }
+      console.log(ret)
+      console.log(this.data)
+    return ret
+  }
+
+  setContainerProperty(property: string, value: string){
+      let typed_property_array = foreignPropertiesByType(this.type)
+      const index = typed_property_array.indexOf(property)
+      if(index !== -1){
+        console.log(typed_property_array[index])
+        this.data[property] = value
+        console.log(this.getContainerProperties())
+      }
+      else{
+        console.log("[error] " + property + " is not a valid container property "
+        + "for " + this.type + " (" + typed_property_array + ")")
+      }
+  }
+
 
 
 

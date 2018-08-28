@@ -43,8 +43,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
         // console.log("ngOnChanges", this.resources[0]);
     }
 
-    onSubmit(resourceCopy) {
-
+    onSubmit(resourcesCopy: [TypedResourceView, TypedResourceView]) {
+        // TODO push both Resources/ handle new child resource
       console.log("trigger resource form")
         // need to first store locally until saved
         this.submitting = true;
