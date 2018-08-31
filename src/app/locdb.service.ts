@@ -254,6 +254,30 @@ export class LocdbService {
     return [child, container];
   }
 
+  async safeCreateAndUpdate(
+    resources: [TypedResourceView, TypedResourceView]
+  ): Promise<[TypedResourceView, TypedResourceView]> {
+    /* if necessary, creates target resource before updating the reference of the entry */
+    /* 1-3 requests */
+    let [child, container] = resources;
+    console.log('Child:', child)
+    console.log('Parent:', container)
+    if (container) {
+      console.log('Pushing parent:', container)
+      // to update resource in backend if id already existed:
+      await this.maybePutResource(container).toPromise();
+      // if it is a new parent, let backend assign an id and save it
+      container = await this.maybePostResource(container).toPromise();
+      child.data.partOf = container._id;
+    }
+    // to update resource in backend if id already existed:
+    await this.maybePutResource(child).toPromise();
+    // if it is a new child, let backend assign an id and save it
+    child = await this.maybePostResource(child).toPromise();
+    console.log('Child after commit', child)
+    return [child, container];
+  }
+
 
 
 

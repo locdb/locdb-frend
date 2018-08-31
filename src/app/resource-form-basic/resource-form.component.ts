@@ -269,8 +269,12 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
 
     convertOrphanToParent(){
       this.resources[1] = this.resources[0]
-      console.log("clone orhan to parent", this.resources)
-      // TODO: create a new resource with id (from backend)
+      // TODO: instead of cloning create a new resource with id (from backend)
+      let nresource = new TypedResourceView({type: enums.resourceType.monograph});
+
+      this.resources[0] = nresource
+      console.log("mazeltov", this.resources)
+      this.ngOnChanges()
     }
     ngOnChanges()  {
         const resource = this.resourceRadio === 'Child' ? this.resources[0] : this.resources[1]
@@ -292,12 +296,12 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         // new clean set contribs
         this.setContributors(resource.contributors);
         this.setIdentifiers(resource.identifiers);
-        // this.setContainers(this.resources[1])
         // console.log('Contribs in resource:', this.resource.contributors);
         // console.log('Contribs in form:', this.contributors);
     }
 
     setContainers(ContainerResource: TypedResourceView){
+      console.log("setContainers ", ContainerResource)
       if (ContainerResource != undefined || ContainerResource != null){
         this.containerForm = this.fb.group(ContainerResource.getContainerProperties())
         console.log("[debug] ", this.containerForm)
@@ -305,7 +309,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     }
 
     onSubmit() {
-      // TODO: prepare both resources (non active is stored in this.resources
+      // prepare both resources (non active is stored in this.resources
       // the other one in formModel)
       if(this._resourceRadio === 'Child'){
         this.resources[0] = this.prepareSaveResource()
@@ -314,10 +318,9 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         this.resources[1] = this.prepareSaveResource()
       }
       // connect them properly (set partOf)
+      // done in safeCreateAndUpdate()
       // then submit
-
         console.log("[debug] submit resources: ", this.resources)
-      // TODO change to [TypedResourceView, TypedResourceView]
         this.updateResource.emit(this.resources)
     }
 
@@ -346,7 +349,15 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
     }
 
     prepareSaveResource(): TypedResourceView  {
-      const old_resource = this.resourceRadio === 'Child' ? this.resources[0] : this.resources[1]
+      let old_resource = null
+      if(this.resourceRadio === 'Child'){
+          old_resource = this.resources[0]
+          this.setContainers(this.resources[1])
+        } else {
+          old_resource = this.resources[1]
+          this.containerForm = this.fb.group({})
+
+        }
         // Form values need deep copy, else shallow copy is enough
         const formModel = this.resourceForm.value;
         const containerFormModel = this.containerForm.value

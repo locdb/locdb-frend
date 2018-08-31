@@ -46,30 +46,19 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
     onSubmit(resourcesCopy: [TypedResourceView, TypedResourceView]) {
         // TODO push both Resources/ handle new child resource
       console.log("trigger resource form")
-        // need to first store locally until saved
-        this.submitting = true;
-        this.locdbService.maybePutResource(resourceCopy).subscribe(
-            (r) =>  {
-                // here better than this.resource = r, since reference is retained
-                Object.assign(this.resources[0], r);
-                this.ngOnChanges();
-                this.submitting = false;
-                this.submitted = true;
-                this.submitStatus.emit(false);
+      console.log("resources: ", resourcesCopy)
+      this.locdbService.safeCreateAndUpdate(resourcesCopy).then(
+          (rs) =>  {
+              // here better than this.resource = r, since reference is retained
+              Object.assign(this.resources, rs);
+              this.submitting = false;
+              this.submitted = true;
+              this.submitStatus.emit(false);
 
-            },
-            (err) => { console.log('error submitting resource', err) ;
-                this.submitting = false });
+          },
+          (err) => { console.log('error submitting resource', err) ;
+              this.submitting = false });
 
-        if(!this.checkParent(this.resources[1], resourceCopy)){
-          console.log("requesting new parent")
-          this.locdbService.bibliographicResource(resourceCopy.partOf).subscribe(
-            (trv) => {
-              // is null parent correct here or should we also retrieve it
-              this.resources[1] = trv
-            },
-            (err) => { console.log('Invalid resourceCopy.partOf', resourceCopy.partOf) });
-        }
     }
 
     cancel() {
