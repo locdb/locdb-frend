@@ -63,6 +63,11 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
           this.resources[1] = this.prepareSaveResource()
         }
         this._resourceRadio = value
+        if(value === 'Child'){
+          this.containerForm = this.fb.group({})
+        } else {
+            this.setContainers(this.resources[1])
+          }
         this.ngOnChanges()
       }
     }
@@ -352,10 +357,8 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
       let old_resource = null
       if(this.resourceRadio === 'Child'){
           old_resource = this.resources[0]
-          this.setContainers(this.resources[1])
         } else {
           old_resource = this.resources[1]
-          this.containerForm = this.fb.group({})
 
         }
         // Form values need deep copy, else shallow copy is enough
