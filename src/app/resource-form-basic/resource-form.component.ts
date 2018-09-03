@@ -348,53 +348,58 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
       return identifier;
     }
 
-    prepareSaveResource(): TypedResourceView  {
+   /**
+    *  Create a **deep** copy of all attributes that are changable in the form
+    *
+    */
+   prepareSaveResource(): TypedResourceView  {
       let old_resource = null
       if(this.resourceRadio === 'Child'){
-          old_resource = this.resources[0]
-          this.setContainers(this.resources[1])
-        } else {
-          old_resource = this.resources[1]
-          this.containerForm = this.fb.group({})
+         old_resource = this.resources[0]
+         this.setContainers(this.resources[1])
+      } else {
+         old_resource = this.resources[1]
+         this.containerForm = this.fb.group({})
 
-        }
-        // Form values need deep copy, else shallow copy is enough
-        const formModel = this.resourceForm.value;
-        const containerFormModel = this.containerForm.value
-        const contribsDeepCopy = formModel.contributors.map((elem: {name: string, role: string, identifiers: models.Identifier[]}) =>
-        elem.name == "UNK" ? this.reconstructAgentRole("", elem.role, elem.identifiers): this.reconstructAgentRole(elem.name, elem.role, elem.identifiers));
-        const identsDeepCopy = formModel.identifiers.map(
-          (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
-        );
-        const resource: TypedResourceView =  new TypedResourceView({_id: old_resource._id,
-          type: formModel.resourcetype as string, partOf: formModel.partOf || old_resource.partOf,
-          parts: old_resource.parts, cites: old_resource.cites,
-          status: old_resource.status})
-        resource.identifiers = identsDeepCopy;
-        resource.title = formModel.title as string || '';
-        resource.subtitle = formModel.subtitle as string || '';
-        resource.edition = formModel.edition as string || '';
-        // containerType ~> containerTitle
-        // additional dropdown when type is selected, according to containertypes
-          // container Title does not need to be editable atm
-        // resource.containerTitle = formModel.containerTitle as string || '';
-        resource.number = formModel.resourcenumber as string || '';
-        resource.contributors = contribsDeepCopy;
-        resource.publicationDate = formModel.publicationyear;
-          // partOf: formModel.partof as string || '',
-          // warning: retain internal identifiers (dont show primary keys to the user)
-          // not editable, but copied values
-        resource.embodiedAs = old_resource.embodiedAs;
-        // let containerResource = this.resources[1]
-        // for(let key in containerFormModel){
-        //   containerResource.setContainerProperty(key, containerFormModel[key])
-        // }
+      }
+      // Form values need deep copy, else shallow copy is enough
+      const formModel = this.resourceForm.value;
+      const containerFormModel = this.containerForm.value
+      const contribsDeepCopy = formModel.contributors.map(
+         (elem: {name: string, role: string, identifiers: models.Identifier[]}) => this.reconstructAgentRole(elem.name, elem.role, elem.identifiers));
+      const identsDeepCopy = formModel.identifiers.map(
+         (id: {scheme: string, literalValue: string} ) => this.reconstructIdentifier(id.scheme, id.literalValue)
+      );
+      const resource: TypedResourceView =  new TypedResourceView({_id: old_resource._id,
+         type: formModel.resourcetype as string, partOf: formModel.partOf || old_resource.partOf,
+         parts: old_resource.parts, cites: old_resource.cites,
+         status: old_resource.status})
+      resource.identifiers = identsDeepCopy;
+      resource.title = formModel.title as string || '';
+      resource.subtitle = formModel.subtitle as string || '';
+      resource.edition = formModel.edition as string || '';
+      // containerType ~> containerTitle
+      // additional dropdown when type is selected, according to containertypes
+      // container Title does not need to be editable atm
+      // resource.containerTitle = formModel.containerTitle as string || '';
+      resource.number = formModel.resourcenumber as string || '';
+      resource.contributors = contribsDeepCopy;
+      resource.publicationDate = formModel.publicationyear;
+      // partOf: formModel.partof as string || '',
+      // warning: retain internal identifiers (dont show primary keys to the user)
+      // not editable, but copied values
+      resource.embodiedAs = old_resource.embodiedAs;
+      // let containerResource = this.resources[1]
+      // for(let key in containerFormModel){
+      //   containerResource.setContainerProperty(key, containerFormModel[key])
+      // }
 
-        return resource;
+      return resource;
     }
 
     short() {
         // A shorthand name for accordion heading
+       // TODO FIXME: presumably unused
         if (this.resources[0]) {
             // resources[0] already present
             const br = this.resources[0];

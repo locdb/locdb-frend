@@ -24,6 +24,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { TypeaheadModule } from 'ngx-bootstrap';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 // misc
 import { PopoverModule } from 'ngx-popover';
@@ -186,15 +187,12 @@ describe('AppComponent with TCB', function () {
           ModalModule.forRoot(),
           CollapseModule.forRoot(),
           HotkeyModule.forRoot(),
+          ButtonsModule.forRoot(),
           BrowserModule,
           FormsModule,
           HttpModule,
           ReactiveFormsModule,
           PopoverModule,
-          // HttpClient,
-          // HttpHeaders,
-          // HttpParams,
-          // HttpResponse,
           PdfViewerModule,
           HttpClientModule,
           RouterModule.forRoot(

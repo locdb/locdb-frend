@@ -1,12 +1,6 @@
-<div class="btn-group" btnRadioGroup *ngIf="resources" [(ngModel)]="resourceRadio">
-  <label class="btn btn-success" btnRadio="Child"
-         tabindex="0" role="button" [hidden]="resources[1] == null">child</label>
- <label class="btn btn-success" btnRadio="Child"
-        tabindex="0" role="button" [hidden]="resources[1] != null">orphan</label>
- <label class="btn btn-success" btnRadio="Child" (click)="convertOrphanToParent()"
-        tabindex="0" role="button" [hidden]="resources[1] != null">create new child</label>
-  <label class="btn btn-success" btnRadio="Parent"
-         tabindex="0" role="button" [hidden]="resources[1] == null">parent</label>
+<div class="btn-group" btnRadioGroup *ngIf="resources[1] !== null" [(ngModel)]="resourceRadio">
+  <label class="btn btn-default" btnRadio="Child" tabindex="0" role="button">Contained Resource</label>
+  <label class="btn btn-default" btnRadio="Parent" tabindex="0" role="button">Container Resource</label>
 </div>
 
 <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
