@@ -1,20 +1,20 @@
 <div [class]="active ? 'card bg-dark' : entry.references ? 'card bg-success' : 'card bg-danger'" *ngIf="entry"
-style="padding-left: 10px"> <!-- [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">-->
-    <div class="card-header" [class]="active ? 'card-header bg-light' : 'card-header border-default  bg-light'">
-      <div class="row">
+  style="padding-left: 10px"> <!-- [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">-->
+  <div class="card-header" [class]="active ? 'card-header bg-light' : 'card-header border-default  bg-light'">
+    <div class="row">
       <!-- <div class="col-1">
         <i *ngIf="!entry.references" class="fa fa-square fa-lg" aria-hidden="true"></i>
         <i *ngIf="entry.references" class="fa fa-check-square fa-lg" aria-hidden="true"></i>
-      </div> -->
+        </div> -->
         <div class="col-11">
           {{ short()}}
+        </div>
+        <div class="col-1">
+          <button type="button" class="btn btn-secondary float-right btn-sm"
+                                (click)="edit()"> {{open ? 'Cancel': 'Edit' }}</button>
+        </div>
     </div>
-      <div class="col-1">
-      <button type="button" class="btn btn-secondary float-right btn-sm"
-      (click)="edit()"> {{open ? 'Cancel': 'Edit' }}</button>
   </div>
-</div>
-</div>
   <div class="card-body bg-light" *ngIf="open && active" >
     <div *ngIf="submitted">
       <table class="table table-striped" style="table-layout:fixed;">
@@ -60,124 +60,124 @@ style="padding-left: 10px"> <!-- [panelClass]="selected ? 'text-white bg-dark' :
               <td> <label>Volume</label> </td>
               <td> <p>{{entry.ocrData.volume}}</p> </td>
             </tr>
-          </tbody>
-        </table>
-        <div style="margin: 1rem; margin-bottom: 0rem;">
-          <div class="row justify-content-between" style="margin-top: 1rem;">
-            <div class="col-xs-6 text-left">
-            </div>
-            <div class="col-xs-6 text-right">
-              <button type="button" class="btn btn-warning" aria-label="Edit" (click)="showForm(true)">
-                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- - - - - -->
-
-      <div *ngIf="!submitted">
-        <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" novalidate>
-          <div class="form-group row">
-            <label for="bibliographicEntryText" class="col-sm-2 col-form-label">Raw text</label>
-            <div class="col-sm-10">
-              <textarea class="form-control" id="bibliographicEntryText" formControlName="bibliographicEntryText" style="resize: none;" ></textarea>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="title" class="col-sm-2 col-form-label">Title</label>
-            <div class="col-sm-10">
-              <textarea class="form-control" id="title" formControlName="title" style="resize: none;" ></textarea>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="date" class="col-sm-2 col-form-label">Year</label>
-            <div class="col-sm-10">
-              <input type="string" id="date" class="form-control" formControlName="date">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="journal" class="col-sm-2 col-form-label">Journal</label>
-            <div class="col-sm-10">
-              <input type="string" id="journal" class="form-control" formControlName="journal">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="volume" class="col-sm-2 col-form-label">Volume</label>
-            <div class="col-sm-10">
-              <input type="string" id="journal" class="form-control" formControlName="volume">
-            </div>
-          </div>
-          <!--   Idents   -->
-          <label for="identifiers"> Identifiers </label>
-          <div id="identifiers" formArrayName="identifiers">
-            <div class="form-group row" *ngFor="let identifier of identifiers.controls; let j = index" [formGroupName]="j">
-              <button (click)="removeIdentifier(j)" type="button" class="close" aria-label="Remove Identifier">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <div class="col">
-                <input class="form-control" formControlName="scheme">
-              </div>
-              <div class="col">
-                <input class="form-control" formControlName="literalValue">
-              </div>
-            </div>
-            <button type="button" class="btn btn-success" aria-label="Add Identifier" (click)="addIdentifier()">
-              Add Identifier
-            </button>
-          </div>
-          <!--   contribs   -->
-          <label for="authors">Authors</label>
-          <div id="authors" formArrayName="authors">
-            <div class="form-group row" *ngFor="let contributor of authors.controls; let j = index">
-              <button (click)="removeAuthor(j)" type="button" class="close" aria-label="Remove Author">
-                <span aria-hidden="true">&times;</span>
-              </button>
-          <div class="col">
-            <input class="form-control"  [formControlName]="j">
-          </div>
-        </div>
-        <button type="button" class="btn btn-success" aria-label="Add Author" (click)="addAuthor()">
-          Add Author
-        </button>
-      </div>
-      <div class="form-group row">
-        <label for="marker" class="col-sm-2 col-form-label">Marker</label>
-        <div class="col-sm-10">
-          <input type="string" id="marker" class="form-control" formControlName="marker">
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="comments" class="col-sm-2 col-form-label">Comments</label>
-        <div class="col-sm-10">
-          <input type="string" id="comments" class="form-control" formControlName="comments">
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="references" class="col-sm-2 col-form-label">References</label>
-        <div class="col-sm-10">
-          <input type="string" id="references" class="form-control" formControlName="references">
-        </div>
-      </div>
+        </tbody>
+      </table>
       <div style="margin: 1rem; margin-bottom: 0rem;">
         <div class="row justify-content-between" style="margin-top: 1rem;">
           <div class="col-xs-6 text-left">
-            <button type="button" class="btn btn-warning" (click)="revert()" [disabled]="submitting">
-              <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset Form
-            </button>
-            <button type="button" class="btn btn-danger" (click)="delete(entry)" [disabled]="submitting">
-              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete Entry
-            </button>
           </div>
           <div class="col-xs-6 text-right">
-            <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="submitting">
-              <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Submit
+            <button type="button" class="btn btn-warning" aria-label="Edit" (click)="showForm(true)">
+              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
             </button>
           </div>
         </div>
       </div>
-    </form>
+    </div>
+
+    <!-- - - - - -->
+
+    <div *ngIf="!submitted">
+      <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="form-group row">
+          <label for="bibliographicEntryText" class="col-sm-2 col-form-label">Raw text</label>
+          <div class="col-sm-10">
+            <textarea class="form-control" id="bibliographicEntryText" formControlName="bibliographicEntryText" style="resize: none;" ></textarea>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="title" class="col-sm-2 col-form-label">Title</label>
+          <div class="col-sm-10">
+            <textarea class="form-control" id="title" formControlName="title" style="resize: none;" ></textarea>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="date" class="col-sm-2 col-form-label">Year</label>
+          <div class="col-sm-10">
+            <input type="string" id="date" class="form-control" formControlName="date">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="journal" class="col-sm-2 col-form-label">Journal</label>
+          <div class="col-sm-10">
+            <input type="string" id="journal" class="form-control" formControlName="journal">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="volume" class="col-sm-2 col-form-label">Volume</label>
+          <div class="col-sm-10">
+            <input type="string" id="journal" class="form-control" formControlName="volume">
+          </div>
+        </div>
+        <!--   Idents   -->
+        <label for="identifiers"> Identifiers </label>
+        <div id="identifiers" formArrayName="identifiers">
+          <div class="form-group row" *ngFor="let identifier of identifiers.controls; let j = index" [formGroupName]="j">
+            <button (click)="removeIdentifier(j)" type="button" class="close" aria-label="Remove Identifier">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="col">
+              <input class="form-control" formControlName="scheme">
+            </div>
+            <div class="col">
+              <input class="form-control" formControlName="literalValue">
+            </div>
+          </div>
+          <button type="button" class="btn btn-success" aria-label="Add Identifier" (click)="addIdentifier()">
+            Add Identifier
+          </button>
+        </div>
+        <!--   contribs   -->
+        <label for="authors">Authors</label>
+        <div id="authors" formArrayName="authors">
+          <div class="form-group row" *ngFor="let contributor of authors.controls; let j = index">
+            <button (click)="removeAuthor(j)" type="button" class="close" aria-label="Remove Author">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="col">
+              <input class="form-control"  [formControlName]="j">
+            </div>
+          </div>
+          <button type="button" class="btn btn-success" aria-label="Add Author" (click)="addAuthor()">
+            Add Author
+          </button>
+        </div>
+        <div class="form-group row">
+          <label for="marker" class="col-sm-2 col-form-label">Marker</label>
+          <div class="col-sm-10">
+            <input type="string" id="marker" class="form-control" formControlName="marker">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="comments" class="col-sm-2 col-form-label">Comments</label>
+          <div class="col-sm-10">
+            <input type="string" id="comments" class="form-control" formControlName="comments">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="references" class="col-sm-2 col-form-label">References</label>
+          <div class="col-sm-10">
+            <input type="string" id="references" class="form-control" formControlName="references">
+          </div>
+        </div>
+        <div style="margin: 1rem; margin-bottom: 0rem;">
+          <div class="row justify-content-between" style="margin-top: 1rem;">
+            <div class="col-xs-6 text-left">
+              <button type="button" class="btn btn-warning" (click)="revert()" [disabled]="submitting">
+                <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset Form
+              </button>
+              <button type="button" class="btn btn-danger" (click)="delete(entry)" [disabled]="submitting">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete Entry
+              </button>
+            </div>
+            <div class="col-xs-6 text-right">
+              <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="submitting">
+                <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
 </div>

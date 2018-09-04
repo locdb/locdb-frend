@@ -303,6 +303,7 @@ export class TypedResourceView implements Metadata {
   }
 
   getContainerProperties(){
+    // volatile
     let typed_property_array = foreignPropertiesByType(this.type)
 
     console.log(typed_property_array)
@@ -316,6 +317,7 @@ export class TypedResourceView implements Metadata {
   }
 
   setContainerProperty(property: string, value: string){
+    // volatile
       let typed_property_array = foreignPropertiesByType(this.type)
       const index = typed_property_array.indexOf(property)
       if(index !== -1){

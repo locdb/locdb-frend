@@ -33,7 +33,6 @@ import { SuggestionComponent } from './suggestion/suggestion.component';
 import { LoginComponent } from './login/login.component';
 import { VisualComponent } from './visual/visual.component';
 import { CommitComponent } from './commit/commit.component';
-import { ResourceFormBasicComponent } from './resource-form-basic/resource-form.component'
 
 // agenda related
 import { AgendaComponent, TodoComponent, EmbodimentComponent } from './agenda';
@@ -49,8 +48,6 @@ import { FeedComponent, FeedReaderComponent } from './ingest/feed-reader/feed-re
 // resource related
 import { MetadataComponent } from './metadata/metadata.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
-import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
-import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
 import { LinkingComponent } from './linking/linking.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 
@@ -132,7 +129,6 @@ const appRoutes: Routes = [
     DisplayComponent,
     SuggestionComponent,
     ResourceFormComponent,
-    ResourceFormBasicComponent,
     LoginComponent,
     VisualComponent,
     CommitComponent,
@@ -144,8 +140,6 @@ const appRoutes: Routes = [
     RouterRefsInspectorComponent,
     RouterScanInspectorComponent,
     MetadataComponent,
-    ResourceAccordionGroupComponent,
-    ResourceEditableComponent,
     LinkingComponent,
     FrontpageComponent,
     ResourceCardComponent,

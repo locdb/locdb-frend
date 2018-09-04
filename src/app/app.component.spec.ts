@@ -64,15 +64,12 @@ import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe, ContainerPipe} fr
 import { StandardPipe } from './pipes/type-pipes';
 // resource related
 // import { ResourceComponent } from './resource/resource.component';
+import { ResourceCardComponent } from './resource-card/resource-card.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
-import { ResourceFormBasicComponent } from './resource-form-basic/resource-form.component';
-import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
-import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 import { LinkingComponent } from './linking/linking.component'
 // New
 import { LoggingService } from './logging.service';
-import { ResourceCardComponent } from './resource-card/resource-card.component';
 import { EntryCardComponent } from './inspectors/entry-card/entry-card.component'
 import { BrowseComponent } from './browse/browse.component'
 // api
@@ -146,7 +143,6 @@ describe('AppComponent with TCB', function () {
           EntryFormComponent,
           SuggestionComponent,
           ResourceFormComponent,
-          ResourceFormBasicComponent,
           LoginComponent,
           VisualComponent,
           CommitComponent,
@@ -166,12 +162,6 @@ describe('AppComponent with TCB', function () {
           AgendaComponent,
           ScanInspectorComponent,
           RefsInspectorComponent,
-          // TodoDetailComponent,
-          // TodoListComponent,
-          // TodoLeafComponent,
-          // ResourceComponent,
-          ResourceAccordionGroupComponent,
-          ResourceEditableComponent,
           LinkingComponent,
           FrontpageComponent,
           ResourceCardComponent,
