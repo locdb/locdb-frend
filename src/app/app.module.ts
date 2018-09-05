@@ -20,6 +20,12 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
+
+// Dynamic form elements for foreign properties
+import { QuestionControlService } from './resource-form/dynamic-question-form/question-control.service';
+import { QuestionService } from './resource-form/dynamic-question-form/question.service';
+import { DynamicFormQuestionComponent } from './resource-form/dynamic-question-form/dynamic-form-question.component';
+
 // misc
 // import { CredentialsService } from 'angular-with-credentials';
 import { CredentialsService } from './locdb.service';
@@ -157,7 +163,8 @@ const appRoutes: Routes = [
     IdentifierPipe,
     StandardPipe,
     JournalStandardPipe,
-    EditViewComponent
+    EditViewComponent,
+    DynamicFormQuestionComponent,
   ],
   providers: [
     { provide: BASE_PATH, useValue: environment.locdbUrl},
@@ -169,7 +176,9 @@ const appRoutes: Routes = [
     BibliographicResourceService,
     ScanService,
     UserService,
-    ScanListService
+    ScanListService,
+    QuestionService,
+    QuestionControlService,
   ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

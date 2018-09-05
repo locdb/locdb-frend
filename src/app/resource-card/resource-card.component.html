@@ -21,7 +21,7 @@
       </div>
       <div class="card-body bg-light" *ngIf="open" >
             <!-- <app-resource-editable [resource]="resources[0]" (resourceChange)="resources[0]=$event; resourceChange.emit($event)" -->
-            <app-resource-form [resources]="resources" (submitStatus)="disabled=!$event; open = $event">
+            <app-resource-form [resource]="resources[0]" [alternate]="resource[1]" (submitStatus)="disabled=!$event; open = $event">
             </app-resource-form>
 
       </div>

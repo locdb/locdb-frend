@@ -5,7 +5,7 @@
   <hr/>
 </div>
 
-<form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate>
+<form [formGroup]="resourceForm" (ngSubmit)="onSubmit()">
   <div class="form-group row">
 
     <label for="resourcetype" class="col-sm-2 col-form-label">Type</label>
@@ -172,8 +172,14 @@
     </div>
   </div>
 
-  <!-- What is this? -->
-  {{resourceForm.value | json }}
+  <hr/>
+  <div formGroupName="foreignProperties" class="mb-2">
+    <h5> Container properties </h5>
+    <div class="form-row" *ngFor="let question of questions">
+      <app-question [question]="question" [form]="foreignProperties"></app-question>
+    </div>
+  </div>
+
 
   <div style="margin: 1rem; margin-bottom: 0rem;">
     <div class="row justify-content-between" style="margin-top: 1rem;">
@@ -186,7 +192,7 @@
         </button>
       </div>
       <div class="col-xs-6 text-right">
-        <button type="button" class="btn btn-primary" (click)="onSubmit()">
+        <button type="submit" class="btn btn-primary" [disabled]="!resourceForm.valid">
           <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Confirm
         </button>
       </div>

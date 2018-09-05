@@ -82,10 +82,13 @@ import { BibliographicResourceService } from './typescript-angular-client/api/bi
 import { EditViewComponent } from './edit-view/edit-view.component'
 
 import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent, HttpClientModule }                           from '@angular/common/http';
+         HttpResponse, HttpEvent, HttpClientModule } from '@angular/common/http';
 import { PaginationModule } from 'ngx-bootstrap';
 
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { QuestionControlService } from './resource-form/dynamic-question-form/question-control.service';
+import { QuestionService } from './resource-form/dynamic-question-form/question.service';
+import { DynamicFormQuestionComponent } from './resource-form/dynamic-question-form/dynamic-form-question.component';
 ////////  SPECS  /////////////
 
 const appRoutes: Routes = [
@@ -133,6 +136,8 @@ describe('AppComponent with TCB', function () {
           UtilsService,
           BibliographicResourceService,
           BibliographicEntryService,
+          QuestionService,
+          QuestionControlService,
           {provide: APP_BASE_HREF, useValue : '/'}
         ],
         declarations: [
@@ -168,6 +173,7 @@ describe('AppComponent with TCB', function () {
           EntryCardComponent,
           BrowseComponent,
           EditViewComponent,
+          DynamicFormQuestionComponent,
         ],
         imports: [
           PaginationModule.forRoot(),

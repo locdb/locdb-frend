@@ -14,6 +14,10 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { TemplateRef } from '@angular/core';
 
+import { QuestionControlService } from './dynamic-question-form/question-control.service';
+import { QuestionService } from './dynamic-question-form/question.service';
+import { QuestionBase } from './dynamic-question-form/question-base';
+
 import { Observable } from 'rxjs/Rx'
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { StandardPipe } from '../pipes/type-pipes';
@@ -79,6 +83,9 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    dataSourceMigration: Observable<any>;
    placeholderMigration = 'Enter name to search for resource to migrate';
    // Retained END
+   
+   // Holds questions for foreign properties
+   questions: Array<QuestionBase<any>> = [];
 
    // NEW TAKE END
 
@@ -108,7 +115,9 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    constructor(
       private fb: FormBuilder,
       private locdbService: LocdbService,
-      private modalService: BsModalService
+      private modalService: BsModalService,
+      private qs: QuestionService,
+      private qcs: QuestionControlService
    ) {
       console.log('[BRF] constructor called')
       this.createForm();
@@ -125,14 +134,14 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          .map(r => r.map( s => this.extractTypeahead(s)));
    }
 
-   switchToAlternate() {
+   switchToAlternate(): void {
       const tmp = this.resource;
       this.resource = this.alternate;
       this.alternate = tmp;
       this.ngOnChanges();
    }
 
-   extractTypeahead(typedTuple: [TypedResourceView,TypedResourceView]){
+   extractTypeahead(typedTuple: [TypedResourceView, TypedResourceView]) {
       // what is this?
       return new TypeaheadObj(typedTuple[0])
    }
@@ -148,6 +157,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       this.resourceForm.value.partOf = e.item.id
       console.log(this.prepareSaveResource())
    }
+
    typeaheadOnSelectMigration(e: TypeaheadMatch): void {
       // console.log('Selected value: ', e.item.id,  e.item.name);
       this.resourceForm.get('migration').setValue(e.item.name)
@@ -168,6 +178,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          contributors: this.fb.array([]),
          identifiers: this.fb.array([]),
          partOf: '',
+         // this holds all foreign properties (flattened)
+         foreignProperties: this.fb.group({}),
          migration: false,
       });
       this.agentIdForm = this.fb.group({
@@ -232,17 +244,24 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       ) : [];
       const contribFormArray = this.fb.array(contribFGs);
       this.resourceForm.setControl('contributors', contribFormArray);
-      console.log("[debug] set resourceForm ", this.resourceForm)
-
+      console.log('[debug] set resourceForm ', this.resourceForm)
    }
 
    get contributors(): FormArray {
+      console.log('[BRF] contribs getter called');
       return this.resourceForm.get('contributors') as FormArray;
    }
 
-   set contributors(contributorArray: FormArray){
+   set contributors(contributorArray: FormArray) {
+      console.log('[BRF] contribs setter called');
+      // TODO FIXME dangerous?
       this.setContributors(contributorArray.value.map(
          e => this.reconstructAgentRole(e.name, e.role, e.identifiers)))
+   }
+
+   get foreignProperties(): FormGroup {
+      console.log('[BRF] fp getter called');
+      return this.resourceForm.get('foreignProperties') as FormGroup;
    }
 
    addContributor() {
@@ -259,21 +278,21 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    moveFormarrayEntry(index: number, shift: number, ){
       if(index + shift < 0 || index + shift >= this.contributors.length){
          console.log("[error] Target index not reachable (index: " + index + ", way: " + shift + ")")
-         return this.contributors
+         return this.contributors;
       }
       else{
          if(shift < 0){
             shift *= -1
             index -= shift
          }
-         let tmp = this.contributors.value
+         let tmp = this.contributors.value; // TODO FIXME this is not a deep copy..
          // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
          tmp.splice(index + shift + 1, 0, tmp[index]);
          // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
-         tmp.splice(index, 1)
+         tmp.splice(index, 1);
          // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
-         this.contributors = this.fb.array(tmp)
-         return this.contributors
+         this.contributors = this.fb.array(tmp);
+         return this.contributors;
       }
    }
 
@@ -303,6 +322,11 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       this.identifiers.removeAt(index);
    }
 
+   setQuestions(forResource: TypedResourceView) {
+      this.questions = this.qs.getQuestionsForResource(forResource);
+      this.resourceForm.setControl('foreignProperties', this.qcs.toFormGroup(this.questions));
+   }
+
    ngOnChanges()  {
       const resource = this.resource;
       console.log('[BRF] ngOnChanges triggered', resource);
@@ -323,6 +347,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       // new clean set contribs
       this.setContributors(resource.contributors);
       this.setIdentifiers(resource.identifiers);
+
+      // foreign properties
+      this.setQuestions(resource);
+
       // console.log('Contribs in resource:', this.resource.contributors);
       // console.log('Contribs in form:', this.contributors);
    }
@@ -362,13 +390,17 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       return identifier;
    }
 
+   changeType(event: any) {
+      console.log('Changing type', event);
+   }
+
    /**
     *  Create a **deep** copy of all attributes that are changable in the form
     *
     */
    prepareSaveResource(): TypedResourceView  {
       const oldResource = this.resource;
-      
+
       // get snapshot of current form models
       const formModel = this.resourceForm.value;
 
@@ -404,6 +436,14 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       resource.embodiedAs = oldResource.embodiedAs;
       // warning: retain internal identifiers (dont show primary keys to the user)
       // not editable, but copied values
+
+      const foreignPropertiesModel = this.foreignProperties.value;
+      console.log('[BRF:prepareSaveResource] foreign properties', foreignPropertiesModel);
+      for (const key of Object.keys(foreignPropertiesModel)) {
+         const value = foreignPropertiesModel[key];
+         console.log('[BRF:prepareSaveResource] Setting', key, 'to', value);
+         resource.data[key] = value;
+      }
 
       return resource;
    }

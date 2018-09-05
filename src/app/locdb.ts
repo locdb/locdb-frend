@@ -1,5 +1,3 @@
-// Just a foward from generated code.
-
 import * as moment from 'moment';
 import * as models from './typescript-angular-client/model/models'
 
@@ -302,41 +300,13 @@ export class TypedResourceView implements Metadata {
     return this.data[typed_property];
   }
 
-  getContainerProperties(){
-    // volatile
-    let typed_property_array = foreignPropertiesByType(this.type)
-
-    console.log(typed_property_array)
-    let ret = {}
-    for(let elem of typed_property_array){
-      ret[elem] = this.data[elem]
-    }
-      console.log(ret)
-      console.log(this.data)
-    return ret
-  }
-
-  setContainerProperty(property: string, value: string){
-    // volatile
-      let typed_property_array = foreignPropertiesByType(this.type)
-      const index = typed_property_array.indexOf(property)
-      if(index !== -1){
-        console.log(typed_property_array[index])
-        this.data[property] = value
-        console.log(this.getContainerProperties())
-      }
-      else{
-        console.log("[error] " + property + " is not a valid container property "
-        + "for " + this.type + " (" + typed_property_array + ")")
-      }
-  }
-
-
-
-
   /** Returns new View of different type on same resource  */
   astype(otherType): TypedResourceView {
     return new TypedResourceView(this.data, otherType);
+  }
+
+  getForeignProperties() {
+    return foreignPropertiesByType(<enums.resourceType>this.viewport_);
   }
 
   toString(): string {
@@ -379,23 +349,6 @@ export class TypedResourceView implements Metadata {
     }
     return s;
   }
-
-  // DEPRECATED
-  // get provenance(): Provenance {
-  //   // could cache, yet identifiers may change ;)
-  //   let prov = Provenance.unknown;
-  //   if (this._id) {
-  //     prov = Provenance.locdb;
-  //   } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.swb)) {
-  //     prov =  Provenance.swb;
-  //   } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.crossref )) {
-  //     prov = Provenance.crossref
-  //   } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.gScholar)) {
-  //     prov = Provenance.gScholar;
-  //   }
-  //   return prov;
-  // }
-
 
   // forward native attributes
   get _id() {
