@@ -5,7 +5,8 @@ import {
    enum_values,
    isoFullDate,
    composeName,
-   decomposeName
+   decomposeName,
+   containerTypes,
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
@@ -65,9 +66,13 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    // 4. Identifier Types
    identifierTypes: string[] = enum_values(enums.identifier);
    // such that they are accessible in drop-down style selects
+   
+   allowedViews: Array<string> = [];
+   currentView: string;
 
    // Presumably unused?
    embodiments: FormGroup[] = [];
+
 
 
    // Determine whether to show input field for identifier migration
@@ -132,6 +137,28 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          observer.next(this.resourceForm.get('migration').value);
       }).mergeMap((token: string) => this.getStatesAsObservable(token))
          .map(r => r.map( s => this.extractTypeahead(s)));
+   }
+
+
+   typeHasChanged() {
+      const newType = this.resourceForm.value.resourcetype;
+      console.log('[BRF:typeHasChanged]', newType);
+
+      // updated allowed container types
+      const allowedViews = containerTypes(newType);
+      // Add very own view
+      allowedViews.unshift(<enums.resourceType>newType);
+      // Set standard selection to own view
+      this.allowedViews = allowedViews;
+      this.currentView = newType;
+      console.log('[BRF:typeHasChanged] valid container types:', this.allowedViews);
+   }
+
+   viewHasChanged() {
+      console.log('[BRF:viewHasChanged]', this.currentView)
+      this.resource.astype(this.currentView);
+      console.log('[BRF:viewHasChanged] Form status', this.resourceForm.status)
+      this.ngOnChanges()
    }
 
    switchToAlternate(): void {
@@ -331,6 +358,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       const resource = this.resource;
       console.log('[BRF] ngOnChanges triggered', resource);
       // console.log("Set publicationyear: ",  this.resource.publicationDate)
+      
+      const allowedViews = containerTypes(resource.type)
+      allowedViews.unshift(resource.type)
+      this.currentView = resource.viewport_;
 
       this.resourceForm.reset( {
          title: resource.title,
@@ -348,7 +379,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       this.setContributors(resource.contributors);
       this.setIdentifiers(resource.identifiers);
 
-      // foreign properties
       this.setQuestions(resource);
 
       // console.log('Contribs in resource:', this.resource.contributors);
