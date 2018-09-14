@@ -207,7 +207,7 @@
                 </button>
               </div>
                 <label class="col-sm-2" style="padding-left: 0px">Scheme</label>
-                <select class="form-control" formControlName="scheme" class="col-sm-3">
+                <select class="col-sm-3 form-control" formControlName="scheme">
                   <option *ngFor="let i of agentIdentifierTypes" [value]="i">{{i}}</option>
                 </select>
                 <label class="col-sm-2">Value</label>
@@ -216,7 +216,7 @@
             </div>
           <div>
             <label class="col-sm-2" style="padding-left: 0px">Scheme</label>
-            <select class="form-control" class="col-sm-3" #addSelector>
+            <select class="col-sm-3 form-control" #addSelector>
               <option *ngFor="let i of agentIdentifierTypes" [value]="i">{{i}}</option>
             </select>
             <label class="col-sm-2">Value</label>
