@@ -296,7 +296,7 @@ export class ResourceFormBasicComponent implements OnInit, OnChanges  {
         const resource: TypedResourceView =  new TypedResourceView({_id: this.resources[0]._id,
           type: formModel.resourcetype as string, partOf: formModel.partOf || this.resources[0].partOf,
           parts: this.resources[0].parts, cites: this.resources[0].cites,
-          status: this.resources[0].status})
+          status: this.resources[0].status});
         resource.identifiers = identsDeepCopy;
         resource.title = formModel.title as string || '';
         resource.subtitle = formModel.subtitle as string || '';
