@@ -525,6 +525,7 @@ export function decomposeName(someString: string): Partial<models.ResponsibleAge
 export function composeName(heldBy: models.ResponsibleAgent): string {
   /* Carefully extracts  givenName and familyName from a responsible agent.
    * Falls back to nameString if nothing is present. */
+  if (!heldBy) { return 'UNK'; } // guard
   if (heldBy.givenName && heldBy.familyName) {
     return heldBy.familyName + NAME_SEPARATOR + heldBy.givenName
   } else if (heldBy.familyName) {
