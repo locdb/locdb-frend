@@ -72,6 +72,7 @@ export class LocdbService {
         xhr.withCredentials = true;
       });
     }
+    console.log('Using Backend ', this.locdbUrl);
   }
 
 
