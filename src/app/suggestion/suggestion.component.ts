@@ -19,7 +19,7 @@ import { map, filter, debounceTime, distinctUntilChanged, switchMap } from 'rxjs
 import { Observable } from 'rxjs/Rx'
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 
-import { StandardPipe }from '../pipes/type-pipes';
+import { StandardPipe } from '../pipes/type-pipes';
 
 
 @Component({
@@ -35,69 +35,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
     @Input() entry: models.BibliographicEntry;
     @Output() suggest: EventEmitter<models.BibliographicResource> = new EventEmitter();
 
-    // filter: [TypedResourceView, TypedResourceView] => boolean
-    filter_options = {source: [{name: 'All', filter: e => true}],
-                      resource_type: [{name: 'All', filter: e => true}],
-                      contained: [{name: 'All', filter: e => true},
-                        {name: 'Contained',
-                          filter: e => e.some(x => x ? x.source !== undefined &&
-                                                              x.source !== null :
-                                                            false)},
-                        {name: 'Standalone',
-                          filter: e => e.every(x => x ? x.source === undefined ||
-                                                              x.source === null:
-                                                            true)}
-                                                          ]}
-    selection = {source: 'All',
-                  resource_type: 'All',
-                  contained: 'All'}
-
-    search_filter(selection_type: string, selection_name: string){
-      return this.filter_options[selection_type]
-                      .find(e => e.name === selection_name)
-                      .filter
-    }
-
-    refreshFilterOptions(){
-      for(let suggestion
-        of this.internalSuggestions.concat(this.externalSuggestions)){
-          if(suggestion){
-            // source selection
-            let source = undefined
-            if(suggestion[1]){
-              source = suggestion[1].source
-            }
-            else {
-              source = suggestion[0].source
-            }
-            if(source && this.filter_options.source.every(y => y.name !== source)){
-              this.filter_options.source.push({name: source,
-                    filter: e => e.some(x => x ? x.source === source : false)})
-                                }
-            const type = suggestion[0].type
-            if(type && this.filter_options.resource_type.every(y => y.name !== type)){
-              this.filter_options.resource_type.push({name: type,
-                    filter: e => e.some(x => x ? x.type === type : false)})
-            }
-          }
-      }
-    }
-
-    filterSuggestions(suggestions: Array<[TypedResourceView,TypedResourceView]>){
-      if(suggestions !== null && suggestions !== undefined){
-        return suggestions.filter(e => e !== null && e !== undefined)
-                    .filter(this.search_filter('source',
-                                                      this.selection.source))
-                    .filter(this.search_filter('resource_type',
-                                                      this.selection.resource_type))
-                    .filter(this.search_filter('contained',
-                                                      this.selection.contained))
-                  }
-      else{
-        return suggestions
-      }
-      }
-
     // make this visible to template
     environment = environment;
 
@@ -108,20 +45,20 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
     private _internalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
     set internalSuggestions(
-      suggestions: Array<[TypedResourceView, TypedResourceView]>){
+      suggestions: Array<[TypedResourceView, TypedResourceView]>) {
         this._internalSuggestions = suggestions
         this.refreshFilterOptions()
       }
-    get internalSuggestions(): Array<[TypedResourceView, TypedResourceView]>{
+    get internalSuggestions(): Array<[TypedResourceView, TypedResourceView]> {
       return this.filterSuggestions(this._internalSuggestions)
     }
     private _externalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
     set externalSuggestions(
-      suggestions: Array<[TypedResourceView, TypedResourceView]>){
+      suggestions: Array<[TypedResourceView, TypedResourceView]>) {
         this._externalSuggestions = suggestions
         this.refreshFilterOptions()
       }
-    get externalSuggestions(){
+    get externalSuggestions() {
       return this.filterSuggestions(this._externalSuggestions)
     }
 
@@ -151,9 +88,26 @@ export class SuggestionComponent implements OnInit, OnChanges {
     internalInProgress = false;
 
     /* Default top-k thresholds */
-    internalThreshold = 1;
+    internalThreshold = 5;
     externalThreshold = 10;
     dataSource: Observable<any>
+
+    // filter: [TypedResourceView, TypedResourceView] => boolean
+    filter_options = {source: [{name: 'All', filter: e => true}],
+                      resource_type: [{name: 'All', filter: e => true}],
+                      contained: [{name: 'All', filter: e => true},
+                        {name: 'Contained',
+                          filter: e => e.some(x => x ? x.source !== undefined &&
+                                                              x.source !== null :
+                                                            false)},
+                        {name: 'Standalone',
+                          filter: e => e.every(x => x ? x.source === undefined ||
+                                                              x.source === null :
+                                                            true)}
+                                                          ]}
+    selection = {source: 'All',
+                  resource_type: 'All',
+                  contained: 'All'}
 
 
     constructor(private locdbService: LocdbService,
@@ -165,8 +119,53 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }).mergeMap((token: string) => this.getStatesAsObservable(token)).map(r => r.map( s => this.extractTypeahead(s)));
   }
 
-  extractTypeahead(typedTuple: [TypedResourceView,TypedResourceView]){
-    return new typeaheadObj(typedTuple)
+
+    search_filter(selection_type: string, selection_name: string) {
+      return this.filter_options[selection_type]
+                      .find(e => e.name === selection_name)
+                      .filter
+    }
+
+    refreshFilterOptions() {
+      for (const suggestion of this.internalSuggestions.concat(this.externalSuggestions)) {
+          if (suggestion) {
+            // source selection
+            let source = undefined
+            if (suggestion[1]) {
+              source = suggestion[1].source;
+            } else {
+              source = suggestion[0].source;
+            }
+            if (source && this.filter_options.source.every(y => y.name !== source)) {
+              this.filter_options.source.push({name: source,
+                    filter: e => e.some(x => x ? x.source === source : false)})
+                                }
+            const type = suggestion[0].type
+            if (type && this.filter_options.resource_type.every(y => y.name !== type)) {
+              this.filter_options.resource_type.push({name: type,
+                    filter: e => e.some(x => x ? x.type === type : false)})
+            }
+          }
+      }
+    }
+
+  filterSuggestions(suggestions: Array<[TypedResourceView, TypedResourceView]>) {
+    if (suggestions !== null && suggestions !== undefined) {
+      return suggestions.filter(e => e !== null && e !== undefined)
+        .filter(this.search_filter('source',
+          this.selection.source))
+        .filter(this.search_filter('resource_type',
+          this.selection.resource_type))
+        .filter(this.search_filter('contained',
+          this.selection.contained))
+    } else {
+      return suggestions;
+    }
+  }
+
+
+  extractTypeahead(typedTuple: [TypedResourceView, TypedResourceView]) {
+    return new TypeaheadObj(typedTuple)
     }
 
   getStatesAsObservable(token: string): Observable<any> {
@@ -178,13 +177,13 @@ export class SuggestionComponent implements OnInit, OnChanges {
     this.query = e.item.id
     this.internalSuggestions = [e.item.typedTuple]
     this.selectedResource = e.item.typedTuple
-    //e.item._id
+    // e.item._id
   }
 
       ngOnInit() {
   }
 
-    getTypeaheadSuggestions(value, index){
+    getTypeaheadSuggestions(value, index) {
       return this.locdbService.suggestionsByQuery(value, false, this.internalThreshold)
     }
 
@@ -417,7 +416,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   openModal(template: TemplateRef<any>) {
     // entry -> resource
     const metadata = OCR2MetaData(this.entry.ocrData);
-    let nresource = new TypedResourceView({type: metadata.type});
+    const nresource = new TypedResourceView({type: metadata.type});
     nresource.set_from(metadata)
     this.newResource = [nresource, null]
     this.selectedResource = this.newResource
@@ -427,31 +426,31 @@ export class SuggestionComponent implements OnInit, OnChanges {
     // this.modalRef = this.modalService.show(template);
   }
 
-  create_resourse(resource: TypedResourceView){
-    console.log("create me", this.entry, resource);
+  create_resourse(resource: TypedResourceView) {
+    console.log('create me', this.entry, resource);
     this.newResource = [resource, null];
     this.modalRef.hide();
     this.onSelect(this.newResource);
   }
 
-  encodeURI(uri: string){
+  encodeURI(uri: string) {
     return encodeURIComponent(uri);
   }
 
-  toggle_extended_search(){
+  toggle_extended_search() {
     this.search_extended = !this.search_extended
   }
 
 }
 
-class typeaheadObj {
+class TypeaheadObj {
     private id;
     private name;
     private typedTuple;
 
-    constructor(typedTuple: [TypedResourceView,TypedResourceView]){
+    constructor(typedTuple: [TypedResourceView, TypedResourceView]) {
       this.typedTuple = typedTuple
-      let tr = typedTuple[0]
+      const tr = typedTuple[0]
       this.id = tr._id
       this.name = (new StandardPipe().transform(tr)).replace(/<.*?>/, '').replace(/<\/.*?>/, '')
     }
