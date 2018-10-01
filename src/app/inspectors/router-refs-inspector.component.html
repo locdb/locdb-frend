@@ -8,16 +8,6 @@
           </button> -->
           <p><app-metadata [of]="resource" [in]="parent"></app-metadata></p>
 
-          Detector:
-          <select>
-            <option>Image</option>
-            <option>ParsCit</option>
-          </select>
-          Namer:
-          <select>
-            <option>Grobid</option>
-            <option>ParsCit</option>
-          </select>
       </div>
       <div class="card-body" *ngIf="sorry_text">
         <p> {{sorry_text}} </p>
