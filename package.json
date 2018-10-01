@@ -21,7 +21,6 @@
     "@angular/platform-browser-dynamic": "^6.0.3",
     "@angular/router": "^6.0.3",
     "@types/d3": "^4.1.0",
-    "@types/node": "^10.1.2",
     "angular2-hotkeys": "^2.1.2",
     "bootstrap": "^4.1.1",
     "core-js": "^2.5.6",
