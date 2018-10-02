@@ -11,7 +11,6 @@ import { QuestionService } from '../resource-form/dynamic-question-form/question
 import { DynamicFormQuestionComponent } from '../resource-form/dynamic-question-form/dynamic-form-question.component';
 
 import { BrowseComponent } from './browse.component';
-import { ResourceAccordionGroupComponent } from '../resource-accordion-group/resource-accordion-group.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';

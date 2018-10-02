@@ -1,12 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SuggestionComponent } from './suggestion.component';
-import { ResourceAccordionGroupComponent } from '../resource-accordion-group/resource-accordion-group.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
-import { ResourceEditableComponent } from '../resource-editable/resource-editable.component';
 import { ResourcePairFormComponent } from '../resource-form/resource-pair-form.component';
 import { ResourceFormComponent } from '../resource-form/resource-form.component';
 import { MetadataComponent } from '../metadata/metadata.component';
