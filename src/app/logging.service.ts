@@ -53,7 +53,9 @@ export class LoggingService {
       this.sendLog(logobject);}
   }
 
-  logSearchIssued(entry: models.BibliographicEntry, selectedRessource: TypedResourceView, queryString: string, confidences_values: any){//}[number, number]) {
+  logSearchIssued(entry: models.BibliographicEntry, selectedRessource:
+    TypedResourceView, queryString: string, confidences_values:
+    any){//}[number, number]) {
     if (selectedRessource){
       const logobject = {
         msg: 'SEARCH ISSUED',

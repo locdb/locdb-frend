@@ -1,5 +1,3 @@
-// Just a foward from generated code.
-
 import * as moment from 'moment';
 import * as models from './typescript-angular-client/model/models'
 
@@ -9,7 +7,6 @@ export {models};
 // use this enums with Object.keys or Object.values if necessary
 import * as enums from './enums';
 export { enums };
-
 
 export const NAME_SEPARATOR = ', '
 
@@ -104,6 +101,44 @@ export const PropertyPrefixByType = invert_enum(enums.resourceType);
 export function typedProperty(type: string, property: string) {
   return PropertyPrefixByType[type] + '_' + property;
 }
+
+export function foreignPropertiesByType(containerType: enums.resourceType): Array< string > {
+  /*
+   * This is a mapping to obtain relevant (but not own) properties for a flattened container type
+   * It is intended to offer the foreign but relevant fields in a form.
+   *
+   */
+
+  const rtype = enums.resourceType;
+  switch (containerType) {
+    case rtype.journalIssue:
+      // when its an issue, we need properties of volume and journal
+      return [typedProperty(rtype.journal, 'title'),
+              typedProperty(rtype.journal, 'subtitle'),
+              typedProperty(rtype.journal, 'identifiers'),
+              typedProperty(rtype.journal, 'contributors'),
+              typedProperty(rtype.journalVolume, 'number')];
+
+    case rtype.journalVolume:
+      // if its a volume, we need properties of journal
+      return [
+        typedProperty(rtype.journal, 'title'),
+        typedProperty(rtype.journal, 'subtitle'),
+        typedProperty(rtype.journal, 'identifiers'),
+        typedProperty(rtype.journal, 'contributors'),
+      ];
+
+    case rtype.monograph || rtype.editedBook || rtype.book || rtype.referenceBook:
+      // in these cases, the book series and sets are flattened.
+      return [typedProperty(rtype.bookSeries, 'title'),
+              typedProperty(rtype.bookSeries, 'number'),
+              typedProperty(rtype.bookSet, 'title')];
+    default:
+      return [];
+  }
+}
+
+
 
 export function containerTypes (type: enums.resourceType): Array<enums.resourceType> {
   /** Unused at the moment ? */
@@ -271,11 +306,13 @@ export class TypedResourceView implements Metadata {
     return this.data[typed_property];
   }
 
-
-
   /** Returns new View of different type on same resource  */
   astype(otherType): TypedResourceView {
     return new TypedResourceView(this.data, otherType);
+  }
+
+  getForeignProperties() {
+    return foreignPropertiesByType(<enums.resourceType>this.viewport_);
   }
 
   toString(): string {
@@ -318,23 +355,6 @@ export class TypedResourceView implements Metadata {
     }
     return s;
   }
-
-  // DEPRECATED
-  // get provenance(): Provenance {
-  //   // could cache, yet identifiers may change ;)
-  //   let prov = Provenance.unknown;
-  //   if (this._id) {
-  //     prov = Provenance.locdb;
-  //   } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.swb)) {
-  //     prov =  Provenance.swb;
-  //   } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.crossref )) {
-  //     prov = Provenance.crossref
-  //   } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.gScholar)) {
-  //     prov = Provenance.gScholar;
-  //   }
-  //   return prov;
-  // }
-
 
   // forward native attributes
   get _id() {

@@ -18,6 +18,13 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+
+
+// Dynamic form elements for foreign properties
+import { QuestionControlService } from './resource-form/dynamic-question-form/question-control.service';
+import { QuestionService } from './resource-form/dynamic-question-form/question.service';
+import { DynamicFormQuestionComponent } from './resource-form/dynamic-question-form/dynamic-form-question.component';
 
 // misc
 // import { CredentialsService } from 'angular-with-credentials';
@@ -32,7 +39,6 @@ import { SuggestionComponent } from './suggestion/suggestion.component';
 import { LoginComponent } from './login/login.component';
 import { VisualComponent } from './visual/visual.component';
 import { CommitComponent } from './commit/commit.component';
-import { ResourceFormBasicComponent } from './resource-form-basic/resource-form.component'
 
 // agenda related
 import { AgendaComponent, TodoComponent, EmbodimentComponent } from './agenda';
@@ -48,8 +54,6 @@ import { FeedComponent, FeedReaderComponent } from './ingest/feed-reader/feed-re
 // resource related
 import { MetadataComponent } from './metadata/metadata.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
-import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
-import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
 import { LinkingComponent } from './linking/linking.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 
@@ -75,6 +79,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { TypeaheadModule } from 'ngx-bootstrap';
 
 import { PaginationModule } from 'ngx-bootstrap';
+import { ResourcePairFormComponent } from './resource-form/resource-pair-form.component';
 
 const appRoutes: Routes = [
   // { path: 'resolve/:NOT_OCR_PROCESSED/:OCR_PROCESSING/:OCR_PROCESSED/:EXTERNAL', component: LinkingComponent },
@@ -111,6 +116,7 @@ const appRoutes: Routes = [
     ModalModule.forRoot(),
     CollapseModule.forRoot(),
     HotkeyModule.forRoot(),
+    ButtonsModule.forRoot(),
     BrowserModule,
     FormsModule,
     HttpModule,
@@ -130,7 +136,6 @@ const appRoutes: Routes = [
     DisplayComponent,
     SuggestionComponent,
     ResourceFormComponent,
-    ResourceFormBasicComponent,
     LoginComponent,
     VisualComponent,
     CommitComponent,
@@ -142,8 +147,6 @@ const appRoutes: Routes = [
     RouterRefsInspectorComponent,
     RouterScanInspectorComponent,
     MetadataComponent,
-    ResourceAccordionGroupComponent,
-    ResourceEditableComponent,
     LinkingComponent,
     FrontpageComponent,
     ResourceCardComponent,
@@ -161,7 +164,9 @@ const appRoutes: Routes = [
     IdentifierPipe,
     StandardPipe,
     JournalStandardPipe,
-    EditViewComponent
+    EditViewComponent,
+    DynamicFormQuestionComponent,
+    ResourcePairFormComponent,
   ],
   providers: [
     { provide: BASE_PATH, useValue: environment.locdbUrl},
@@ -173,7 +178,9 @@ const appRoutes: Routes = [
     BibliographicResourceService,
     ScanService,
     UserService,
-    ScanListService
+    ScanListService,
+    QuestionService,
+    QuestionControlService,
   ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

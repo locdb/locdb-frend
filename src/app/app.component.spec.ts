@@ -24,6 +24,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { TypeaheadModule } from 'ngx-bootstrap';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 // misc
 import { PopoverModule } from 'ngx-popover';
@@ -52,6 +53,7 @@ import { AgendaComponent } from './agenda/agenda.component'
 import { RouterRefsInspectorComponent, RouterScanInspectorComponent } from './inspectors';
 import { ScanInspectorComponent } from './inspectors/scan-inspector.component'
 import { RefsInspectorComponent } from './inspectors/refs-inspector.component'
+import { ResourcePairFormComponent } from './resource-form/resource-pair-form.component';
 // pipes
 import {
     TypedResourceView,
@@ -63,15 +65,12 @@ import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe, ContainerPipe} fr
 import { StandardPipe } from './pipes/type-pipes';
 // resource related
 // import { ResourceComponent } from './resource/resource.component';
+import { ResourceCardComponent } from './resource-card/resource-card.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
-import { ResourceFormBasicComponent } from './resource-form-basic/resource-form.component';
-import { ResourceEditableComponent } from './resource-editable/resource-editable.component';
-import { ResourceAccordionGroupComponent } from './resource-accordion-group/resource-accordion-group.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 import { LinkingComponent } from './linking/linking.component'
 // New
 import { LoggingService } from './logging.service';
-import { ResourceCardComponent } from './resource-card/resource-card.component';
 import { EntryCardComponent } from './inspectors/entry-card/entry-card.component'
 import { BrowseComponent } from './browse/browse.component'
 // api
@@ -84,10 +83,14 @@ import { BibliographicResourceService } from './typescript-angular-client/api/bi
 import { EditViewComponent } from './edit-view/edit-view.component'
 
 import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent, HttpClientModule }                           from '@angular/common/http';
+         HttpResponse, HttpEvent, HttpClientModule } from '@angular/common/http';
 import { PaginationModule } from 'ngx-bootstrap';
 
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { QuestionControlService } from './resource-form/dynamic-question-form/question-control.service';
+import { QuestionService } from './resource-form/dynamic-question-form/question.service';
+import { DynamicFormQuestionComponent } from './resource-form/dynamic-question-form/dynamic-form-question.component';
+
 ////////  SPECS  /////////////
 
 const appRoutes: Routes = [
@@ -135,6 +138,8 @@ describe('AppComponent with TCB', function () {
           UtilsService,
           BibliographicResourceService,
           BibliographicEntryService,
+          QuestionService,
+          QuestionControlService,
           {provide: APP_BASE_HREF, useValue : '/'}
         ],
         declarations: [
@@ -145,7 +150,6 @@ describe('AppComponent with TCB', function () {
           EntryFormComponent,
           SuggestionComponent,
           ResourceFormComponent,
-          ResourceFormBasicComponent,
           LoginComponent,
           VisualComponent,
           CommitComponent,
@@ -165,18 +169,14 @@ describe('AppComponent with TCB', function () {
           AgendaComponent,
           ScanInspectorComponent,
           RefsInspectorComponent,
-          // TodoDetailComponent,
-          // TodoListComponent,
-          // TodoLeafComponent,
-          // ResourceComponent,
-          ResourceAccordionGroupComponent,
-          ResourceEditableComponent,
           LinkingComponent,
           FrontpageComponent,
           ResourceCardComponent,
           EntryCardComponent,
           BrowseComponent,
+          ResourcePairFormComponent,
           EditViewComponent,
+          DynamicFormQuestionComponent,
         ],
         imports: [
           PaginationModule.forRoot(),
@@ -186,15 +186,12 @@ describe('AppComponent with TCB', function () {
           ModalModule.forRoot(),
           CollapseModule.forRoot(),
           HotkeyModule.forRoot(),
+          ButtonsModule.forRoot(),
           BrowserModule,
           FormsModule,
           HttpModule,
           ReactiveFormsModule,
           PopoverModule,
-          // HttpClient,
-          // HttpHeaders,
-          // HttpParams,
-          // HttpResponse,
           PdfViewerModule,
           HttpClientModule,
           RouterModule.forRoot(

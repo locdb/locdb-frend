@@ -1,0 +1,23 @@
+<div *ngIf="resource && alternate">
+  <p>
+  <button type="default" class="btn btn-secondary" *ngIf="!alternateIsActive" (click)="toggleAlternate()">
+    Switch to Container Metadata
+  </button>
+  <button type="default" class="btn btn-secondary" *ngIf="alternateIsActive" (click)="toggleAlternate()">
+    Switch to Own Metadata
+  </button>
+  </p>
+  <div *ngIf="resource.partOf !== alternate._id" class="alert alert-warning" role="alert">
+    Resource is not properly linked to its container. Resource is part of {{ resource.partOf }} but container identifier is {{ alternate._id }}.
+    <button type="default" class="btn btn-secondary btn-sm" (click)="fixPartOf()">Fix it.</button>
+  </div>
+  <hr/>
+</div>
+
+<div *ngIf="!alternateIsActive && resource">
+  <!-- Just a resource form, if no alternate is given -->
+  <app-resource-form [resource]="resource" (resourceChange)="onResourceChange($event)"></app-resource-form>
+</div>
+<div *ngIf="alternateIsActive && alternate">
+  <app-resource-form [resource]="alternate" (alternateChange)="onAlternateChange($event)"></app-resource-form>
+</div>

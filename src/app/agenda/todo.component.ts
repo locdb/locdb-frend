@@ -37,7 +37,7 @@ export class TodoComponent implements OnChanges {
   }
 
   edit() {
-    this.router.navigate(['/edit/'], { queryParams: { resource: this.todo._id} });
+    this.router.navigate(['/edit/'], { queryParams: { resource: this.todo._id, container: this.container ? this.container._id : ''} });
   }
 
   isOcrTriggerable(emsc: [models.ResourceEmbodiment, models.Scan]): boolean {
