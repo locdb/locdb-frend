@@ -1,5 +1,3 @@
-// Just a foward from generated code.
-
 import * as moment from 'moment';
 import * as models from './typescript-angular-client/model/models'
 
@@ -117,12 +115,18 @@ export function foreignPropertiesByType(containerType: enums.resourceType): Arra
       // when its an issue, we need properties of volume and journal
       return [typedProperty(rtype.journal, 'title'),
               typedProperty(rtype.journal, 'subtitle'),
+              typedProperty(rtype.journal, 'identifiers'),
+              typedProperty(rtype.journal, 'contributors'),
               typedProperty(rtype.journalVolume, 'number')];
 
     case rtype.journalVolume:
       // if its a volume, we need properties of journal
-      return [typedProperty(rtype.journal, 'title'),
-              typedProperty(rtype.journal, 'subtitle')];
+      return [
+        typedProperty(rtype.journal, 'title'),
+        typedProperty(rtype.journal, 'subtitle'),
+        typedProperty(rtype.journal, 'identifiers'),
+        typedProperty(rtype.journal, 'contributors'),
+      ];
 
     case rtype.monograph || rtype.editedBook || rtype.book || rtype.referenceBook:
       // in these cases, the book series and sets are flattened.
@@ -302,39 +306,13 @@ export class TypedResourceView implements Metadata {
     return this.data[typed_property];
   }
 
-  getContainerProperties(){
-    let typed_property_array = foreignPropertiesByType(this.type)
-
-    console.log(typed_property_array)
-    let ret = {}
-    for(let elem of typed_property_array){
-      ret[elem] = this.data[elem]
-    }
-      console.log(ret)
-      console.log(this.data)
-    return ret
-  }
-
-  setContainerProperty(property: string, value: string){
-      let typed_property_array = foreignPropertiesByType(this.type)
-      const index = typed_property_array.indexOf(property)
-      if(index !== -1){
-        console.log(typed_property_array[index])
-        this.data[property] = value
-        console.log(this.getContainerProperties())
-      }
-      else{
-        console.log("[error] " + property + " is not a valid container property "
-        + "for " + this.type + " (" + typed_property_array + ")")
-      }
-  }
-
-
-
-
   /** Returns new View of different type on same resource  */
   astype(otherType): TypedResourceView {
     return new TypedResourceView(this.data, otherType);
+  }
+
+  getForeignProperties() {
+    return foreignPropertiesByType(<enums.resourceType>this.viewport_);
   }
 
   toString(): string {
@@ -377,23 +355,6 @@ export class TypedResourceView implements Metadata {
     }
     return s;
   }
-
-  // DEPRECATED
-  // get provenance(): Provenance {
-  //   // could cache, yet identifiers may change ;)
-  //   let prov = Provenance.unknown;
-  //   if (this._id) {
-  //     prov = Provenance.locdb;
-  //   } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.swb)) {
-  //     prov =  Provenance.swb;
-  //   } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.crossref )) {
-  //     prov = Provenance.crossref
-  //   } else if (this.identifiers && this.identifiers.find(id => id.scheme === enums.externalSources.gScholar)) {
-  //     prov = Provenance.gScholar;
-  //   }
-  //   return prov;
-  // }
-
 
   // forward native attributes
   get _id() {
@@ -564,6 +525,7 @@ export function decomposeName(someString: string): Partial<models.ResponsibleAge
 export function composeName(heldBy: models.ResponsibleAgent): string {
   /* Carefully extracts  givenName and familyName from a responsible agent.
    * Falls back to nameString if nothing is present. */
+  if (!heldBy) { return 'UNK'; } // guard
   if (heldBy.givenName && heldBy.familyName) {
     return heldBy.familyName + NAME_SEPARATOR + heldBy.givenName
   } else if (heldBy.familyName) {

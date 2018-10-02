@@ -1,31 +1,30 @@
 <!-- <div> open: </div>{{open}}, active:{{active}}, {{open && active}}, disabled:{{disabled}} -->
-<div class="card" *ngIf="resources[0]" [class]="selected && selectable ? 'card bg-dark' : 'card bg-light'" style="padding-left: 10px"> <!-- [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">-->
-     <div class="card-header" [class]="selected && selectable ? 'card-header bg-light' : 'card-header border-default  bg-light'">
-       <div class="row">
-         <div class="col-11">
-           <app-metadata [of]="resources[0]" [in]="resources[1]">
-             <!-- <span class="badge badge-warning"> {{resources[0].source}}</span> -->
-           </app-metadata>
-         </div>
+<div class="card" *ngIf="resources[0]" [class]="selectable && selected ? 'card bg-dark' : 'card bg-light'" style="padding-left: 10px"> <!-- [panelClass]="selected ? 'text-white bg-dark' : 'border-default'">-->
+      <div class="card-header" [class]="selectable && selected ? 'card-header bg-light' : 'card-header border-default  bg-light'">
+            <div class="row">
+                  <div class="col-11">
+                        <app-metadata [of]="resources[0]" [in]="resources[1]">
+                              <!-- <span class="badge badge-warning"> {{resources[0].source}}</span> -->
+                        </app-metadata>
+                  </div>
 
-         <!-- This is not needed anymore, or is it? -->
-         <!-- <div class="col-2"> -->
-         <!--   <button *ngIf="!selectable && resources[0].parts && resources[0].parts.length && !open" type="button" class="btn btn-success" -->
-         <!--                                                                                                         (click)="onSelectExternal()">References</button> -->
-         <!-- </div> -->
-         <div class="col-1">
-           <button type="button" class="btn btn-secondary btn-sm float-right"
-                                 (click)="toggleOpen()"> {{open ? 'Cancel': 'Edit' }}</button>
-         </div>
-       </div>
-     </div>
-     <div class="card-body bg-light" *ngIf="open" >
-       <!-- <app-resource-editable [resource]="resources[0]" (resourceChange)="resources[0]=$event; resourceChange.emit($event)" -->
-      <app-resource-editable [resources]="resources"
-          (submitStatus)="disabled=!$event; open = $event">
-       </app-resource-editable>
+                  <!-- This is not needed anymore, or is it? -->
+                  <!-- <div class="col-2"> -->
+                  <!--   <button *ngIf="!selectable && resources[0].parts && resources[0].parts.length && !open" type="button" class="btn btn-success" -->
+                  <!--                                                                                                         (click)="onSelectExternal()">References</button> -->
+                  <!-- </div> -->
+                  <div class="col-1">
+                        <button type="button" class="btn btn-secondary btn-sm float-right"
+                                              (click)="toggleOpen()"> {{open ? 'Cancel': 'Edit' }}</button>
+                  </div>
+            </div>
+      </div>
+      <div class="card-body bg-light" *ngIf="open" >
+            <!-- <app-resource-editable [resource]="resources[0]" (resourceChange)="resources[0]=$event; resourceChange.emit($event)" -->
+            <app-resource-form [resource]="resources[0]" [alternate]="resource[1]" (submitStatus)="disabled=!$event; open = $event">
+            </app-resource-form>
 
-       <ng-content>
-       </ng-content>
-     </div>
+      </div>
+      <ng-content>
+      </ng-content>
 </div>
