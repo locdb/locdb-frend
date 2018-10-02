@@ -79,7 +79,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { TypeaheadModule } from 'ngx-bootstrap';
 
 import { PaginationModule } from 'ngx-bootstrap';
-import { MetaResourceFormComponent } from './resource-form/meta-resource-form/meta-resource-form.component';
+import { ResourcePairFormComponent } from './resource-form/resource-pair-form.component';
 
 const appRoutes: Routes = [
   // { path: 'resolve/:NOT_OCR_PROCESSED/:OCR_PROCESSING/:OCR_PROCESSED/:EXTERNAL', component: LinkingComponent },
@@ -166,7 +166,7 @@ const appRoutes: Routes = [
     JournalStandardPipe,
     EditViewComponent,
     DynamicFormQuestionComponent,
-    MetaResourceFormComponent,
+    ResourcePairFormComponent,
   ],
   providers: [
     { provide: BASE_PATH, useValue: environment.locdbUrl},

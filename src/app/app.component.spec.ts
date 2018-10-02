@@ -66,6 +66,7 @@ import { StandardPipe } from './pipes/type-pipes';
 // import { ResourceComponent } from './resource/resource.component';
 import { ResourceCardComponent } from './resource-card/resource-card.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
+import { ResourcePairFormComponent } from './resource-form/resource-pair-form.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 import { LinkingComponent } from './linking/linking.component'
 // New
@@ -89,6 +90,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { QuestionControlService } from './resource-form/dynamic-question-form/question-control.service';
 import { QuestionService } from './resource-form/dynamic-question-form/question.service';
 import { DynamicFormQuestionComponent } from './resource-form/dynamic-question-form/dynamic-form-question.component';
+
 ////////  SPECS  /////////////
 
 const appRoutes: Routes = [
@@ -172,6 +174,7 @@ describe('AppComponent with TCB', function () {
           ResourceCardComponent,
           EntryCardComponent,
           BrowseComponent,
+          ResourcePairFormComponent,
           EditViewComponent,
           DynamicFormQuestionComponent,
         ],
