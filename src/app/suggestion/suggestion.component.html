@@ -131,7 +131,7 @@
       Suggestions
     </h4>
     <div *ngIf="internalSuggestions && !internalInProgress">
-    <div *ngFor="let r of internalSuggestions;let i = index">
+    <div *ngFor="let r of internalSuggestions; let i = index">
       <app-resource-card *ngIf="max_in <= 0 || i < max_in"
         [resources]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
       </app-resource-card>

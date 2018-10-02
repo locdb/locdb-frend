@@ -23,6 +23,9 @@ import { Observable } from 'rxjs/Rx'
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { StandardPipe } from '../pipes/type-pipes';
 
+// Service to commit changes to the resource
+import { BibliographicResourceService } from '../typescript-angular-client/api/api';
+
 @Component( {
    selector: 'app-resource-form',
    templateUrl: './resource-form.component.html',
@@ -44,9 +47,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    // The input resource to edit
    @Input() resource: TypedResourceView;
 
-   // The resource's container
-   @Input() alternate: TypedResourceView = null;
-
    // Event emitter to notify about changes (when resource is submitted)
    @Output() resourceChange = new EventEmitter<TypedResourceView>();
 
@@ -66,9 +66,11 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    // 4. Identifier Types
    identifierTypes: string[] = enum_values(enums.identifier);
    // such that they are accessible in drop-down style selects
-   
+
+   // DEPRECATED (other option with dynamic question form wins)
    allowedViews: Array<string> = [];
    currentView: string;
+   // the two lines above might be removed in the future
 
    // Presumably unused?
    embodiments: FormGroup[] = [];
@@ -88,7 +90,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    dataSourceMigration: Observable<any>;
    placeholderMigration = 'Enter name to search for resource to migrate';
    // Retained END
-   
+   //
    // Holds questions for foreign properties
    questions: Array<QuestionBase<any>> = [];
 
@@ -121,6 +123,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       private fb: FormBuilder,
       private locdbService: LocdbService,
       private modalService: BsModalService,
+      private brService: BibliographicResourceService,
       private qs: QuestionService,
       private qcs: QuestionControlService
    ) {
@@ -141,6 +144,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
 
    typeHasChanged() {
+      // unused
       const newType = this.resourceForm.value.resourcetype;
       console.log('[BRF:typeHasChanged]', newType);
 
@@ -155,17 +159,11 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    }
 
    viewHasChanged() {
+      // unused
       console.log('[BRF:viewHasChanged]', this.currentView)
       this.resource.astype(this.currentView);
       console.log('[BRF:viewHasChanged] Form status', this.resourceForm.status)
       this.ngOnChanges()
-   }
-
-   switchToAlternate(): void {
-      const tmp = this.resource;
-      this.resource = this.alternate;
-      this.alternate = tmp;
-      this.ngOnChanges();
    }
 
    extractTypeahead(typedTuple: [TypedResourceView, TypedResourceView]) {
@@ -261,14 +259,24 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    setContributors(roles: models.AgentRole[]) {
       console.log('[debug] set contributors ', roles)
 
-      const contribFGs = roles ? roles.filter(arole => arole !== null).map(
+      if (!roles || !roles.length) {
+         // guard
+         this.resourceForm.setControl('contributors', this.fb.array([])); return;
+      }
+
+      const validRoles = roles.filter(arole => arole !== null);
+      console.log(validRoles);
+      const contribFGs = validRoles.map(
          arole => this.fb.group(
-            {role: arole.roleType, name: this.nameFromAgent(arole.heldBy),
-               identifiers: this.fb.array(arole.heldBy.identifiers !== null ?
-                  arole.heldBy.identifiers.map(e => this.fb.group(e)) || [] :
-                  []) }
+            {
+               role: arole.roleType, name: this.nameFromAgent(arole.heldBy),
+               identifiers: this.fb.array(
+                  arole.heldBy.identifiers && arole.heldBy.identifiers.length ?
+                  arole.heldBy.identifiers.map(e => this.fb.group(e)) : []
+               )
+            }
          )
-      ) : [];
+      );
       const contribFormArray = this.fb.array(contribFGs);
       this.resourceForm.setControl('contributors', contribFormArray);
       console.log('[debug] set resourceForm ', this.resourceForm)
@@ -358,8 +366,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       const resource = this.resource;
       console.log('[BRF] ngOnChanges triggered', resource);
       // console.log("Set publicationyear: ",  this.resource.publicationDate)
-      
-      const allowedViews = containerTypes(resource.type)
+      const allowedViews = containerTypes(resource.type);
       allowedViews.unshift(resource.type)
       this.currentView = resource.viewport_;
 
@@ -386,13 +393,28 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    }
 
    onSubmit() {
-      console.log('[debug] submit resource: ', this.resource)
       const newResource = this.prepareSaveResource();
+      console.log('[BRF] Submitting resource: ', newResource);
 
       // TODO store the resource here
       //
       //
       //
+      const data = <models.BibliographicResource>newResource.data;
+      if (newResource._id) {
+         // Update internal database if it has an ID
+         this.brService.update(data._id, data).subscribe(
+            response => this.resource = new TypedResourceView(response),
+            error => alert('Could not save changes: ' + error.msg)
+         )
+      } else {
+         // Create new resource if it has an ID
+         this.brService.save(data).subscribe(
+            response => this.resource = new TypedResourceView(response),
+            error => alert('Could not save changes: ' + error.msg)
+         )
+      }
+      // In any case, notify higher-level components
       this.resourceChange.emit(newResource);
    }
 
@@ -447,7 +469,9 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             _id: oldResource._id,
             type: formModel.resourcetype as string,
             partOf: formModel.partOf || oldResource.partOf,
-            parts: oldResource.parts, cites: oldResource.cites,
+            // It's super important that these values are undefined,
+            // as we never want to update them manually
+            parts: undefined, cites: undefined,
             status: oldResource.status,
          }
       )

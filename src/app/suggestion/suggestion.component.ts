@@ -23,154 +23,148 @@ import { StandardPipe }from '../pipes/type-pipes';
 
 
 @Component({
-    selector: 'app-suggestion',
-    templateUrl: './suggestion.component.html',
-    styleUrls: ['./suggestion.component.css']
+  selector: 'app-suggestion',
+  templateUrl: './suggestion.component.html',
+  styleUrls: ['./suggestion.component.css']
 })
 
 export class SuggestionComponent implements OnInit, OnChanges {
 
-    @ViewChild('newResourcePanel') newResourceChild ;
-    // retain entry as input, then we can modifiy its 'references' field
-    @Input() entry: models.BibliographicEntry;
-    @Output() suggest: EventEmitter<models.BibliographicResource> = new EventEmitter();
+  @ViewChild('newResourcePanel') newResourceChild ;
+  // retain entry as input, then we can modifiy its 'references' field
+  @Input() entry: models.BibliographicEntry;
+  @Output() suggest: EventEmitter<models.BibliographicResource> = new EventEmitter();
 
-    // filter: [TypedResourceView, TypedResourceView] => boolean
-    filter_options = {source: [{name: 'All', filter: e => true}],
-                      resource_type: [{name: 'All', filter: e => true}],
-                      contained: [{name: 'All', filter: e => true},
-                        {name: 'Contained',
-                          filter: e => e.some(x => x ? x.source !== undefined &&
-                                                              x.source !== null :
-                                                            false)},
-                        {name: 'Standalone',
-                          filter: e => e.every(x => x ? x.source === undefined ||
-                                                              x.source === null:
-                                                            true)}
-                                                          ]}
-    selection = {source: 'All',
-                  resource_type: 'All',
-                  contained: 'All'}
+  // filter: [TypedResourceView, TypedResourceView] => boolean
+  filter_options = {source: [{name: 'All', filter: e => true}],
+    resource_type: [{name: 'All', filter: e => true}],
+    contained: [{name: 'All', filter: e => true},
+      {name: 'Contained',
+        filter: e => e.some(x => x ? x.source !== undefined &&
+          x.source !== null : false)},
+      {name: 'Standalone',
+        filter: e => e.every(x => x ? x.source === undefined ||
+          x.source === null : true)}
+    ]}
+  selection = {source: 'All',
+    resource_type: 'All',
+    contained: 'All'}
 
-    search_filter(selection_type: string, selection_name: string){
-      return this.filter_options[selection_type]
-                      .find(e => e.name === selection_name)
-                      .filter
+
+  // make this visible to template
+  environment = environment;
+
+  selectedResource: [TypedResourceView, TypedResourceView] = [null, null];
+  query: string;
+
+  search_extended = false;
+
+  private _internalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
+  set internalSuggestions( suggestions: Array<[TypedResourceView, TypedResourceView]>) {
+    this._internalSuggestions = suggestions
+    this.refreshFilterOptions()
+  }
+  get internalSuggestions(): Array<[TypedResourceView, TypedResourceView]> {
+    return this.filterSuggestions(this._internalSuggestions)
+  }
+
+  private _externalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
+  set externalSuggestions(suggestions: Array<[TypedResourceView, TypedResourceView]>) {
+    this._externalSuggestions = suggestions
+    this.refreshFilterOptions()
+  }
+
+  get externalSuggestions() {
+    return this.filterSuggestions(this._externalSuggestions)
+  }
+
+  private _currentTarget: [TypedResourceView, TypedResourceView];
+  get currentTarget() {
+    return this._currentTarget;
+  }
+  set currentTarget(target: [TypedResourceView, TypedResourceView] | TypedResourceView) {
+    if (target instanceof TypedResourceView) {
+      this._currentTarget = [target, null];
+    } else {
+      this._currentTarget = target;
     }
 
-    refreshFilterOptions(){
-      for(let suggestion
-        of this.internalSuggestions.concat(this.externalSuggestions)){
-          if(suggestion){
-            // source selection
-            let source = undefined
-            if(suggestion[1]){
-              source = suggestion[1].source
-            }
-            else {
-              source = suggestion[0].source
-            }
-            if(source && this.filter_options.source.every(y => y.name !== source)){
-              this.filter_options.source.push({name: source,
-                    filter: e => e.some(x => x ? x.source === source : false)})
-                                }
-            const type = suggestion[0].type
-            if(type && this.filter_options.resource_type.every(y => y.name !== type)){
-              this.filter_options.resource_type.push({name: type,
-                    filter: e => e.some(x => x ? x.type === type : false)})
-            }
-          }
-      }
-    }
+  }
 
-    filterSuggestions(suggestions: Array<[TypedResourceView,TypedResourceView]>){
-      if(suggestions !== null && suggestions !== undefined){
-        return suggestions.filter(e => e !== null && e !== undefined)
-                    .filter(this.search_filter('source',
-                                                      this.selection.source))
-                    .filter(this.search_filter('resource_type',
-                                                      this.selection.resource_type))
-                    .filter(this.search_filter('contained',
-                                                      this.selection.contained))
-                  }
-      else{
-        return suggestions
-      }
-      }
+  modalRef: BsModalRef;
+  newResource: [TypedResourceView, TypedResourceView] = [null, null];
 
-    // make this visible to template
-    environment = environment;
+  committed = false;
+  max_shown_suggestions = 5
+  max_ex = -1;
+  max_in = -1;
 
-    selectedResource: [TypedResourceView, TypedResourceView] = [null, null];
-    query: string;
+  /* Flags for loading indicators */
+  externalInProgress = false;
+  internalInProgress = false;
 
-    search_extended = false;
-
-    private _internalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
-    set internalSuggestions(
-      suggestions: Array<[TypedResourceView, TypedResourceView]>){
-        this._internalSuggestions = suggestions
-        this.refreshFilterOptions()
-      }
-    get internalSuggestions(): Array<[TypedResourceView, TypedResourceView]>{
-      return this.filterSuggestions(this._internalSuggestions)
-    }
-    private _externalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
-    set externalSuggestions(
-      suggestions: Array<[TypedResourceView, TypedResourceView]>){
-        this._externalSuggestions = suggestions
-        this.refreshFilterOptions()
-      }
-    get externalSuggestions(){
-      return this.filterSuggestions(this._externalSuggestions)
-    }
-
-    private _currentTarget: [TypedResourceView, TypedResourceView];
-    get currentTarget() {
-      return this._currentTarget;
-    }
-    set currentTarget(target: [TypedResourceView, TypedResourceView] | TypedResourceView) {
-      if (target instanceof TypedResourceView) {
-        this._currentTarget = [target, null];
-      } else {
-        this._currentTarget = target;
-      }
-
-    }
-
-    modalRef: BsModalRef;
-    newResource: [TypedResourceView, TypedResourceView] = [null, null];
-
-    committed = false;
-    max_shown_suggestions = 5
-    max_ex = -1;
-    max_in = -1;
-
-    /* Flags for loading indicators */
-    externalInProgress = false;
-    internalInProgress = false;
-
-    /* Default top-k thresholds */
-    internalThreshold = 1;
-    externalThreshold = 10;
-    dataSource: Observable<any>
+  /* Default top-k thresholds */
+  internalThreshold = 1;
+  externalThreshold = 10;
+  dataSource: Observable<any>
 
 
     constructor(private locdbService: LocdbService,
       private loggingService: LoggingService,
       private modalService: BsModalService) {
       this.dataSource = Observable.create((observer: any) => {
-      // Runs on every search
-      observer.next(this.query);
-    }).mergeMap((token: string) => this.getStatesAsObservable(token)).map(r => r.map( s => this.extractTypeahead(s)));
-  }
-
-  extractTypeahead(typedTuple: [TypedResourceView,TypedResourceView]){
-    return new typeaheadObj(typedTuple)
+        // Runs on every search
+        observer.next(this.query);
+      }).mergeMap((token: string) => this.getStatesAsObservable(token)).map(r => r.map( s => this.extractTypeahead(s)));
     }
 
+  search_filter(selection_type: string, selection_name: string) {
+    return this.filter_options[selection_type]
+      .find(e => e.name === selection_name)
+      .filter
+  }
+
+  refreshFilterOptions() {
+    for (const suggestion of this.internalSuggestions.concat(this.externalSuggestions)) {
+      if (suggestion) {
+        // source selection
+        let source = undefined
+        if (suggestion[1]) {
+          source = suggestion[1].source
+        } else {
+          source = suggestion[0].source
+        }
+        if (source && this.filter_options.source.every(y => y.name !== source)) {
+          this.filter_options.source.push({name: source,
+            filter: e => e.some(x => x ? x.source === source : false)})
+        }
+        const type = suggestion[0].type
+        if (type && this.filter_options.resource_type.every(y => y.name !== type)) {
+          this.filter_options.resource_type.push({name: type,
+            filter: e => e.some(x => x ? x.type === type : false)})
+        }
+      }
+    }
+  }
+
+  filterSuggestions(suggestions: Array<[TypedResourceView, TypedResourceView]>) {
+    if (suggestions !== null && suggestions !== undefined) {
+      return suggestions.filter(e => e !== null && e !== undefined)
+        .filter(this.search_filter('source',
+          this.selection.source))
+        .filter(this.search_filter('resource_type',
+          this.selection.resource_type))
+        .filter(this.search_filter('contained',
+          this.selection.contained))
+    } else { return suggestions; }
+  }
+
+  extractTypeahead(typedTuple: [TypedResourceView, TypedResourceView]) {
+    return new TypeaheadObj(typedTuple)
+  }
+
   getStatesAsObservable(token: string): Observable<any> {
-      return this.locdbService.suggestionsByQuery(token, false, this.internalThreshold)
+    return this.locdbService.suggestionsByQuery(token, false, this.internalThreshold)
   }
 
   typeaheadOnSelect(e: TypeaheadMatch): void {
@@ -178,15 +172,14 @@ export class SuggestionComponent implements OnInit, OnChanges {
     this.query = e.item.id
     this.internalSuggestions = [e.item.typedTuple]
     this.selectedResource = e.item.typedTuple
-    //e.item._id
   }
 
-      ngOnInit() {
+  ngOnInit() {
   }
 
-    getTypeaheadSuggestions(value, index){
-      return this.locdbService.suggestionsByQuery(value, false, this.internalThreshold)
-    }
+  getTypeaheadSuggestions(value, index) {
+    return this.locdbService.suggestionsByQuery(value, false, this.internalThreshold)
+  }
 
   ngOnChanges(changes: SimpleChanges | any) {
     // This is called every time the input this.entry changes //
@@ -225,7 +218,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       this.entry,
       this.selectedResource[0],
       this.query,
-      [0, 1]
+      [this.internalThreshold, this.externalThreshold]
     );
     // Why would we reset the newResource here
     // this.newResource = [null, null];
@@ -255,140 +248,140 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
   }
 
-    fetchInternalSuggestions(): void {
-      if (this.query) {
-        const oldEntry = this.entry;
-        this.internalInProgress = true; // loading icon
-        this.internalSuggestions = [];
-        console.log('Fetching internal suggestions for', this.query, 'with threshold', this.internalThreshold);
-        // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
-        this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold).subscribe(
-          (sug) => { Object.is(this.entry, oldEntry) ? this.saveInternal(sug) : console.log('discarded suggestions')
-                      // this.loggingService.logSuggestionsArrived(this.entry, sug, true)
-                    },
-          (err) => { this.internalInProgress = false;
-                    console.log(err) }
-        );
+  fetchInternalSuggestions(): void {
+    if (this.query) {
+      const oldEntry = this.entry;
+      this.internalInProgress = true; // loading icon
+      this.internalSuggestions = [];
+      console.log('Fetching internal suggestions for', this.query, 'with threshold', this.internalThreshold);
+      // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
+      this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold).subscribe(
+        (sug) => { Object.is(this.entry, oldEntry) ? this.saveInternal(sug) : console.log('discarded suggestions')
+          // this.loggingService.logSuggestionsArrived(this.entry, sug, true)
+        },
+        (err) => { this.internalInProgress = false;
+          console.log(err) }
+      );
+    }
+  }
+
+  fetchExternalSuggestions(): void {
+    if (this.query) {
+      const oldEntry = this.entry;
+      this.externalInProgress = true; // loading icon
+      this.externalSuggestions = [];
+      console.log('Fetching external suggestions for', this.query, 'with threshold', this.externalThreshold);
+      // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
+      this.locdbService.suggestionsByQuery(this.query, true, this.externalThreshold).subscribe(
+        (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions')
+          // this.loggingService.logSuggestionsArrived(this.entry, sug, false)
+        },
+        (err) => { this.externalInProgress = false; console.log(err)}
+      );
+    }
+  }
+
+  // these two functions could go somewhere else e.g. static in locdb.ts
+  // BEGIN
+  authors2contributors (authors: string[]): models.AgentRole[] {
+    if (!authors) {return []};
+    const contributors = [];
+    for (const author of authors) {
+      const agent: models.ResponsibleAgent = {
+        nameString: author,
+        identifiers: [],
+        givenName: '',
+        familyName: '',
       }
-    }
-
-    fetchExternalSuggestions(): void {
-      if (this.query) {
-        const oldEntry = this.entry;
-        this.externalInProgress = true; // loading icon
-        this.externalSuggestions = [];
-        console.log('Fetching external suggestions for', this.query, 'with threshold', this.externalThreshold);
-        // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
-        this.locdbService.suggestionsByQuery(this.query, true, this.externalThreshold).subscribe(
-          (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions')
-                      // this.loggingService.logSuggestionsArrived(this.entry, sug, false)
-                    },
-          (err) => { this.externalInProgress = false; console.log(err)}
-        );
+      const role: models.AgentRole = {
+        roleType: 'AUTHOR',
+        heldBy: agent,
+        identifiers: [],
       }
+      contributors.push(role);
     }
+    return contributors;
+  }
 
-    // these two functions could go somewhere else e.g. static in locdb.ts
-    // BEGIN
-    authors2contributors (authors: string[]): models.AgentRole[] {
-        if (!authors) {return []};
-        const contributors = [];
-        for (const author of authors) {
-            const agent: models.ResponsibleAgent = {
-                nameString: author,
-                identifiers: [],
-                givenName: '',
-                familyName: '',
-            }
-            const role: models.AgentRole = {
-                roleType: 'AUTHOR',
-                heldBy: agent,
-                identifiers: [],
-            }
-            contributors.push(role);
-        }
-        return contributors;
+  // Turns OCR data into (partial) metadata, the type is missing
+  // Duplicate code with locdb.ts
+  // resourceFromEntry(entry: models.BibliographicEntry): Partial<Metadata> {
+  //     const ocr = entry.ocrData;
+  //     const br: Partial<Metadata> = {
+  //       title: ocr.title || entry.bibliographicEntryText,
+  //       publicationDate: new Date(ocr.date), // unary + operator makes it a number
+  //       contributors: this.authors2contributors(ocr.authors),
+  //       number: ocr.volume || '', // hope they work
+  //       identifiers: entry.identifiers.filter(i => i.scheme && i.literalValue), // only valid ones
+  //     }
+  //     return br;
+  // }
+
+  onSelect(br?: [TypedResourceView, TypedResourceView]): void {
+    this.loggingService.logReferenceTargetSelected(this.entry, br[0])
+    // <--------------------------------------------------------------------
+    this.selectedResource = br;
+    this.committed = false;
+    this.suggest.emit(br[0]);
+  }
+
+  saveInternal(sgt: Array<[TypedResourceView, TypedResourceView]>) {
+    this.internalSuggestions = sgt
+    if (this.internalSuggestions && this.internalSuggestions.length <= this.max_shown_suggestions) {
+      this.max_in = -1;
+    } else {
+      this.max_in = this.max_shown_suggestions;
     }
-
-    // Turns OCR data into (partial) metadata, the type is missing
-    // Duplicate code with locdb.ts
-    // resourceFromEntry(entry: models.BibliographicEntry): Partial<Metadata> {
-    //     const ocr = entry.ocrData;
-    //     const br: Partial<Metadata> = {
-    //       title: ocr.title || entry.bibliographicEntryText,
-    //       publicationDate: new Date(ocr.date), // unary + operator makes it a number
-    //       contributors: this.authors2contributors(ocr.authors),
-    //       number: ocr.volume || '', // hope they work
-    //       identifiers: entry.identifiers.filter(i => i.scheme && i.literalValue), // only valid ones
-    //     }
-    //     return br;
+    this.internalInProgress = false;
+    console.log('Received Internal Suggestions: ', this.internalSuggestions);
     // }
+  }
 
-    onSelect(br?: [TypedResourceView, TypedResourceView]): void {
-        this.loggingService.logReferenceTargetSelected(this.entry, br[0])
-        // <--------------------------------------------------------------------
-        this.selectedResource = br;
-        this.committed = false;
-        this.suggest.emit(br[0]);
+  saveExternal(sgt: Array<[TypedResourceView, TypedResourceView]>) {
+    this.externalSuggestions = sgt;
+    if (this.externalSuggestions && this.externalSuggestions.length <= this.max_shown_suggestions) {
+      this.max_ex = -1;
+    } else {
+      this.max_ex = this.max_shown_suggestions;
     }
+    console.log('Received External Suggestions: ', this.externalSuggestions);
+    this.externalInProgress = false;
+  }
 
-    saveInternal(sgt: Array<[TypedResourceView, TypedResourceView]>) {
-        this.internalSuggestions = sgt
-        if (this.internalSuggestions && this.internalSuggestions.length <= this.max_shown_suggestions) {
-          this.max_in = -1;
-        } else {
-          this.max_in = this.max_shown_suggestions;
-        }
-        this.internalInProgress = false;
-        console.log('Received Internal Suggestions: ', this.internalSuggestions);
-        // }
+  commit() {
+    console.log('Start commit', this.selectedResource)
+    const pr = this.selectedResource[0];
+    console.log('selected Resource ', pr )
+    console.log('entry ', this.entry)
+    console.log('Call Logging');
+    this.loggingService.logCommitPressed(this.entry, this.selectedResource[0], null);
+    const pinnedResource = this.selectedResource;
+    console.log('Commiting pair:', this.selectedResource);
+    this.locdbService.safeCommitLink(this.entry, this.selectedResource).then(
+      res => {
+        this.currentTarget = res;
+        this.onSelect(this.currentTarget);
+        // console.log('Log after commit');
+        // this.loggingService.logCommited(this.entry, this._currentTarget[0], null);
+      })
+  }
+
+
+  toggle_max_ex() {
+    if (this.max_ex === 0) {
+      this.max_ex = this.max_shown_suggestions;
+    } else {
+      this.max_ex = 0;
     }
+  }
 
-    saveExternal(sgt: Array<[TypedResourceView, TypedResourceView]>) {
-        this.externalSuggestions = sgt;
-        if (this.externalSuggestions && this.externalSuggestions.length <= this.max_shown_suggestions) {
-          this.max_ex = -1;
-        } else {
-          this.max_ex = this.max_shown_suggestions;
-        }
-        console.log('Received External Suggestions: ', this.externalSuggestions);
-        this.externalInProgress = false;
+  toggle_max_in() {
+    if (this.max_in === 0) {
+      this.max_in = this.max_shown_suggestions;
+    } else {
+      this.max_in = 0;
     }
-
-    commit() {
-      console.log('Start commit', this.selectedResource)
-      const pr = this.selectedResource[0];
-      console.log('selected Resource ', pr )
-      console.log('entry ', this.entry)
-      console.log('Call Logging');
-      this.loggingService.logCommitPressed(this.entry, this.selectedResource[0], null);
-      const pinnedResource = this.selectedResource;
-      console.log('Commiting pair:', this.selectedResource);
-      this.locdbService.safeCommitLink(this.entry, this.selectedResource).then(
-        res => {
-          this.currentTarget = res;
-          this.onSelect(this.currentTarget);
-          // console.log('Log after commit');
-          // this.loggingService.logCommited(this.entry, this._currentTarget[0], null);
-        })
-    }
-
-
-    toggle_max_ex() {
-      if (this.max_ex === 0) {
-        this.max_ex = this.max_shown_suggestions;
-      } else {
-          this.max_ex = 0;
-      }
-    }
-
-    toggle_max_in() {
-      if (this.max_in === 0) {
-        this.max_in = this.max_shown_suggestions;
-      } else {
-          this.max_in = 0;
-      }
-    }
+  }
 
   queryFromEntry(entry: models.BibliographicEntry): string {
     const dois = entry.identifiers.filter(x => x.scheme === enums.identifier.doi);
@@ -397,7 +390,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     } else if (entry.ocrData && entry.ocrData.title) {
       return `${entry.ocrData.title} ${entry.ocrData.date}`;
     } else if (entry.bibliographicEntryText) {
-        return entry.bibliographicEntryText;
+      return entry.bibliographicEntryText;
     }
     return '';
   }
@@ -417,7 +410,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   openModal(template: TemplateRef<any>) {
     // entry -> resource
     const metadata = OCR2MetaData(this.entry.ocrData);
-    let nresource = new TypedResourceView({type: metadata.type});
+    const nresource = new TypedResourceView({type: metadata.type});
     nresource.set_from(metadata)
     this.newResource = [nresource, null]
     this.selectedResource = this.newResource
@@ -427,36 +420,36 @@ export class SuggestionComponent implements OnInit, OnChanges {
     // this.modalRef = this.modalService.show(template);
   }
 
-  create_resourse(resource: TypedResourceView){
-    console.log("create me", this.entry, resource);
+  create_resourse(resource: TypedResourceView) {
+    console.log('Create me', this.entry, resource);
     this.newResource = [resource, null];
     this.modalRef.hide();
     this.onSelect(this.newResource);
   }
 
-  encodeURI(uri: string){
+  encodeURI(uri: string) {
     return encodeURIComponent(uri);
   }
 
-  toggle_extended_search(){
-    this.search_extended = !this.search_extended
+  toggle_extended_search() {
+    this.search_extended = !this.search_extended;
   }
 
 }
 
-class typeaheadObj {
-    private id;
-    private name;
-    private typedTuple;
+class TypeaheadObj {
+  private id;
+  private name;
+  private typedTuple;
 
-    constructor(typedTuple: [TypedResourceView,TypedResourceView]){
-      this.typedTuple = typedTuple
-      let tr = typedTuple[0]
-      this.id = tr._id
-      this.name = (new StandardPipe().transform(tr)).replace(/<.*?>/, '').replace(/<\/.*?>/, '')
-    }
+  constructor(typedTuple: [TypedResourceView, TypedResourceView]) {
+    this.typedTuple = typedTuple;
+    const tr = typedTuple[0];
+    this.id = tr._id;
+    this.name = (new StandardPipe().transform(tr)).replace(/<.*?>/, '').replace(/<\/.*?>/, '')
+  }
 
-    public toString (): string {
-      return this.name
-    }
+  public toString (): string {
+    return this.name
+  }
 }

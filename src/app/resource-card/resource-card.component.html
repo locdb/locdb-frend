@@ -15,15 +15,16 @@
                   <!-- </div> -->
                   <div class="col-1">
                         <button type="button" class="btn btn-secondary btn-sm float-right"
-                                              (click)="toggleOpen()"> {{open ? 'Cancel': 'Edit' }}</button>
+                                              (click)="toggleOpen()"> {{open ? 'Stop Editing': 'Edit' }}</button>
                   </div>
             </div>
       </div>
       <div class="card-body bg-light" *ngIf="open" >
             <!-- <app-resource-editable [resource]="resources[0]" (resourceChange)="resources[0]=$event; resourceChange.emit($event)" -->
-            <app-resource-pair-form [resource]="resources[0]" [alternate]="resource[1]" (submitStatus)="disabled=!$event; open = $event">
+            <!-- <app-resource-pair-form [resource]="resources[0]" [alternate]="resource[1] || null" (submitStatus)="disabled=!$event; open = $event"> -->
+            <!-- </app-resource-pair-form> -->
+            <app-resource-pair-form [resource]="resources[0]" [alternate]="resources[1] || null" (resourceChange)="resources[0]=$event;" (alternateChange)="resources[1]=$event;">
             </app-resource-pair-form>
-
       </div>
       <ng-content>
       </ng-content>

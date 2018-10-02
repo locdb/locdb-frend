@@ -1,10 +1,3 @@
-<div *ngIf="alternate">
-  <button class="btn btn-default btn-sm" (click)="switchToAlternate()">
-    Switch to Alternate: <em>{{ alternate.title || alternate.type }}</em>
-  </button>
-  <hr/>
-</div>
-
 <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()">
   <div class="form-group row">
     <label for="resourcetype" class="col-sm-2 col-form-label">Type</label>
@@ -170,9 +163,9 @@
     </div>
   </div>
 
-  <hr/>
-  <div formGroupName="foreignProperties" class="mb-2">
-    <h5> Container properties </h5>
+  <div *ngIf="questions.length" formGroupName="foreignProperties" class="mb-2">
+    <hr/>
+    <h5> Additional Container properties </h5>
     <div class="form-row" *ngFor="let question of questions">
       <app-question [question]="question" [form]="foreignProperties"></app-question>
     </div>
@@ -186,12 +179,12 @@
         <!--   <span class="glyphicon" aria-hidden="true"></span> Cancel -->
         <!-- </button> -->
         <button type="button" class="btn btn-warning" (click)="revert()">
-          <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset Form
+          <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset
         </button>
       </div>
       <div class="col-xs-6 text-right">
         <button type="submit" class="btn btn-primary" [disabled]="!resourceForm.valid">
-          <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Confirm
+          <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {{ resource._id ? 'Submit' : 'Migrate' }}
         </button>
       </div>
     </div>
