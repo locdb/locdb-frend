@@ -53,6 +53,7 @@ import { AgendaComponent } from './agenda/agenda.component'
 import { RouterRefsInspectorComponent, RouterScanInspectorComponent } from './inspectors';
 import { ScanInspectorComponent } from './inspectors/scan-inspector.component'
 import { RefsInspectorComponent } from './inspectors/refs-inspector.component'
+import { ResourcePairFormComponent } from './resource-form/resource-pair-form.component';
 // pipes
 import {
     TypedResourceView,
@@ -66,7 +67,6 @@ import { StandardPipe } from './pipes/type-pipes';
 // import { ResourceComponent } from './resource/resource.component';
 import { ResourceCardComponent } from './resource-card/resource-card.component';
 import { ResourceFormComponent } from './resource-form/resource-form.component';
-import { ResourcePairFormComponent } from './resource-form/resource-pair-form.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 import { LinkingComponent } from './linking/linking.component'
 // New

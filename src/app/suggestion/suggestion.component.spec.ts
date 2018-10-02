@@ -7,8 +7,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ResourceEditableComponent } from '../resource-editable/resource-editable.component';
+import { ResourcePairFormComponent } from '../resource-form/resource-pair-form.component';
 import { ResourceFormComponent } from '../resource-form/resource-form.component';
-import { ResourceFormBasicComponent } from '../resource-form-basic/resource-form.component';
 import { MetadataComponent } from '../metadata/metadata.component';
 import { HttpModule } from '@angular/http';
 import { LocdbService, CredentialsService } from '../locdb.service';
@@ -24,6 +24,9 @@ import { BibliographicEntryService } from '../typescript-angular-client/api/bibl
 import { BibliographicResourceService } from '../typescript-angular-client/api/bibliographicResource.service'
 import { StandardPipe } from '../pipes/type-pipes';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+
+import { QuestionService } from '../resource-form/dynamic-question-form/question.service';
+import { DynamicFormQuestionComponent } from '../resource-form/dynamic-question-form/dynamic-form-question.component';
 
 import { HttpClientModule }  from '@angular/common/http';
 describe('SuggestionComponent', () => {
@@ -47,9 +50,7 @@ describe('SuggestionComponent', () => {
         SuggestionComponent,
         // ResourceComponent,
         ResourceFormComponent,
-        ResourceFormBasicComponent,
-        ResourceEditableComponent,
-        ResourceAccordionGroupComponent,
+        ResourcePairFormComponent,
         ResourceCardComponent,
         MetadataComponent,
         AuthorsPipe,
@@ -57,14 +58,15 @@ describe('SuggestionComponent', () => {
         PublisherPipe,
         EmbracePipe,
         StandardPipe,
-        ContainerPipe
+        ContainerPipe,
+        DynamicFormQuestionComponent,
       ],
       providers: [ LocdbService, CredentialsService, LoggingService,
         ScanService,
         UserService,
         UtilsService,
         BibliographicResourceService,
-        BibliographicEntryService, ]
+        BibliographicEntryService, QuestionService ]
     })
     .compileComponents();
   }));

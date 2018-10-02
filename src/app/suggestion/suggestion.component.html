@@ -238,7 +238,7 @@
         <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
         </select> -->
 
-        <app-resource-form-basic [resource]="newResource[0]" [alternate]="newResource[1]"></app-resource-form-basic>
+        <app-resource-pair-form [resource]="newResource[0]" [alternate]="newResource[1]"></app-resource-pair-form>
       <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
   </div>
   <!-- <div class="modal-footer">

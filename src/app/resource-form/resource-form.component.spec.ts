@@ -8,8 +8,8 @@ import { FormGroup, FormGroupName, FormsModule, ReactiveFormsModule } from '@ang
 import { NgModule } from '@angular/core';
 
 describe('ResourceFormComponent', () => {
-  let component: ResourceFormBasicComponent;
-  let fixture: ComponentFixture<ResourceFormBasicComponent>;
+  let component: ResourceFormComponent;
+  let fixture: ComponentFixture<ResourceFormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -17,7 +17,7 @@ describe('ResourceFormComponent', () => {
                 FormsModule,
                 ReactiveFormsModule,
                 ],
-      declarations: [ ResourceFormBasicComponent,
+      declarations: [ ResourceFormComponent,
                       FormGroup,
                       FormGroupName
       ],
@@ -26,7 +26,7 @@ describe('ResourceFormComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ResourceFormBasicComponent);
+    fixture = TestBed.createComponent(ResourceFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
