@@ -47,6 +47,7 @@
         <p> {{sorry_text}} </p>
       </div>
       <div class="card-body"  *ngIf="!sorry_text">
+
         <div *ngIf="scanIsDisplayable" [hidden]="!scanIsVisible" [style.height]="imgheight">
 
           <app-display [img_src]="scanUrl" [entries]="refs" [selectedEntry]="entry"
@@ -61,6 +62,38 @@
            style="display: block;"></pdf-viewer>
         </div>
         <div [hidden]="scanIsVisible">
+          <!-- Filter selector -->
+          <div class="row" style="margin-left: 10px">
+            <div class="col-md-3" *ngFor="let attribute of filter_attributes" style="margin-right: 15px">
+            <label for="source" class="col-form-label">
+              {{attribute}}:</label>
+            <div id="{{attribute}}">
+              <select [(ngModel)]="selection[attribute]" class="form-control" >
+                <option *ngFor="let opt of filter_options[attribute]"
+                [value]="opt.name">{{opt.name}}</option>
+              </select>
+            </div>
+          </div>
+            <!-- <label for="resource_type" class="col-form-label" style="margin-right: 15px;
+                    margin-left: 10px">
+              Date:</label>
+            <div id="date">
+              <select [(ngModel)]="selection.date" class="form-control" >
+                <option *ngFor="let opt of filter_options.date"
+                [value]="opt.name">{{opt.name}}</option>
+              </select>
+            </div>
+              <label for="contained" class="col-form-label" style="margin-right: 15px;
+                      margin-left: 10px">
+                Namer:</label>
+            <div id="namer">
+              <select [(ngModel)]="selection.namer" class="form-control" >
+                <option *ngFor="let opt of filter_options.namer"
+                [value]="opt.name">{{opt.name}}</option>
+              </select>
+            </div> -->
+          </div>
+        <hr/>
           <app-entry-list [resource]="resource" [entries]="refs" [selectedEntry]="entry"
            (entry)="selectEntry($event)" (openEdit)="triggerEdit($event)"></app-entry-list>
         </div>
