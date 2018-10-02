@@ -60,15 +60,15 @@ export class UtilsService {
 
     /**
      * 
-     * Gets marc from k10+zentral (needed for debugging)
+     * Gets parsed data from Crossref (needed for debugging)
      * @param query The query string
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public get(query?: string, observe?: 'body', reportProgress?: boolean): Observable<SuccessResponse>;
-    public get(query?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<SuccessResponse>>;
-    public get(query?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<SuccessResponse>>;
-    public get(query?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getCrossref(query?: string, observe?: 'body', reportProgress?: boolean): Observable<SuccessResponse>;
+    public getCrossref(query?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<SuccessResponse>>;
+    public getCrossref(query?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<SuccessResponse>>;
+    public getCrossref(query?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
         if (query !== undefined) {
@@ -94,9 +94,213 @@ export class UtilsService {
             'multipart/form-data'
         ];
 
-        return this.httpClient.get<SuccessResponse>(`${this.basePath}/get`,
+        return this.httpClient.get<SuccessResponse>(`${this.basePath}/getCrossref`,
             {
                 params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * Gets parsed data from GVI (needed for debugging)
+     * @param query The query string
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getGVI(query?: string, observe?: 'body', reportProgress?: boolean): Observable<SuccessResponse>;
+    public getGVI(query?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<SuccessResponse>>;
+    public getGVI(query?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<SuccessResponse>>;
+    public getGVI(query?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (query !== undefined) {
+            queryParameters = queryParameters.set('query', <any>query);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json',
+            'image/png',
+            'application/pdf'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json',
+            'multipart/form-data'
+        ];
+
+        return this.httpClient.get<SuccessResponse>(`${this.basePath}/getGVI`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * Gets parsed marc from k10+zentral (needed for debugging)
+     * @param query The query string
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getK10Plus(query?: string, observe?: 'body', reportProgress?: boolean): Observable<SuccessResponse>;
+    public getK10Plus(query?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<SuccessResponse>>;
+    public getK10Plus(query?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<SuccessResponse>>;
+    public getK10Plus(query?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (query !== undefined) {
+            queryParameters = queryParameters.set('query', <any>query);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json',
+            'image/png',
+            'application/pdf'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json',
+            'multipart/form-data'
+        ];
+
+        return this.httpClient.get<SuccessResponse>(`${this.basePath}/getK10Plus`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * Gets parsed marc from SWB (needed for debugging)
+     * @param query The query string
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getSWB(query?: string, observe?: 'body', reportProgress?: boolean): Observable<SuccessResponse>;
+    public getSWB(query?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<SuccessResponse>>;
+    public getSWB(query?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<SuccessResponse>>;
+    public getSWB(query?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (query !== undefined) {
+            queryParameters = queryParameters.set('query', <any>query);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json',
+            'image/png',
+            'application/pdf'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json',
+            'multipart/form-data'
+        ];
+
+        return this.httpClient.get<SuccessResponse>(`${this.basePath}/getSWB`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * Loads bibliographic resources into the database given a JSON file
+     * @param file A textual file with bibliographic resources to store in the database (has to be json)
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public loadBibliographicResources(file: Blob, observe?: 'body', reportProgress?: boolean): Observable<SuccessResponse>;
+    public loadBibliographicResources(file: Blob, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<SuccessResponse>>;
+    public loadBibliographicResources(file: Blob, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<SuccessResponse>>;
+    public loadBibliographicResources(file: Blob, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (file === null || file === undefined) {
+            throw new Error('Required parameter file was null or undefined when calling loadBibliographicResources.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json',
+            'image/png',
+            'application/pdf'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json',
+            'multipart/form-data'
+        ];
+
+        const canConsumeForm = this.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): void; };
+        let useForm = false;
+        let convertFormParamsToString = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        // see https://stackoverflow.com/questions/4007969/application-x-www-form-urlencoded-or-multipart-form-data
+        useForm = canConsumeForm;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        }
+
+        if (file !== undefined) {
+            formParams = formParams.append('file', <any>file) || formParams;
+        }
+
+        return this.httpClient.post<SuccessResponse>(`${this.basePath}/loadBibliographicResources`,
+            convertFormParamsToString ? formParams.toString() : formParams,
+            {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

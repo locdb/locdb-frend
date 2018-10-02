@@ -375,6 +375,56 @@ export class BibliographicResourceService {
 
     /**
      * 
+     * Sets a bibliographic resource to VALID, i.e. \&quot;completely linked\&quot;, given it&#39;s internal identifier. The system internally sets all bibliographic entries of the bibliographic resources to OBSOLETE that are not linked and therefore not valid. We do this in order to deal with duplicate reference extractions.
+     * @param id The internal identifier of the resource
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public setValid(id: string, observe?: 'body', reportProgress?: boolean): Observable<BibliographicResource>;
+    public setValid(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<BibliographicResource>>;
+    public setValid(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<BibliographicResource>>;
+    public setValid(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling setValid.');
+        }
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (id !== undefined) {
+            queryParameters = queryParameters.set('id', <any>id);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json',
+            'image/png',
+            'application/pdf'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json',
+            'multipart/form-data'
+        ];
+
+        return this.httpClient.get<BibliographicResource>(`${this.basePath}/setValid`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
      * Updates an existing bibliographic resource
      * @param id The _id of the bibliographic resource to be updated.
      * @param bibliographicResource A bibliographic resource to be updated

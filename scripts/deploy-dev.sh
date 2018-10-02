@@ -1,3 +1,7 @@
+# Cd into project root
+REPO_ROOT=$( cd $(dirname "$0"); pwd -P)/..
+cd "$REPO_ROOT" && echo "Entering $PWD" || exit 1
+
 echo "Building for Development"
 ng build --base-href "/extrapolate-dev/"
 cat dist/index.html
