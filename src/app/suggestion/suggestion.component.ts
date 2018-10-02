@@ -19,7 +19,7 @@ import { map, filter, debounceTime, distinctUntilChanged, switchMap } from 'rxjs
 import { Observable } from 'rxjs/Rx'
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 
-import { StandardPipe } from '../pipes/type-pipes';
+import { StandardPipe }from '../pipes/type-pipes';
 
 
 @Component({
@@ -68,7 +68,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
     return this.filterSuggestions(this._internalSuggestions)
   }
 
-
   private _externalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
   set externalSuggestions(suggestions: Array<[TypedResourceView, TypedResourceView]>) {
     this._externalSuggestions = suggestions
@@ -78,7 +77,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
   get externalSuggestions() {
     return this.filterSuggestions(this._externalSuggestions)
   }
-
 
   private _currentTarget: [TypedResourceView, TypedResourceView];
   get currentTarget() {
@@ -105,29 +103,10 @@ export class SuggestionComponent implements OnInit, OnChanges {
   externalInProgress = false;
   internalInProgress = false;
 
-
-    /* Default top-k thresholds */
-    internalThreshold = 5;
-    externalThreshold = 10;
-    dataSource: Observable<any>
-
-
-    // filter: [TypedResourceView, TypedResourceView] => boolean
-    filter_options = {source: [{name: 'All', filter: e => true}],
-                      resource_type: [{name: 'All', filter: e => true}],
-                      contained: [{name: 'All', filter: e => true},
-                        {name: 'Contained',
-                          filter: e => e.some(x => x ? x.source !== undefined &&
-                                                              x.source !== null :
-                                                            false)},
-                        {name: 'Standalone',
-                          filter: e => e.every(x => x ? x.source === undefined ||
-                                                              x.source === null :
-                                                            true)}
-                                                          ]}
-    selection = {source: 'All',
-                  resource_type: 'All',
-                  contained: 'All'}
+  /* Default top-k thresholds */
+  internalThreshold = 5;
+  externalThreshold = 10;
+  dataSource: Observable<any>
 
 
     constructor(private locdbService: LocdbService,
@@ -165,7 +144,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
             filter: e => e.some(x => x ? x.type === type : false)})
         }
       }
-
     }
   }
 
@@ -470,7 +448,6 @@ class TypeaheadObj {
     this.id = tr._id;
     this.name = (new StandardPipe().transform(tr)).replace(/<.*?>/, '').replace(/<\/.*?>/, '')
   }
-
 
   public toString (): string {
     return this.name
