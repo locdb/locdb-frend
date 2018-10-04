@@ -19,7 +19,7 @@ import { map, filter, debounceTime, distinctUntilChanged, switchMap } from 'rxjs
 import { Observable } from 'rxjs/Rx'
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 
-import { StandardPipe }from '../pipes/type-pipes';
+import { StandardPipe } from '../pipes/type-pipes';
 
 
 @Component({
@@ -36,19 +36,22 @@ export class SuggestionComponent implements OnInit, OnChanges {
   @Output() suggest: EventEmitter<models.BibliographicResource> = new EventEmitter();
 
   // filter: [TypedResourceView, TypedResourceView] => boolean
-  filter_options = {source: [{name: 'All', filter: e => true}],
-    resource_type: [{name: 'All', filter: e => true}],
+  filter_options = {
+    source: [
+      {name: 'All', filter: e => true}
+    ],
+    resource_type: [
+      {name: 'All', filter: e => true}
+    ],
     contained: [{name: 'All', filter: e => true},
-      {name: 'Contained',
-        filter: e => e.some(x => x ? x.source !== undefined &&
-          x.source !== null : false)},
-      {name: 'Standalone',
-        filter: e => e.every(x => x ? x.source === undefined ||
-          x.source === null : true)}
+      {name: 'Contained', filter: e => !!e[1]},
+      {name: 'Standalone', filter: e => !e[1]}
     ]}
-  selection = {source: 'All',
+  selection = {
+    source: 'All',
     resource_type: 'All',
-    contained: 'All'}
+    contained: 'All'
+  }
 
 
   // make this visible to template
@@ -105,7 +108,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
   /* Default top-k thresholds */
   internalThreshold = 5;
-  externalThreshold = 10;
+  externalThreshold = 30;
   dataSource: Observable<any>
 
 
