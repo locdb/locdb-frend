@@ -36,7 +36,7 @@
           <div class="row" style="margin-left: 10px">
             <div class="col-md-3" *ngFor="let attribute of filter_attributes" style="margin-right: 15px">
               <label for="source" class="col-form-label">
-                {{attribute}}:</label>
+                {{attribute | titlecase }}:</label>
               <div id="{{attribute}}">
                 <select [(ngModel)]="selection[attribute]" class="form-control" >
                   <option *ngFor="let opt of filter_options[attribute]"
