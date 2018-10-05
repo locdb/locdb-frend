@@ -75,9 +75,19 @@ export class AgendaComponent implements OnInit, OnChanges {
       }
     }
     this.locdbService.getToDo(statuses).subscribe(
-      (todos) => { this.todos = todos; this.loading = false; console.log('Todos', todos) },
+      (todos) => { this.todos = this.sortChildrenByPage(todos); this.loading = false; console.log('Todos', todos) },
       (err) => { console.log(err); this.loading = false; }
     );
+  }
+
+  sortChildrenByPage(todos: Array<TypedResourceView>) {
+    for (const todo of todos) {
+      if (todo.children) {
+        // in-place sort
+        todo.children.sort((a, b) => a.embodiedAs[0].firstPage - b.embodiedAs[0].firstPage);
+      }
+    }
+    return todos;
   }
 
 
