@@ -44,8 +44,8 @@ import { CommitComponent } from './commit/commit.component';
 import { AgendaComponent, TodoComponent, EmbodimentComponent } from './agenda';
 
 // inspector related
-import { RouterRefsInspectorComponent, RouterScanInspectorComponent, RefsInspectorComponent,
-  ScanInspectorComponent, ScanListService, EntryListComponent, EntryCardComponent, DisplayComponent,
+import { RouterRefsInspectorComponent, RouterScanInspectorComponent,
+  ScanListService, EntryListComponent, EntryCardComponent, DisplayComponent,
   EntryFormComponent} from './inspectors';
 
 // feeds
@@ -142,8 +142,6 @@ const appRoutes: Routes = [
     FeedReaderComponent,
     FeedComponent,
     EntryListComponent,
-    RefsInspectorComponent,
-    ScanInspectorComponent,
     RouterRefsInspectorComponent,
     RouterScanInspectorComponent,
     MetadataComponent,

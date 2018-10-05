@@ -5,7 +5,6 @@ import { Context, Tracking } from '../agenda/agenda.component';
 import { AgendaComponent } from '../agenda/agenda.component';
 import { Router, ActivatedRoute} from '@angular/router';
 
-import { RefsInspectorComponent, ScanInspectorComponent } from '../inspectors';
 //import { environment } from 'environments/environment';
 
 @Component({

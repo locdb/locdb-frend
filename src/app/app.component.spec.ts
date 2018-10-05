@@ -51,8 +51,6 @@ import { AgendaComponent } from './agenda/agenda.component'
 // inspector related
 
 import { RouterRefsInspectorComponent, RouterScanInspectorComponent } from './inspectors';
-import { ScanInspectorComponent } from './inspectors/scan-inspector.component'
-import { RefsInspectorComponent } from './inspectors/refs-inspector.component'
 import { ResourcePairFormComponent } from './resource-form/resource-pair-form.component';
 // pipes
 import {
@@ -167,8 +165,6 @@ describe('AppComponent with TCB', function () {
           StandardPipe,
           ContainerPipe,
           AgendaComponent,
-          ScanInspectorComponent,
-          RefsInspectorComponent,
           LinkingComponent,
           FrontpageComponent,
           ResourceCardComponent,
