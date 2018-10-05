@@ -10,6 +10,7 @@ import { PopoverModule } from 'ngx-popover/index';
 import { Observable } from 'rxjs';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
+import * as interact from 'interactjs';
 // Display component consists of file upload, todo item selection and actual
 // display of the scan
 
@@ -61,6 +62,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     constructor( private locdbService: LocdbService, private _hotkeysService: HotkeysService) {
     }
+
+    // TODO: https://github.com/interactjs/website/blob/master/source/javascripts/star.js
 
     initSVGZoom() {
         // let zoom = d3.zoom().on('zoom', function () {
