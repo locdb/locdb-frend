@@ -63,6 +63,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     initSVGZoom() {
+        console.log('[Display] init Zoom')
         // let zoom = d3.zoom().on('zoom', function () {
         //     svgContainer.attr('transform', 'translate(' +
         //                       d3.event.transform.x + ', ' + d3.event.transform.y +
@@ -100,7 +101,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnChanges(changes: SimpleChanges | any) {
         // Input todo and this method should replace manual calling of updateDisplay
-        // console.log('ngOnChanges in display');
+        console.log('[Display] ngOnChanges');
         if (this.entries && this.entries.length) {
             // extract rectanlges and so on
             // this.extractRects(this.entries);
@@ -195,7 +196,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         if ((this.imgX + this.imgY) <= 0) {
             console.log('Image size = 0', realDim);
         }
-        this.initSVGZoom();
+        // this.initSVGZoom();
     }
 
     ngOnDestroy() {

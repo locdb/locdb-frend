@@ -33,6 +33,7 @@ export class RouterScanInspectorComponent implements OnInit {
   private _refs: Array<models.BibliographicEntry> = [];
   /* setter and getter to enable filtering without loosing the actual data */
   get refs(){
+      // return this._refs
       return this.filterEntries(this._refs)
   }
   set refs(refs: Array<models.BibliographicEntry>){
