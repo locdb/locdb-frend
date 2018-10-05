@@ -63,9 +63,9 @@ export class RouterScanInspectorComponent implements OnInit {
   }
   /* extract filter options and generate the necessary filterfunctions */
   refreshFilterOptions() {
-    for (const entrie of this.refs) {
+    for (const current_entry of this.refs) {
         for (const attribute of this.filter_attributes){
-          const value = entrie.ocrData[attribute]
+          const value = current_entry.ocrData[attribute]
           if (value && this.filter_options[attribute].every(y => y.name !== value)) {
             this.filter_options[attribute].push({name: value,
                   filter: x => x ? x.ocrData[attribute] === value : false})}}
@@ -79,7 +79,8 @@ export class RouterScanInspectorComponent implements OnInit {
   /* Flag whether the scan or the digital references list is shown */
   scanIsVisible = true;
 
-  /* Currently active entry, is passed down to the entrie component */
+  /* Currently active entry, is passed down to the app-display and
+  app-entry-list components */
   entry: models.BibliographicEntry;
 
   /* Indicates loading */
