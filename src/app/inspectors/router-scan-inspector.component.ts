@@ -41,11 +41,11 @@ export class RouterScanInspectorComponent implements OnInit {
   }
   /* apply the filter functions */
   filterEntries(entries: models.BibliographicEntry[]) {
-    console.log("filter Entries: ", entries)
+    // console.log("filter Entries: ", entries)
     if (entries !== null && entries !== undefined) {
       let filtered_entries = entries.filter(e => e !== null && e !== undefined)
       /* allways drop status obsolete */
-      filtered_entries = entries.filter(e => e.status != 'OBSOLETE')
+      filtered_entries = entries.filter(e => e.status !== 'OBSOLETE')
 
       for (const attribute of this.filter_attributes){
           filtered_entries = filtered_entries.filter(this.search_filter(attribute,

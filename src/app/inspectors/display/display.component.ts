@@ -79,11 +79,11 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         .duration(250);
         let svgContainer = d3.select(this.zoomSVG.nativeElement);
         this.selection = svgContainer
-                        .attr('width', '100%')
-                        .attr('height', '100%')
-                        .call(zoom)
-                        .on("dblclick.zoom", null)
-                        .on("wheel.zoom", null);
+            .attr('width', '100%')
+            .attr('height', '100%')
+            .call(zoom)
+            .on("dblclick.zoom", null)
+            .on("wheel.zoom", null);
         this.zoom = zoom;
     }
 
@@ -134,6 +134,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     onSelect(rect: Rect) {
+        console.log('[display] onselect called');
         this.selectedEntry = rect.entry;
         this.entry.next(rect.entry);
     }
