@@ -269,7 +269,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       const contribFGs = validRoles.map(
          arole => this.fb.group(
             {
-               role: arole.roleType, name: this.nameFromAgent(arole.heldBy),
+               role: arole.roleType,
+               name: this.nameFromAgent(arole.heldBy),
                identifiers: this.fb.array(
                   arole.heldBy.identifiers && arole.heldBy.identifiers.length ?
                   arole.heldBy.identifiers.map(e => this.fb.group(e)) : []
@@ -308,19 +309,17 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       this.contributors.removeAt(index);
    }
 
-   //shift an entry in a formarray
-
-   moveFormarrayEntry(index: number, shift: number, ){
-      if(index + shift < 0 || index + shift >= this.contributors.length){
-         console.log("[error] Target index not reachable (index: " + index + ", way: " + shift + ")")
+   // shift an entry in a formarray
+   moveFormarrayEntry(index: number, shift: number) {
+      if (index + shift < 0 || index + shift >= this.contributors.length) {
+         console.log('[error] Target index not reachable (index: ' + index + ', way: ' + shift + ')')
          return this.contributors;
-      }
-      else{
-         if(shift < 0){
+      } else {
+         if (shift < 0) {
             shift *= -1
             index -= shift
          }
-         let tmp = this.contributors.value; // TODO FIXME this is not a deep copy..
+         const tmp = this.contributors.value; // TODO FIXME this is not a deep copy..
          // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
          tmp.splice(index + shift + 1, 0, tmp[index]);
          // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
