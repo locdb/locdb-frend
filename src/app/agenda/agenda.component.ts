@@ -17,6 +17,19 @@ export interface Context {
   embodiment?: models.ResourceEmbodiment;
 }
 
+function fancySortFunction (a: TypedResourceView, b: TypedResourceView): number {
+  function isComparableByPage(x) {
+    return x.embodiedAs && x.embodiedAs.length && x.embodiedAs[0].firstPage;
+  }
+  if (isComparableByPage(a) && isComparableByPage(b)) {
+    // if comparison on pages is ok
+    // sort ascending
+    return a.embodiedAs[0].firstPage - b.embodiedAs[0].firstPage;
+  } else {
+    return 0;
+  }
+}
+
 
 @Component({
   selector: 'app-agenda',
@@ -26,9 +39,9 @@ export interface Context {
 export class AgendaComponent implements OnInit, OnChanges {
   @Output() refsWithContext: EventEmitter<[Array<models.BibliographicEntry>, Context]> = new EventEmitter();
   @Output() scanWithContext: EventEmitter<[models.Scan, Context]> = new EventEmitter()
-  @Input() set routerTracking(rtracking: Tracking){
+  @Input() set routerTracking(rtracking: Tracking) {
     console.log('rt: ', rtracking)
-    if(!(typeof rtracking === 'undefined')){
+    if (!(typeof rtracking === 'undefined')) {
       this.loading = true;
       this.tracking[enums.status.ocrProcessed] = rtracking[enums.status.ocrProcessed];
       this.tracking[enums.status.external] = rtracking[enums.status.external]
@@ -84,7 +97,7 @@ export class AgendaComponent implements OnInit, OnChanges {
     for (const todo of todos) {
       if (todo.children) {
         // in-place sort
-        todo.children.sort((a, b) => a.embodiedAs[0].firstPage - b.embodiedAs[0].firstPage);
+        todo.children.sort(fancySortFunction);
       }
     }
     return todos;
