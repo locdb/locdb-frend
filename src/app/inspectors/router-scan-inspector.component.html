@@ -32,21 +32,25 @@
                 <!-- </div> -->
             </div>
           </div>
-          <!-- <label>Detector:</label> -->
-          <!-- <select> -->
-          <!--   <option>Image</option> -->
-          <!--   <option>ParsCit</option> -->
-          <!-- </select> -->
-          <!-- <label>Namer:</label> -->
-          <!-- <select> -->
-          <!--   <option>Grobid</option> -->
-          <!--   <option>ParsCit</option> -->
-          <!-- </select> -->
+          <!-- Filter selector -->
+          <div class="row" style="margin-left: 10px">
+            <div class="col-md-3" *ngFor="let attribute of filter_attributes" style="margin-right: 15px">
+              <label for="source" class="col-form-label">
+                {{attribute | titlecase }}:</label>
+              <div id="{{attribute}}">
+                <select [(ngModel)]="selection[attribute]" class="form-control" >
+                  <option *ngFor="let opt of filter_options[attribute]"
+                                                           [value]="opt.name">{{opt.name}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
       </div>
       <div class="card-header" *ngIf="sorry_text">
         <p> {{sorry_text}} </p>
       </div>
       <div class="card-body"  *ngIf="!sorry_text">
+
         <div *ngIf="scanIsDisplayable" [hidden]="!scanIsVisible" [style.height]="imgheight">
 
           <app-display [img_src]="scanUrl" [entries]="refs" [selectedEntry]="entry"
@@ -61,12 +65,13 @@
            style="display: block;"></pdf-viewer>
         </div>
         <div [hidden]="scanIsVisible">
+        <hr/>
           <app-entry-list [resource]="resource" [entries]="refs" [selectedEntry]="entry"
            (entry)="selectEntry($event)" (openEdit)="triggerEdit($event)"></app-entry-list>
         </div>
         <div *ngIf="loading" class="loader">
         </div>
-      </div>
+      </div> <!-- End of body -->
       <div class="card-footer"  *ngIf="!sorry_text">
         <div class="row">
           <div class="col-6">
@@ -80,9 +85,9 @@
             </button>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
+      </div> <!-- End of footer -->
+    </div> <!-- End of card -->
+  </div> <!-- End of column -->
   <div class="col-xs-12 col-sm-6 col-md-6">
     <!-- <app-suggestion [entry]="entry" (suggest)='updateTarget($event)'></app-suggestion> -->
     <div *ngIf="entry">
