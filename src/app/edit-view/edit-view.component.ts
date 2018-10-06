@@ -23,6 +23,11 @@ export class EditViewComponent implements OnInit {
 
   entry: models.BibliographicEntry;
 
+  // determines whether info box is displayed.
+  submitted = false;
+
+
+
   constructor(private locdbService: LocdbService, private route: ActivatedRoute,
     private location: Location, private router: Router) {}
 
@@ -79,25 +84,13 @@ export class EditViewComponent implements OnInit {
       });
   }
 
-
-
-  save_resourse(_resource: TypedResourceView){
-    console.log('Save resource ', _resource.data.type)
-    console.log('Resource type: ', typeof(_resource))
-    this.locdbService.maybePutResource(_resource).subscribe((succ) => {
-      console.log('Save successful', succ);
-      this.triggerBack();
-  },
-    (err) => { console.log('Error', _resource, err) });
-  }
-
-
-  triggerBack(){
+  triggerBack() {
     // history.back() //slow
     this.location.back() // hm ok no difference
   }
 
   ngOnDestroy() {
+    // is this good practice?
     this.sub.unsubscribe();
   }
 }
