@@ -395,26 +395,27 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       const newResource = this.prepareSaveResource();
       console.log('[BRF] Submitting resource: ', newResource);
 
-      // TODO store the resource here
-      //
-      //
-      //
       const data = <models.BibliographicResource>newResource.data;
       if (newResource._id) {
          // Update internal database if it has an ID
          this.brService.update(data._id, data).subscribe(
-            response => this.resource = new TypedResourceView(response),
+            response => {
+               this.resource = new TypedResourceView(response);
+               this.resourceChange.emit(this.resource);
+            },
             error => alert('Could not save changes: ' + error.msg)
          )
       } else {
          // Create new resource if it has an ID
          this.brService.save(data).subscribe(
-            response => this.resource = new TypedResourceView(response),
+            response => {
+               this.resource = new TypedResourceView(response);
+               this.resourceChange.emit(this.resource);
+            },
             error => alert('Could not save changes: ' + error.msg)
          )
       }
       // In any case, notify higher-level components
-      this.resourceChange.emit(newResource);
    }
 
    revert() {
