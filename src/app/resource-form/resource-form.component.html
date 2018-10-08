@@ -166,7 +166,7 @@
   <div *ngIf="questions.length" formGroupName="foreignProperties" class="mb-2">
     <hr/>
     <h5> Additional Container properties </h5>
-    <div class="form-row" *ngFor="let question of questions">
+    <div *ngFor="let question of questions">
       <app-question [question]="question" [form]="foreignProperties"></app-question>
     </div>
   </div>

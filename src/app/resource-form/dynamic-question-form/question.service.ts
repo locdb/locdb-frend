@@ -11,7 +11,12 @@ import { models, TypedResourceView } from '../../locdb';
  * we need some helpers to make them human readable and order them
  */
 function humanReadable(property: string) {
-  return property;
+  // split on _ and capitalize
+  const components = property.split('_').map(c => c.charAt(0).toUpperCase() + c.substr(1))
+  const nosnake = components.join(' ');
+  // convert camel case to space seperated words
+  const nocamel = nosnake.replace(/([a-z])([A-Z])/g, '$1 $2');
+  return nocamel;
 }
 
 function getOrderForProperty(property: string) {
