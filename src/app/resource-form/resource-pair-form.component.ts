@@ -19,6 +19,7 @@ export class ResourcePairFormComponent implements OnInit {
 
   // Detemine whether 'resource' or 'alternate' is active
   alternateIsActive = false;
+  isLinking = false;
 
   @Output() resourceChange = new EventEmitter<TypedResourceView>();
   @Output() alternateChange = new EventEmitter<TypedResourceView>();
@@ -34,6 +35,7 @@ export class ResourcePairFormComponent implements OnInit {
   }
 
   onAlternateChange(event: TypedResourceView) {
+    console.log('On Alternate Change:', event);
     this.alternate = event;
     this.alternateChange.emit(event);
   }
@@ -58,6 +60,14 @@ export class ResourcePairFormComponent implements OnInit {
       (response) => { this.resource = new TypedResourceView(response); },
       (error) => { alert('An unexpected error occurred: ' + error.msg) }
     )
+  }
+
+  createNewContainer() {
+    this.alternate = new TypedResourceView({});
+  }
+
+  disconnectFromAlternate() {
+    this.alternate = null;
   }
 
 }

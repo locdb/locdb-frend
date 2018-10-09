@@ -403,7 +403,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                this.resource = new TypedResourceView(response);
                this.resourceChange.emit(this.resource);
             },
-            error => alert('Could not save changes: ' + error.msg)
+            error => alert('Could not save changes: ' + error.message)
          )
       } else {
          // Create new resource if it has an ID
@@ -412,7 +412,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                this.resource = new TypedResourceView(response);
                this.resourceChange.emit(this.resource);
             },
-            error => alert('Could not save changes: ' + error.msg)
+            error => alert('Could not save changes: ' + error.message)
          )
       }
       // In any case, notify higher-level components

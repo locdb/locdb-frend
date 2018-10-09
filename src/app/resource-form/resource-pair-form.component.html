@@ -1,23 +1,50 @@
 <div *ngIf="resource && alternate">
-  <p>
-  <button type="default" class="btn btn-secondary" *ngIf="!alternateIsActive" (click)="toggleAlternate()">
-    Switch to Container Metadata
-  </button>
-  <button type="default" class="btn btn-secondary" *ngIf="alternateIsActive" (click)="toggleAlternate()">
-    Switch to Own Metadata
-  </button>
-  </p>
-  <div *ngIf="resource.partOf !== alternate._id" class="alert alert-warning" role="alert">
+  <div *ngIf="!alternateIsActive">
+    <b>Editing own meta-data</b>&nbsp;
+    <button type="default" class="btn btn-secondary btn-sm" *ngIf="!alternateIsActive" (click)="toggleAlternate()">
+      Switch to Container Metadata
+    </button>&nbsp;
+    <button type="default" class="btn btn-warning btn-sm" (click)="disconnectFromAlternate()">Disconnect from container</button>
+  </div>
+  <div *ngIf="alternateIsActive">
+    <b> Editing container's metadata </b>
+    <button type="default" class="btn btn-secondary btn-sm" *ngIf="alternateIsActive" (click)="toggleAlternate()">
+      Switch to Own Metadata
+    </button>
+  </div>
+  <div *ngIf="!resource.partOf || resource.partOf !== alternate._id" class="alert alert-warning" role="alert">
     Resource is not properly linked to its container. Resource is part of {{ resource.partOf }} but container identifier is {{ alternate._id }}.
     <button type="default" class="btn btn-secondary btn-sm" (click)="fixPartOf()">Fix it.</button>
   </div>
-  <hr/>
 </div>
+<div *ngIf="!alternate" class="alert alert-info" role="alert">
+  Standalone Resource&nbsp;
+  <button type="default" class="btn btn-secondary btn-sm" (click)="createNewContainer()">Create new container</button>
+  <!-- <button type="default" class="btn btn-secondary btn-sm" (click)="isLinking = true">Link to container</button>&nbsp; -->
+  <!-- typeahead partOf -->
+  <!-- <div *ngIf="isLinking" style="margin-top: .75rem;" class="form-group row"> -->
+    <!-- <label for="pof" class="col-sm-2 col-form-label">Change container</label> -->
+    <!-- <div class="col-sm-10"> -->
+    <!--   <input id="pof" -->
+    <!--          autocomplete="off" -->
+    <!--          formControlName="partOf" -->
+    <!--          class="form-control" -->
+
+    <!--          [typeahead]="dataSourcePartOf" -->
+    <!--          (typeaheadOnSelect)="typeaheadOnSelectPartOf($event)" -->
+    <!--          [typeaheadOptionsLimit]="7" -->
+    <!--          typeaheadWaitMs="1000" -->
+    <!--          typeaheadOptionField="name" -->
+    <!--          [placeholder]="placeholderPartOf"> -->
+    <!-- </div> -->
+  <!-- </div> -->
+</div>
+<hr/>
 
 <div *ngIf="!alternateIsActive && resource">
   <!-- Just a resource form, if no alternate is given -->
   <app-resource-form [resource]="resource" (resourceChange)="onResourceChange($event)"></app-resource-form>
 </div>
 <div *ngIf="alternateIsActive && alternate">
-  <app-resource-form [resource]="alternate" (alternateChange)="onAlternateChange($event)"></app-resource-form>
+  <app-resource-form [resource]="alternate" (resourceChange)="onAlternateChange($event)"></app-resource-form>
 </div>
