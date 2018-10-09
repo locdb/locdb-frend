@@ -1,5 +1,7 @@
-import { Component, OnInit, OnDestroy, OnChanges, Input, Output, EventEmitter, ViewChildren, ViewChild} from '@angular/core';
+import { Component, OnInit, OnDestroy, OnChanges,
+  Input, Output, EventEmitter, ViewChildren, ViewChild} from '@angular/core';
 import { SimpleChanges } from '@angular/core';
+import {ElementRef} from '@angular/core';
 
 import { models } from '../../locdb';
 import { LocdbService } from '../../locdb.service';
@@ -54,23 +56,29 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     selection: any;
 
     rects: Rect[] = [];
-    imgX = 1500;    // initvalues no relevance if new picture is set
-    imgY = 1500;
+    imgX = 3000;    // initvalues no relevance if new picture is set
+    imgY = 3000;
 
     @Output() imglength: EventEmitter<Number> = new EventEmitter();
     @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
+
+    @ViewChild('svgroot') svgroot:ElementRef;
 
     constructor( private locdbService: LocdbService, private _hotkeysService: HotkeysService) {
     }
 
     // TODO: https://github.com/interactjs/website/blob/master/source/javascripts/star.js
 
-    initInteract(){
+    initInteract(imgWidth, imgHeight){
       // get the interact variable from the parent window
-      let svg = document.querySelector('#svgroot');
-      interact('.resizeable-rect', {
-          context: svg
-          })
+      console.log('imgWidth', imgWidth)
+      console.log('imgHeight', imgHeight)
+      console.log('screenWidth: ', this.svgroot)
+      console.log('screenWidth: ', this.svgroot.nativeElement.clientWidth)
+      console.log('screenHeight:', this.svgroot.nativeElement.scrollHeight)
+
+
+      interact('.resizeable-rect')
         .draggable({
           restrict: {
             restriction: 'parent',
@@ -95,6 +103,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           inertia: true,
         })
         .on('resizemove', function (event) {
+          console.log(imgWidth)
+          console.log(imgHeight)
           let target = event.target,
               x = (parseFloat(target.getAttribute('x')) || 0),
               y = (parseFloat(target.getAttribute('y')) || 0);
@@ -102,21 +112,34 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         //
           // update the element's style
           console.log(event)
-          target.style.width  = event.rect.width + 'px';
-          target.style.height = event.rect.height + 'px';
+          let svg = target.parentNode.parentNode
+          const clientToImageWidthRatio = imgWidth / svg.clientWidth
+          const clientToImageHeightRatio = imgHeight / svg.clientHeight
+          console.log(svg.clientWidth, clientToImageWidthRatio)
+          console.log(svg.clientHeight, clientToImageHeightRatio)
+          target.style.width  = event.rect.width * clientToImageWidthRatio + 'px';
+          target.style.height = event.rect.height * clientToImageHeightRatio + 'px';
 
           // translate when resizing from top or left edges
-          x -= event.deltaRect.left;
-          y -= event.deltaRect.top;
+          x += event.deltaRect.left * clientToImageWidthRatio;
+          y += event.deltaRect.top * clientToImageHeightRatio;
 
-          target.style.webkitTransform = target.style.transform =
-              'translate(' + x + 'px,' + y + 'px)';
+
+          // target.style.webkitTransform = target.style.transform =
+          //     'translate(' + x + 'px,' + y + 'px)';
           // target.x = x;
           // target.y = y
-        //   target.setAttribute('data-x', x);
-        //   target.setAttribute('data-y', y);
-        //   target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height);
-         });
+        target.setAttribute('x', x);
+        target.setAttribute('y', y);
+          target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height);
+         })
+         .on('dragmove', function (event) {
+           let target = event.target,
+               x = (parseFloat(target.getAttribute('x')) || 0),
+               y = (parseFloat(target.getAttribute('y')) || 0);
+           console.log(target.id, x,y, event.deltaRect, event.rect)
+           console.log(event)
+        });
     }
 
     initSVGZoom() {
@@ -251,7 +274,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         if ((this.imgX + this.imgY) <= 0) {
             console.log('Image size = 0', realDim);
         }
-        this.initInteract()
+        this.initInteract(this.imgX, this.imgY)
         // this.initSVGZoom();
     }
 
@@ -260,6 +283,10 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             const hk = this._hotkeysService.get(combo)
             this._hotkeysService.remove(hk);
         }
+    }
+
+    resize(e){
+      console.log("Resize image event: ", e)
     }
 }
 

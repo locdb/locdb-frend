@@ -1,8 +1,8 @@
 <div style="height: 1000px; overflow-y: scroll;">
 <figure>
-    <svg class="resize-container" #svgroot xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + imgX + ' ' + imgY">
-      <g #zoomSVG>
-            <image [attr.xlink:href]="img_src" [attr.height]="imgY + 'px'" [attr.width]="imgX + 'px'" (load)="imageOnload()"/>
+    <svg #svgroot xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + imgX + ' ' + imgY">
+      <g #zoomSVG class="resize-container" [attr.height]="imgY + 'px'" [attr.width]="imgX + 'px'">
+            <image [attr.xlink:href]="img_src" [attr.height]="imgY + 'px'" [attr.width]="imgX + 'px'" (load)="imageOnload()" (resize)="resize($event)"/>
             <rect [id]='i' class="resizeable-rect" *ngFor="let rect of rects; let i=index" [attr.x]="rect.x"
             [attr.y]="rect.y" [attr.height]="rect.height"
             [attr.width]="rect.width" [ngClass]="{ 'selected' : rect.entry ==
