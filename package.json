@@ -44,7 +44,7 @@
     "@angular/compiler-cli": "^6.1.9",
     "@types/core-js": "^0.9.41",
     "@types/jasmine": "^2.8.8",
-    "@types/node": "^10.11.3",
+    "@types/node": "^10.11.6",
     "codelyzer": "^4.4.4",
     "eslint": "^4.1.1",
     "eslint-config-google": "^0.9.0",
