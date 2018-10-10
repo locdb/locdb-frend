@@ -199,19 +199,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       // console.log("On init form", this.resources)
    }
 
-   nameFromAgent(agent: models.ResponsibleAgent): string {
-      // forward to locdb.ts method for unified treatment everywhere
-      return composeName(agent);
-   }
-
-   agentFromName(forminput: string): models.ResponsibleAgent {
-      // forward to locdb.ts method for unified treatment everywhere
-      const agent = decomposeName(forminput);
-      // decompose only yields familyName givenName and nameString
-      agent.identifiers = [];
-      return agent;
-   }
-
    // clean array treatment
    setContributors(roles: models.AgentRole[]) {
       console.log('[debug] set contributors ', roles)
@@ -227,7 +214,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          arole => this.fb.group(
             {
                role: arole.roleType,
-               name: this.nameFromAgent(arole.heldBy),
+               name: composeName(arole.heldBy),
                identifiers: this.fb.array(
                   arole.heldBy.identifiers && arole.heldBy.identifiers.length ?
                   arole.heldBy.identifiers.map(e => this.fb.group(e)) : []
@@ -259,7 +246,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
    addContributor() {
       // reference from getter above
-      this.contributors.push(this.fb.group({role: 'AUTHOR', name: 'name', identifiers: []}));
+      this.contributors.push(this.fb.group({role: 'AUTHOR', name: '', identifiers: []}));
    }
 
    removeContributor(index: number) {
@@ -378,12 +365,15 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
 
    reconstructAgentRole(name: string, role: string, identifiers: models.Identifier[]): models.AgentRole {
+      const agent = decomposeName(name);
+      // decompose only yields familyName givenName and nameString
+      agent.identifiers = identifiers || [];
       const agentRole = {
+         // role identifiers are pointless
          identifiers: [],
          roleType: role,
-         heldBy: this.agentFromName(name)
+         heldBy: agent
       }
-      agentRole.heldBy.identifiers = identifiers;
       console.log('[debug] reconstructed agentRole: ', agentRole)
       return agentRole;
    }
