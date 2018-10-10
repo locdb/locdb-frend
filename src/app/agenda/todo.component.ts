@@ -48,8 +48,8 @@ export class TodoComponent implements OnChanges {
     return false;
   }
 
-  unpackFirstPage(emsc) {
-    return emsc[0].firstPage;
+  unpackFirstPage(emsc): number {
+    return emsc[0].firstPage || 1;
   }
 
   unpackLastPage(emsc) {
