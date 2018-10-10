@@ -1,6 +1,6 @@
 {
   "*": {
-    "dispatch": "export CHROME_BIN=chromium; ng test",
+    "dispatch": "export CHROME_BIN=chromium; ng test --watch false",
     "make": "ng build",
     "start": "ng serve"
   },
