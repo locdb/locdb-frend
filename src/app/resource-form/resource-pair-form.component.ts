@@ -1,6 +1,13 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { TypedResourceView, models } from '../locdb';
+import { LocdbService } from '../locdb.service';
 import { BibliographicResourceService, } from '../typescript-angular-client/api/api';
+
+/* Typeahead for changing the container */
+import { Observable } from 'rxjs/Rx'
+import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
+// import { PublisherPipe } from '../pipes/publisher.pipe';
+import { StandardPipe } from '../pipes/type-pipes';
 
 /* Key idea:
  *
@@ -20,11 +27,27 @@ export class ResourcePairFormComponent implements OnInit {
   // Detemine whether 'resource' or 'alternate' is active
   alternateIsActive = false;
   isLinking = false;
+  dataSource:  Observable<any>;
+  // The initial value for changing containers
+  typeaheadPlaceholder = 'Enter title to search for containers';
+  // The value (double-bound) input field
+  asyncSelected = '';
+
+
 
   @Output() resourceChange = new EventEmitter<TypedResourceView>();
   @Output() alternateChange = new EventEmitter<TypedResourceView>();
 
-  constructor(private brService: BibliographicResourceService) { }
+  constructor(private brService: BibliographicResourceService,
+  private locdbService: LocdbService) {
+    this.dataSource = Observable.create((observer: any) => {
+      // runs on every search
+      observer.next(this.asyncSelected)
+    }).mergeMap((token: string) => this.getStatesAsObservable(token)).map( r =>
+      r.map( pair => new TypeaheadObj(pair[0]))
+    )
+  }
+
 
   ngOnInit() {
   }
@@ -38,6 +61,19 @@ export class ResourcePairFormComponent implements OnInit {
     console.log('On Alternate Change:', event);
     this.alternate = event;
     this.alternateChange.emit(event);
+  }
+
+  getStatesAsObservable(token: string): Observable<any> {
+    return this.locdbService.suggestionsByQuery(token, false, 0);
+  }
+
+  typeaheadOnSelect(e: TypeaheadMatch) {
+    console.log('typeaheadOnSelect', e);
+    this.brService.get(e.item.id).subscribe(
+      (resource) => this.alternate = new TypedResourceView(resource),
+      (error) => alert('Could not retrieve container data.')
+    )
+    this.isLinking = false;
   }
 
   toggleAlternate() {
@@ -72,3 +108,16 @@ export class ResourcePairFormComponent implements OnInit {
 
 }
 
+class TypeaheadObj {
+   id: string;
+   name: string;
+
+   constructor(tr: TypedResourceView) {
+      this.id = tr._id;
+      this.name = (new StandardPipe().transform(tr)).replace(/<.*?>/, '').replace(/<\/.*?>/, '')
+   }
+
+   public toString (): string {
+      return this.name;
+   }
+}

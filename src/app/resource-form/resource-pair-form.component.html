@@ -20,24 +20,21 @@
 <div *ngIf="!alternate" class="alert alert-info" role="alert">
   Standalone Resource&nbsp;
   <button type="default" class="btn btn-secondary btn-sm" (click)="createNewContainer()">Create new container</button>
-  <!-- <button type="default" class="btn btn-secondary btn-sm" (click)="isLinking = true">Link to container</button>&nbsp; -->
+  <button type="default" class="btn btn-secondary btn-sm" (click)="isLinking = true">Link to container</button>&nbsp;
   <!-- typeahead partOf -->
-  <!-- <div *ngIf="isLinking" style="margin-top: .75rem;" class="form-group row"> -->
-    <!-- <label for="pof" class="col-sm-2 col-form-label">Change container</label> -->
-    <!-- <div class="col-sm-10"> -->
-    <!--   <input id="pof" -->
-    <!--          autocomplete="off" -->
-    <!--          formControlName="partOf" -->
-    <!--          class="form-control" -->
-
-    <!--          [typeahead]="dataSourcePartOf" -->
-    <!--          (typeaheadOnSelect)="typeaheadOnSelectPartOf($event)" -->
-    <!--          [typeaheadOptionsLimit]="7" -->
-    <!--          typeaheadWaitMs="1000" -->
-    <!--          typeaheadOptionField="name" -->
-    <!--          [placeholder]="placeholderPartOf"> -->
-    <!-- </div> -->
-  <!-- </div> -->
+  <div *ngIf="isLinking" style="margin: .75rem;" class="form-group row">
+    {{ asyncSelected | json }}
+    {{ alternate | json }}
+      <input autocomplete="off"
+             class="form-control"
+             [(ngModel)]="asyncSelected"
+             [typeahead]="dataSource"
+             (typeaheadOnSelect)="typeaheadOnSelect($event)"
+             [typeaheadOptionsLimit]="7"
+             typeaheadWaitMs="1000"
+             typeaheadOptionField="name"
+             [placeholder]="typeaheadPlaceholder">
+  </div>
 </div>
 <hr/>
 
