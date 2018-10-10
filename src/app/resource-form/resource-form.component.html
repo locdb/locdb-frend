@@ -24,27 +24,6 @@
     </div>
 
   </div>
-  <!-- typeahead partOf -->
-  <div class="form-group row">
-
-    <label for="pof" class="col-sm-2 col-form-label">Change container</label>
-    <div class="col-sm-10">
-
-      <input id="pof"
-             autocomplete="off"
-             formControlName="partOf"
-             class="form-control"
-
-             [typeahead]="dataSourcePartOf"
-             (typeaheadOnSelect)="typeaheadOnSelectPartOf($event)"
-             [typeaheadOptionsLimit]="7"
-             typeaheadWaitMs="1000"
-             typeaheadOptionField="name"
-             [placeholder]="placeholderPartOf">
-
-    </div>
-
-  </div>
   <!--   contribs   -->
   <label for="contributors">Contributors</label>
   <div id="contributors" formArrayName="contributors" class="mb-2">

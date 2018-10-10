@@ -84,9 +84,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    modalRef: BsModalRef;
    currentContributorForModal = null;
 
-   dataSourcePartOf: Observable<any>;
-   placeholderPartOf = 'Enter name to search for parent';
-
    dataSourceMigration: Observable<any>;
    placeholderMigration = 'Enter name to search for resource to migrate';
    // Retained END
@@ -95,29 +92,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    questions: Array<QuestionBase<any>> = [];
 
    // NEW TAKE END
-
-
-   // objectKeys = Object.keys;
-   // _resourceRadio = 'Child'
-   // set resourceRadio(value: string){
-   //    if (this._resourceRadio === value){
-
-   //    } else {
-   //       if(this._resourceRadio === 'Child'){
-   //          this.resources[0] = this.prepareSaveResource()
-   //       }
-   //       else {
-   //          this.resources[1] = this.prepareSaveResource()
-   //       }
-   //       this._resourceRadio = value
-   //       this.ngOnChanges()
-   //    }
-   // }
-   // get resourceRadio(): string{
-   //    return this._resourceRadio
-   // }
-   // queryPartOf: string;
-
 
    constructor(
       private fb: FormBuilder,
@@ -129,13 +103,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    ) {
       console.log('[BRF] constructor called')
       this.createForm();
-      this.dataSourcePartOf = Observable.create((observer: any) => {
-         // Runs on every search
-         observer.next(this.resourceForm.get('partOf').value); // input field with two way bind
-      }).mergeMap((token: string) => this.getStatesAsObservable(token))
-         .map(r => r.map( s => this.extractTypeahead(s)));
-      // write id of selected resource in partof
-      // maybe show name in form
       this.dataSourceMigration = Observable.create((observer: any) => {
          observer.next(this.resourceForm.get('migration').value);
       }).mergeMap((token: string) => this.getStatesAsObservable(token))
@@ -176,19 +143,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    }
 
 
-   typeaheadOnSelectPartOf(e: TypeaheadMatch): void {
-      // console.log('Selected value: ', e.item.id,  e.item.name);
-      this.resourceForm.get('partOf').setValue(e.item.name)
-      this.resourceForm.value.partOf = e.item.id
-      console.log(this.prepareSaveResource())
-   }
-
    typeaheadOnSelectMigration(e: TypeaheadMatch): void {
       // console.log('Selected value: ', e.item.id,  e.item.name);
       this.resourceForm.get('migration').setValue(e.item.name)
       this.setIdentifiers(this.resourceForm.get('identifiers').value.concat(e.item.identifiers))
-      // this.resourceForm.value.partOf = e.item.id
-      // console.log(this.prepareSaveResource())
       this.toggleMigrating()
    }
 
@@ -202,7 +160,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          publicationyear: '',  // is this default ok?
          contributors: this.fb.array([]),
          identifiers: this.fb.array([]),
-         partOf: '',
          // this holds all foreign properties (flattened)
          foreignProperties: this.fb.group({}),
          migration: false,
@@ -375,11 +332,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          resourcetype: resource.type,
          edition: resource.edition,
          resourcenumber: resource.number,
-         publicationyear: isoFullDate(resource.publicationDate),
-         partOf: resource.partOf,
-         // containerTitle: this.resource.containerTitle // still in progress
+         publicationyear: isoFullDate(resource.publicationDate)
       });
-      this.placeholderPartOf = resource.partOf || 'Enter name to search for parent'
       // console.log("publicationyear: ",  this.resourceForm.value.publicationyear)
       // new clean set contribs
       this.setContributors(resource.contributors);
@@ -468,10 +422,9 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          {
             _id: oldResource._id,
             type: formModel.resourcetype as string,
-            partOf: formModel.partOf || oldResource.partOf,
             // It's super important that these values are undefined,
             // as we never want to update them manually
-            parts: undefined, cites: undefined,
+            partOf: undefined, parts: undefined, cites: undefined,
             status: oldResource.status,
          }
       )
