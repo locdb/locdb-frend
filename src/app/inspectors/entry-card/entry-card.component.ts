@@ -204,7 +204,7 @@ export class EntryCardComponent implements OnChanges {
 
       const elements: string[] = [];
       if (this.entry.ocrData.authors && this.entry.ocrData.authors.length) {
-        const authorsString = this.entry.ocrData.authors.join('; ')
+        const authorsString = this.entry.ocrData.authors.join('; ');
         if (authorsString) {
           elements.push(`${authorsString}`)
         }

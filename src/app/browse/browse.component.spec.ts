@@ -6,16 +6,18 @@ import { UtilsService } from '../typescript-angular-client/api/utils.service'
 import { BibliographicEntryService } from '../typescript-angular-client/api/bibliographicEntry.service'
 import { BibliographicResourceService } from '../typescript-angular-client/api/bibliographicResource.service'
 
+
+import { QuestionService } from '../resource-form/dynamic-question-form/question.service';
+import { DynamicFormQuestionComponent } from '../resource-form/dynamic-question-form/dynamic-form-question.component';
+
 import { BrowseComponent } from './browse.component';
-import { ResourceAccordionGroupComponent } from '../resource-accordion-group/resource-accordion-group.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
-import { ResourceEditableComponent } from '../resource-editable/resource-editable.component';
 import { ResourceFormComponent } from '../resource-form/resource-form.component';
-import { ResourceFormBasicComponent } from '../resource-form-basic/resource-form.component';
 import { ResourceCardComponent } from '../resource-card/resource-card.component';
+import { ResourcePairFormComponent } from '../resource-form/resource-pair-form.component';
 import { MetadataComponent } from '../metadata/metadata.component'
 // import { ResourceComponent } from '../resource/resource.component';
 import { HttpModule } from '@angular/http';
@@ -49,16 +51,15 @@ describe('BrowseComponent', () => {
         BrowseComponent,
         ResourceCardComponent,
         ResourceFormComponent,
-        ResourceFormBasicComponent,
-        ResourceEditableComponent,
-        ResourceAccordionGroupComponent,
+        ResourcePairFormComponent,
         MetadataComponent,
         AuthorsPipe,
         EditorsPipe,
         PublisherPipe,
         EmbracePipe,
         StandardPipe,
-        ContainerPipe
+        ContainerPipe,
+        DynamicFormQuestionComponent,
       ],
       providers: [
         LocdbService,
@@ -68,7 +69,8 @@ describe('BrowseComponent', () => {
         UserService,
         UtilsService,
         BibliographicResourceService,
-        BibliographicEntryService, ]
+        BibliographicEntryService,
+        QuestionService]
     })
     .compileComponents();
   }));

@@ -15,7 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TypeaheadModule } from 'ngx-bootstrap';
 
 import { RouterModule, Routes } from '@angular/router';
-import { ResourceFormBasicComponent } from '../resource-form-basic/resource-form.component'
+import { ResourceFormComponent } from '../resource-form/resource-form.component'
 import { EntryFormComponent } from '../inspectors/entry-form/entry-form.component'
 
 import { BrowserModule } from '@angular/platform-browser'
@@ -60,7 +60,7 @@ describe('EditViewComponent', () => {
         )
       ],
       declarations: [ EditViewComponent,
-        ResourceFormBasicComponent,
+        ResourceFormComponent,
         EntryFormComponent,
         ],
       providers: [

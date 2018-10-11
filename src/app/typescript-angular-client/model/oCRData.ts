@@ -20,4 +20,6 @@ export interface OCRData {
     comments?: string;
     journal?: string;
     volume?: string;
+    namer?: string;
+    detector?: string;
 }

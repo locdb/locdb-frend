@@ -1,248 +1,210 @@
-<!-- Panel heading including search bar -->
 <div class="card">
-<div class="card-header">
-  <div class="row" style="">
-    <div class="form-group col-md-1" style="padding-right: 0px">
-  <button type="button" class="btn btn-block mx-auto" (click)="toggle_extended_search()" style="height: 100px;">
-    <i *ngIf="!search_extended" class="fa fa-angle-double-down"></i>
-    <i *ngIf="search_extended" class="fa fa-angle-double-up"></i>
-  </button>
-  </div>
-    <div class="col-md-10" style="padding: 0px">
-      <div class="form-group">
-        <!-- <textarea id="searcharea"
-                  [(ngModel)]="query"
-                  class="form-control"
-                  (keyup.enter)="refresh()"
-                  rows="3"
-                  style="resize: none;"
-
-                  [typeahead]="dataSource"
-                  (typeaheadOnSelect)="typeaheadOnSelect($event)"
-                  [typeaheadOptionsLimit]="7"
-                  typeaheadWaitMs="500"
-                  typeaheadOptionField="name"
-                  placeholder="Locations loaded with timeout"></textarea> -->
-
-        <textarea id="searcharea"
-                  [(ngModel)]="query"
-                  class="form-control"
-                  (keyup.enter)="refresh()"
-                  rows="3"
-                  style="resize: none;"
-                  ></textarea>
-
+  <div class="card-header">
+    <div class="row" style="">
+      <div class="form-group col-md-1" style="padding-right: 0px">
+        <button type="button" class="btn btn-block mx-auto" (click)="toggle_extended_search()" style="height: 100px;">
+          <i *ngIf="!search_extended" class="fa fa-angle-double-down"></i>
+          <i *ngIf="search_extended" class="fa fa-angle-double-up"></i>
+        </button>
       </div>
-    </div>
-    <div class="col-md-1" style="padding-left: 0px">
-      <button type="button" class="btn btn-success btn-block mx-auto" aria-label="Search" (click)="refresh()" style="height: 100px;">
-        <i class="fa fa-search"></i>
-      </button>
-    </div>
+      <div class="col-md-10" style="padding: 0px">
+        <div class="form-group">
+          <textarea id="searcharea"
+                    [(ngModel)]="query"
+                    class="form-control"
+                    (keyup.enter)="refresh()"
+                    rows="3"
+                    style="resize: none;"
+                    ></textarea>
 
-  </div>
-  <!-- <div class="row" style="" *ngIf="search_extended"> -->
+        </div>
+      </div>
+      <div class="col-md-1" style="padding-left: 0px">
+        <button type="button" class="btn btn-success btn-block mx-auto" aria-label="Search" (click)="refresh()" style="height: 100px;">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+
+    </div>
     <div class="row" *ngIf="search_extended">
       <div class="form-group col-md-5">
         <label for="internalThreshold" class="center-block">Number of internal suggestions</label>
       </div>
       <div class="form-group col-md-5">
         <label for="externalThreshold" class="center-block">Number of external suggestions</label>
+      </div>
+      <div class="col-md-2">
+      </div>
     </div>
-    <div class="col-md-2">
-    </div>
-  </div>
     <div class="row" *ngIf="search_extended">
       <div class="form-group col-md-5">
         <input class="form-control" type="number" min=1 step=1 name="internalThreshold" [(ngModel)]="internalThreshold">
       </div>
       <div class="form-group col-md-5">
         <input class="form-control" type="number" min=1 step=1 name="externalThreshold" [(ngModel)]="externalThreshold">
-    </div>
-    <div class="col-md-2">
-      <popover-content #searchPopover [closeOnClickOutside]="true">
-        <a href="{{'https://scholar.google.com/scholar?q='+encodeURI(query)}}"
-        target="_blank" style="target-new: tab;" class="btn float-right" role="button"
-        (click)="logAskOthers()">Google Scolar</a>
-      </popover-content>
-      <button *ngIf="search_extended" type="button" [popover]="searchPopover" class="btn float-right">
-        Ask Others</button>
       </div>
-  <!-- </div> -->
+      <div class="col-md-2">
+        <popover-content #searchPopover [closeOnClickOutside]="true">
+          <a href="{{'https://scholar.google.com/scholar?q='+encodeURI(query)}}"
+             target="_blank" style="target-new: tab;" class="btn float-right" role="button"
+                                                                              (click)="logAskOthers()">Google Scolar</a>
+        </popover-content>
+        <button *ngIf="search_extended" type="button" [popover]="searchPopover" class="btn float-right">
+          Ask Others</button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row" style="margin-left: .5rem;">
+      <label for="source" class="col-form-label" style="margin-right: .25rem">
+        Source:</label>
+      <div id="source">
+        <select [(ngModel)]="selection.source" class="form-control" >
+          <option *ngFor="let opt of filter_options.source"
+                                               [value]="opt.name">{{opt.name}}</option>
+        </select>
+      </div>
+      <label for="resource_type" class="col-form-label" style="margin-right: .25rem;
+      margin-left: .75rem">
+        Type:</label>
+      <div id="resource_type">
+        <select [(ngModel)]="selection.resource_type" class="form-control" >
+          <option *ngFor="let opt of filter_options.resource_type"
+                                                      [value]="opt.name">{{opt.name}}</option>
+        </select>
+      </div>
+      <label for="contained" class="col-form-label" style="margin-right: .25rem;
+      margin-left: .75rem">
+        Contained:</label>
+      <div id="contained">
+        <select [(ngModel)]="selection.contained" class="form-control" >
+          <option *ngFor="let opt of filter_options.contained"
+                                                  [value]="opt.name">{{opt.name}}</option>
+        </select>
+      </div>
+      <label for="year-filter" class="col-form-label" style="margin-right: .25rem;
+      margin-left: .75rem">
+        Year:</label>
+      <div id="year-filter">
+        <select [(ngModel)]="selection.year" class="form-control" >
+          <option *ngFor="let opt of filter_options.year" [value]="opt.name">{{opt.name}}</option>
+        </select>
+      </div>
+    </div>
+    <!-- Panel body providing suggestions -->
+    <div *ngIf="currentTarget">
+      <hr/>
+      <div class="row">
+        <div class="col-md-12">
+          <div *ngIf="currentTarget" class="card-block">
+            <h4 class="card-title">
+              Current citation target
+            </h4>
+            <app-resource-card [resources]="currentTarget"
+                [selected]="currentTarget == selectedResource"
+                (click)="onSelect(currentTarget)">
+            </app-resource-card>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr/>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card-block">
+          <h4 class="card-title">
+            Suggestions
+          </h4>
+          <div *ngIf="internalSuggestions && !internalInProgress">
+            <div *ngFor="let r of internalSuggestions; let i = index">
+              <app-resource-card *ngIf="max_in <= 0 || i < max_in"
+              [resources]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
+              </app-resource-card>
+            </div>
+            <button type="button" *ngIf="max_in == max_shown_suggestions && internalSuggestions.length > max_shown_suggestions"
+                    class="list-group-item list-group-item-action list-group-item-default text-center"
+                    (click)="toggle_max_in()">
+              <p><em>Show all</em></p>
+            </button>
+            <button type="button" *ngIf="max_in == 0"
+                    class="list-group-item list-group-item-action list-group-item-default text-center"
+                    (click)="toggle_max_in()">
+              <p><em>Show less</em></p>
+            </button>
+          </div>
+          <div *ngIf="internalInProgress" class="loader">
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr/>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card-block">
+          <h4 class="card-title">
+            Suggestions from external sources
+          </h4>
+          <div *ngIf="externalSuggestions && !externalInProgress">
+            <div *ngFor="let r of externalSuggestions;let i = index">
+              <app-resource-card *ngIf="max_ex <= 0 || i < max_ex"
+              [resources]="r" [selected]="r == selectedResource"
+              (click)="onSelect(r)">
+              </app-resource-card>
+            </div>
+            <button type="button" *ngIf="max_ex == max_shown_suggestions  && externalSuggestions.length > max_shown_suggestions"
+                    class="list-group-item list-group-item-action list-group-item-default text-center"
+                    (click)="toggle_max_ex()">
+              <p><em>Show all</em></p>
+            </button>
+            <button type="button" *ngIf="max_ex == 0"
+                    class="list-group-item list-group-item-action list-group-item-default text-center"
+                    (click)="toggle_max_ex()">
+              <p><em>Show less</em></p>
+            </button>
+          </div>
+          <div *ngIf="externalInProgress" class="loader">
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr/>
 
-        <!-- <div class="form-group col-md-1">
-      <button type="button" class="btn" (click)="toggle_extended_search()">
-        <i *ngIf="!search_extended" class="fa fa-angle-double-down"></i>
-        <i *ngIf="search_extended" class="fa fa-angle-double-up"></i>
+    <div class="row" *ngIf="newResource">
+      <div class="col-md-12">
+        <div class="card-block">
+          <h4 class="card-title">
+            New resource from reference metadata
+          </h4>
+          <app-resource-card [resources]="newResource"
+              [selected]="newResource == selectedResource"
+              (click)="onSelect(newResource)" #newResourcePanel>
+          </app-resource-card>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="newResource[0] == null && newResource[1] == null">
+      <div class="col-md-12">
+        <button type="button" class="btn btn-secondary"
+                              (click)="openModal(template)" [disabled]="!entry">
+          <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+          Create Resource
+        </button>
+      </div>
+    </div>
+  </div> <!-- end card body -->
+  <!-- Panel footer allowing actions -->
+  <div class="card-footer">
+    <div class="text-right">
+      <button type="button" class="btn btn-primary" [disabled]="selectedResource == [null,null]"
+                            (click)="commit()">
+        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+        Commit Link
       </button>
-      </div> -->
+    </div>
   </div>
-</div>
-<!-- <div class="card-body" style="height: 1200px; overflow-y: scroll;"> -->
-<div class="card-body">
+</div> <!-- end of card -->
 
-<div class="row" style="margin-left: 10px">
-  <label for="source" class="col-form-label" style="margin-right: 15px">
-    Source:</label>
-  <div id="source">
-    <select [(ngModel)]="selection.source" class="form-control" >
-      <option *ngFor="let opt of filter_options.source"
-      [value]="opt.name">{{opt.name}}</option>
-    </select>
-  </div>
-  <label for="resource_type" class="col-form-label" style="margin-right: 15px;
-          margin-left: 10px">
-    Type:</label>
-  <div id="resource_type">
-    <select [(ngModel)]="selection.resource_type" class="form-control" >
-      <option *ngFor="let opt of filter_options.resource_type"
-      [value]="opt.name">{{opt.name}}</option>
-    </select>
-  </div>
-    <label for="contained" class="col-form-label" style="margin-right: 15px;
-            margin-left: 10px">
-      Contained:</label>
-  <div id="contained">
-    <select [(ngModel)]="selection.contained" class="form-control" >
-      <option *ngFor="let opt of filter_options.contained"
-      [value]="opt.name">{{opt.name}}</option>
-    </select>
-  </div>
-</div>
-  <!-- Panel body providing suggestions -->
-  <div class="row" *ngIf="currentTarget">
-    <div class="col-md-12">
-      <div *ngIf="currentTarget" class="card-block">
-        <h4 class="card-title">
-          Current citation target
-        </h4>
-        <app-resource-card [resources]="currentTarget"
-            [selected]="currentTarget == selectedResource"
-            (click)="onSelect(currentTarget)">
-        </app-resource-card>
-      </div>
-    </div>
-  </div>
-<hr/>
-<div class="row">
-<div class="col-md-12">
-  <div class="card-block">
-    <h4 class="card-title">
-      Suggestions
-    </h4>
-    <div *ngIf="internalSuggestions && !internalInProgress">
-    <div *ngFor="let r of internalSuggestions;let i = index">
-      <app-resource-card *ngIf="max_in <= 0 || i < max_in"
-        [resources]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
-      </app-resource-card>
-    </div>
-    <button type="button" *ngIf="max_in == max_shown_suggestions && internalSuggestions.length > max_shown_suggestions"
-    class="list-group-item list-group-item-action list-group-item-default text-center"
-    (click)="toggle_max_in()">
-      <p><em>Show all</em></p>
-    </button>
-    <button type="button" *ngIf="max_in == 0"
-    class="list-group-item list-group-item-action list-group-item-default text-center"
-    (click)="toggle_max_in()">
-      <p><em>Show less</em></p>
-    </button>
-    </div>
-    <div *ngIf="internalInProgress" class="loader">
-    </div>
-  </div>
-</div>
-</div>
-<hr/>
-  <div class="row">
-  <div class="col-md-12">
-  <div class="card-block">
-    <h4 class="card-title">
-      Suggestions from external sources
-    </h4>
-    <div *ngIf="externalSuggestions && !externalInProgress">
-    <div *ngFor="let r of externalSuggestions;let i = index">
-      <app-resource-card *ngIf="max_ex <= 0 || i < max_ex"
-        [resources]="r" [selected]="r == selectedResource"
-        (click)="onSelect(r)">
-      </app-resource-card>
-    </div>
-    <button type="button" *ngIf="max_ex == max_shown_suggestions  && externalSuggestions.length > max_shown_suggestions"
-    class="list-group-item list-group-item-action list-group-item-default text-center"
-    (click)="toggle_max_ex()">
-      <p><em>Show all</em></p>
-    </button>
-    <button type="button" *ngIf="max_ex == 0"
-    class="list-group-item list-group-item-action list-group-item-default text-center"
-    (click)="toggle_max_ex()">
-      <p><em>Show less</em></p>
-    </button>
-  </div>
-    <div *ngIf="externalInProgress" class="loader">
-    </div>
-  </div>
-</div>
-</div>
-<hr/>
-
-<div class="row" *ngIf="newResource">
-  <div class="col-md-12">
-    <div class="card-block">
-      <h4 class="card-title">
-        New resource from reference metadata
-      </h4>
-      <app-resource-card [resources]="newResource"
-      [selected]="newResource == selectedResource"
-      (click)="onSelect(newResource)" #newResourcePanel>
-      </app-resource-card>
-    </div>
-  </div>
-</div>
-
-<div class="row" *ngIf="newResource[0] == null && newResource[1] == null">
-  <div class="col-md-12">
-    <button type="button" class="btn btn-secondary"
-    (click)="openModal(template)" [disabled]="!entry">
-      <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-      Create Resource
-    </button>
-  </div>
-</div>
-</div> <!-- end card body -->
-<!-- Panel footer allowing actions -->
-<div class="card-footer">
-  <div class="text-right">
-    <button type="button" class="btn btn-primary" [disabled]="selectedResource == [null,null]"
-    (click)="commit()">
-      <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-      Commit Link
-    </button>
-  </div>
-</div>
-<div *ngIf="committed" class="alert alert-success" role="alert">
+<div *ngIf="committed" style="margin: 1rem;" class="alert alert-success" role="alert">
   <strong>Link committed.</strong>
 </div>
-</div>
-
-<ng-template #template>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Select Type of new Resource</h4>
-    <button type="button" class="close pull-right" aria-label="Close"
-    (click)="modalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <!-- <label> Resource Type: </label>
-
-        <select name="modaltypeselect" [(ngModel)]="resourceType">
-        <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
-        </select> -->
-
-        <app-resource-form-basic [resources]="newResource"></app-resource-form-basic>
-      <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
-  </div>
-  <!-- <div class="modal-footer">
-    <button type="button" class="btn btn-primary float-right" (click)="create_resourse()" [disabled]="!resourceType">Confirm </button>
-  </div> -->
-
-</ng-template>

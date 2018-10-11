@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { models, enums, composeName, TypedResourceView } from '../locdb';
-import { StandardPipe, JournalStandardPipe }from './type-pipes';
+import { StandardPipe, JournalStandardPipe } from './type-pipes';
 
 
 /*

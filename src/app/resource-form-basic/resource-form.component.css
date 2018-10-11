@@ -1,9 +1,0 @@
-a {
-    word-wrap: break-word;
-}
-
-
-table td {
-    word-wrap: break-word;
-    overflow: hidden;
-}

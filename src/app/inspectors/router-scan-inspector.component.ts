@@ -30,12 +30,57 @@ export class RouterScanInspectorComponent implements OnInit {
   parentResource: TypedResourceView;
 
   /* Currently displayed references (should always correspond to scan) */
-  refs: Array<models.BibliographicEntry> = [];
+  private _refs: Array<models.BibliographicEntry> = [];
+  /* setter and getter to enable filtering without loosing the actual data */
+  get refs(){
+      // return this._refs
+      return this.filterEntries(this._refs)
+  }
+  set refs(refs: Array<models.BibliographicEntry>){
+    this._refs = refs
+    this.refreshFilterOptions()
+  }
+  /* apply the filter functions */
+  filterEntries(entries: models.BibliographicEntry[]) {
+    // console.log("filter Entries: ", entries)
+    if (entries !== null && entries !== undefined) {
+      let filtered_entries = entries.filter(e => e !== null && e !== undefined)
+      /* allways drop status obsolete */
+      filtered_entries = entries.filter(e => e.status !== 'OBSOLETE')
+
+      for (const attribute of this.filter_attributes){
+          filtered_entries = filtered_entries.filter(this.search_filter(attribute,
+            this.selection[attribute]))
+      }
+      return filtered_entries;
+    }
+  }
+
+  search_filter(selection_type: string, selection_name: string) {
+    return this.filter_options[selection_type]
+                    .find(e => e.name === selection_name)
+                    .filter
+  }
+  /* extract filter options and generate the necessary filterfunctions */
+  refreshFilterOptions() {
+    for (const current_entry of this.refs) {
+        for (const attribute of this.filter_attributes){
+          const value = current_entry.ocrData[attribute]
+          if (value && this.filter_options[attribute].every(y => y.name !== value)) {
+            this.filter_options[attribute].push({name: value,
+                  filter: x => x ? x.ocrData[attribute] === value : false})}}
+        }
+    for (let attribute of this.filter_attributes){
+      this.filter_options[attribute].sort((e1, e2) => ( e1.name < e2.name ||
+                  e1.name == 'All' && e2.name != 'All' ? -1 : 1))
+    }}
+
 
   /* Flag whether the scan or the digital references list is shown */
   scanIsVisible = true;
 
-  /* Currently active entry, is passed down to the suggestion component */
+  /* Currently active entry, is passed down to the app-display and
+  app-entry-list components */
   entry: models.BibliographicEntry;
 
   /* Indicates loading */
@@ -55,6 +100,14 @@ export class RouterScanInspectorComponent implements OnInit {
   scanUrl: string;
   /* A flag to determine whether the scan is displayable (is not a pdf) */
   scanIsDisplayable = true;
+  /* set attributes from ocrData to filter from
+  NOTE: attributes to filter by still have to be set manually,
+  because not all attributes are relevant or are to specific to filter by */
+  filter_attributes = ['detector', 'namer', 'date']
+  /* these objects store the filter functions and selected options */
+  filter_options = {}
+  selection = {}
+
   /* Overwrite setter such that scanIsDisplayable is always set correctly */
   private _scan: models.Scan = null;
   get scan(): models.Scan { return this._scan; }
@@ -122,6 +175,12 @@ export class RouterScanInspectorComponent implements OnInit {
     );
     // Fetch the scans associated with scan id (can be performed in parallel to resource retrieval
     this.fetchEntriesForScan(scanId);
+
+    /* inititialize filter_options */
+    for(const attribute of this.filter_attributes){
+      this.filter_options[attribute] = [{name: 'All', filter: e => true}]
+      this.selection[attribute] = 'All'
+    }
   }
 
   /* Given a scanId, fetches all associated entries from the backend */

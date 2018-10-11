@@ -2,6 +2,10 @@ a {
     word-wrap: break-word;
 }
 
+label {
+    font-weight: bold;
+}
+
 
 table td {
     word-wrap: break-word;
