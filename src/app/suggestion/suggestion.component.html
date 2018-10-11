@@ -81,8 +81,11 @@
 <!-- <div class="card-body" style="height: 1200px; overflow-y: scroll;"> -->
 <div class="card-body">
 
-<div class="row" style="margin-left: 10px">
-  <label for="source" class="col-form-label" style="margin-right: 15px">
+  {{ filter_options | json }}
+  <br/>
+  {{ selection | json }}
+<div class="row" style="margin-left: .5rem;">
+  <label for="source" class="col-form-label" style="margin-right: .25rem">
     Source:</label>
   <div id="source">
     <select [(ngModel)]="selection.source" class="form-control" >
@@ -90,8 +93,8 @@
       [value]="opt.name">{{opt.name}}</option>
     </select>
   </div>
-  <label for="resource_type" class="col-form-label" style="margin-right: 15px;
-          margin-left: 10px">
+  <label for="resource_type" class="col-form-label" style="margin-right: .25rem;
+          margin-left: .75rem">
     Type:</label>
   <div id="resource_type">
     <select [(ngModel)]="selection.resource_type" class="form-control" >
@@ -99,13 +102,21 @@
       [value]="opt.name">{{opt.name}}</option>
     </select>
   </div>
-    <label for="contained" class="col-form-label" style="margin-right: 15px;
-            margin-left: 10px">
+    <label for="contained" class="col-form-label" style="margin-right: .25rem;
+            margin-left: .75rem">
       Contained:</label>
   <div id="contained">
     <select [(ngModel)]="selection.contained" class="form-control" >
       <option *ngFor="let opt of filter_options.contained"
       [value]="opt.name">{{opt.name}}</option>
+    </select>
+  </div>
+    <label for="year-filter" class="col-form-label" style="margin-right: .25rem;
+            margin-left: .75rem">
+      Year:</label>
+  <div id="year-filter">
+    <select [(ngModel)]="selection.year" class="form-control" >
+      <option *ngFor="let opt of filter_options.year" [value]="opt.name">{{opt.name}}</option>
     </select>
   </div>
 </div>

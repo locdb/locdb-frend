@@ -46,11 +46,14 @@ export class SuggestionComponent implements OnInit, OnChanges {
     contained: [{name: 'All', filter: e => true},
       {name: 'Contained', filter: e => !!e[1]},
       {name: 'Standalone', filter: e => !e[1]}
-    ]}
+    ],
+    year: [{name: 'All', filter: e => true}]
+  }
   selection = {
     source: 'All',
     resource_type: 'All',
-    contained: 'All'
+    contained: 'All',
+    year: 'All'
   }
 
 
@@ -122,6 +125,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
 
   search_filter(selection_type: string, selection_name: string) {
+    // returns the correct filter depending on the selection
     return this.filter_options[selection_type]
       .find(e => e.name === selection_name)
       .filter
@@ -141,16 +145,28 @@ export class SuggestionComponent implements OnInit, OnChanges {
           this.filter_options.source.push({name: source,
             filter: e => e.some(x => x ? x.source === source : false)})
         }
-        const type = suggestion[0].type
-        if (type && this.filter_options.resource_type.every(y => y.name !== type)) {
-          this.filter_options.resource_type.push({name: type,
-            filter: e => e.some(x => x ? x.type === type : false)})
+        const rtype = suggestion[0].type
+        if (rtype && this.filter_options.resource_type.every(y => y.name !== rtype)) {
+          this.filter_options.resource_type.push({name: rtype,
+            filter: e => e.some(x => x ? x.type === rtype : false)})
+        }
+
+        if (suggestion[0].publicationDate) {
+          // only add a filter when there is an actual date
+          const year = suggestion[0].publicationDate.getFullYear();
+          const yearString = year.toString();
+          if (year && this.filter_options.year.every(y => y.name !== yearString)) {
+            this.filter_options.year.push({name: yearString,
+              filter: e => e.some(x => x.publicationDate ? x.publicationDate.getFullYear() === year : false )
+            });
+          }
         }
       }
     }
   }
 
   filterSuggestions(suggestions: Array<[TypedResourceView, TypedResourceView]>) {
+    // Apply all selected filters
     if (suggestions !== null && suggestions !== undefined) {
       return suggestions.filter(e => e !== null && e !== undefined)
         .filter(this.search_filter('source',
@@ -159,6 +175,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
           this.selection.resource_type))
         .filter(this.search_filter('contained',
           this.selection.contained))
+        .filter(this.search_filter('year',
+          this.selection.year))
     } else { return suggestions; }
   }
 
@@ -260,7 +278,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
       // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
       this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold).subscribe(
         (sug) => { Object.is(this.entry, oldEntry) ? this.saveInternal(sug) : console.log('discarded suggestions')
-          // this.loggingService.logSuggestionsArrived(this.entry, sug, true)
         },
         (err) => { this.internalInProgress = false;
           console.log(err) }
@@ -329,6 +346,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   saveInternal(sgt: Array<[TypedResourceView, TypedResourceView]>) {
+    this.loggingService.logSuggestionsArrived(this.entry, sgt.length, true)
     this.internalSuggestions = sgt
     if (this.internalSuggestions && this.internalSuggestions.length <= this.max_shown_suggestions) {
       this.max_in = -1;
@@ -341,6 +359,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   saveExternal(sgt: Array<[TypedResourceView, TypedResourceView]>) {
+    this.loggingService.logSuggestionsArrived(this.entry, sgt.length, false)
     this.externalSuggestions = sgt;
     if (this.externalSuggestions && this.externalSuggestions.length <= this.max_shown_suggestions) {
       this.max_ex = -1;
