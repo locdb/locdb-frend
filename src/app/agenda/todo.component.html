@@ -19,10 +19,9 @@
             </button>
             <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
                                                   role="menu" aria-labelledby="button-basic">
-                <li *ngFor="let emsc of embodiment_scans" role="menuitem">
+                <li *ngFor="let emsc of embodiment_scans; index as i" role="menuitem">
                     <a class="dropdown-item" (click)="inspectScan(emsc); false">
-                        {{ this.unpackFirstPage(emsc) }} - {{this.unpackLastPage(emsc)}},
-                        {{ this.unpackType(emsc)}} {{ this.unpackFormat(emsc)}}
+                        Page {{ this.unpackFirstPage(emsc) + i}}
                         <i *ngIf="isOcrTriggerable(emsc)" class="fa fa-play-circle" aria-hidden="true" (click)="triggerOcrProcessing(emsc[1]); $event.stopPropagation()"></i>
                     </a>
                 </li>
@@ -34,6 +33,9 @@
         </button>&nbsp;
         <button type="button" class="btn btn-secondary btn-sm" (click)="edit()">
             <i class="fa fa-edit"></i> Edit
+        </button>&nbsp;
+        <button type="button" class="btn btn-success btn-sm" (click)="fullyValidateResource()">
+            Done
         </button>
 
         </div> <!--close text right-->

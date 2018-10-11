@@ -15,7 +15,7 @@ export class LoggingService {
   private http: any;
   private _augmentFunctions = <any>[];
   private url_ = `${environment.locdbUrl}/log`;
-  private log_active = false
+  private log_active = environment.production;
 
   constructor(http: Http) {
     this.http = <any>http;
@@ -39,22 +39,19 @@ export class LoggingService {
       entry_id: entry._id,
       current_selected_ids: selectedRessource.identifiers
     };
-    console.log(logobject);
-    if(this.log_active){
-      this.sendLog(logobject);
-    }
+    this.sendLog(logobject);
   }
 
   logReferenceSelected(selectedEntry: models.BibliographicEntry) {
     const logobject = { msg: 'REFERENCE SELECTED',
      current_selected_id: selectedEntry._id };
-    console.log(logobject);
-    if(this.log_active){
-      this.sendLog(logobject);}
+    this.sendLog(logobject);
   }
 
-  logSearchIssued(entry: models.BibliographicEntry, selectedRessource: TypedResourceView, queryString: string, confidences_values: any){//}[number, number]) {
-    if (selectedRessource){
+  logSearchIssued(entry: models.BibliographicEntry, selectedRessource:
+    TypedResourceView, queryString: string, confidences_values:
+    any) {
+    if (selectedRessource) {
       const logobject = {
         msg: 'SEARCH ISSUED',
         entry_id: entry._id,
@@ -62,11 +59,8 @@ export class LoggingService {
         queryString: queryString,
         confidences_values: confidences_values
       };
-      console.log(logobject);
-      if(this.log_active){
-        this.sendLog(logobject);}
-    }
-    else{
+      this.sendLog(logobject);
+    } else {
       const logobject = {
         msg: 'SEARCH ISSUED',
         entry_id: entry._id,
@@ -74,25 +68,18 @@ export class LoggingService {
         queryString: queryString,
         confidences_values: confidences_values
       };
-      console.log(logobject);
-      if(this.log_active){
-        this.sendLog(logobject);}
+      this.sendLog(logobject);
     }
-
   }
 
-  logSuggestionsArrived(entry: models.BibliographicEntry, sugs: TypedResourceView[], internal) {
+  logSuggestionsArrived(entry: models.BibliographicEntry, howmany: number, internal: boolean) {
       const logobject = {
         msg: 'SUGGESTIONS ARRIVED',
         entry_id: entry._id,
         internal: internal,
-        n_suggestions: sugs.length,
+        n_suggestions: howmany,
       };
-      console.log(logobject);
-      if(this.log_active){
-        this.sendLog(logobject);
-      }
-
+    this.sendLog(logobject);
   }
 
 
@@ -103,9 +90,7 @@ export class LoggingService {
       target: target._id,
       from_where: from_where
     };
-    console.log(logobject);
-    if(this.log_active){
-      this.sendLog(logobject);}
+    this.sendLog(logobject);
 
   }
 
@@ -116,10 +101,7 @@ export class LoggingService {
       newtarget: newtarget._id,
       from_where: from_where
     };
-    console.log(logobject);
-    if(this.log_active){
-      this.sendLog(logobject);}
-
+    this.sendLog(logobject);
   }
 
   logStartEditing(resource: TypedResourceView, from_where?: Provenance) {
@@ -130,9 +112,7 @@ export class LoggingService {
       // target: BibliographicResource,
       from_where: from_where
     };
-    console.log(logobject);
-    if(this.log_active){
-      this.sendLog(logobject);}
+    this.sendLog(logobject);
 
   }
   logEndEditing(resource: TypedResourceView, from_where?: Provenance) {
@@ -143,10 +123,7 @@ export class LoggingService {
       // target: BibliographicResource,
       from_where: from_where
     };
-    console.log(logobject);
-    if(this.log_active){
-      this.sendLog(logobject);}
-
+    this.sendLog(logobject);
   }
 
   logAskOthersPressed(entry: models.BibliographicEntry, query: String) {
@@ -155,27 +132,28 @@ export class LoggingService {
       entry_id: entry._id,
       query: query
     };
+    this.sendLog(logobject);
+  }
+
+  sendLog(logobject: any) {
+    // always log to console
     console.log(logobject);
-    if(this.log_active){
-      this.sendLog(logobject);}
-
+    // only log if active
+    if (this.log_active) {
+      this.uploadLog(logobject).subscribe(
+        (res) => {console.log('Success:', res)},
+        (err) => {console.log('Error:', err)}
+      );
+    }
   }
 
+  uploadLog(logObject: any): Observable<any> {
+    console.log('Uploading Log Object')
+    const body = JSON.stringify(logObject);
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
 
-  sendLog(logobject){
-    this.uploadLog(logobject).subscribe(
-        (res) => {console.log("Success", res)},
-        (err) => {console.log("Success", err)}
-    );
-  }
-
-  uploadLog(logObject:any): Observable<any> {
-    console.log("send log")
-    let body = JSON.stringify(logObject);
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let options = new RequestOptions({ headers: headers });
-
-    console.log(body,headers,options)
+    console.log(body, headers, options)
     return this.http.post(this.url_, body, options)
     .map(this.extractData)
     .catch(this.handleError);

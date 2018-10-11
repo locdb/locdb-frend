@@ -6,7 +6,7 @@ import { LocdbService } from '../../locdb.service';
 
 @Component({
   selector: 'app-entry-form',
-  templateUrl: './entry-form0.component.html',
+  templateUrl: './entry-form.component.html',
   styleUrls: ['./entry-form.component.css']
 })
 
@@ -22,8 +22,7 @@ export class EntryFormComponent implements OnChanges {
 
   constructor(
     private fb: FormBuilder,
-    private locdbService: LocdbService)
-  { this.createForm(); }
+    private locdbService: LocdbService) { this.createForm(); }
 
   createForm() {
     this.entryForm = this.fb.group({
@@ -196,7 +195,7 @@ export class EntryFormComponent implements OnChanges {
 
     const elements: string[] = [];
     if (this.entry.ocrData.authors && this.entry.ocrData.authors.length) {
-      const authorsString = this.entry.ocrData.authors.join('; ')
+      const authorsString = this.entry.ocrData.authors.join('; ');
       if (authorsString) {
         elements.push(`${authorsString}:`)
       }

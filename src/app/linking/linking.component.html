@@ -17,15 +17,16 @@
 </div>
 
 
-<div class="row" *ngIf="isInspecting">
-  <div class="col-xs-12 col-sm-6 col-md-6">
-    <app-scan-inspector *ngIf="scan" [resource]="context.source" [scan]="scan" (entry)="updateEntry($event)"></app-scan-inspector>
-    <app-refs-inspector *ngIf="refs" [resource]="context.source" [refs]="refs" (entry)="updateEntry($event)"></app-refs-inspector>
-  </div>
-  <div class="col-xs-12 col-sm-6 col-md-6">
-    <app-suggestion [entry]="entry" (suggest)='updateTarget($event)'></app-suggestion>
-  </div>
-</div>
+<!-- handled by router -->
+<!-- <div class="row" *ngIf="isInspecting"> -->
+<!--   <div class="col-xs-12 col-sm-6 col-md-6"> -->
+<!--     <app-scan-inspector *ngIf="scan" [resource]="context.source" [scan]="scan" (entry)="updateEntry($event)"></app-scan-inspector> -->
+<!--     <app-refs-inspector *ngIf="refs" [resource]="context.source" [refs]="refs" (entry)="updateEntry($event)"></app-refs-inspector> -->
+<!--   </div> -->
+<!--   <div class="col-xs-12 col-sm-6 col-md-6"> -->
+<!--     <app-suggestion [entry]="entry" (suggest)='updateTarget($event)'></app-suggestion> -->
+<!--   </div> -->
+<!-- </div> -->
 
 
   <!-- <div class='row'> -->
