@@ -157,7 +157,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
           const yearString = year.toString();
           if (year && this.filter_options.year.every(y => y.name !== yearString)) {
             this.filter_options.year.push({name: yearString,
-              filter: e => e.some(x => x.publicationDate ? x.publicationDate.getFullYear() === year : false )
+              filter: e => e.some(x => x && x.publicationDate ? x.publicationDate.getFullYear() === year : false )
             });
           }
         }
