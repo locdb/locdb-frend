@@ -30,7 +30,8 @@ import { StandardPipe } from '../pipes/type-pipes';
 
 export class SuggestionComponent implements OnInit, OnChanges {
 
-  @ViewChild('newResourcePanel') newResourceChild ;
+  // Unused, we do not do pop-overs any more
+  // @ViewChild('newResourcePanel') newResourceChild ;
   // retain entry as input, then we can modifiy its 'references' field
   @Input() entry: models.BibliographicEntry;
   @Output() suggest: EventEmitter<models.BibliographicResource> = new EventEmitter();
@@ -377,15 +378,19 @@ export class SuggestionComponent implements OnInit, OnChanges {
     console.log('entry ', this.entry)
     console.log('Call Logging');
     this.loggingService.logCommitPressed(this.entry, this.selectedResource[0], null);
-    const pinnedResource = this.selectedResource;
-    console.log('Commiting pair:', this.selectedResource);
+    // unused
+    // const pinnedResource = this.selectedResource;
+    console.log('Committing pair:', this.selectedResource);
     this.locdbService.safeCommitLink(this.entry, this.selectedResource).then(
       res => {
         this.currentTarget = res;
         this.onSelect(this.currentTarget);
-        // console.log('Log after commit');
-        // this.loggingService.logCommited(this.entry, this._currentTarget[0], null);
-      })
+        this.committed = true;
+        console.log('Log after commit');
+        this.loggingService.logCommited(this.entry, this._currentTarget[0], null);
+      },
+      err => { console.log(err); alert('An error occurred.' + err.message) }
+    )
   }
 
 
@@ -435,9 +440,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
     const nresource = new TypedResourceView({type: metadata.type});
     nresource.set_from(metadata)
     this.newResource = [nresource, null]
-    this.selectedResource = this.newResource
-    // open edit pannel
-    this.newResourceChild.forceOpen()
+    this.selectedResource = this.newResource;
+    // unused we do not do popovers any more
+    // this.newResourceChild.forceOpen()
 
     // this.modalRef = this.modalService.show(template);
   }
