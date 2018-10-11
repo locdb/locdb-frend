@@ -22,6 +22,21 @@ import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { StandardPipe } from '../pipes/type-pipes';
 
 
+function sortByName(a, b) {
+  const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+  const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+  if (nameA < nameB) {
+    return -1;
+  }
+  if (nameA > nameB) {
+    return 1;
+  }
+
+  // names must be equal
+  return 0;
+}
+
+
 @Component({
   selector: 'app-suggestion',
   templateUrl: './suggestion.component.html',
@@ -37,25 +52,13 @@ export class SuggestionComponent implements OnInit, OnChanges {
   @Output() suggest: EventEmitter<models.BibliographicResource> = new EventEmitter();
 
   // filter: [TypedResourceView, TypedResourceView] => boolean
-  filter_options = {
-    source: [
-      {name: 'All', filter: e => true}
-    ],
-    resource_type: [
-      {name: 'All', filter: e => true}
-    ],
-    contained: [{name: 'All', filter: e => true},
-      {name: 'Contained', filter: e => !!e[1]},
-      {name: 'Standalone', filter: e => !e[1]}
-    ],
-    year: [{name: 'All', filter: e => true}]
-  }
-  selection = {
-    source: 'All',
-    resource_type: 'All',
-    contained: 'All',
-    year: 'All'
-  }
+  filter_options: {
+    source: Array<{name, filter}>,
+      resource_type: Array<{name, filter}>,
+      contained: Array<{name, filter}>,
+      year: Array<{name, filter}>
+  };
+  selection: { source: string, resource_type: string, contained: string, year: string };
 
 
   // make this visible to template
@@ -89,7 +92,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   get currentTarget() {
     return this._currentTarget;
   }
-  set currentTarget(target: [TypedResourceView, TypedResourceView] | TypedResourceView) {
+  set currentTarget(target: [TypedResourceView, TypedResourceView]) {
     if (target instanceof TypedResourceView) {
       this._currentTarget = [target, null];
     } else {
@@ -113,17 +116,19 @@ export class SuggestionComponent implements OnInit, OnChanges {
   /* Default top-k thresholds */
   internalThreshold = 5;
   externalThreshold = 30;
-  dataSource: Observable<any>
+  dataSource: Observable<any>;
 
 
-    constructor(private locdbService: LocdbService,
-      private loggingService: LoggingService,
-      private modalService: BsModalService) {
-      this.dataSource = Observable.create((observer: any) => {
-        // Runs on every search
-        observer.next(this.query);
-      }).mergeMap((token: string) => this.getStatesAsObservable(token)).map(r => r.map( s => this.extractTypeahead(s)));
-    }
+  constructor(private locdbService: LocdbService,
+    private loggingService: LoggingService,
+    private modalService: BsModalService) {
+    this.dataSource = Observable.create((observer: any) => {
+      // Runs on every search
+      observer.next(this.query);
+    }).mergeMap((token: string) => this.getStatesAsObservable(token)).map(r => r.map( s => this.extractTypeahead(s)));
+    // Important else template fails in the beginning.
+    this.initFilterOptions();
+  }
 
   search_filter(selection_type: string, selection_name: string) {
     // returns the correct filter depending on the selection
@@ -132,7 +137,34 @@ export class SuggestionComponent implements OnInit, OnChanges {
       .filter
   }
 
+  initFilterOptions() {
+    // initialize the filter options
+
+    // inital set of options
+    this.filter_options = {
+      source: [
+        {name: 'All', filter: e => true}
+      ],
+      resource_type: [
+        {name: 'All', filter: e => true}
+      ],
+      contained: [{name: 'All', filter: e => true},
+        {name: 'Contained', filter: e => !!e[1]},
+        {name: 'Standalone', filter: e => !e[1]}
+      ],
+      year: [{name: 'All', filter: e => true}]
+    };
+    // pre-selected values
+    this.selection = {
+      source: 'All',
+      resource_type: 'All',
+      contained: 'All',
+      year: 'All'
+    };
+  }
+
   refreshFilterOptions() {
+    this.initFilterOptions();
     for (const suggestion of this.internalSuggestions.concat(this.externalSuggestions)) {
       if (suggestion) {
         // source selection
@@ -164,6 +196,12 @@ export class SuggestionComponent implements OnInit, OnChanges {
         }
       }
     }
+
+    // Sort the entries for nicer selection
+    this.filter_options.source.sort(sortByName)
+    this.filter_options.resource_type.sort(sortByName)
+    this.filter_options.contained.sort(sortByName)
+    this.filter_options.year.sort(sortByName)
   }
 
   filterSuggestions(suggestions: Array<[TypedResourceView, TypedResourceView]>) {
@@ -204,6 +242,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges | any) {
+    console.log('[Suggestion Component] ngOnChanges called');
+    // reset filters
+    this.initFilterOptions();
     // This is called every time the input this.entry changes //
     if (this.entry) {
       console.log('Entry: ', this.entry)
@@ -219,7 +260,14 @@ export class SuggestionComponent implements OnInit, OnChanges {
         this.locdbService.bibliographicResource(this.entry.references).subscribe(
           (trv) => {
             // is null parent correct here or should we also retrieve it
-            this.currentTarget = [trv, null];
+            if (trv.partOf) {
+              this.locdbService.bibliographicResource(trv.partOf).subscribe(
+                (container) => this.currentTarget = [trv, container],
+                (error) => { console.log('Could not retrieve container'); this.currentTarget = [trv, null]; }
+              );
+              } else {
+                this.currentTarget = [trv, null];
+              }
             this.onSelect(this.currentTarget);
           },
           (err) => { console.log('Invalid entry.references pointer', this.entry.references) });
@@ -432,26 +480,12 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
   }
 
-  // atm creating new resource
-  // without openning modal
-  openModal(template: TemplateRef<any>) {
-    // entry -> resource
+  createResourceFromMetaData() {
     const metadata = OCR2MetaData(this.entry.ocrData);
     const nresource = new TypedResourceView({type: metadata.type});
     nresource.set_from(metadata)
     this.newResource = [nresource, null]
     this.selectedResource = this.newResource;
-    // unused we do not do popovers any more
-    // this.newResourceChild.forceOpen()
-
-    // this.modalRef = this.modalService.show(template);
-  }
-
-  create_resourse(resource: TypedResourceView) {
-    console.log('Create me', this.entry, resource);
-    this.newResource = [resource, null];
-    this.modalRef.hide();
-    this.onSelect(this.newResource);
   }
 
   encodeURI(uri: string) {

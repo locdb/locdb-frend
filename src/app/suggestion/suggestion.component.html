@@ -186,7 +186,7 @@
     <div class="row" *ngIf="newResource[0] == null && newResource[1] == null">
       <div class="col-md-12">
         <button type="button" class="btn btn-secondary"
-                              (click)="openModal(template)" [disabled]="!entry">
+                              (click)="createResourceFromMetaData()" [disabled]="!entry">
           <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
           Create Resource
         </button>
