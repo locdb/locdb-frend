@@ -179,19 +179,18 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
 
     ngOnChanges(changes: SimpleChanges | any) {
-        // Input todo and this method should replace manual calling of updateDisplay
-        // console.log('ngOnChanges in display');
-        if (this.entries && this.entries.length) {
-            // extract rectanlges and so on
-            // this.extractRects(this.entries);
-            // there can be empty coordinate fields! we need to filter first
-            this.rects = this.entries.filter(
-                e => e.ocrData.coordinates && this.validateCoordinates(e.ocrData.coordinates)
-            ).map(this.rectFromEntry);
-            const firstUnprocessed = this.rects.find(r => !r.entry.references);
-            // this.selectedEntry = firstUnprocessed.entry;
-            // this.entry.next(this.selectedEntry);
-        }
+    }
+
+    reload_rects(){
+      // Input todo and this method should replace manual calling of updateDisplay
+      if (this.entries && this.entries.length) {
+          // extract rectanlges and so on
+          // there can be empty coordinate fields! we need to filter first
+          this.rects = this.entries.filter(
+              e => e.ocrData.coordinates && this.validateCoordinates(e.ocrData.coordinates)
+          ).map(this.rectFromEntry);
+          const firstUnprocessed = this.rects.find(r => !r.entry.references);
+      }
     }
 
     ngOnInit() {
@@ -210,7 +209,6 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             this.onSelect(this.rects[current]);
             return false;
         }, [], 'one rectangle downward'));
-
     }
 
     onSelect(rect: Rect) {
@@ -275,6 +273,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             console.log('Image size = 0', realDim);
         }
         this.initInteract(this.imgX, this.imgY)
+        this.reload_rects();
         // this.initSVGZoom();
     }
 
