@@ -1,12 +1,11 @@
 {
   "*": {
-    "dispatch": "./node_modules/.bin/karma start karma.conf.js --single-run --browsers Chrome",
-    "make": "npm build",
-    "start": "npm start"
+    "dispatch": "export CHROME_BIN=chromium; ng test --watch false",
+    "make": "ng build",
+    "start": "ng serve"
   },
   "src/app/*.css": {"type": "css"},
   "src/app/*.html": {"alternate": "src/app/{}.ts", "type": "html"},
   "src/app/*.spec.ts": {"type": "spec"},
-  "src/app/*.ts": {"alternate": "src/app/{}.html", "type": "ts"},
-  "todo.rst": {"type": "todo"}
+  "src/app/*.ts": {"alternate": "src/app/{}.html", "type": "ts"}
 } 

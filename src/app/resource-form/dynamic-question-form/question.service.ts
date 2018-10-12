@@ -35,6 +35,7 @@ function getTypeForProperty(property: string) {
 export class QuestionService {
 
   getQuestionsForResource(trv: TypedResourceView) {
+    // depends on active view
     const foreignProperties = trv.getForeignProperties();
     const questions: QuestionBase<any>[] = []
 

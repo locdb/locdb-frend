@@ -3,7 +3,7 @@
     <label for="resourcetype" class="col-sm-2 col-form-label">Type</label>
     <div class="col-sm-10">
 
-      <select id="resourcetype" class="form-control" formControlName="resourcetype">
+      <select id="resourcetype" class="form-control" formControlName="resourcetype" (change)="onChangeType($event.target.value)">
         <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
       </select>
 
@@ -20,27 +20,6 @@
     <label for="subtitle" class="col-sm-2 col-form-label">Subtitle</label>
     <div class="col-sm-10">
       <input id="subtitle" class="form-control" formControlName="subtitle">
-
-    </div>
-
-  </div>
-  <!-- typeahead partOf -->
-  <div class="form-group row">
-
-    <label for="pof" class="col-sm-2 col-form-label">Part of</label>
-    <div class="col-sm-10">
-
-      <input id="pof"
-             autocomplete="off"
-             formControlName="partOf"
-             class="form-control"
-
-             [typeahead]="dataSourcePartOf"
-             (typeaheadOnSelect)="typeaheadOnSelectPartOf($event)"
-             [typeaheadOptionsLimit]="7"
-             typeaheadWaitMs="1000"
-             typeaheadOptionField="name"
-             [placeholder]="placeholderPartOf">
 
     </div>
 
@@ -131,36 +110,26 @@
         <input class="form-control" formControlName="literalValue">
       </div>
     </div>
-    <div *ngIf="!migrating">
-      <button type="button" class="btn btn-secondary btn-sm" aria-label="Add Identifier" (click)="addIdentifier()">
-        Add identifier
-      </button>
-      <button type="button" class="btn btn-secondary btn-sm pull-right" aria-label="Start Migrating" (click)="toggleMigrating()">
-        Migrate identifiers from other resource ...
-      </button>
-    </div>
-    <div *ngIf="migrating" class="form-group row">
-      <div class="col-sm-1">
-        <button type="button" class="btn btn-secondary btn-sm" aria-label="Cancel Migrating" (click)="toggleMigrating()">
-          Cancel
-        </button>
-      </div>
-      <div class="col-sm-11">
-
-        <input id="mig"
-               autocomplete="off"
-               formControlName="migration"
-               class="form-control"
-
-               [typeahead]="dataSourceMigration"
-               (typeaheadOnSelect)="typeaheadOnSelectMigration($event)"
-               [typeaheadOptionsLimit]="10"
-               typeaheadWaitMs="1000"
-               typeaheadOptionField="name"
-               [placeholder]="placeholderMigration">
-
-      </div>
-    </div>
+  </div>
+  <div>
+    <button type="button" class="btn btn-secondary btn-sm" aria-label="Add Identifier" (click)="addIdentifier()">
+      Add identifier
+    </button>
+    <button type="button" class="btn btn-secondary btn-sm pull-right" aria-label="Toggle Migrating" (click)="toggleMigrating()">
+      {{ !migrating ? 'Migrate identifiers' : 'Cancel' }}
+    </button>
+  </div>
+  <div *ngIf="migrating" class="form-group row" style="margin: 1rem;">
+    <input id="mig"
+           autocomplete="off"
+           formControlName="migration"
+           class="form-control"
+           [typeahead]="dataSourceMigration"
+           (typeaheadOnSelect)="typeaheadOnSelectMigration($event)"
+           [typeaheadOptionsLimit]="10"
+           typeaheadWaitMs="1000"
+           typeaheadOptionField="name"
+           [placeholder]="placeholderMigration">
   </div>
 
   <div *ngIf="questions.length" formGroupName="foreignProperties" class="mb-2">

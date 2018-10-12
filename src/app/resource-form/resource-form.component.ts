@@ -22,6 +22,7 @@ import { QuestionBase } from './dynamic-question-form/question-base';
 import { Observable } from 'rxjs/Rx'
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { StandardPipe } from '../pipes/type-pipes';
+import { ContainerPipe } from '../pipes/container.pipe';
 
 // Service to commit changes to the resource
 import { BibliographicResourceService } from '../typescript-angular-client/api/api';
@@ -84,40 +85,14 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    modalRef: BsModalRef;
    currentContributorForModal = null;
 
-   dataSourcePartOf: Observable<any>;
-   placeholderPartOf = 'Enter name to search for parent';
-
    dataSourceMigration: Observable<any>;
-   placeholderMigration = 'Enter name to search for resource to migrate';
+   placeholderMigration = 'Enter title to search for resource to migrate';
    // Retained END
    //
    // Holds questions for foreign properties
    questions: Array<QuestionBase<any>> = [];
 
    // NEW TAKE END
-
-
-   // objectKeys = Object.keys;
-   // _resourceRadio = 'Child'
-   // set resourceRadio(value: string){
-   //    if (this._resourceRadio === value){
-
-   //    } else {
-   //       if(this._resourceRadio === 'Child'){
-   //          this.resources[0] = this.prepareSaveResource()
-   //       }
-   //       else {
-   //          this.resources[1] = this.prepareSaveResource()
-   //       }
-   //       this._resourceRadio = value
-   //       this.ngOnChanges()
-   //    }
-   // }
-   // get resourceRadio(): string{
-   //    return this._resourceRadio
-   // }
-   // queryPartOf: string;
-
 
    constructor(
       private fb: FormBuilder,
@@ -129,13 +104,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    ) {
       console.log('[BRF] constructor called')
       this.createForm();
-      this.dataSourcePartOf = Observable.create((observer: any) => {
-         // Runs on every search
-         observer.next(this.resourceForm.get('partOf').value); // input field with two way bind
-      }).mergeMap((token: string) => this.getStatesAsObservable(token))
-         .map(r => r.map( s => this.extractTypeahead(s)));
-      // write id of selected resource in partof
-      // maybe show name in form
       this.dataSourceMigration = Observable.create((observer: any) => {
          observer.next(this.resourceForm.get('migration').value);
       }).mergeMap((token: string) => this.getStatesAsObservable(token))
@@ -167,28 +135,21 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    }
 
    extractTypeahead(typedTuple: [TypedResourceView, TypedResourceView]) {
-      // what is this?
-      return new TypeaheadObj(typedTuple[0])
+      // pass two objects into typeahead to properly create teh string?
+      const [resource, container] = typedTuple;
+      console.log('extract Typeahead', typedTuple);
+      return new TypeaheadObj(resource, container);
    }
 
    getStatesAsObservable(token: string): Observable<any> {
-      return this.locdbService.suggestionsByQuery(token, false, 0)
+      return this.locdbService.suggestionsByQuery(token, false, 0);
    }
 
-
-   typeaheadOnSelectPartOf(e: TypeaheadMatch): void {
-      // console.log('Selected value: ', e.item.id,  e.item.name);
-      this.resourceForm.get('partOf').setValue(e.item.name)
-      this.resourceForm.value.partOf = e.item.id
-      console.log(this.prepareSaveResource())
-   }
 
    typeaheadOnSelectMigration(e: TypeaheadMatch): void {
       // console.log('Selected value: ', e.item.id,  e.item.name);
-      this.resourceForm.get('migration').setValue(e.item.name)
+      this.resourceForm.get('migration').setValue(e.item.name) // why?
       this.setIdentifiers(this.resourceForm.get('identifiers').value.concat(e.item.identifiers))
-      // this.resourceForm.value.partOf = e.item.id
-      // console.log(this.prepareSaveResource())
       this.toggleMigrating()
    }
 
@@ -202,10 +163,10 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          publicationyear: '',  // is this default ok?
          contributors: this.fb.array([]),
          identifiers: this.fb.array([]),
-         partOf: '',
          // this holds all foreign properties (flattened)
          foreignProperties: this.fb.group({}),
-         migration: false,
+         // does this need to be in the form?
+         migration: '',
       });
       this.agentIdForm = this.fb.group({
          // you can also set initial formgroup inside if you like
@@ -242,19 +203,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       // console.log("On init form", this.resources)
    }
 
-   nameFromAgent(agent: models.ResponsibleAgent): string {
-      // forward to locdb.ts method for unified treatment everywhere
-      return composeName(agent);
-   }
-
-   agentFromName(forminput: string): models.ResponsibleAgent {
-      // forward to locdb.ts method for unified treatment everywhere
-      const agent = decomposeName(forminput);
-      // decompose only yields familyName givenName and nameString
-      agent.identifiers = [];
-      return agent;
-   }
-
    // clean array treatment
    setContributors(roles: models.AgentRole[]) {
       console.log('[debug] set contributors ', roles)
@@ -270,7 +218,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          arole => this.fb.group(
             {
                role: arole.roleType,
-               name: this.nameFromAgent(arole.heldBy),
+               name: composeName(arole.heldBy),
                identifiers: this.fb.array(
                   arole.heldBy.identifiers && arole.heldBy.identifiers.length ?
                   arole.heldBy.identifiers.map(e => this.fb.group(e)) : []
@@ -302,7 +250,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
    addContributor() {
       // reference from getter above
-      this.contributors.push(this.fb.group({role: 'AUTHOR', name: 'name', identifiers: []}));
+      this.contributors.push(this.fb.group({role: 'AUTHOR', name: '', identifiers: []}));
    }
 
    removeContributor(index: number) {
@@ -319,7 +267,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             shift *= -1
             index -= shift
          }
-         const tmp = this.contributors.value; // TODO FIXME this is not a deep copy..
+         const tmp = this.contributors.value; // TODO FIXME this is not a deep copy.. its ok here
          // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
          tmp.splice(index + shift + 1, 0, tmp[index]);
          // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
@@ -356,9 +304,18 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       this.identifiers.removeAt(index);
    }
 
-   setQuestions(forResource: TypedResourceView) {
-      this.questions = this.qs.getQuestionsForResource(forResource);
+   setQuestions(forResource: TypedResourceView, asType: enums.resourceType = null) {
+      let resourceView: TypedResourceView = forResource;
+      if (asType) {
+         // Change the view if desired (required for type change events)
+         resourceView = resourceView.astype(asType);
+      }
+      this.questions = this.qs.getQuestionsForResource(resourceView);
       this.resourceForm.setControl('foreignProperties', this.qcs.toFormGroup(this.questions));
+   }
+
+   onChangeType(newType: enums.resourceType) {
+      this.setQuestions(this.resource, newType);
    }
 
    ngOnChanges()  {
@@ -375,11 +332,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          resourcetype: resource.type,
          edition: resource.edition,
          resourcenumber: resource.number,
-         publicationyear: isoFullDate(resource.publicationDate),
-         partOf: resource.partOf,
-         // containerTitle: this.resource.containerTitle // still in progress
+         publicationyear: isoFullDate(resource.publicationDate)
       });
-      this.placeholderPartOf = resource.partOf || 'Enter name to search for parent'
       // console.log("publicationyear: ",  this.resourceForm.value.publicationyear)
       // new clean set contribs
       this.setContributors(resource.contributors);
@@ -403,7 +357,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                this.resource = new TypedResourceView(response);
                this.resourceChange.emit(this.resource);
             },
-            error => alert('Could not save changes: ' + error.msg)
+            error => alert('Could not save changes: ' + error.message)
          )
       } else {
          // Create new resource if it has an ID
@@ -412,7 +366,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
                this.resource = new TypedResourceView(response);
                this.resourceChange.emit(this.resource);
             },
-            error => alert('Could not save changes: ' + error.msg)
+            error => alert('Could not save changes: ' + error.message)
          )
       }
       // In any case, notify higher-level components
@@ -424,12 +378,15 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
 
    reconstructAgentRole(name: string, role: string, identifiers: models.Identifier[]): models.AgentRole {
+      const agent = decomposeName(name);
+      // decompose only yields familyName givenName and nameString
+      agent.identifiers = identifiers || [];
       const agentRole = {
+         // role identifiers are pointless
          identifiers: [],
          roleType: role,
-         heldBy: this.agentFromName(name)
+         heldBy: agent
       }
-      agentRole.heldBy.identifiers = identifiers;
       console.log('[debug] reconstructed agentRole: ', agentRole)
       return agentRole;
    }
@@ -468,10 +425,9 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          {
             _id: oldResource._id,
             type: formModel.resourcetype as string,
-            partOf: formModel.partOf || oldResource.partOf,
             // It's super important that these values are undefined,
             // as we never want to update them manually
-            parts: undefined, cites: undefined,
+            partOf: undefined, parts: undefined, cites: undefined,
             status: oldResource.status,
          }
       )
@@ -521,10 +477,16 @@ class TypeaheadObj {
    private name: string;
    private identifiers: models.Identifier[];
 
-   constructor(tr: TypedResourceView) {
-      this.id = tr._id
-      this.name = (new StandardPipe().transform(tr)).replace(/<.*?>/, '').replace(/<\/.*?>/, '')
-      this.identifiers = tr.identifiers
+   constructor(resource: TypedResourceView, container: TypedResourceView | null = null) {
+      this.id = resource._id;
+      this.identifiers = resource.identifiers;
+
+
+      if (!container) {
+         this.name  = new ContainerPipe().transform(resource, true);
+      } else {
+         this.name = new StandardPipe().transform(resource) + ' <em>In:</em> ' + new ContainerPipe().transform(container, false);
+      }
    }
 
    public toString (): string {

@@ -22,6 +22,21 @@ import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { StandardPipe } from '../pipes/type-pipes';
 
 
+function sortByName(a, b) {
+  const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+  const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+  if (nameA < nameB) {
+    return -1;
+  }
+  if (nameA > nameB) {
+    return 1;
+  }
+
+  // names must be equal
+  return 0;
+}
+
+
 @Component({
   selector: 'app-suggestion',
   templateUrl: './suggestion.component.html',
@@ -30,28 +45,20 @@ import { StandardPipe } from '../pipes/type-pipes';
 
 export class SuggestionComponent implements OnInit, OnChanges {
 
-  @ViewChild('newResourcePanel') newResourceChild ;
+  // Unused, we do not do pop-overs any more
+  // @ViewChild('newResourcePanel') newResourceChild ;
   // retain entry as input, then we can modifiy its 'references' field
   @Input() entry: models.BibliographicEntry;
   @Output() suggest: EventEmitter<models.BibliographicResource> = new EventEmitter();
 
   // filter: [TypedResourceView, TypedResourceView] => boolean
-  filter_options = {
-    source: [
-      {name: 'All', filter: e => true}
-    ],
-    resource_type: [
-      {name: 'All', filter: e => true}
-    ],
-    contained: [{name: 'All', filter: e => true},
-      {name: 'Contained', filter: e => !!e[1]},
-      {name: 'Standalone', filter: e => !e[1]}
-    ]}
-  selection = {
-    source: 'All',
-    resource_type: 'All',
-    contained: 'All'
-  }
+  filter_options: {
+    source: Array<{name, filter}>,
+      resource_type: Array<{name, filter}>,
+      contained: Array<{name, filter}>,
+      year: Array<{name, filter}>
+  };
+  selection: { source: string, resource_type: string, contained: string, year: string };
 
 
   // make this visible to template
@@ -85,7 +92,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   get currentTarget() {
     return this._currentTarget;
   }
-  set currentTarget(target: [TypedResourceView, TypedResourceView] | TypedResourceView) {
+  set currentTarget(target: [TypedResourceView, TypedResourceView]) {
     if (target instanceof TypedResourceView) {
       this._currentTarget = [target, null];
     } else {
@@ -109,25 +116,55 @@ export class SuggestionComponent implements OnInit, OnChanges {
   /* Default top-k thresholds */
   internalThreshold = 5;
   externalThreshold = 30;
-  dataSource: Observable<any>
+  dataSource: Observable<any>;
 
 
-    constructor(private locdbService: LocdbService,
-      private loggingService: LoggingService,
-      private modalService: BsModalService) {
-      this.dataSource = Observable.create((observer: any) => {
-        // Runs on every search
-        observer.next(this.query);
-      }).mergeMap((token: string) => this.getStatesAsObservable(token)).map(r => r.map( s => this.extractTypeahead(s)));
-    }
+  constructor(private locdbService: LocdbService,
+    private loggingService: LoggingService,
+    private modalService: BsModalService) {
+    this.dataSource = Observable.create((observer: any) => {
+      // Runs on every search
+      observer.next(this.query);
+    }).mergeMap((token: string) => this.getStatesAsObservable(token)).map(r => r.map( s => this.extractTypeahead(s)));
+    // Important else template fails in the beginning.
+    this.initFilterOptions();
+  }
 
   search_filter(selection_type: string, selection_name: string) {
+    // returns the correct filter depending on the selection
     return this.filter_options[selection_type]
       .find(e => e.name === selection_name)
       .filter
   }
 
+  initFilterOptions() {
+    // initialize the filter options
+
+    // inital set of options
+    this.filter_options = {
+      source: [
+        {name: 'All', filter: e => true}
+      ],
+      resource_type: [
+        {name: 'All', filter: e => true}
+      ],
+      contained: [{name: 'All', filter: e => true},
+        {name: 'Contained', filter: e => !!e[1]},
+        {name: 'Standalone', filter: e => !e[1]}
+      ],
+      year: [{name: 'All', filter: e => true}]
+    };
+    // pre-selected values
+    this.selection = {
+      source: 'All',
+      resource_type: 'All',
+      contained: 'All',
+      year: 'All'
+    };
+  }
+
   refreshFilterOptions() {
+    this.initFilterOptions();
     for (const suggestion of this.internalSuggestions.concat(this.externalSuggestions)) {
       if (suggestion) {
         // source selection
@@ -141,16 +178,34 @@ export class SuggestionComponent implements OnInit, OnChanges {
           this.filter_options.source.push({name: source,
             filter: e => e.some(x => x ? x.source === source : false)})
         }
-        const type = suggestion[0].type
-        if (type && this.filter_options.resource_type.every(y => y.name !== type)) {
-          this.filter_options.resource_type.push({name: type,
-            filter: e => e.some(x => x ? x.type === type : false)})
+        const rtype = suggestion[0].type
+        if (rtype && this.filter_options.resource_type.every(y => y.name !== rtype)) {
+          this.filter_options.resource_type.push({name: rtype,
+            filter: e => e.some(x => x ? x.type === rtype : false)})
+        }
+
+        if (suggestion[0].publicationDate) {
+          // only add a filter when there is an actual date
+          const year = suggestion[0].publicationDate.getFullYear();
+          const yearString = year.toString();
+          if (year && this.filter_options.year.every(y => y.name !== yearString)) {
+            this.filter_options.year.push({name: yearString,
+              filter: e => e.some(x => x && x.publicationDate ? x.publicationDate.getFullYear() === year : false )
+            });
+          }
         }
       }
     }
+
+    // Sort the entries for nicer selection
+    this.filter_options.source.sort(sortByName)
+    this.filter_options.resource_type.sort(sortByName)
+    this.filter_options.contained.sort(sortByName)
+    this.filter_options.year.sort(sortByName)
   }
 
   filterSuggestions(suggestions: Array<[TypedResourceView, TypedResourceView]>) {
+    // Apply all selected filters
     if (suggestions !== null && suggestions !== undefined) {
       return suggestions.filter(e => e !== null && e !== undefined)
         .filter(this.search_filter('source',
@@ -159,6 +214,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
           this.selection.resource_type))
         .filter(this.search_filter('contained',
           this.selection.contained))
+        .filter(this.search_filter('year',
+          this.selection.year))
     } else { return suggestions; }
   }
 
@@ -185,6 +242,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges | any) {
+    console.log('[Suggestion Component] ngOnChanges called');
+    // reset filters
+    this.initFilterOptions();
     // This is called every time the input this.entry changes //
     if (this.entry) {
       console.log('Entry: ', this.entry)
@@ -195,12 +255,20 @@ export class SuggestionComponent implements OnInit, OnChanges {
       // add new Resource
       // does not work with new datamodel
       // this.newResource = this.resourceFromEntry(this.entry);
+      this.newResource = [null, null];
       if (this.entry.references) {
         // entry already has a link
         this.locdbService.bibliographicResource(this.entry.references).subscribe(
           (trv) => {
             // is null parent correct here or should we also retrieve it
-            this.currentTarget = [trv, null];
+            if (trv.partOf) {
+              this.locdbService.bibliographicResource(trv.partOf).subscribe(
+                (container) => this.currentTarget = [trv, container],
+                (error) => { console.log('Could not retrieve container'); this.currentTarget = [trv, null]; }
+              );
+              } else {
+                this.currentTarget = [trv, null];
+              }
             this.onSelect(this.currentTarget);
           },
           (err) => { console.log('Invalid entry.references pointer', this.entry.references) });
@@ -260,7 +328,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
       // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
       this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold).subscribe(
         (sug) => { Object.is(this.entry, oldEntry) ? this.saveInternal(sug) : console.log('discarded suggestions')
-          // this.loggingService.logSuggestionsArrived(this.entry, sug, true)
         },
         (err) => { this.internalInProgress = false;
           console.log(err) }
@@ -329,6 +396,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   saveInternal(sgt: Array<[TypedResourceView, TypedResourceView]>) {
+    this.loggingService.logSuggestionsArrived(this.entry, sgt.length, true)
     this.internalSuggestions = sgt
     if (this.internalSuggestions && this.internalSuggestions.length <= this.max_shown_suggestions) {
       this.max_in = -1;
@@ -341,6 +409,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   saveExternal(sgt: Array<[TypedResourceView, TypedResourceView]>) {
+    this.loggingService.logSuggestionsArrived(this.entry, sgt.length, false)
     this.externalSuggestions = sgt;
     if (this.externalSuggestions && this.externalSuggestions.length <= this.max_shown_suggestions) {
       this.max_ex = -1;
@@ -358,15 +427,19 @@ export class SuggestionComponent implements OnInit, OnChanges {
     console.log('entry ', this.entry)
     console.log('Call Logging');
     this.loggingService.logCommitPressed(this.entry, this.selectedResource[0], null);
-    const pinnedResource = this.selectedResource;
-    console.log('Commiting pair:', this.selectedResource);
+    // unused
+    // const pinnedResource = this.selectedResource;
+    console.log('Committing pair:', this.selectedResource);
     this.locdbService.safeCommitLink(this.entry, this.selectedResource).then(
       res => {
         this.currentTarget = res;
         this.onSelect(this.currentTarget);
-        // console.log('Log after commit');
-        // this.loggingService.logCommited(this.entry, this._currentTarget[0], null);
-      })
+        this.committed = true;
+        console.log('Log after commit');
+        this.loggingService.logCommited(this.entry, this._currentTarget[0], null);
+      },
+      err => { console.log(err); alert('An error occurred.' + err.message) }
+    )
   }
 
 
@@ -408,26 +481,12 @@ export class SuggestionComponent implements OnInit, OnChanges {
     }
   }
 
-  // atm creating new resource
-  // without openning modal
-  openModal(template: TemplateRef<any>) {
-    // entry -> resource
+  createResourceFromMetaData() {
     const metadata = OCR2MetaData(this.entry.ocrData);
     const nresource = new TypedResourceView({type: metadata.type});
     nresource.set_from(metadata)
     this.newResource = [nresource, null]
-    this.selectedResource = this.newResource
-    // open edit pannel
-    this.newResourceChild.forceOpen()
-
-    // this.modalRef = this.modalService.show(template);
-  }
-
-  create_resourse(resource: TypedResourceView) {
-    console.log('Create me', this.entry, resource);
-    this.newResource = [resource, null];
-    this.modalRef.hide();
-    this.onSelect(this.newResource);
+    this.selectedResource = this.newResource;
   }
 
   encodeURI(uri: string) {

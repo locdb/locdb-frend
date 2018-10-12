@@ -31,24 +31,25 @@ export class JournalStandardPipe implements PipeTransform {
     const publisherPepe = new PublisherPipe()
     const datePepe = new DatePipe('en'); // locale
     if (!typedResource) { return '(no resource)'; }
-    let journalTitle = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'title')
+    let journalTitle = typedResource.getTypedProperty(enums.resourceType.journal, 'title')
     if (standalone) {
+      // duplicate with below?
       journalTitle = '<b>' + journalTitle + '</b>';
     }
-    const issueTitle = typedResource.getTypedPropertyWrap(enums.resourceType.journalIssue, 'title')
-    const volumeTitle = typedResource.getTypedPropertyWrap(enums.resourceType.journalVolume, 'title')
+    const issueTitle = typedResource.getTypedProperty(enums.resourceType.journalIssue, 'title')
+    const volumeTitle = typedResource.getTypedProperty(enums.resourceType.journalVolume, 'title')
     // journals do not have a publication date themselves, rather on the issue level
-    // let publicationDate = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'publicationDate')
+    // let publicationDate = typedResource.getTypedProperty(enums.resourceType.journal, 'publicationDate')
     // go with astype to get proper date treatment from the accessor
     const publicationDate = typedResource.astype(enums.resourceType.journalIssue).publicationDate;
     const isoPublicationDate = datePepe.transform(publicationDate, 'yyyy');
-    const contributors = typedResource.getTypedPropertyWrap(enums.resourceType.journal, 'contributors')
+    const contributors = typedResource.getTypedProperty(enums.resourceType.journal, 'contributors')
     // const authors = authorsPepe.transform(contributors, '; ', contrib_suffix)
     // const editors = editorsPepe.transform(contributors, '; ', contrib_suffix)
-    const issueNumber =  'issue ' + typedResource.getTypedPropertyWrap(enums.resourceType.journalIssue, 'number')
-    const volumeNumber =  'volume ' + typedResource.getTypedPropertyWrap(enums.resourceType.journalVolume, 'number')
+    const issueNumber =  'issue ' + typedResource.getTypedProperty(enums.resourceType.journalIssue, 'number')
+    const volumeNumber =  'volume ' + typedResource.getTypedProperty(enums.resourceType.journalVolume, 'number')
     const publisher = publisherPepe.transform(typedResource.contributors) || publisherPepe.transform(contributors)
-    // const identifiers =  typedResource.getTypedPropertyWrap(forced_type, 'identifiers')
+    // const identifiers =  typedResource.getTypedProperty(forced_type, 'identifiers')
     return this.prettyStandardString(
       journalTitle,
       issueTitle,
@@ -112,18 +113,6 @@ export class JournalStandardPipe implements PipeTransform {
       }
     }
     s += ' ' + otherAttributes.join(seperator);
-    // console.log('jStandard pipe result after joining:', s);
-
-
-    // TODO FIXME this caused some trouble! :)
-    // if(standardString.length >= seperator.length+1){
-    //   standardString = standardString.slice(0, -(seperator.length+1))
-    // }
-
-    // we do this in the template so that we can also display only the container
-    // if(standardString.length > 1){
-    //   standardString = "<em>In:&nbsp;</em>"  + standardString
-    // }
     return s;
 
 

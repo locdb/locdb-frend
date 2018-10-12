@@ -2,6 +2,7 @@ import { OnChanges, Component, Input, Output, EventEmitter} from '@angular/core'
 import { gatherScansWithEmbodiment, models, enums, TypedResourceView } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Router, ActivatedRoute} from '@angular/router';
+import { BibliographicResourceService } from '../typescript-angular-client/api/bibliographicResource.service'
 
 
 @Component({
@@ -20,7 +21,8 @@ export class TodoComponent implements OnChanges {
 
   constructor(private route: ActivatedRoute,
     private router: Router,
-    private locdbService: LocdbService
+    private locdbService: LocdbService,
+    private brService: BibliographicResourceService
   ) {}
 
   ngOnChanges() {
@@ -40,6 +42,15 @@ export class TodoComponent implements OnChanges {
     this.router.navigate(['/edit/'], { queryParams: { resource: this.todo._id, container: this.container ? this.container._id : ''} });
   }
 
+  fullyValidateResource() {
+    if (confirm(`You are about to mark the resource '${this.todo.title}' as done.  The resource will not appear on the agenda again and all of its unlinked reference entries will be marked as obsolete. Okay?`)) {
+      this.brService.setValid(this.todo._id).subscribe(
+        (success) => location.reload(),
+        (error) => alert('An error occurred: ' + error.message)
+      );
+    }
+  }
+
   isOcrTriggerable(emsc: [models.ResourceEmbodiment, models.Scan]): boolean {
     const [emb, scan] = emsc;
     if (scan.status === enums.status.notOcrProcessed) {
@@ -48,8 +59,8 @@ export class TodoComponent implements OnChanges {
     return false;
   }
 
-  unpackFirstPage(emsc) {
-    return emsc[0].firstPage;
+  unpackFirstPage(emsc): number {
+    return emsc[0].firstPage || 1;
   }
 
   unpackLastPage(emsc) {

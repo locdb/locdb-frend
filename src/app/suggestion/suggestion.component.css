@@ -13,3 +13,7 @@
 /*     color: #607D8B; */
 /*     background-color: #DDD; */
 /* } */
+
+label {
+  font-weight: bold;
+}

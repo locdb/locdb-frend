@@ -214,7 +214,7 @@ export class LocdbService {
 
   bibliographicResource(identifier: string): Observable<TypedResourceView> {
     return this.bibliographicResourceService.get(identifier).pipe(map( br => new
-      TypedResourceView(br)),retryWhen(error => error.pipe(delay(500))),take(5),);
+      TypedResourceView(br)), retryWhen(error => error.pipe(delay(500))), take(5), );
   }
 
   parentResource(br: TypedResourceView | models.BibliographicResource): Observable<TypedResourceView> {
