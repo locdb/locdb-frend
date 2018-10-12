@@ -263,6 +263,12 @@ export class RouterScanInspectorComponent implements OnInit {
       this.display.zoomReset();
     }
   }
+
+  saveBoxes(){
+    if (this.scanIsDisplayable) {
+      this.display.saveBoxes();
+    }
+  }
   // Zooming methods END
 
 }

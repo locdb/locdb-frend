@@ -38,7 +38,22 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     // @Input() todo: ToDoScans;
 
     @Input() img_src = '';
-    @Input() entries: models.BibliographicEntry[] = [];
+    private _entries = []
+    @Input() set entries(entries: models.BibliographicEntry[]){
+     console.log("set entries")
+      if(entries.length == this._entries.length &&
+        entries.every(e => this._entries.includes(e))){
+         console.log("old == new")
+       }
+       else {
+        console.log("old != new")
+          this._entries = entries
+          this.reload_rects()
+    }
+    }
+    get entries(): models.BibliographicEntry[]{
+      return this._entries
+    }
 
     _selectedEntry: models.BibliographicEntry = null;
     get selectedEntry(){
@@ -71,13 +86,11 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     initInteract(imgWidth, imgHeight){
       // get the interact variable from the parent window
-      console.log('imgWidth', imgWidth)
-      console.log('imgHeight', imgHeight)
-      console.log('screenWidth: ', this.svgroot)
-      console.log('screenWidth: ', this.svgroot.nativeElement.clientWidth)
-      console.log('screenHeight:', this.svgroot.nativeElement.scrollHeight)
-
-
+      // console.log('imgWidth', imgWidth)
+      // console.log('imgHeight', imgHeight)
+      // console.log('screenWidth: ', this.svgroot)
+      // console.log('screenWidth: ', this.svgroot.nativeElement.clientWidth)
+      // console.log('screenHeight:', this.svgroot.nativeElement.scrollHeight)
       interact('.resizeable-rect')
         .draggable({
           restrict: {
@@ -103,45 +116,75 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           inertia: true,
         })
         .on('resizemove', function (event) {
-          console.log(imgWidth)
-          console.log(imgHeight)
+          const min_width = 50
+          const min_height = 20
+          // console.log(imgWidth)
+          // console.log(imgHeight)
           let target = event.target,
               x = (parseFloat(target.getAttribute('x')) || 0),
               y = (parseFloat(target.getAttribute('y')) || 0);
-          console.log(target.id, x,y, event.deltaRect, event.rect)
+          // console.log(target.id, x,y, event.deltaRect, event.rect)
         //
           // update the element's style
-          console.log(event)
+          // console.log(event)
           let svg = target.parentNode.parentNode
           const clientToImageWidthRatio = imgWidth / svg.clientWidth
           const clientToImageHeightRatio = imgHeight / svg.clientHeight
-          console.log(svg.clientWidth, clientToImageWidthRatio)
-          console.log(svg.clientHeight, clientToImageHeightRatio)
-          target.style.width  = event.rect.width * clientToImageWidthRatio + 'px';
-          target.style.height = event.rect.height * clientToImageHeightRatio + 'px';
+          // console.log(svg.clientWidth, clientToImageWidthRatio)
+          // console.log(svg.clientHeight, clientToImageHeightRatio)
+          let width  = event.rect.width;
+          let height = event.rect.height;
+          let deltaLeft = event.deltaRect.left;
+          let deltaTop = event.deltaRect.top;
 
-          // translate when resizing from top or left edges
-          x += event.deltaRect.left * clientToImageWidthRatio;
-          y += event.deltaRect.top * clientToImageHeightRatio;
+          if(width < min_width){
+            width = min_width
+            deltaLeft = 0
+          }
+          if(height < min_height){
+            height = min_height
+            deltaTop = 0
+          }
+               // translate when resizing from top or left edges
+          x += deltaLeft * clientToImageWidthRatio;
+          y += deltaTop * clientToImageHeightRatio;
 
 
           // target.style.webkitTransform = target.style.transform =
           //     'translate(' + x + 'px,' + y + 'px)';
           // target.x = x;
           // target.y = y
+
+        target.setAttribute('width', width * clientToImageWidthRatio);
+        target.setAttribute('height', height * clientToImageHeightRatio);
         target.setAttribute('x', x);
         target.setAttribute('y', y);
-          target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height);
+
+        // target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height);
          })
-         .on('dragmove', function (event) {
+         .on('dragmove', function (event){
            let target = event.target,
-               x = (parseFloat(target.getAttribute('x')) || 0),
-               y = (parseFloat(target.getAttribute('y')) || 0);
-           console.log(target.id, x,y, event.deltaRect, event.rect)
-           console.log(event)
+           x = (parseFloat(target.getAttribute('x')) || 0),
+           y = (parseFloat(target.getAttribute('y')) || 0);
+
+           let svg = target.parentNode.parentNode
+           const clientToImageWidthRatio = imgWidth / svg.clientWidth
+           const clientToImageHeightRatio = imgHeight / svg.clientHeight
+
+           x += event.dx * clientToImageWidthRatio;
+           y += event.dy * clientToImageHeightRatio;
+
+
+           // target.style.webkitTransform = target.style.transform =
+           //     'translate(' + x + 'px,' + y + 'px)';
+           // target.x = x;
+           // target.y = y
+           target.setAttribute('x', x);
+           target.setAttribute('y', y);
+           // console.log(target.id, x,y, event.deltaRect, event.rect)
+           // console.log(event)
         });
     }
-
     initSVGZoom() {
         console.log('[Display] init Zoom')
         // let zoom = d3.zoom().on('zoom', function () {
@@ -178,7 +221,25 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
       this.selection.transition().duration(500).call(this.zoom.transform, d3.zoomIdentity);
     }
 
+    saveBoxes(){
+      console.log('click')
+      console.log(this.rects.map(e => e.entry.ocrData.coordinates))
+      for(let rect of this.zoomSVG.nativeElement.querySelectorAll('rect')){
+        const id = rect.getAttribute('id')
+        const x = rect.getAttribute('x')
+        const y = rect.getAttribute('y')
+        const w = rect.getAttribute('width')
+        const h = rect.getAttribute('height')
+        this.rects[id].saveCoordinates(x, y, w, h)
+        // console.log('id', id, 'x', x, 'y',
+        // y, 'prestine?', 'width', w, 'height', h,
+        // this.rects[id].x == x && this.rects[id].y == y &&
+        // this.rects[id].width == w && this.rects[id].height == h? true : false)
+      }
+      console.log(this.rects.map(e => e.entry.ocrData.coordinates))
+      this.reload_rects()
 
+    }
     ngOnChanges(changes: SimpleChanges | any) {
     }
 
@@ -223,38 +284,9 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     rectFromEntry(entry: models.BibliographicEntry): Rect {
-        const values = entry.ocrData.coordinates.split(' ')
-        const rect = {
-                x: Number(values[0]),
-                y: Number(values[1]),
-                width: Number(values[2])  - Number(values[0]),
-                height: Number(values[3]) - Number(values[1]),
-                entry: entry
-            }
         // returns null when coordinates string is empty
-        return rect;
+        return new Rect(entry)
     }
-
-    // extractRects(entries) {
-    //     this.rects = [];
-    //     for (const e of entries){
-    //         // console.log("Entrie.OCRData.coordinates: ", e.coordinates);
-    //         const coords = e.ocrData.coordinates;
-    //         const rectField = coords.split(' ');
-    //         this.rects.push({
-
-    //             // x1 y1 x2 y2
-    //             x: Number(rectField[0]),
-    //             y: Number(rectField[1]),
-    //             width: Number(rectField[2])  - Number(rectField[0]),
-    //             height: Number(rectField[3]) - Number(rectField[1]),
-    //             state: e.references ? 1 : -1
-
-    //         });
-    //         console.log(rectField);
-    //         console.log(this.rects[this.rects.length - 1]);
-    //     }
-    // }
 
     realImgDimension(url) {
         const i = new Image();
@@ -285,10 +317,6 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             this._hotkeysService.remove(hk);
         }
     }
-
-    resize(e){
-      console.log("Resize image event: ", e)
-    }
 }
 
 class Rect {
@@ -297,4 +325,47 @@ class Rect {
     height: number;
     width: number;
     entry: models.BibliographicEntry;
+
+    constructor(entry?: models.BibliographicEntry){
+                  if(entry){
+                    this.setByEntry(entry)
+                  }
+                }
+
+    setByEntry(entry){
+      const values = entry.ocrData.coordinates.split(' ')
+        this.x = Number(values[0])
+        this.y = Number(values[1]),
+        this.width = Number(values[2])  - Number(values[0]),
+        this.height = Number(values[3]) - Number(values[1]),
+        this.entry = entry
+    }
+
+    updateOCR(){
+      console.log("Update with: ", this.x + " " + this.y  + " " +
+                (this.width + this.x) + " " + (this.height + this.y))
+        this.entry.ocrData.coordinates =
+          this.x + " " + this.y  + " " +
+          (this.width + this.x) + " " + (this.height + this.y)
+    }
+
+    saveCoordinates(x: number, y: number, width: number, height: number){
+      const prestine = this.checkChange(x, y, width, height)
+      this.x = Math.round(x)
+      this.y = Math.round(y)
+      this.width = Math.round(width)
+      this.height = Math.round(height)
+      // console.log('x', x, 'y',
+            // y, 'prestine?', prestine, 'width', width, 'height', height)
+      // console.log('entry', this.entry)
+      if(!prestine){
+        this.updateOCR();
+      }
+    }
+
+    checkChange(x: number, y: number, width: number, height: number){
+      return this.x == x && this.y == y &&
+             this.width == width && this.height == height? true : false
+           }
+
 }
