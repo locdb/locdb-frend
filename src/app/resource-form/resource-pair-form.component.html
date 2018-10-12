@@ -33,7 +33,7 @@
              [(ngModel)]="asyncSelected"
              [typeahead]="dataSource"
              (typeaheadOnSelect)="typeaheadOnSelect($event)"
-             [typeaheadOptionsLimit]="7"
+             [typeaheadOptionsLimit]="10"
              typeaheadWaitMs="1000"
              typeaheadOptionField="name"
              [placeholder]="typeaheadPlaceholder">

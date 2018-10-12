@@ -22,6 +22,7 @@ import { QuestionBase } from './dynamic-question-form/question-base';
 import { Observable } from 'rxjs/Rx'
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { StandardPipe } from '../pipes/type-pipes';
+import { ContainerPipe } from '../pipes/container.pipe';
 
 // Service to commit changes to the resource
 import { BibliographicResourceService } from '../typescript-angular-client/api/api';
@@ -85,7 +86,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    currentContributorForModal = null;
 
    dataSourceMigration: Observable<any>;
-   placeholderMigration = 'Enter name to search for resource to migrate';
+   placeholderMigration = 'Enter title to search for resource to migrate';
    // Retained END
    //
    // Holds questions for foreign properties
@@ -134,18 +135,20 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    }
 
    extractTypeahead(typedTuple: [TypedResourceView, TypedResourceView]) {
-      // what is this?
-      return new TypeaheadObj(typedTuple[0])
+      // pass two objects into typeahead to properly create teh string?
+      const [resource, container] = typedTuple;
+      console.log('extract Typeahead', typedTuple);
+      return new TypeaheadObj(resource, container);
    }
 
    getStatesAsObservable(token: string): Observable<any> {
-      return this.locdbService.suggestionsByQuery(token, false, 0)
+      return this.locdbService.suggestionsByQuery(token, false, 0);
    }
 
 
    typeaheadOnSelectMigration(e: TypeaheadMatch): void {
       // console.log('Selected value: ', e.item.id,  e.item.name);
-      this.resourceForm.get('migration').setValue(e.item.name)
+      this.resourceForm.get('migration').setValue(e.item.name) // why?
       this.setIdentifiers(this.resourceForm.get('identifiers').value.concat(e.item.identifiers))
       this.toggleMigrating()
    }
@@ -162,7 +165,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          identifiers: this.fb.array([]),
          // this holds all foreign properties (flattened)
          foreignProperties: this.fb.group({}),
-         migration: false,
+         // does this need to be in the form?
+         migration: '',
       });
       this.agentIdForm = this.fb.group({
          // you can also set initial formgroup inside if you like
@@ -263,7 +267,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             shift *= -1
             index -= shift
          }
-         const tmp = this.contributors.value; // TODO FIXME this is not a deep copy..
+         const tmp = this.contributors.value; // TODO FIXME this is not a deep copy.. its ok here
          // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
          tmp.splice(index + shift + 1, 0, tmp[index]);
          // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
@@ -473,10 +477,16 @@ class TypeaheadObj {
    private name: string;
    private identifiers: models.Identifier[];
 
-   constructor(tr: TypedResourceView) {
-      this.id = tr._id
-      this.name = (new StandardPipe().transform(tr)).replace(/<.*?>/, '').replace(/<\/.*?>/, '')
-      this.identifiers = tr.identifiers
+   constructor(resource: TypedResourceView, container: TypedResourceView | null = null) {
+      this.id = resource._id;
+      this.identifiers = resource.identifiers;
+
+
+      if (!container) {
+         this.name  = new ContainerPipe().transform(resource, true);
+      } else {
+         this.name = new StandardPipe().transform(resource) + ' <em>In:</em> ' + new ContainerPipe().transform(container, false);
+      }
    }
 
    public toString (): string {

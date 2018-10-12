@@ -33,6 +33,7 @@ export class JournalStandardPipe implements PipeTransform {
     if (!typedResource) { return '(no resource)'; }
     let journalTitle = typedResource.getTypedProperty(enums.resourceType.journal, 'title')
     if (standalone) {
+      // duplicate with below?
       journalTitle = '<b>' + journalTitle + '</b>';
     }
     const issueTitle = typedResource.getTypedProperty(enums.resourceType.journalIssue, 'title')
@@ -112,18 +113,6 @@ export class JournalStandardPipe implements PipeTransform {
       }
     }
     s += ' ' + otherAttributes.join(seperator);
-    // console.log('jStandard pipe result after joining:', s);
-
-
-    // TODO FIXME this caused some trouble! :)
-    // if(standardString.length >= seperator.length+1){
-    //   standardString = standardString.slice(0, -(seperator.length+1))
-    // }
-
-    // we do this in the template so that we can also display only the container
-    // if(standardString.length > 1){
-    //   standardString = "<em>In:&nbsp;</em>"  + standardString
-    // }
     return s;
 
 
