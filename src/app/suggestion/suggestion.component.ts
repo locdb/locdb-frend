@@ -255,6 +255,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       // add new Resource
       // does not work with new datamodel
       // this.newResource = this.resourceFromEntry(this.entry);
+      this.newResource = [null, null];
       if (this.entry.references) {
         // entry already has a link
         this.locdbService.bibliographicResource(this.entry.references).subscribe(
