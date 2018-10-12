@@ -300,9 +300,18 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       this.identifiers.removeAt(index);
    }
 
-   setQuestions(forResource: TypedResourceView) {
-      this.questions = this.qs.getQuestionsForResource(forResource);
+   setQuestions(forResource: TypedResourceView, asType: enums.resourceType = null) {
+      let resourceView: TypedResourceView = forResource;
+      if (asType) {
+         // Change the view if desired (required for type change events)
+         resourceView = resourceView.astype(asType);
+      }
+      this.questions = this.qs.getQuestionsForResource(resourceView);
       this.resourceForm.setControl('foreignProperties', this.qcs.toFormGroup(this.questions));
+   }
+
+   onChangeType(newType: enums.resourceType) {
+      this.setQuestions(this.resource, newType);
    }
 
    ngOnChanges()  {
