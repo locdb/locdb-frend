@@ -7,7 +7,8 @@ import { BibliographicResourceService, } from '../typescript-angular-client/api/
 import { Observable } from 'rxjs/Rx'
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 // import { PublisherPipe } from '../pipes/publisher.pipe';
-import { StandardPipe } from '../pipes/type-pipes';
+// import { StandardPipe } from '../pipes/type-pipes';
+import { ContainerPipe } from '../pipes/container.pipe';
 
 /* Key idea:
  *
@@ -141,7 +142,8 @@ class TypeaheadObj {
 
    constructor(tr: TypedResourceView) {
       this.id = tr._id;
-      this.name = (new StandardPipe().transform(tr)).replace(/<.*?>/, '').replace(/<\/.*?>/, '')
+      // this.name = (new StandardPipe().transform(tr)).replace(/<.*?>/, '').replace(/<\/.*?>/, '')
+      this.name = new ContainerPipe().transform(tr);
    }
 
    public toString (): string {
