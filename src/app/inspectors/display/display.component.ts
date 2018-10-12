@@ -12,6 +12,8 @@ import { PopoverModule } from 'ngx-popover/index';
 import { Observable } from 'rxjs';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
+import { ScanService } from '../../typescript-angular-client/api/scan.service';
+
 import * as interact from 'interact.js';
 // Display component consists of file upload, todo item selection and actual
 // display of the scan
@@ -79,7 +81,9 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     @ViewChild('svgroot') svgroot:ElementRef;
 
-    constructor( private locdbService: LocdbService, private _hotkeysService: HotkeysService) {
+  constructor(
+    private scanService: ScanService,
+    private locdbService: LocdbService, private _hotkeysService: HotkeysService) {
     }
 
     // TODO: https://github.com/interactjs/website/blob/master/source/javascripts/star.js
@@ -221,23 +225,32 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
       this.selection.transition().duration(500).call(this.zoom.transform, d3.zoomIdentity);
     }
 
-    saveBoxes(){
+    saveBoxes() {
       console.log('click')
       console.log(this.rects.map(e => e.entry.ocrData.coordinates))
-      for(let rect of this.zoomSVG.nativeElement.querySelectorAll('rect')){
+      for (const rect of this.zoomSVG.nativeElement.querySelectorAll('rect')) {
         const id = rect.getAttribute('id')
         const x = rect.getAttribute('x')
         const y = rect.getAttribute('y')
         const w = rect.getAttribute('width')
         const h = rect.getAttribute('height')
-        this.rects[id].saveCoordinates(x, y, w, h)
+        if (this.rects[id].checkChange(x, y, w, h)) {
+          console.log('Detected a change');
+          this.rects[id].saveCoordinates(x, y, w, h);
+          const scan_id = this.rects[id].entry.scanId;
+          const coords = this.rects[id].toString();
+          this.scanService.correctReferencePosition(scan_id, coords).subscribe(
+            (newEntry) => this.rects[id].entry = newEntry,
+            (error) => alert('OCR component yielded error')
+          );
+        }
         // console.log('id', id, 'x', x, 'y',
         // y, 'prestine?', 'width', w, 'height', h,
         // this.rects[id].x == x && this.rects[id].y == y &&
         // this.rects[id].width == w && this.rects[id].height == h? true : false)
       }
       console.log(this.rects.map(e => e.entry.ocrData.coordinates))
-      this.reload_rects()
+      // this.reload_rects()
 
     }
     ngOnChanges(changes: SimpleChanges | any) {
@@ -338,19 +351,16 @@ class Rect {
         this.y = Number(values[1]),
         this.width = Number(values[2])  - Number(values[0]),
         this.height = Number(values[3]) - Number(values[1]),
-        this.entry = entry
+        this.entry = entry;
     }
 
-    updateOCR(){
-      console.log("Update with: ", this.x + " " + this.y  + " " +
-                (this.width + this.x) + " " + (this.height + this.y))
-        this.entry.ocrData.coordinates =
-          this.x + " " + this.y  + " " +
-          (this.width + this.x) + " " + (this.height + this.y)
+    toString() {
+      const coords = this.x + ' ' + this.y  + ' ' + (this.width + this.x) + ' ' + (this.height + this.y);
+      console.log('Update with', coords);
+      return coords;
     }
 
     saveCoordinates(x: number, y: number, width: number, height: number){
-      const prestine = this.checkChange(x, y, width, height)
       this.x = Math.round(x)
       this.y = Math.round(y)
       this.width = Math.round(width)
@@ -358,14 +368,11 @@ class Rect {
       // console.log('x', x, 'y',
             // y, 'prestine?', prestine, 'width', width, 'height', height)
       // console.log('entry', this.entry)
-      if(!prestine){
-        this.updateOCR();
-      }
     }
 
-    checkChange(x: number, y: number, width: number, height: number){
-      return this.x == x && this.y == y &&
-             this.width == width && this.height == height? true : false
-           }
+    checkChange(x: number, y: number, width: number, height: number) {
+      // is this ok?
+      return !(this.x === x && this.y === y && this.width === width && this.height === height)
+    }
 
 }

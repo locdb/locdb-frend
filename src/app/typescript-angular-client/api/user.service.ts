@@ -21,6 +21,7 @@ import { Observable }                                        from 'rxjs/Observab
 import { ErrorResponse } from '../model/errorResponse';
 import { Feed } from '../model/feed';
 import { FeedEntry } from '../model/feedEntry';
+
 import { SuccessResponse } from '../model/successResponse';
 import { User } from '../model/user';
 
