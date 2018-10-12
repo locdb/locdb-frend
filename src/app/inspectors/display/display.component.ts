@@ -234,7 +234,11 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         const y = rect.getAttribute('y')
         const w = rect.getAttribute('width')
         const h = rect.getAttribute('height')
-        if (this.rects[id].checkChange(x, y, w, h)) {
+        const prestine = this.rects[id].isPrestine(x, y, w, h)
+        console.log('x', x, 'y',
+              y, , 'width', w, 'height', h, 'prestine', prestine)
+        console.log(this.rects[id].toString())
+        if (!prestine) {
           console.log('Detected a change');
           this.rects[id].saveCoordinates(x, y, w, h);
           const scan_id = this.rects[id].entry.scanId;
@@ -333,10 +337,10 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 }
 
 class Rect {
-    x: number;
-    y: number;
-    height: number;
-    width: number;
+    x: Number;
+    y: Number;
+    height: Number;
+    width: Number;
     entry: models.BibliographicEntry;
 
     constructor(entry?: models.BibliographicEntry){
@@ -360,7 +364,7 @@ class Rect {
       return coords;
     }
 
-    saveCoordinates(x: number, y: number, width: number, height: number){
+    saveCoordinates(x: Number, y: Number, width: Number, height: Number){
       this.x = Math.round(x)
       this.y = Math.round(y)
       this.width = Math.round(width)
@@ -370,9 +374,11 @@ class Rect {
       // console.log('entry', this.entry)
     }
 
-    checkChange(x: number, y: number, width: number, height: number) {
+    isPrestine(x: Number, y: Number, width: Number, height: Number) {
       // is this ok?
-      return !(this.x === x && this.y === y && this.width === width && this.height === height)
+      console.log(this.x, Number(x), this.y, Number(y), this.width, Number(width), this.height, Number(height))
+      return this.x === Number(x) && this.y === Number(y) &&
+              this.width === Number(width) && this.height === Number(height)
     }
 
 }
