@@ -131,7 +131,7 @@
       Suggestions
     </h4>
     <div *ngIf="internalSuggestions && !internalInProgress">
-    <div *ngFor="let r of internalSuggestions;let i = index">
+    <div *ngFor="let r of internalSuggestions; let i = index">
       <app-resource-card *ngIf="max_in <= 0 || i < max_in"
         [resources]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
       </app-resource-card>
@@ -238,7 +238,7 @@
         <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
         </select> -->
 
-        <app-resource-form-basic [resources]="newResource"></app-resource-form-basic>
+        <app-resource-pair-form [resource]="newResource[0]" [alternate]="newResource[1]"></app-resource-pair-form>
       <!-- <button type="button" class="btn btn-primary" (click)="modalRef.hide(); openModal(template)">Select Files</button> -->
   </div>
   <!-- <div class="modal-footer">

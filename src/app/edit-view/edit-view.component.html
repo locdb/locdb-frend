@@ -10,23 +10,21 @@
   <div class="loader">
   </div>
 </div>
-<div *ngIf="request_answered"class="container">
+<div *ngIf="request_answered" class="container">
   <!-- resource edit -->
-  <div class="card" *ngIf="resource_id != 0 && entry_id == 0">
+  <div class="card" *ngIf="resource && !entry">
     <div class="card-header">
       <h3 class="card-title">
         Edit Resource
       </h3>
-      <app-metadata [of]="resource"></app-metadata>
+      <app-metadata [of]="resource" [in]="container"></app-metadata>
     </div>
     <div class="card-body">
-      <div class="container" *ngIf='resource'>
-        <app-resource-form [resources]="[resource, null]"></app-resource-form>
-      </div>
+      <app-resource-pair-form [resource]="resource" [alternate]="container" (resourceChange)="resource = $event; submitted = true" (alternateChange)="container = $event; submitted = true"></app-resource-pair-form>
     </div>
   </div>
   <!-- entry edit -->
-  <div class="card" *ngIf="resource_id != 0 && entry_id != 0 && entry_id != 'create'">
+  <div class="card" *ngIf="resource && entry">
     <div class="card-header">
       <h3 *ngIf="resource" class="card-title">
         Edit Entry {{entry_id}} attached to <b *ngIf="resource.title">{{resource.title}}</b> <b *ngIf="!resource.title">{{resource_id}}</b>
@@ -34,12 +32,12 @@
     </div>
     <div class="card-body">
       <div class="container" *ngIf='entry'>
-        <app-entry-form [entry]="entry" [resource]="resource" [active]="true" (done)="triggerBack()"></app-entry-form>
+        <app-entry-form [entry]="entry" [resource]="resource" [active]="true" (done)="submitted = true"></app-entry-form>
       </div>
     </div>
   </div>
-  <!-- entry creation -->
-  <div class="card" *ngIf="resource_id != 0 && entry_id == 'create'">
+  <!-- entry creation, if entry has no _id it is new! :) -->
+  <div class="card" *ngIf="resource && entry && !entry._id">
     <div class="card-header">
       <h3 *ngIf="resource" class="card-title">
         Create Entry attached to <b *ngIf="resource.title">{{resource.title}}</b> <b *ngIf="!resource.title">{{resource_id}}</b>
@@ -47,20 +45,23 @@
     </div>
     <div class="card-body">
       <div class="container" *ngIf='entry'>
-        <app-entry-form [entry]="entry" [resource]="resource" [active]="true" (done)="triggerBack()"></app-entry-form>
+        <app-entry-form [entry]="entry" [resource]="resource" [active]="true" (done)="submitted = true"></app-entry-form>
       </div>
     </div>
   </div>
+  <div *ngIf="submitted" class="alert alert-success" style="margin-top: 1rem;">
+    Changes have been saved. <button type="default" class="btn btn-primary" (click)="triggerBack()">Back</button>
+  </div>
   <!-- error -->
-  <div class="card" *ngIf="resource_id == 0 && entry_id == 0">
+  <div class="card" *ngIf="!resource">
     <div class="card-header">
       <h3 class="card-title">
-        Oohps!
+        Error!
       </h3>
     </div>
     <div class="card-body">
       <p>
-        No Ids ...
+        No (valid) identifiers were supplied...
       </p>
     </div>
   </div>

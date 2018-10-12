@@ -48,9 +48,15 @@ export class ScanComponent {
 
   modalRef: BsModalRef;
 
-  constructor ( private locdbService: LocdbService,private modalService: BsModalService) {
+  constructor ( private locdbService: LocdbService, private modalService: BsModalService) {
     // necessary to display select options
   }
+
+  preselectBatchIdentifierScheme() {
+    // Function to pre-select an identifier scheme of the batch, depending on batch resource type
+    this.batchInformation.identifierScheme = REQUIRED_IDENTIFIERS[this.batchInformation.resourceType][0];
+  }
+
 
   openModal(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template);
@@ -63,7 +69,7 @@ export class ScanComponent {
     this.onSelect(null) // to check open file
     let ready = true;
     if (this.listoffiles !== []) {
-      for (const file of this.listoffiles){
+      for (const file of this.listoffiles) {
         if (!file.allset) {
           ready = false;
           break;
@@ -282,7 +288,7 @@ export class ScanComponent {
       (suc) => this.successHandler(listelement, suc, true),
       (err) => this.processError(listelement, err)
     );
-    //print or digital enum)
+    // print or digital enum)
     //
     //   this.locdbService.saveScan(
     //     listelement.identifier.literalValue,
@@ -357,11 +363,11 @@ export class ScanComponent {
   addId() {
     this.listoffiles.push(new ToDoScansWithMeta(
       {
-        identifier: { scheme: enums.identifier.zdb_id, literalValue: null },
+        identifier: { scheme: enums.identifier.doi, literalValue: '' },
         firstpage: null,
         lastpage: null,
         file: null,
-        resourceType: enums.resourceType.journal, // electronic for now is always journal
+        resourceType: enums.resourceType.journalArticle,
         embodimentType: enums.embodimentType.digital,
         uploading: false
       })
@@ -413,11 +419,11 @@ class ToDoScansWithMeta {
   private _resourceType;
   set resourceType( newType: string) {
     // side effect: valid identifier types may not match
-    let oldScheme = this.identifier.scheme;
-    if (REQUIRED_IDENTIFIERS[newType].indexOf(oldScheme) === -1) {
+    // let oldScheme = this.identifier.scheme;
+    // if (REQUIRED_IDENTIFIERS[newType].indexOf(oldScheme) === -1) {
       // identifier scheme not possible for new type, guess one
-      this.identifier.scheme = REQUIRED_IDENTIFIERS[newType][0];
-    }
+    this.identifier.scheme = REQUIRED_IDENTIFIERS[newType][0];
+    // }
     this._resourceType = newType;
   }
 

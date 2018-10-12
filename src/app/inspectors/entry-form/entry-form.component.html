@@ -1,8 +1,5 @@
 <div *ngIf="entry">
-  <accordion-group #group [isOpen]="open && active" [isDisabled]="disabled" [panelClass]="active ? 'text-white bg-primary' : entry.references ? 'border-success' : 'border-danger'">
-    <div accordion-heading class="clearfix">
-      {{short()}}<button type="button" class="btn btn-warning pull-right" (click)="toggleDisabled()">{{disabled ? 'details' : 'close'}}</button>
-    </div>
+  <!-- <div> open: </div>{{open}}, active:{{active}}, {{open && active}}, disabled:{{disabled}} -->
     <div *ngIf="submitted">
       <table class="table table-striped" style="table-layout:fixed;">
         <tbody>
@@ -31,123 +28,139 @@
             <td> <p>{{ident.literalValue}}</p> </td>
           </tr>
           <tr>
-          <tr *ngIf="entry.ocrData.marker">
-            <td> <label>Marker</label> </td>
-            <td> <p>{{entry.ocrData.marker}}</p> </td>
-          </tr>
-          <tr *ngIf="entry.ocrData.comments">
-            <td> <label>Comments</label> </td>
-            <td> <p>{{entry.ocrData.comments}}</p> </td>
-          </tr>
-          <tr *ngIf="entry.ocrData.journal">
-            <td> <label>Journal</label> </td>
-            <td> <p>{{entry.ocrData.journal}}</p> </td>
-          </tr>
-          <tr *ngIf="entry.ocrData.volume">
-            <td> <label>Volume</label> </td>
-            <td> <p>{{entry.ocrData.volume}}</p> </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="text-right">
-        <button type="button" class="btn btn-warning" aria-label="Edit" (click)="showForm(true)">
-          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
-        </button>
-      </div>
-    </div>
-
-    <!-- -------------------------------------------------------------------------------------- -->
-
-    <div *ngIf="!submitted">
-      <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" novalidate>
-        <div class="form-group">
-          <label>Raw text:
-            <input class="form-control" formControlName="bibliographicEntryText">
-          </label>
-        </div>
-        <div class="form-group">
-          <label>Title:
-            <input class="form-control" formControlName="title">
-          </label>
-        </div>
-        <div formArrayName="authors">
-          <div *ngFor="let author of authors.controls; let i=index">
-            <div class="form-group">
-              <div class="row">
-                <div class="col">
-                  <button (click)="removeAuthor(i)" type="button" class="close" aria-label="Remove Author">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                  <label> Author #{{i + 1}}:</label>
-                </div>
-                <div class="col">
-                  <input class="form-control" [formControlName]="i">
-                </div>
-              </div>
+            <tr *ngIf="entry.ocrData.marker">
+              <td> <label>Marker</label> </td>
+              <td> <p>{{entry.ocrData.marker}}</p> </td>
+            </tr>
+            <tr *ngIf="entry.ocrData.comments">
+              <td> <label>Comments</label> </td>
+              <td> <p>{{entry.ocrData.comments}}</p> </td>
+            </tr>
+            <tr *ngIf="entry.ocrData.journal">
+              <td> <label>Journal</label> </td>
+              <td> <p>{{entry.ocrData.journal}}</p> </td>
+            </tr>
+            <tr *ngIf="entry.ocrData.volume">
+              <td> <label>Volume</label> </td>
+              <td> <p>{{entry.ocrData.volume}}</p> </td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin: 1rem; margin-bottom: 0rem;">
+          <div class="row justify-content-between" style="margin-top: 1rem;">
+            <div class="col-xs-6 text-left">
+            </div>
+            <div class="col-xs-6 text-right">
+              <button type="button" class="btn btn-warning" aria-label="Edit" (click)="showForm(true)">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+              </button>
             </div>
           </div>
-          <button (click)="addAuthor()" class="btn btn-success" style="margin: 1rem;" type="button">Add Author</button>
         </div>
-        <div class="form-group">
-          <label for="date">Year:
-            <input id="date" class="form-control" formControlName="date">
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="journal">Journal:
-            <input id="journal" class="form-control" formControlName="journal">
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="journal">Volume:
-            <input id="volume" class="form-control" formControlName="volume">
-          </label>
-        </div>
-        <div formArrayName="identifiers">
-          <label>Identifiers</label>
-            <div *ngFor="let identifier of identifiers.controls; let j = index" [formGroupName]="j">
-              <div class="row">
-                <button type="button" class="close" aria-label="Remove Identifier" (click)="removeIdentifier(j)">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <div class="col">
-                  <input class="form-control" formControlName="scheme">
-                </div>
-                <div class="col">
-                  <input class="form-control" formControlName="literalValue">
-                </div>
-              </div>
-          </div>
-          <button style="margin: 1rem;" type="button" class="btn btn-success" aria-label="Add Identifier" (click)="addIdentifier()">
-            Add Identifier
-          </button>
-        </div>
-        <div class="form-group">
-          <label>Marker:
-            <input class="form-control" formControlName="marker">
-          </label>
-        </div>
-        <div class="form-group">
-          <label>Comments:
-            <input class="form-control" formControlName="comments">
-          </label>
-        </div>
-        <div class="form-group">
-          <label>References:
-            <input type="search" class="form-control" formControlName="references">
-          </label>
-        </div>
+      </div>
 
-        <div style="margin-top: 1em" align="right">
-          <button type="button" class="btn btn-default" (click)="showForm(false)">
-            Cancel
-          </button> &nbsp;
-          <button type="button" (click)="revert()"
-            [disabled]="entryForm.pristine" class="btn btn-warning">Revert</button> &nbsp;
-          <button type="submit"
-            [disabled]="entryForm.pristine" class="btn btn-success">Save</button>
+      <!-- - - - - -->
+
+      <div *ngIf="!submitted">
+        <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" novalidate>
+          <div class="form-group row">
+            <label for="bibliographicEntryText" class="col-sm-2 col-form-label">Raw text</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" id="bibliographicEntryText" formControlName="bibliographicEntryText" style="resize: none;" ></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="title" class="col-sm-2 col-form-label">Title</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" id="title" formControlName="title" style="resize: none;" ></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="date" class="col-sm-2 col-form-label">Year</label>
+            <div class="col-sm-10">
+              <input type="string" id="date" class="form-control" formControlName="date">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="journal" class="col-sm-2 col-form-label">Journal</label>
+            <div class="col-sm-10">
+              <input type="string" id="journal" class="form-control" formControlName="journal">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="volume" class="col-sm-2 col-form-label">Volume</label>
+            <div class="col-sm-10">
+              <input type="string" id="volume" class="form-control" formControlName="volume">
+            </div>
+          </div>
+          <!--   Idents   -->
+          <label for="identifiers"> Identifiers </label>
+          <div id="identifiers" formArrayName="identifiers">
+            <div class="form-group row" *ngFor="let identifier of identifiers.controls; let j = index" [formGroupName]="j">
+              <button (click)="removeIdentifier(j)" type="button" class="close" aria-label="Remove Identifier">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <div class="col">
+                <input class="form-control" formControlName="scheme">
+              </div>
+              <div class="col">
+                <input class="form-control" formControlName="literalValue">
+              </div>
+            </div>
+            <button type="button" class="btn btn-success" aria-label="Add Identifier" (click)="addIdentifier()">
+              Add Identifier
+            </button>
+          </div>
+          <!--   contribs   -->
+          <label for="authors">Authors</label>
+          <div id="authors" formArrayName="authors">
+            <div class="form-group row" *ngFor="let contributor of authors.controls; let j = index">
+              <button (click)="removeAuthor(j)" type="button" class="close" aria-label="Remove Author">
+                <span aria-hidden="true">&times;</span>
+              </button>
+          <div class="col">
+            <input class="form-control"  [formControlName]="j">
+          </div>
         </div>
-      </form>
-    </div>
-  </accordion-group>
+        <button type="button" class="btn btn-success" aria-label="Add Author" (click)="addAuthor()">
+          Add Author
+        </button>
+      </div>
+      <div class="form-group row">
+        <label for="marker" class="col-sm-2 col-form-label">Marker</label>
+        <div class="col-sm-10">
+          <input type="string" id="marker" class="form-control" formControlName="marker">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="comments" class="col-sm-2 col-form-label">Comments</label>
+        <div class="col-sm-10">
+          <input type="string" id="comments" class="form-control" formControlName="comments">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="references" class="col-sm-2 col-form-label">References</label>
+        <div class="col-sm-10">
+          <input type="string" id="references" class="form-control" formControlName="references">
+        </div>
+      </div>
+      <div style="margin: 1rem; margin-bottom: 0rem;">
+        <div class="row justify-content-between" style="margin-top: 1rem;">
+          <div class="col-xs-6 text-left">
+            <button type="button" class="btn btn-warning" (click)="revert()" [disabled]="submitting">
+              <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset Form
+            </button>
+            <button type="button" class="btn btn-danger" (click)="delete(entry)" [disabled]="submitting">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete Entry
+            </button>
+          </div>
+          <div class="col-xs-6 text-right">
+            <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="submitting">
+              <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
