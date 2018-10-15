@@ -282,7 +282,7 @@ export class ScanComponent {
       listelement.lastpage || undefined,
       listelement.textualPdf,
       listelement.file,
-      '',
+      listelement.plainText,
       listelement.embodimentType
     ).subscribe(
       (suc) => this.successHandler(listelement, suc, true),
@@ -367,6 +367,23 @@ export class ScanComponent {
         firstpage: null,
         lastpage: null,
         file: null,
+        plainText: null,
+        resourceType: enums.resourceType.journalArticle,
+        embodimentType: enums.embodimentType.digital,
+        uploading: false
+      })
+    );
+    console.log('added empty to listoffiles: ', this.listoffiles)
+  }
+
+  addPlainTextItem() {
+    this.listoffiles.push(new ToDoScansWithMeta(
+      {
+        identifier: { scheme: enums.identifier.doi, literalValue: '' },
+        firstpage: null,
+        lastpage: null,
+        file: null,
+        plainText: '',
         resourceType: enums.resourceType.journalArticle,
         embodimentType: enums.embodimentType.digital,
         uploading: false
@@ -377,12 +394,13 @@ export class ScanComponent {
 
     /* the two method below could go to the class */
   getName(item: ToDoScansWithMeta) {
+    const rtype = '<span class="badge badge-primary">' + item.resourceType + '</span>'
     if (item.file) {
-      return item.file.name;
-    } else if (item.identifier == null) {
-      return 'Electronic Resource';
+      return rtype + ' ' + item.file.name;
+    } else if (item.identifier && item.identifier.literalValue) {
+      return rtype + ' ' + item.identifier.scheme + '=' + item.identifier.literalValue;
     } else {
-      return item.identifier.scheme + ': ' + item.identifier.literalValue;
+      return rtype;
     }
   }
 
@@ -390,6 +408,8 @@ export class ScanComponent {
     if (item.file) {
       return (item.file.size / 1024 / 1024).toFixed(3) + ' MB, '
         + item.file.type;
+    } else if (item.plainText !== null) {
+      return 'Plain Text'
     } else {
       return 'Electronic';
     }
@@ -414,6 +434,7 @@ class ToDoScansWithMeta {
   err?: any;
   textualPdf?: boolean; // textual pdf flag. optional since not needed for electronic
   embodimentType?: enums.embodimentType;
+  plainText?: string;
 
   // private, to overwrite setter side effects
   private _resourceType;
