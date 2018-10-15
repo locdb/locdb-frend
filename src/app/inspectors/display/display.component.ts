@@ -245,7 +245,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           console.log('Uploading coordinates:', coords)
           this.scanService.correctReferencePosition(scan_id, coords).subscribe(
             (newEntry) => this.rects[id].entry = newEntry,
-            (error) => alert('OCR component yielded error')
+            (error) => alert('Error while uploading new coordinates: ' + error.message)
           );
         }
         // console.log('id', id, 'x', x, 'y',
