@@ -61,63 +61,6 @@ export class BibliographicResourceService {
 
     /**
      * 
-     * Get bibliographic resource by PICA-Prod-Nr.
-     * @param ppn The PICA-Prod-Nr. assigned by SWB
-     * @param resourceType The type of the resource
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public createByPPN(ppn: string, resourceType: string, observe?: 'body', reportProgress?: boolean): Observable<BibliographicResource>;
-    public createByPPN(ppn: string, resourceType: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<BibliographicResource>>;
-    public createByPPN(ppn: string, resourceType: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<BibliographicResource>>;
-    public createByPPN(ppn: string, resourceType: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (ppn === null || ppn === undefined) {
-            throw new Error('Required parameter ppn was null or undefined when calling createByPPN.');
-        }
-        if (resourceType === null || resourceType === undefined) {
-            throw new Error('Required parameter resourceType was null or undefined when calling createByPPN.');
-        }
-
-        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (ppn !== undefined) {
-            queryParameters = queryParameters.set('ppn', <any>ppn);
-        }
-        if (resourceType !== undefined) {
-            queryParameters = queryParameters.set('resourceType', <any>resourceType);
-        }
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'application/json',
-            'image/png',
-            'application/pdf'
-        ];
-        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected != undefined) {
-            headers = headers.set("Accept", httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json',
-            'multipart/form-data'
-        ];
-
-        return this.httpClient.get<BibliographicResource>(`${this.basePath}/createBibliographicResourceByPPN`,
-            {
-                params: queryParameters,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * 
      * Deletes all (!) bibliographic resources (may be removed in a later stage)
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

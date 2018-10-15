@@ -355,4 +355,44 @@ export class UtilsService {
         );
     }
 
+    /**
+     * 
+     * Returns a bunch of statistics reflecting the current status of the system
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public stats(observe?: 'body', reportProgress?: boolean): Observable<SuccessResponse>;
+    public stats(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<SuccessResponse>>;
+    public stats(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<SuccessResponse>>;
+    public stats(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json',
+            'image/png',
+            'application/pdf'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json',
+            'multipart/form-data'
+        ];
+
+        return this.httpClient.get<SuccessResponse>(`${this.basePath}/stats`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
 }

@@ -18,6 +18,7 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs/Observable';
 
+import { BibliographicEntry } from '../model/bibliographicEntry';
 import { BibliographicResource } from '../model/bibliographicResource';
 import { ErrorResponse } from '../model/errorResponse';
 import { SuccessResponse } from '../model/successResponse';
@@ -58,6 +59,67 @@ export class ScanService {
         return false;
     }
 
+
+    /**
+     * 
+     * Send a processing request to the reference extraction component for a single reference with human-corrected bounding box position
+     * @param scanId The unique id of the scan which should be send to the reference extraction component
+     * @param coordinates The new coordinates of the bounding box separated by single space, i.e. format x1 y1 x2 y2
+     * @param bibliographicEntryId The id of the bibliographic entry that should be set to obsolete
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public correctReferencePosition(scanId: string, coordinates: string, bibliographicEntryId?: string, observe?: 'body', reportProgress?: boolean): Observable<BibliographicEntry>;
+    public correctReferencePosition(scanId: string, coordinates: string, bibliographicEntryId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<BibliographicEntry>>;
+    public correctReferencePosition(scanId: string, coordinates: string, bibliographicEntryId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<BibliographicEntry>>;
+    public correctReferencePosition(scanId: string, coordinates: string, bibliographicEntryId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (scanId === null || scanId === undefined) {
+            throw new Error('Required parameter scanId was null or undefined when calling correctReferencePosition.');
+        }
+        if (coordinates === null || coordinates === undefined) {
+            throw new Error('Required parameter coordinates was null or undefined when calling correctReferencePosition.');
+        }
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (scanId !== undefined) {
+            queryParameters = queryParameters.set('scanId', <any>scanId);
+        }
+        if (coordinates !== undefined) {
+            queryParameters = queryParameters.set('coordinates', <any>coordinates);
+        }
+        if (bibliographicEntryId !== undefined) {
+            queryParameters = queryParameters.set('bibliographicEntryId', <any>bibliographicEntryId);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json',
+            'image/png',
+            'application/pdf'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json',
+            'multipart/form-data'
+        ];
+
+        return this.httpClient.get<BibliographicEntry>(`${this.basePath}/correctReferencePosition`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
 
     /**
      * 

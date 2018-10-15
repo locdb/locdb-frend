@@ -1,5 +1,7 @@
-import { Component, OnInit, OnDestroy, OnChanges, Input, Output, EventEmitter, ViewChildren, ViewChild} from '@angular/core';
+import { Component, OnInit, OnDestroy, OnChanges,
+  Input, Output, EventEmitter, ViewChildren, ViewChild} from '@angular/core';
 import { SimpleChanges } from '@angular/core';
+import {ElementRef} from '@angular/core';
 
 import { models } from '../../locdb';
 import { LocdbService } from '../../locdb.service';
@@ -10,6 +12,9 @@ import { PopoverModule } from 'ngx-popover/index';
 import { Observable } from 'rxjs';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
+import { ScanService } from '../../typescript-angular-client/api/scan.service';
+
+import * as interact from 'interact.js';
 // Display component consists of file upload, todo item selection and actual
 // display of the scan
 
@@ -35,7 +40,22 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     // @Input() todo: ToDoScans;
 
     @Input() img_src = '';
-    @Input() entries: models.BibliographicEntry[] = [];
+    private _entries = []
+    @Input() set entries(entries: models.BibliographicEntry[]){
+     console.log("set entries")
+      if(entries.length == this._entries.length &&
+        entries.every(e => this._entries.includes(e))){
+         console.log("old == new")
+       }
+       else {
+        console.log("old != new")
+          this._entries = entries
+          this.reload_rects()
+    }
+    }
+    get entries(): models.BibliographicEntry[]{
+      return this._entries
+    }
 
     _selectedEntry: models.BibliographicEntry = null;
     get selectedEntry(){
@@ -53,15 +73,122 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     selection: any;
 
     rects: Rect[] = [];
-    imgX = 1500;    // initvalues no relevance if new picture is set
-    imgY = 1500;
+    imgX = 3000;    // initvalues no relevance if new picture is set
+    imgY = 3000;
 
     @Output() imglength: EventEmitter<Number> = new EventEmitter();
     @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
 
-    constructor( private locdbService: LocdbService, private _hotkeysService: HotkeysService) {
+    @ViewChild('svgroot') svgroot: ElementRef;
+
+  constructor(
+    private scanService: ScanService,
+    private locdbService: LocdbService, private _hotkeysService: HotkeysService) {
     }
 
+    // TODO: https://github.com/interactjs/website/blob/master/source/javascripts/star.js
+
+    initInteract(imgWidth, imgHeight) {
+      // get the interact variable from the parent window
+      // console.log('imgWidth', imgWidth)
+      // console.log('imgHeight', imgHeight)
+      // console.log('screenWidth: ', this.svgroot)
+      // console.log('screenWidth: ', this.svgroot.nativeElement.clientWidth)
+      // console.log('screenHeight:', this.svgroot.nativeElement.scrollHeight)
+      interact('.resizeable-rect')
+        .draggable({
+          restrict: {
+            restriction: 'parent',
+            elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+          },
+        })
+        .resizable({
+          // resize from all edges and corners
+          edges: { left: true, right: true, bottom: true, top: true },
+
+          // keep the edges inside the parent
+          restrictEdges: {
+            outer: 'parent',
+            endOnly: true,
+          },
+
+          // minimum size
+          restrictSize: {
+            min: { width: 100, height: 50 },
+          },
+
+          inertia: true,
+        })
+        .on('resizemove', function (event) {
+          const min_width = 50
+          const min_height = 20
+          // console.log(imgWidth)
+          // console.log(imgHeight)
+          let target = event.target,
+              x = (parseFloat(target.getAttribute('x')) || 0),
+              y = (parseFloat(target.getAttribute('y')) || 0);
+          // console.log(target.id, x,y, event.deltaRect, event.rect)
+        //
+          // update the element's style
+          // console.log(event)
+          let svg = target.parentNode.parentNode
+          const clientToImageWidthRatio = imgWidth / svg.clientWidth
+          const clientToImageHeightRatio = imgHeight / svg.clientHeight
+          // console.log(svg.clientWidth, clientToImageWidthRatio)
+          // console.log(svg.clientHeight, clientToImageHeightRatio)
+          let width  = event.rect.width;
+          let height = event.rect.height;
+          let deltaLeft = event.deltaRect.left;
+          let deltaTop = event.deltaRect.top;
+
+          if(width < min_width){
+            width = min_width
+            deltaLeft = 0
+          }
+          if(height < min_height){
+            height = min_height
+            deltaTop = 0
+          }
+               // translate when resizing from top or left edges
+          x += deltaLeft * clientToImageWidthRatio;
+          y += deltaTop * clientToImageHeightRatio;
+
+
+          // target.style.webkitTransform = target.style.transform =
+          //     'translate(' + x + 'px,' + y + 'px)';
+          // target.x = x;
+          // target.y = y
+
+        target.setAttribute('width', width * clientToImageWidthRatio);
+        target.setAttribute('height', height * clientToImageHeightRatio);
+        target.setAttribute('x', x);
+        target.setAttribute('y', y);
+
+        // target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height);
+         })
+         .on('dragmove', function (event){
+           let target = event.target,
+           x = (parseFloat(target.getAttribute('x')) || 0),
+           y = (parseFloat(target.getAttribute('y')) || 0);
+
+           let svg = target.parentNode.parentNode
+           const clientToImageWidthRatio = imgWidth / svg.clientWidth
+           const clientToImageHeightRatio = imgHeight / svg.clientHeight
+
+           x += event.dx * clientToImageWidthRatio;
+           y += event.dy * clientToImageHeightRatio;
+
+
+           // target.style.webkitTransform = target.style.transform =
+           //     'translate(' + x + 'px,' + y + 'px)';
+           // target.x = x;
+           // target.y = y
+           target.setAttribute('x', x);
+           target.setAttribute('y', y);
+           // console.log(target.id, x,y, event.deltaRect, event.rect)
+           // console.log(event)
+        });
+    }
     initSVGZoom() {
         console.log('[Display] init Zoom')
         // let zoom = d3.zoom().on('zoom', function () {
@@ -98,21 +225,52 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
       this.selection.transition().duration(500).call(this.zoom.transform, d3.zoomIdentity);
     }
 
-
-    ngOnChanges(changes: SimpleChanges | any) {
-        // Input todo and this method should replace manual calling of updateDisplay
-        console.log('[Display] ngOnChanges');
-        if (this.entries && this.entries.length) {
-            // extract rectanlges and so on
-            // this.extractRects(this.entries);
-            // there can be empty coordinate fields! we need to filter first
-            this.rects = this.entries.filter(
-                e => e.ocrData.coordinates && this.validateCoordinates(e.ocrData.coordinates)
-            ).map(this.rectFromEntry);
-            const firstUnprocessed = this.rects.find(r => !r.entry.references);
-            // this.selectedEntry = firstUnprocessed.entry;
-            // this.entry.next(this.selectedEntry);
+    saveBoxes() {
+      console.log('Saving coordinates')
+      // console.log(this.rects.map(e => e.entry.ocrData.coordinates))
+      for (const rect of this.zoomSVG.nativeElement.querySelectorAll('rect')) {
+        const id = rect.getAttribute('id')
+        const x = Math.round(rect.getAttribute('x'))
+        const y = Math.round(rect.getAttribute('y'))
+        const w = Math.round(rect.getAttribute('width'))
+        const h = Math.round(rect.getAttribute('height'))
+        const pristine = this.rects[id].isPristine(x, y, w, h)
+        // console.log('Old values:', this.rects[id].toString())
+        // console.log('New values:', 'x', x, 'y', y, 'width', w, 'height', h, 'pristine', pristine)
+        if (!pristine) {
+          console.log('Detected a change', this.rects[id].toString());
+          this.rects[id].saveCoordinates(x, y, w, h);
+          const scan_id = this.rects[id].entry.scanId;
+          const coords = this.rects[id].toString();
+          console.log('Uploading coordinates:', coords)
+          const entry_id = this.rects[id].entry._id || undefined;
+          this.scanService.correctReferencePosition(scan_id, coords, entry_id).subscribe(
+            (newEntry) => this.rects[id].entry = newEntry,
+            (error) => alert('Error while uploading new coordinates: ' + error.message)
+          );
         }
+        // console.log('id', id, 'x', x, 'y',
+        // y, 'pristine?', 'width', w, 'height', h,
+        // this.rects[id].x == x && this.rects[id].y == y &&
+        // this.rects[id].width == w && this.rects[id].height == h? true : false)
+      }
+      // console.log(this.rects.map(e => e.entry.ocrData.coordinates))
+      // this.reload_rects()
+
+    }
+    ngOnChanges(changes: SimpleChanges | any) {
+    }
+
+    reload_rects() {
+      // Input todo and this method should replace manual calling of updateDisplay
+      if (this.entries && this.entries.length) {
+          // extract rectanlges and so on
+          // there can be empty coordinate fields! we need to filter first
+          this.rects = this.entries.filter(
+              e => e.ocrData.coordinates && this.validateCoordinates(e.ocrData.coordinates)
+          ).map(this.rectFromEntry);
+          const firstUnprocessed = this.rects.find(r => !r.entry.references);
+      }
     }
 
     ngOnInit() {
@@ -131,7 +289,6 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             this.onSelect(this.rects[current]);
             return false;
         }, [], 'one rectangle downward'));
-
     }
 
     onSelect(rect: Rect) {
@@ -145,38 +302,9 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     rectFromEntry(entry: models.BibliographicEntry): Rect {
-        const values = entry.ocrData.coordinates.split(' ')
-        const rect = {
-                x: Number(values[0]),
-                y: Number(values[1]),
-                width: Number(values[2])  - Number(values[0]),
-                height: Number(values[3]) - Number(values[1]),
-                entry: entry
-            }
         // returns null when coordinates string is empty
-        return rect;
+        return new Rect(entry)
     }
-
-    // extractRects(entries) {
-    //     this.rects = [];
-    //     for (const e of entries){
-    //         // console.log("Entrie.OCRData.coordinates: ", e.coordinates);
-    //         const coords = e.ocrData.coordinates;
-    //         const rectField = coords.split(' ');
-    //         this.rects.push({
-
-    //             // x1 y1 x2 y2
-    //             x: Number(rectField[0]),
-    //             y: Number(rectField[1]),
-    //             width: Number(rectField[2])  - Number(rectField[0]),
-    //             height: Number(rectField[3]) - Number(rectField[1]),
-    //             state: e.references ? 1 : -1
-
-    //         });
-    //         console.log(rectField);
-    //         console.log(this.rects[this.rects.length - 1]);
-    //     }
-    // }
 
     realImgDimension(url) {
         const i = new Image();
@@ -196,6 +324,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         if ((this.imgX + this.imgY) <= 0) {
             console.log('Image size = 0', realDim);
         }
+        this.initInteract(this.imgX, this.imgY)
+        this.reload_rects();
         // this.initSVGZoom();
     }
 
@@ -208,9 +338,52 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 }
 
 class Rect {
+  /*
+   * Don’t ever use the types Number, String, Boolean, or Object. These types
+   * refer to non-primitive boxed objects that are almost never used
+   * appropriately in JavaScript code.
+   * From: https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html
+   * */
     x: number;
     y: number;
     height: number;
     width: number;
     entry: models.BibliographicEntry;
+
+    constructor(entry: models.BibliographicEntry) {
+      const values = entry.ocrData.coordinates.split(' ')
+      this.x = parseInt(values[0], 10);
+      this.y = parseInt(values[1], 10);
+      this.width = parseInt(values[2], 10)  - parseInt(values[0], 10);
+      this.height = parseInt(values[3], 10) - parseInt(values[1], 10);
+      this.entry = entry;
+    }
+
+
+    toString() {
+      const x1 = this.x;
+      const y1 = this.y;
+      const x2 = this.x + this.width;
+      const y2 = this.y + this.height;
+      // Do not do string addition by accident
+      const coords = `${x1} ${y1} ${x2} ${y2}`;
+      return coords;
+    }
+
+    saveCoordinates(x: number, y: number, width: number, height: number) {
+      this.x = Math.round(x)
+      this.y = Math.round(y)
+      this.width = Math.round(width)
+      this.height = Math.round(height)
+      // console.log('x', x, 'y',
+            // y, 'pristine?', pristine, 'width', width, 'height', height)
+      // console.log('entry', this.entry)
+    }
+
+    isPristine(x: number, y: number, width: number, height: number) {
+      // is this ok?
+      // console.log('Pristine check', this.x, x, this.y, y, this.width, width, this.height, height)
+      return this.x === x && this.y === y && this.width === width && this.height === height
+    }
+
 }
