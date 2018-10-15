@@ -235,8 +235,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         const w = rect.getAttribute('width')
         const h = rect.getAttribute('height')
         const prestine = this.rects[id].isPrestine(x, y, w, h)
-        console.log('x', x, 'y',
-              y, , 'width', w, 'height', h, 'prestine', prestine)
+        console.log('x', x, 'y', y, 'width', w, 'height', h, 'prestine', prestine)
         console.log(this.rects[id].toString())
         if (!prestine) {
           console.log('Detected a change');
@@ -260,7 +259,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges | any) {
     }
 
-    reload_rects(){
+    reload_rects() {
       // Input todo and this method should replace manual calling of updateDisplay
       if (this.entries && this.entries.length) {
           // extract rectanlges and so on
@@ -337,24 +336,30 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 }
 
 class Rect {
-    x: Number;
-    y: Number;
-    height: Number;
-    width: Number;
+  /*
+   * Don’t ever use the types Number, String, Boolean, or Object. These types
+   * refer to non-primitive boxed objects that are almost never used
+   * appropriately in JavaScript code.
+   * From: https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html
+   * */
+    x: number;
+    y: number;
+    height: number;
+    width: number;
     entry: models.BibliographicEntry;
 
-    constructor(entry?: models.BibliographicEntry){
-                  if(entry){
-                    this.setByEntry(entry)
-                  }
-                }
+    constructor(entry?: models.BibliographicEntry) {
+      if (entry) {
+        this.setByEntry(entry)
+      }
+    }
 
-    setByEntry(entry){
+    setByEntry(entry) {
       const values = entry.ocrData.coordinates.split(' ')
-        this.x = Number(values[0])
-        this.y = Number(values[1]),
-        this.width = Number(values[2])  - Number(values[0]),
-        this.height = Number(values[3]) - Number(values[1]),
+        this.x = values[0] as number;
+        this.y = values[1] as number;
+        this.width = (values[2] as number)  - (values[0] as number),
+        this.height = (values[3] as number) - (values[1] as number),
         this.entry = entry;
     }
 
@@ -364,7 +369,7 @@ class Rect {
       return coords;
     }
 
-    saveCoordinates(x: Number, y: Number, width: Number, height: Number){
+    saveCoordinates(x: number, y: number, width: number, height: number) {
       this.x = Math.round(x)
       this.y = Math.round(y)
       this.width = Math.round(width)
@@ -374,11 +379,11 @@ class Rect {
       // console.log('entry', this.entry)
     }
 
-    isPrestine(x: Number, y: Number, width: Number, height: Number) {
+    isPrestine(x: number, y: number, width: number, height: number) {
       // is this ok?
-      console.log(this.x, Number(x), this.y, Number(y), this.width, Number(width), this.height, Number(height))
-      return this.x === Number(x) && this.y === Number(y) &&
-              this.width === Number(width) && this.height === Number(height)
+      console.log(this.x, x, this.y, y, this.width, width, this.height, height)
+      return this.x === x && this.y === y &&
+              this.width === width && this.height === height
     }
 
 }
