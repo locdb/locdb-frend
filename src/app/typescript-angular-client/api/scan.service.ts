@@ -63,28 +63,32 @@ export class ScanService {
     /**
      * 
      * Send a processing request to the reference extraction component for a single reference with human-corrected bounding box position
-     * @param id The unique id of the scan which should be send to the reference extraction component
+     * @param scanId The unique id of the scan which should be send to the reference extraction component
      * @param coordinates The new coordinates of the bounding box separated by single space, i.e. format x1 y1 x2 y2
+     * @param bibliographicEntryId The id of the bibliographic entry that should be set to obsolete
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public correctReferencePosition(id: string, coordinates: string, observe?: 'body', reportProgress?: boolean): Observable<BibliographicEntry>;
-    public correctReferencePosition(id: string, coordinates: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<BibliographicEntry>>;
-    public correctReferencePosition(id: string, coordinates: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<BibliographicEntry>>;
-    public correctReferencePosition(id: string, coordinates: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling correctReferencePosition.');
+    public correctReferencePosition(scanId: string, coordinates: string, bibliographicEntryId?: string, observe?: 'body', reportProgress?: boolean): Observable<BibliographicEntry>;
+    public correctReferencePosition(scanId: string, coordinates: string, bibliographicEntryId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<BibliographicEntry>>;
+    public correctReferencePosition(scanId: string, coordinates: string, bibliographicEntryId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<BibliographicEntry>>;
+    public correctReferencePosition(scanId: string, coordinates: string, bibliographicEntryId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (scanId === null || scanId === undefined) {
+            throw new Error('Required parameter scanId was null or undefined when calling correctReferencePosition.');
         }
         if (coordinates === null || coordinates === undefined) {
             throw new Error('Required parameter coordinates was null or undefined when calling correctReferencePosition.');
         }
 
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (id !== undefined) {
-            queryParameters = queryParameters.set('id', <any>id);
+        if (scanId !== undefined) {
+            queryParameters = queryParameters.set('scanId', <any>scanId);
         }
         if (coordinates !== undefined) {
             queryParameters = queryParameters.set('coordinates', <any>coordinates);
+        }
+        if (bibliographicEntryId !== undefined) {
+            queryParameters = queryParameters.set('bibliographicEntryId', <any>bibliographicEntryId);
         }
 
         let headers = this.defaultHeaders;
