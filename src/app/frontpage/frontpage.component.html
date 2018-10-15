@@ -43,9 +43,11 @@
   </div>
 
   <div *ngIf="stats" class="card">
-    <h2 class="card-title">Stats</h2>
     <div class="card-body">
-      {{ stats }}
+      <h2 class="card-title">Stats</h2>
+      <div class="card-body">
+        {{ stats | json }}
+      </div>
     </div>
   </div>
 </div>

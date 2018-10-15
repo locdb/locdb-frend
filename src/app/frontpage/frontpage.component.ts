@@ -9,14 +9,15 @@ import { UtilsService } from '../typescript-angular-client/api/utils.service'
 })
 export class FrontpageComponent implements OnInit {
 
-  stats: string;
+  stats: any;
 
   constructor(private utilsService: UtilsService) { }
 
   ngOnInit() {
+    console.log('Retrieving stats');
     this.utilsService.stats().subscribe(
-      (stats) => { this.stats = stats }
-      (error) => { this.stats = error.message }
+      (stats) => { this.stats = stats; },
+      (error) => { this.stats = error.message; }
     );
   }
 

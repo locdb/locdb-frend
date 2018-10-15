@@ -60,6 +60,7 @@ import { FrontpageComponent } from './frontpage/frontpage.component';
 import { LoggingService } from './logging.service';
 import { ResourceCardComponent } from './resource-card/resource-card.component';
 import { BrowseComponent } from './browse/browse.component'
+import { UtilsService } from './typescript-angular-client/api/utils.service'
 
 import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe,
 ContainerPipe, IdentifierPipe} from './pipes';
@@ -179,6 +180,7 @@ const appRoutes: Routes = [
     ScanListService,
     QuestionService,
     QuestionControlService,
+    UtilsService
   ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
