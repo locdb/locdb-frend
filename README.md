@@ -58,7 +58,7 @@ npm install
     "spec": {},
     "options": {
       "modelPropertyNaming": "original",
-      "ngVersion": "6.0"
+      "ngVersion": "6.1"
     },
     "swaggerUrl": "https://locdb.bib.uni-mannheim.de/locdb-dev/swagger",
     "authorizationValue": {
