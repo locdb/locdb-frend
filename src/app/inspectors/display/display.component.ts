@@ -79,7 +79,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     @Output() imglength: EventEmitter<Number> = new EventEmitter();
     @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
 
-    @ViewChild('svgroot') svgroot:ElementRef;
+    @ViewChild('svgroot') svgroot: ElementRef;
 
   constructor(
     private scanService: ScanService,
@@ -88,7 +88,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     // TODO: https://github.com/interactjs/website/blob/master/source/javascripts/star.js
 
-    initInteract(imgWidth, imgHeight){
+    initInteract(imgWidth, imgHeight) {
       // get the interact variable from the parent window
       // console.log('imgWidth', imgWidth)
       // console.log('imgHeight', imgHeight)
@@ -226,33 +226,34 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     saveBoxes() {
-      console.log('click')
-      console.log(this.rects.map(e => e.entry.ocrData.coordinates))
+      console.log('Saving coordinates')
+      // console.log(this.rects.map(e => e.entry.ocrData.coordinates))
       for (const rect of this.zoomSVG.nativeElement.querySelectorAll('rect')) {
         const id = rect.getAttribute('id')
-        const x = rect.getAttribute('x')
-        const y = rect.getAttribute('y')
-        const w = rect.getAttribute('width')
-        const h = rect.getAttribute('height')
-        const prestine = this.rects[id].isPrestine(x, y, w, h)
-        console.log('x', x, 'y', y, 'width', w, 'height', h, 'prestine', prestine)
-        console.log(this.rects[id].toString())
-        if (!prestine) {
-          console.log('Detected a change');
+        const x = Math.round(rect.getAttribute('x'))
+        const y = Math.round(rect.getAttribute('y'))
+        const w = Math.round(rect.getAttribute('width'))
+        const h = Math.round(rect.getAttribute('height'))
+        const pristine = this.rects[id].isPristine(x, y, w, h)
+        // console.log('Old values:', this.rects[id].toString())
+        // console.log('New values:', 'x', x, 'y', y, 'width', w, 'height', h, 'pristine', pristine)
+        if (!pristine) {
+          console.log('Detected a change', this.rects[id].toString());
           this.rects[id].saveCoordinates(x, y, w, h);
           const scan_id = this.rects[id].entry.scanId;
           const coords = this.rects[id].toString();
+          console.log('Uploading coordinates:', coords)
           this.scanService.correctReferencePosition(scan_id, coords).subscribe(
             (newEntry) => this.rects[id].entry = newEntry,
             (error) => alert('OCR component yielded error')
           );
         }
         // console.log('id', id, 'x', x, 'y',
-        // y, 'prestine?', 'width', w, 'height', h,
+        // y, 'pristine?', 'width', w, 'height', h,
         // this.rects[id].x == x && this.rects[id].y == y &&
         // this.rects[id].width == w && this.rects[id].height == h? true : false)
       }
-      console.log(this.rects.map(e => e.entry.ocrData.coordinates))
+      // console.log(this.rects.map(e => e.entry.ocrData.coordinates))
       // this.reload_rects()
 
     }
@@ -348,24 +349,23 @@ class Rect {
     width: number;
     entry: models.BibliographicEntry;
 
-    constructor(entry?: models.BibliographicEntry) {
-      if (entry) {
-        this.setByEntry(entry)
-      }
+    constructor(entry: models.BibliographicEntry) {
+      const values = entry.ocrData.coordinates.split(' ')
+      this.x = parseInt(values[0], 10);
+      this.y = parseInt(values[1], 10);
+      this.width = parseInt(values[2], 10)  - parseInt(values[0], 10);
+      this.height = parseInt(values[3], 10) - parseInt(values[1], 10);
+      this.entry = entry;
     }
 
-    setByEntry(entry) {
-      const values = entry.ocrData.coordinates.split(' ')
-        this.x = values[0] as number;
-        this.y = values[1] as number;
-        this.width = (values[2] as number)  - (values[0] as number),
-        this.height = (values[3] as number) - (values[1] as number),
-        this.entry = entry;
-    }
 
     toString() {
-      const coords = this.x + ' ' + this.y  + ' ' + (this.width + this.x) + ' ' + (this.height + this.y);
-      console.log('Update with', coords);
+      const x1 = this.x;
+      const y1 = this.y;
+      const x2 = this.x + this.width;
+      const y2 = this.y + this.height;
+      // Do not do string addition by accident
+      const coords = `${x1} ${y1} ${x2} ${y2}`;
       return coords;
     }
 
@@ -375,15 +375,14 @@ class Rect {
       this.width = Math.round(width)
       this.height = Math.round(height)
       // console.log('x', x, 'y',
-            // y, 'prestine?', prestine, 'width', width, 'height', height)
+            // y, 'pristine?', pristine, 'width', width, 'height', height)
       // console.log('entry', this.entry)
     }
 
-    isPrestine(x: number, y: number, width: number, height: number) {
+    isPristine(x: number, y: number, width: number, height: number) {
       // is this ok?
-      console.log(this.x, x, this.y, y, this.width, width, this.height, height)
-      return this.x === x && this.y === y &&
-              this.width === width && this.height === height
+      // console.log('Pristine check', this.x, x, this.y, y, this.width, width, this.height, height)
+      return this.x === x && this.y === y && this.width === width && this.height === height
     }
 
 }
