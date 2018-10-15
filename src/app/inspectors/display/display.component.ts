@@ -243,7 +243,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           const scan_id = this.rects[id].entry.scanId;
           const coords = this.rects[id].toString();
           console.log('Uploading coordinates:', coords)
-          this.scanService.correctReferencePosition(scan_id, coords).subscribe(
+          const entry_id = this.rects[id].entry._id || undefined;
+          this.scanService.correctReferencePosition(scan_id, coords, entry_id).subscribe(
             (newEntry) => this.rects[id].entry = newEntry,
             (error) => alert('Error while uploading new coordinates: ' + error.message)
           );

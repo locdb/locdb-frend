@@ -195,7 +195,7 @@ export class RouterScanInspectorComponent implements OnInit {
     this.locdbService.getToDoBibliographicEntries(scanId).subscribe(
       // DO NOT extract them from resource
       (entries) => {
-        this.refs = entries;
+        this.refs = entries.filter(x => x.status !== enums.status.obsolete);
         this.selectFirst(entries); // here we select an appropriate entry from the new list
         console.log('[debug] scan inspector received from scan_id: entries:', this.refs)
       },
