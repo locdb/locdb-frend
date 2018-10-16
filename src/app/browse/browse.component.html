@@ -62,7 +62,8 @@
 <div class="card-body" style="height: 800px; overflow-y: scroll;">
   <!-- Panel body providing suggestions -->
   <div class="card-block">
-    <div *ngFor="let r of internalSuggestions;let i = index">
+    <div *ngFor="let r of internalSuggestions; let i = index">
+      {{ r | json }}
       <app-resource-card *ngIf="max_in <= 0 || i < max_in"
         [resources]="r" [selected]="r[1] == selectedResource" (click)="onSelect(r[1])">
       </app-resource-card>

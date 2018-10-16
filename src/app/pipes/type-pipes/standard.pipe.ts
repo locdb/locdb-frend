@@ -91,7 +91,7 @@ export class StandardPipe implements PipeTransform {
     for (const attr of [title, subtitle]) {
       if (attr && attr.trim()) {
         if (standalone) {
-          otherAttributes.push('<b>' + attr + '</b>');
+          otherAttributes.push('<strong>' + attr + '</strong>');
         } else {
           otherAttributes.push(attr);
         }

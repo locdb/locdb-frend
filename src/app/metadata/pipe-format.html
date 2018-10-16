@@ -1,0 +1,16 @@
+<div *ngIf="of">
+  <!-- Option 1 -->
+  <span [innerHtml]="innerHtml">
+  </span>
+  <span *ngIf="!in" [innerHtml]="of | container:true">
+  </span>
+  <!-- Option 2 -->
+  <span *ngIf="!!in">
+    <span [innerHtml]="of | standard">
+    </span>
+    <em> In: </em>
+    <span [innerHtml]="in | container:false">
+    </span>
+  </span>
+</div>
+

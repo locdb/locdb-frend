@@ -325,8 +325,11 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       allowedViews.unshift(resource.type)
       this.currentView = resource.viewport_;
 
-      let stringDate = resource.publicationDate.toISOString()
-      stringDate = stringDate.slice(0, stringDate.indexOf('T'));
+      let stringDate = '';
+      if (resource.publicationDate !== undefined && resource.publicationDate !== null) {
+         stringDate = resource.publicationDate.toISOString()
+         stringDate = stringDate.slice(0, stringDate.indexOf('T'));
+      }
 
       this.resourceForm.reset( {
          title: resource.title,

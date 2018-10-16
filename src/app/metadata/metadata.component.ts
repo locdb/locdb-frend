@@ -8,30 +8,38 @@ import {
 import { LocdbService } from '../locdb.service';
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 
-import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe, ContainerPipe} from '../pipes';
+import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
 
+import { StandardPipe, ContainerPipe } from '../pipes';
 
 const DOI_PREFIX = 'https://doi.org/'
 
 
 @Component({
   selector: 'app-metadata',
-  templateUrl: './author-year-format.html',
+  templateUrl: './pipe-format.html',
   styleUrls: ['./metadata.component.css']
 })
 export class MetadataComponent implements OnInit, OnChanges {
   // if this is a string, we can try to dereference it from the back-end
-  @Input() of: Metadata = null; // child resource
+  @Input() of: TypedResourceView = null; // child resource
   /* in Must be typed resource view to automagically find the correct metadata */
   @Input() in: TypedResourceView | null = null; // parent resource
 
-  ngOnInit()  {
+  innerHtml: string;
 
+  ngOnInit()  {
 
   }
 
   ngOnChanges() {
-    // this.in = findContainerMetadata(this.in);
+    if (!this.in) {
+      this.innerHtml = new ContainerPipe().transform(<TypedResourceView>this.of, true);
+    } else {
+      this.innerHtml = new StandardPipe().transform(<TypedResourceView>this.of)
+        + ' <em>In:</em> ' + new ContainerPipe().transform(this.in, false);
+    }
+
   }
 
   open_link(link: string) {
