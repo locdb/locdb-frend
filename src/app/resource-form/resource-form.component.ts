@@ -3,7 +3,6 @@ import {
    TypedResourceView,
    enums,
    enum_values,
-   isoFullDate,
    composeName,
    decomposeName,
    containerTypes,
