@@ -1,4 +1,3 @@
-import * as moment from 'moment';
 import { Pipe, PipeTransform } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { models, enums, composeName, TypedResourceView} from '../../locdb';
