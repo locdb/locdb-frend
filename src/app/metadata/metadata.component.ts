@@ -8,7 +8,7 @@ import {
 import { LocdbService } from '../locdb.service';
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 
-import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
+import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe, PrefixPipe} from '../pipes';
 
 import { StandardPipe, ContainerPipe } from '../pipes';
 
@@ -17,7 +17,7 @@ const DOI_PREFIX = 'https://doi.org/'
 
 @Component({
   selector: 'app-metadata',
-  templateUrl: './pipe-format.html',
+  templateUrl: './author-year-format.html',
   styleUrls: ['./metadata.component.css']
 })
 export class MetadataComponent implements OnInit, OnChanges {
@@ -26,20 +26,15 @@ export class MetadataComponent implements OnInit, OnChanges {
   /* in Must be typed resource view to automagically find the correct metadata */
   @Input() in: TypedResourceView | null = null; // parent resource
 
-  innerHtml: string;
+  // make resource type available
+  resourceType = enums.resourceType;
+
 
   ngOnInit()  {
 
   }
 
   ngOnChanges() {
-    if (!this.in) {
-      this.innerHtml = new ContainerPipe().transform(<TypedResourceView>this.of, true);
-    } else {
-      this.innerHtml = new StandardPipe().transform(<TypedResourceView>this.of)
-        + ' <em>In:</em> ' + new ContainerPipe().transform(this.in, false);
-    }
-
   }
 
   open_link(link: string) {
@@ -53,15 +48,12 @@ export class MetadataComponent implements OnInit, OnChanges {
   }
 
   /* Transforms a DOI into a clickable URL
-   * 10.1111j.1468-4446.2010.01345.x.pdf
+   * 10.1111j.1468-4446.2010.01345.x
    * to
    * https://doi.org/10.1111/j.1468-4446.2010.01345.x
    *
-   * FIXME this WILL go wrong, if the doi has any other format
    */
   doi2url(doi: string): string {
-    // UNSAFE
-    // return DOI_PREFIX + doi.slice(0, 7) + '/' + doi.slice(7);
     if (doi.startsWith('http')) {
       return doi;
     } else if (doi.startsWith('doi.org')) {
@@ -69,6 +61,21 @@ export class MetadataComponent implements OnInit, OnChanges {
     } else {
       return 'https://doi.org/' + doi;
     }
+  }
+
+  black_magic(rType: enums.resourceType): string {
+    // TODO FIXME get rid of black magic
+    // it is only evaluated once which is shitty
+    console.log('black_magic()', rType)
+    if (rType === enums.resourceType.journalIssue || rType === enums.resourceType.journalVolume) {
+      console.log('journal-like');
+      return 'journal-like';
+    }
+    if (rType === enums.resourceType.monograph || rType === enums.resourceType.editedBook || rType === enums.resourceType.book || rType === enums.resourceType.referenceBook) {
+      console.log('book-like');
+      return 'book-like';
+    }
+    return '';
   }
 
 }

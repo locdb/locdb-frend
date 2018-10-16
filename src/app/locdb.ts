@@ -108,8 +108,6 @@ export function foreignPropertiesByType(containerType: enums.resourceType): Arra
       // when its an issue, we need properties of volume and journal
       return [typedProperty(rtype.journal, 'title'),
               typedProperty(rtype.journal, 'subtitle'),
-              // typedProperty(rtype.journal, 'identifiers'),
-              // typedProperty(rtype.journal, 'contributors'),
               typedProperty(rtype.journalVolume, 'number')];
 
     case rtype.journalVolume:
@@ -117,8 +115,6 @@ export function foreignPropertiesByType(containerType: enums.resourceType): Arra
       return [
         typedProperty(rtype.journal, 'title'),
         typedProperty(rtype.journal, 'subtitle'),
-        // typedProperty(rtype.journal, 'identifiers'),
-        // typedProperty(rtype.journal, 'contributors'),
       ];
 
     case rtype.monograph || rtype.editedBook || rtype.book || rtype.referenceBook:

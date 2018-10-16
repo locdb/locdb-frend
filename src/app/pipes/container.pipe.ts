@@ -34,8 +34,7 @@ export class ContainerPipe implements PipeTransform {
     // if type is Journal, Journal Issue or Journal Volume gather metadata from all three
     if ([enums.resourceType.journal.valueOf(),
       enums.resourceType.journalIssue.valueOf(),
-      enums.resourceType.journalVolume.valueOf()]
-      .indexOf(typedResource.type) !== -1) {
+      enums.resourceType.journalVolume.valueOf()].indexOf(typedResource.type) !== -1) {
       // truely awesome stuff
       // let standardString = standardPepe.transform(typedResource, enums.resourceType.journal, ', ', author_suffix)
       // containerString += (standardString.trim().length > 0 ? standardString + seperator : '')
@@ -51,9 +50,6 @@ export class ContainerPipe implements PipeTransform {
     // additionally if type is either bookSet nor bookSeries add metadata from this types
     if ([enums.resourceType.bookSet.valueOf(),
       enums.resourceType.bookSeries.valueOf()
-      // enums.resourceType.journal.valueOf(),
-      // enums.resourceType.journalIssue.valueOf(),
-      // enums.resourceType.journalVolume.valueOf()
     ].indexOf(typedResource.type) !== -1) {
       let standardString = standardPepe.transform(typedResource, enums.resourceType.bookSet, ', ', standalone)
       containerString += (standardString.trim().length > 0 ? seperator + standardString : '')
