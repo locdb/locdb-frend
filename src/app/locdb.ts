@@ -1,4 +1,3 @@
-import * as moment from 'moment';
 import * as models from './typescript-angular-client/model/models'
 
 export {models};
@@ -88,12 +87,6 @@ export function enum_values(obj) {
     values.push(obj[prop]);
   }
   return values;
-}
-
-export function isoFullDate(date: Date): string {
-  const dateMoment = moment(date);
-  const isoDate = dateMoment.format('YYYY-MM-DD');
-  return isoDate;
 }
 
 
@@ -209,7 +202,7 @@ export function authors2contributors (authors: string[]): models.AgentRole[] {
 
 export function OCR2MetaData(ocr: models.OCRData): Metadata {
   console.log('Extracting OCR data from', ocr);
-  const ocrDate = moment(ocr.date, 'YYYY').toDate();
+  const ocrDate = new Date(ocr.date);
   const obj =  {
     title: ocr.title || '',
     subtitle: '',
@@ -437,36 +430,26 @@ export class TypedResourceView implements Metadata {
   }
 
   get publicationDate(): Date {
-    // rely on moment library to do the conversion from string
-    // moment can deal with both the initial date-time and later on full-date
     const strDate = this.data[this._prefix + 'publicationDate'];
-    // console.log("getDate", strDate)
     if (!strDate) { return null; }
-    const mom = moment(strDate);
-    const date = mom.toDate();
+    const date = new Date(strDate);
     if (!isValidDate(date)) {
       // return null if not valid
       return null;
     }
-    // console.log("moment null", isoFullDate(moment(null).format("YYYY-MM-DD")))
-    // console.log("moment undefined", moment(undefined).format("YYYY-MM-DD"))
-    // console.log("moment ''", moment("").format("YYYY-MM-DD"))
-    // console.log("moment ' '", moment(" ").format("YYYY-MM-DD"))
-    // console.log("getDate", date)
     return date;
   }
 
   set publicationDate(newDate: Date) {
-    console.log('Setting publicationDate', newDate);
-    // if (!newDate) {
-    const dateMoment = moment(newDate);
-    if (!isValidDate(dateMoment.toDate())) {
+    console.log('Date setter called with', newDate);
+    if (!isValidDate(newDate)) {
       console.log('Date was not valid, discarding', newDate);
       this.data[this._prefix + 'publicationDate'] = undefined;
     } else {
       // console.log("setDate", newDate)
-      const isoDate = dateMoment.format('YYYY-MM-DD');
-      // console.log("isoFullDate ", isoFullDate)
+      let isoDate = newDate.toISOString();
+      isoDate = isoDate.slice(0, isoDate.indexOf('T'));
+      console.log('Setting publicationDate', isoDate);
       this.data[this._prefix + 'publicationDate'] = isoDate;
     }
   }

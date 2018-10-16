@@ -3,7 +3,6 @@ import {
    TypedResourceView,
    enums,
    enum_values,
-   isoFullDate,
    composeName,
    decomposeName,
    containerTypes,
@@ -326,13 +325,16 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       allowedViews.unshift(resource.type)
       this.currentView = resource.viewport_;
 
+      let stringDate = resource.publicationDate.toISOString()
+      stringDate = stringDate.slice(0, stringDate.indexOf('T'));
+
       this.resourceForm.reset( {
          title: resource.title,
          subtitle: resource.subtitle,
          resourcetype: resource.type,
          edition: resource.edition,
          resourcenumber: resource.number,
-         publicationyear: isoFullDate(resource.publicationDate)
+         publicationyear: stringDate
       });
       // console.log("publicationyear: ",  this.resourceForm.value.publicationyear)
       // new clean set contribs
@@ -431,6 +433,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             status: oldResource.status,
          }
       )
+      // console.log('Form Model publiation date', formModel.publicationyear);
       // Set **typed** attributes
       resource.identifiers = identsDeepCopy;
       resource.title = formModel.title as string || '';
@@ -442,7 +445,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       // resource.containerTitle = formModel.containerTitle as string || '';
       resource.number = formModel.resourcenumber as string || '';
       resource.contributors = contribsDeepCopy;
-      resource.publicationDate = formModel.publicationyear;
+      resource.publicationDate = new Date(formModel.publicationyear);
       resource.embodiedAs = oldResource.embodiedAs;
       // warning: retain internal identifiers (dont show primary keys to the user)
       // not editable, but copied values
