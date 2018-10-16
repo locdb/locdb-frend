@@ -1,8 +1,8 @@
 export enum todoStatus {
   notOcrProcessed = 'NOT_OCR_PROCESSED',
-  ocrProcessing = 'OCR_PROCESSING',
-  ocrProcessed = 'OCR_PROCESSED',
-  external = 'EXTERNAL'
+    ocrProcessing = 'OCR_PROCESSING',
+    ocrProcessed = 'OCR_PROCESSED',
+    external = 'EXTERNAL'
 }
 
 export enum status {
@@ -11,7 +11,7 @@ export enum status {
     ocrProcessed = 'OCR_PROCESSED',
     valid = 'VALID',
     external = 'EXTERNAL',
-   obsolete = 'OBSOLETE'
+    obsolete = 'OBSOLETE'
 }
 export enum identifier {
   isbn = 'ISBN',
@@ -30,11 +30,12 @@ export enum identifier {
     uri = 'URI',
     urlCrossref = 'URL_CROSSREF',
     gviId = 'ID_GVI',
+    k10plusId = 'ID_K10PLUS',
 
 }
 export enum agentIdentifier {
-    orcid = "ORCID",
-    gndid = "GND_ID",
+  orcid = 'ORCID',
+    gndid = 'GND_ID',
 
 }
 export enum roleType {
@@ -75,11 +76,11 @@ export enum embodimentType {
     print = 'PRINT'
 }
 export enum externalSources {
-  gScholar = 'URL_GOOGLE_SCHOLAR',
-    crossref = 'URL_CROSSREF',
-    swb = 'URL_SWB',
-    zdb = 'URL_ZDB',
-    olcSsg = 'URL_OLCSSG',
-    gvi = 'ID_GVI',
-    k10plus = 'ID_K10PLUS'
+  gScholar = 'GOOGLE_SCHOLAR',
+    crossref = 'CROSSREF',
+    swb = 'SWB',
+    zdb = 'ZDB',
+    olcSsg = 'OLCSSG',
+    gvi = 'GVI',
+    k10plus = 'K10PLUS'
 }
