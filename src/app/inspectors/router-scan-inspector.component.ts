@@ -1,5 +1,5 @@
 
-import { ViewChild, Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
+import { ViewChild, Component, OnInit, Input, Output, OnChanges, AfterViewInit, EventEmitter} from '@angular/core';
 import { models, enums, TypedResourceView, gatherScans } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import {Observable} from 'rxjs/Rx';
@@ -18,7 +18,12 @@ import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 })
 export class RouterScanInspectorComponent implements OnInit {
   // Do we need this?
+  // enables method invocation on child to connect the buttons on this component
+  // to the logic in the child component
   @ViewChild('display') display;
+  // get rid of condition changed while checking error
+  // still there... 
+  initialized = false;
   title = 'Scan Inspector';
   // if sorry_text is set it is shows instead of the app display in the card body
   sorry_text = '';
@@ -95,6 +100,10 @@ export class RouterScanInspectorComponent implements OnInit {
     private router: Router) {
   }
 
+  ngAfterViewInit(){
+    this.initialized = true
+  }
+
   /* apply the filter functions */
   filterEntries(entries: models.BibliographicEntry[]) {
     // console.log("filter Entries: ", entries)
@@ -112,6 +121,9 @@ export class RouterScanInspectorComponent implements OnInit {
   }
 
   search_filter(selection_type: string, selection_name: string) {
+    if (this.filter_options[selection_type] === undefined){
+      return e => true
+    }
     return this.filter_options[selection_type]
                     .find(e => e.name === selection_name)
                     .filter
@@ -271,6 +283,18 @@ export class RouterScanInspectorComponent implements OnInit {
   saveBoxes() {
     if (this.scanIsDisplayable) {
       this.display.saveBoxes();
+    }
+  }
+
+  setMode(mode: string) {
+    if (this.scanIsDisplayable) {
+      this.display.setMode(mode);
+    }
+  }
+
+  getMode(mode: string) {
+    if (this.scanIsDisplayable && this.display) {
+      return this.display.editMode
     }
   }
   // Zooming methods END

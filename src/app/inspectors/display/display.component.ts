@@ -26,11 +26,6 @@ import * as interact from 'interact.js';
     providers: [ LocdbService ]
 })
 
-// interface BibliographicEntry {
-// // we can use an interface to add propertys
-//     rect: rect;
-// }
-
 export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     private zoomSVG: any;
     @ViewChild('zoomSVG') set content(content: any) {
@@ -42,13 +37,11 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     @Input() img_src = '';
     private _entries = []
     @Input() set entries(entries: models.BibliographicEntry[]){
-     console.log("set entries")
+      // check if new entries arrived
       if(entries.length == this._entries.length &&
         entries.every(e => this._entries.includes(e))){
-         console.log("old == new")
        }
        else {
-        console.log("old != new")
           this._entries = entries
           this.reload_rects()
     }
@@ -76,6 +69,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     imgX = 3000;    // initvalues no relevance if new picture is set
     imgY = 3000;
 
+    editMode = 'select'
+
     @Output() imglength: EventEmitter<Number> = new EventEmitter();
     @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
 
@@ -89,12 +84,6 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     // TODO: https://github.com/interactjs/website/blob/master/source/javascripts/star.js
 
     initInteract(imgWidth, imgHeight) {
-      // get the interact variable from the parent window
-      // console.log('imgWidth', imgWidth)
-      // console.log('imgHeight', imgHeight)
-      // console.log('screenWidth: ', this.svgroot)
-      // console.log('screenWidth: ', this.svgroot.nativeElement.clientWidth)
-      // console.log('screenHeight:', this.svgroot.nativeElement.scrollHeight)
       interact('.resizeable-rect')
         .draggable({
           restrict: {
@@ -122,20 +111,13 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         .on('resizemove', function (event) {
           const min_width = 50
           const min_height = 20
-          // console.log(imgWidth)
-          // console.log(imgHeight)
           let target = event.target,
               x = (parseFloat(target.getAttribute('x')) || 0),
               y = (parseFloat(target.getAttribute('y')) || 0);
-          // console.log(target.id, x,y, event.deltaRect, event.rect)
-        //
           // update the element's style
-          // console.log(event)
           let svg = target.parentNode.parentNode
           const clientToImageWidthRatio = imgWidth / svg.clientWidth
           const clientToImageHeightRatio = imgHeight / svg.clientHeight
-          // console.log(svg.clientWidth, clientToImageWidthRatio)
-          // console.log(svg.clientHeight, clientToImageHeightRatio)
           let width  = event.rect.width;
           let height = event.rect.height;
           let deltaLeft = event.deltaRect.left;
@@ -153,19 +135,11 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           x += deltaLeft * clientToImageWidthRatio;
           y += deltaTop * clientToImageHeightRatio;
 
-
-          // target.style.webkitTransform = target.style.transform =
-          //     'translate(' + x + 'px,' + y + 'px)';
-          // target.x = x;
-          // target.y = y
-
         target.setAttribute('width', width * clientToImageWidthRatio);
         target.setAttribute('height', height * clientToImageHeightRatio);
         target.setAttribute('x', x);
         target.setAttribute('y', y);
-
-        // target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height);
-         })
+})
          .on('dragmove', function (event){
            let target = event.target,
            x = (parseFloat(target.getAttribute('x')) || 0),
@@ -178,27 +152,12 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
            x += event.dx * clientToImageWidthRatio;
            y += event.dy * clientToImageHeightRatio;
 
-
-           // target.style.webkitTransform = target.style.transform =
-           //     'translate(' + x + 'px,' + y + 'px)';
-           // target.x = x;
-           // target.y = y
            target.setAttribute('x', x);
            target.setAttribute('y', y);
-           // console.log(target.id, x,y, event.deltaRect, event.rect)
-           // console.log(event)
         });
     }
     initSVGZoom() {
         console.log('[Display] init Zoom')
-        // let zoom = d3.zoom().on('zoom', function () {
-        //     svgContainer.attr('transform', 'translate(' +
-        //                       d3.event.transform.x + ', ' + d3.event.transform.y +
-        //                       ')scale(' + d3.event.transform.k + ')')
-        // })
-        // .scaleExtent([1, 5])
-        // .translateExtent([[0, 0], [this.imgX, this.imgY]])
-        // .duration(250);
         let zoom = d3.zoom().on("zoom", function () {
           svgContainer.attr("transform", d3.event.transform)
         })
@@ -226,8 +185,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     saveBoxes() {
+      // console.log(this.entries[0].scanId)
       console.log('Saving coordinates')
-      // console.log(this.rects.map(e => e.entry.ocrData.coordinates))
       for (const rect of this.zoomSVG.nativeElement.querySelectorAll('rect')) {
         const id = rect.getAttribute('id')
         const x = Math.round(rect.getAttribute('x'))
@@ -235,8 +194,6 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         const w = Math.round(rect.getAttribute('width'))
         const h = Math.round(rect.getAttribute('height'))
         const pristine = this.rects[id].isPristine(x, y, w, h)
-        // console.log('Old values:', this.rects[id].toString())
-        // console.log('New values:', 'x', x, 'y', y, 'width', w, 'height', h, 'pristine', pristine)
         if (!pristine) {
           console.log('Detected a change', this.rects[id].toString());
           this.rects[id].saveCoordinates(x, y, w, h);
@@ -249,15 +206,9 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             (error) => alert('Error while uploading new coordinates: ' + error.message)
           );
         }
-        // console.log('id', id, 'x', x, 'y',
-        // y, 'pristine?', 'width', w, 'height', h,
-        // this.rects[id].x == x && this.rects[id].y == y &&
-        // this.rects[id].width == w && this.rects[id].height == h? true : false)
       }
-      // console.log(this.rects.map(e => e.entry.ocrData.coordinates))
-      // this.reload_rects()
-
     }
+
     ngOnChanges(changes: SimpleChanges | any) {
     }
 
@@ -292,9 +243,96 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     onSelect(rect: Rect) {
-        console.log('[display] onselect called');
-        this.selectedEntry = rect.entry;
-        this.entry.next(rect.entry);
+        console.log('[display] onselect called', this.addDeleteMode);
+        if(this.editMode == 'add'){
+          console.log('onSelect in add Mode')
+        }
+        else if(this.editMode == 'delete'){
+          console.log('onSelect in delete Mode')
+        }
+        else {
+          if(rect.entry._id){
+          this.selectedEntry = rect.entry;
+          this.entry.next(rect.entry);
+        }
+        }
+    }
+
+    setMode(mode: string){
+      this.editMode = mode
+    }
+
+    clicked(evt){
+      console.log(evt.path[0].nodeName)
+      const element = evt.path[0]
+      const svg = evt.path.find(e => e.nodeName == 'svg')
+      const clientToImageWidthRatio = this.imgX / svg.clientWidth
+      const clientToImageHeightRatio = this.imgY / svg.clientHeight
+
+      if(element.nodeName === 'image' && this.editMode == 'add'){
+
+        let e = evt.target;
+        let dim = e.getBoundingClientRect();
+        let x = evt.clientX - dim.left;
+        let y = evt.clientY - dim.top;
+        // alert("x: "+x+" y:"+y);
+        console.log(evt)
+        console.log(evt.path)
+        console.log(evt.path[0].nodeName)
+        console.log(e.getBoundingClientRect())
+        console.log(x, y)
+        this.newRectAndEntry(x * clientToImageWidthRatio, y * clientToImageHeightRatio)
+        }
+      else if (element.nodeName === 'rect' && this.editMode == 'delete'){
+        console.log(element)
+        const id = element.id
+        this.deleteRectAndEntry(id, element.x.baseVal.value, element.y.baseVal.value,
+          element.width.baseVal.value, element.height.baseVal.value)
+        }
+    }
+
+
+    markRect(event){
+      // console.log("Markme", event)
+      event.path[0].style.fill = 'rgb(0,0,0)'
+      event.path[0].style.stroke = 'rgb(0,0,0)'
+      // event.path[0].style['fill-opacity'] = '0.9'
+      // event.path[0].style['stroke-opacity'] = '1'
+    }
+
+    unmarkRect(event){
+      // console.log("Unmarkme", event)
+      event.path[0].style.fill = ''
+      event.path[0].style.stroke = ''
+      event.path[0].style['fill-opacity'] = ''
+      event.path[0].style['stroke-opacity'] = ''
+    }
+
+    // TODO: take care of creating entry in entries too
+    newRectAndEntry(x: number, y: number){
+      const scanId = this.img_src.split('/').pop()
+      console.log('create on coordinates ', x, y)
+      const coords = `${Math.round(x)} ${Math.round(y)} ${Math.round(x+300)} ${Math.round(y+125)}`
+      console.log('coords: ', coords)
+      const entry = {ocrData: {coordinates: coords},
+                    scanId: scanId}
+      console.log(entry)
+      this.rects.push(new Rect(entry))
+      // this.entries.push(entry)
+    }
+
+    // TODO: make sure entries are deleted in backend too
+    deleteRectAndEntry(id: number, x: number, y: number, width: number, height: number){
+      const rectToDelete = this.rects[id]
+      if(confirm(`Delete entry ${rectToDelete.entry.bibliographicEntryText}?`)){
+        console.log('delete: ', this.rects[id])
+        // prestine check may be to harsh,
+        // const prestine = rectToDelete.isPristine(x, y, width, height)
+        // console.log('right element?', prestine)
+        console.log('Deleted rect', this.rects.splice(id, 1))
+        console.log('Deleted entry', this.entries.splice(id, 1))
+      }
+
     }
 
     validateCoordinates(coordinates: string): boolean {
@@ -382,7 +420,7 @@ class Rect {
 
     isPristine(x: number, y: number, width: number, height: number) {
       // is this ok?
-      // console.log('Pristine check', this.x, x, this.y, y, this.width, width, this.height, height)
+      console.log('Pristine check', this.x, x, this.y, y, this.width, width, this.height, height)
       return this.x === x && this.y === y && this.width === width && this.height === height
     }
 
