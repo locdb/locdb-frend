@@ -120,11 +120,16 @@ export function foreignPropertiesByType(containerType: enums.resourceType): Arra
         typedProperty(rtype.journal, 'subtitle'),
       ];
 
-    case rtype.monograph || rtype.editedBook || rtype.book || rtype.referenceBook:
+    case rtype.book:
+    case rtype.editedBook:
+    case rtype.monograph:
+    case rtype.referenceBook: {
       // in these cases, the book series and sets are flattened.
       return [typedProperty(rtype.bookSeries, 'title'),
               typedProperty(rtype.bookSeries, 'number'),
               typedProperty(rtype.bookSet, 'title')];
+    }
+
     default:
       return [];
   }
