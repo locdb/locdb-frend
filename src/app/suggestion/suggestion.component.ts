@@ -269,8 +269,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
               );
               } else {
                 this.currentTarget = [trv, null];
+                this.onSelect(this.currentTarget);
               }
-            this.onSelect(this.currentTarget);
           },
           (err) => { console.log('Invalid entry.references pointer', this.entry.references) });
       } else {
@@ -390,7 +390,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
   onSelect(br?: [TypedResourceView, TypedResourceView]): void {
     this.loggingService.logReferenceTargetSelected(this.entry, br[0])
-    // <--------------------------------------------------------------------
     this.selectedResource = br;
     this.committed = false;
     this.suggest.emit(br[0]);

@@ -25,6 +25,9 @@ export class ResourcePairFormComponent implements OnInit {
   @Input() resource: TypedResourceView;
   @Input() alternate: TypedResourceView;
 
+  // Keep the last alternate stored, so that we can go back
+  lastAlternate: TypedResourceView;
+
   // Detemine whether 'resource' or 'alternate' is active
   alternateIsActive = false;
   // Show input field to link to another container
@@ -131,7 +134,13 @@ export class ResourcePairFormComponent implements OnInit {
   }
 
   disconnectFromAlternate() {
+    this.lastAlternate = this.alternate;
     this.alternate = null;
+  }
+
+  reconnectToLastAlternate() {
+    this.alternate = this.lastAlternate;
+    this.lastAlternate = null;
   }
 
 }
