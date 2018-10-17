@@ -1,14 +1,16 @@
 <div style="height: 1000px; overflow-y: scroll;">
     <!-- {{ selectedEntry | json}} -->
 <figure>
-    <svg #svgroot xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + imgX + ' ' + imgY" (click)="clicked($event)">
+    <svg #svgroot xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + imgX + ' ' + imgY" >
+      <!-- (click)="clicked($event)"> -->
       <g #zoomSVG class="resize-container" [attr.height]="imgY + 'px'" [attr.width]="imgX + 'px'">
             <image [attr.xlink:href]="img_src" [attr.height]="imgY + 'px'" [attr.width]="imgX + 'px'" (load)="imageOnload()" (resize)="resize($event)"/>
             <rect [id]='i' class="resizeable-rect" *ngFor="let rect of rects; let i=index" [attr.x]="rect.x"
             [attr.y]="rect.y" [attr.height]="rect.height"
             [attr.width]="rect.width" [ngClass]="{ 'selected' : rect.entry ==
             selectedEntry, 'todo' : !(rect.entry == selectedEntry) && !rect.entry.references, 'done' :
-            !(rect.entry == selectedEntry) && rect.entry.references}" (click)="onSelect(rect)" (mouseenter)="markRect($event)" (mouseleave)="unmarkRect($event)"/>
+            !(rect.entry == selectedEntry) && rect.entry.references}" (click)="onSelect(rect)"/>
+             <!-- (mouseenter)="markRect($event)" (mouseleave)="unmarkRect($event)"/> -->
             <!-- <rect *ngFor="let rect of rects; let i=index"
             [attr.x]="rect.x" [attr.y]="rect.y" [attr.height]="rect.height"
             [attr.width]="rect.width" style="stroke: #009900; stroke-width: 1;

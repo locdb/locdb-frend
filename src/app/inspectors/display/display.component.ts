@@ -243,7 +243,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     onSelect(rect: Rect) {
-        console.log('[display] onselect called', this.addDeleteMode);
+        console.log('[display] onselect called', this.editMode);
         if(this.editMode == 'add'){
           console.log('onSelect in add Mode')
         }
@@ -293,7 +293,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
 
     markRect(event){
-      // console.log("Markme", event)
+      console.log("Markme", event)
       event.path[0].style.fill = 'rgb(0,0,0)'
       event.path[0].style.stroke = 'rgb(0,0,0)'
       // event.path[0].style['fill-opacity'] = '0.9'
@@ -301,7 +301,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     unmarkRect(event){
-      // console.log("Unmarkme", event)
+      console.log("Unmarkme", event)
       event.path[0].style.fill = ''
       event.path[0].style.stroke = ''
       event.path[0].style['fill-opacity'] = ''
