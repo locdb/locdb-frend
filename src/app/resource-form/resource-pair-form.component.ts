@@ -156,12 +156,18 @@ class TypeaheadObj {
        // When no parent is give, the child is a stand-alone which can be a potential container
        this.id = resource._id;
        this.name = resource.toString();
+       if (resource.publicationDate) {
+         this.name = resource.publicationDate.getFullYear() + ' - ' + this.name;
+       }
      } else {
        // Both resource and container are given.
        // In this case, the child **MAY NOT BE** a container
        // because we are dealing with a two level hierarchy.
        this.id = container._id;
        this.name = container.toString();
+       if (container.publicationDate) {
+         this.name = container.publicationDate.getFullYear() + ' - ' + this.name;
+       }
      }
    }
 

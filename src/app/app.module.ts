@@ -81,7 +81,6 @@ import { TypeaheadModule } from 'ngx-bootstrap';
 import { PaginationModule } from 'ngx-bootstrap';
 import { ResourcePairFormComponent } from './resource-form/resource-pair-form.component';
 import { PrefixPipe } from './pipes/prefix.pipe';
-import { ContainerTitlePipe } from './pipes/container-title.pipe';
 
 const appRoutes: Routes = [
   // { path: 'resolve/:NOT_OCR_PROCESSED/:OCR_PROCESSING/:OCR_PROCESSED/:EXTERNAL', component: LinkingComponent },
@@ -168,7 +167,6 @@ const appRoutes: Routes = [
     DynamicFormQuestionComponent,
     ResourcePairFormComponent,
     PrefixPipe,
-    ContainerTitlePipe,
   ],
   providers: [
     { provide: BASE_PATH, useValue: environment.locdbUrl},

@@ -493,6 +493,9 @@ class TypeaheadObj {
       } else {
          this.name = resource.toString() + ' <em>In:</em> ' + container.toString();
       }
+      if (resource.publicationDate) {
+         this.name = resource.publicationDate.getFullYear() + ' - ' + this.name;
+      }
    }
 
    public toString (): string {

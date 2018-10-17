@@ -3,7 +3,7 @@
   <span *ngIf="of.publicationDate" class="badge badge-info ml-1"> {{ of.publicationDate | date:'yyyy' }}</span>
   {{ of.contributors | authors:'; ':': ' }}
   <!-- Only show publisher here if not contained in some other resource -->
-  <strong>{{of | containerTitle}}</strong>
+  <strong>{{ of }}</strong>
   <span *ngIf="!in">
     <!-- No container present, show own publisher -->
     <span>{{of.contributors | publisher | prefix}}</span>
@@ -13,7 +13,7 @@
     <em> in: </em>
     <span class="badge badge-primary"> {{ in.type }}</span>
     {{ in.contributors | editors }}
-    <strong>{{ in | containerTitle }}</strong>
+    <strong>{{ in }}</strong>
     <span>{{in.contributors | publisher | prefix}}</span>
   </span>
   <span *ngIf="of.embodiedAs && of.embodiedAs.length && of.embodiedAs[0].firstPage && of.embodiedAs[0].lastPage">, pp. {{ of.embodiedAs[0].firstPage}}-{{ of.embodiedAs[0].lastPage }}</span>.

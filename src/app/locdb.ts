@@ -7,8 +7,6 @@ export {models};
 import * as enums from './enums';
 export { enums };
 
-// used for TypedResourceView's toString()
-import { ContainerTitlePipe } from './pipes';
 
 export const NAME_SEPARATOR = ', '
 
@@ -312,15 +310,83 @@ export class TypedResourceView implements Metadata {
     return foreignPropertiesByType(<enums.resourceType>this.viewport_);
   }
 
+  isJournalLike() {
+    // could use viewport instead
+    const rType = this.type;
+    return rType === enums.resourceType.journalIssue || rType === enums.resourceType.journalVolume;
+  }
+
+  isBookLike() {
+    // could use viewport instead
+    const rType = this.type;
+    return (
+      rType === enums.resourceType.monograph ||
+      rType === enums.resourceType.editedBook ||
+      rType === enums.resourceType.book ||
+      rType === enums.resourceType.referenceBook
+    )
+  }
+
   toString(): string {
     /** Method to return a short-hand string representation
      *  which can be used for auto-completion techniques.
+     *  It is also used for the main-title generation.
      */
     let s = '';
-    if (this.publicationDate) {
-      s += this.publicationDate.getFullYear() + ' - '
+    const value = this;
+    if (this.isJournalLike()) {
+      s = value.astype(enums.resourceType.journal).title;
+      const journalSubtitle = value.astype(enums.resourceType.journal).subtitle;
+      if (journalSubtitle) {
+        s += ' ' + journalSubtitle;
+      }
+
+
+      const volumeNumber = value.astype(enums.resourceType.journalVolume).number;
+      if (volumeNumber) {
+        s += ', Vol. ' + volumeNumber;
+      }
+
+      const issueNumber = value.astype(enums.resourceType.journalIssue).number;
+      if (issueNumber) {
+        s += ', Issue ' + issueNumber;
+      }
+
+      // journals issues and volumes do not need anything else, we're done here.
+      return s;
     }
-    s += new ContainerTitlePipe().transform(this) + '.';
+
+    // Otherwise, always use own title:
+    // the very important default, is the resource's OWN TITLE.
+    // also plain journals are dealt with here
+    if (value.title) {
+      s += value.title;
+      if (value.subtitle) {
+        s += ' ' + value.subtitle;
+      }
+    } else if (value.number) {
+      // If no title is given, e.g. for a book chapter, use try to use its number
+      s += value.number;
+    }
+
+    if (this.isBookLike()) {
+      // For book-like resources, add (flattened) info on Series
+      const seriesTitle = value.astype(enums.resourceType.bookSeries).title;
+      const seriesNumber = value.astype(enums.resourceType.bookSeries).number;
+      if (seriesTitle) {
+        s += ', ' + seriesTitle;
+        if (seriesNumber) {
+          s += seriesNumber;
+        }
+
+      }
+      // and book sets
+      const setTitle = value.astype(enums.resourceType.bookSet).title;
+      if (setTitle) {
+        s += ', ' + setTitle;
+      }
+    }
+
     return s;
   }
 
@@ -475,27 +541,6 @@ export class TypedResourceView implements Metadata {
 
 }
 
-export function findContainerMetadata(trv: TypedResourceView, checkInitial = true): TypedResourceView {
-  /* Finds the least general container type that has meta data available,
-   * traverses the list of preferred container types for the current type
-   * from most preferable to least preferable.
-   * Designed for usage in metadata's of part.
-   * When `checkInitial` is false, the initial `trv` will not be checked against the condition.
-   * As a fallback, the same view as the input is returned.
-   * TODO: this could even be recursive, but for now we assume that our lookup table is flattened.
-   */
-  if (!trv) { return null; };
-  if (checkInitial && trv.title) { return trv; };
-
-  console.log('DeprecationWarning: findContainerMetadata');
-  const validTypes = containerTypes(trv.type);
-  for (const candidateType of validTypes) {
-    const view = trv.astype(candidateType);
-    // could even put callback as condition...
-    if (view.title) { return view };
-  }
-  return trv;
-}
 
 export function decomposeName(someString: string): Partial<models.ResponsibleAgent> {
   const [lastname, firstname, ...other] = someString.split(NAME_SEPARATOR);
