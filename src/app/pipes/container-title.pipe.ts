@@ -41,10 +41,14 @@ export class ContainerTitlePipe implements PipeTransform {
     }
 
     // Otherwise, always use own title
-    s = value.title;
-    const subtitle = value.subtitle;
-    if (subtitle) {
-      s += ' ' + subtitle;
+    if (value.title) {
+      s += value.title;
+      if (value.subtitle) {
+        s += ' ' + value.subtitle;
+      }
+    } else if (value.number) {
+      // If no title is given, e.g. for a book chapter, use try to use its number
+      s += value.number;
     }
 
     if (this.isBookLike(value.type)) {

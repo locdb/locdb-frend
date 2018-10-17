@@ -3,25 +3,21 @@
   <span *ngIf="of.publicationDate" class="badge badge-info ml-1"> {{ of.publicationDate | date:'yyyy' }}</span>
   {{ of.contributors | authors:'; ':': ' }}
   <!-- Only show publisher here if not contained in some other resource -->
+  <strong>{{of | containerTitle}}</strong>
   <span *ngIf="!in">
-    <!-- No container present, show flattened properties here -->
-    <strong>{{of | containerTitle}}</strong><span>{{of.contributors | publisher | prefix}}.</span>
+    <!-- No container present, show own publisher -->
+    <span>{{of.contributors | publisher | prefix}}</span>
   </span>
   <span *ngIf="!!in">
     <!-- Both child and parent are given -->
-    <strong>
-      <!-- In this case, use ONLY the resource's own title -->
-      {{ of.title }} {{ of.subtitle }} {{ of.number }}
-    </strong>
     <em> in: </em>
     <span class="badge badge-primary"> {{ in.type }}</span>
     {{ in.contributors | editors }}
-    <strong>{{ in | containerTitle }}</strong><span>{{in.contributors | publisher | prefix}}.</span>
+    <strong>{{ in | containerTitle }}</strong>
+    <span>{{in.contributors | publisher | prefix}}</span>
   </span>
+  <span *ngIf="of.embodiedAs && of.embodiedAs.length && of.embodiedAs[0].firstPage && of.embodiedAs[0].lastPage">, pp. {{ of.embodiedAs[0].firstPage}}-{{ of.embodiedAs[0].lastPage }}</span>.
   <!-- Some information that is only available when child is given -->
-  <span *ngIf="of.embodiedAs && of.embodiedAs.length && of.embodiedAs[0].firstPage && of.embodiedAs[0].lastPage">
-    (pp. {{ of.embodiedAs[0].firstPage}}-{{ of.embodiedAs[0].lastPage }})
-  </span>
   <a class="badge badge-secondary ml-1" *ngIf="findIdentifier(of.identifiers, 'URL_CROSSREF')" [href]="findIdentifier(of.identifiers, 'URL_CROSSREF')" target="_blank">
     <i class="fa fa-external-link"></i> CrossRef
   </a>
