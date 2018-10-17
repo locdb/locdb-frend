@@ -26,7 +26,7 @@ import { PopoverModule } from 'ngx-popover';
 import { LoggingService } from '../logging.service';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
-import { AuthorsPipe, ContainerPipe, EditorsPipe, PublisherPipe, EmbracePipe} from '../pipes';
+import { AuthorsPipe, ContainerPipe, EditorsPipe, PublisherPipe, EmbracePipe, PrefixPipe} from '../pipes';
 import { StandardPipe } from '../pipes/type-pipes';
 
 import { HttpClientModule } from '@angular/common/http';
@@ -59,6 +59,7 @@ describe('BrowseComponent', () => {
         EmbracePipe,
         StandardPipe,
         ContainerPipe,
+        PrefixPipe,
         DynamicFormQuestionComponent,
       ],
       providers: [
