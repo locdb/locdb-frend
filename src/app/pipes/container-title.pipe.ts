@@ -13,6 +13,9 @@ export class ContainerTitlePipe implements PipeTransform {
    * For book-like containers the book-title is combined with the series name
    * and number as well as the book set name
    *
+   * The implementation is robust enough with respect to non-container resources,
+   * as the default is the title (+subtitle) or the number of the own resource.
+   * Special container-specific treatment is only applied, when the type is a valid container.
    *
    */
 
