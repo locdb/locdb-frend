@@ -63,7 +63,6 @@
   <!-- Panel body providing suggestions -->
   <div class="card-block">
     <div *ngFor="let r of internalSuggestions; let i = index">
-      {{ r | json }}
       <app-resource-card [resources]="r" [selected]="r[1] == selectedResource" (click)="onSelect(r[1])">
       </app-resource-card>
     </div>
