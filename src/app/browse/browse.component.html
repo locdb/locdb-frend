@@ -62,17 +62,10 @@
 <div class="card-body" style="height: 800px; overflow-y: scroll;">
   <!-- Panel body providing suggestions -->
   <div class="card-block">
-    <div *ngFor="let r of internalSuggestions;let i = index">
-      <app-resource-card *ngIf="max_in <= 0 || i < max_in"
-        [resources]="r" [selected]="r[1] == selectedResource" (click)="onSelect(r[1])">
+    <div *ngFor="let r of internalSuggestions; let i = index">
+      <app-resource-card [resources]="r" [selected]="r[1] == selectedResource" (click)="onSelect(r[1])">
       </app-resource-card>
     </div>
-    <button type="button" *ngIf="max_in == max_shown_suggestions" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
-      <p><em>Show all</em></p>
-    </button>
-    <button type="button" *ngIf="max_in == 0" class="list-group-item list-group-item-action list-group-item-default text-center" (click)="toggle_max_in()">
-      <p><em>Show less</em></p>
-    </button>
     <div *ngIf="internalInProgress" class="loader">
     </div>
   </div>

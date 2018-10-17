@@ -11,7 +11,7 @@ export class EditorsPipe implements PipeTransform {
   transform(
     contributors: Array<models.AgentRole>,
     seperator: string = '; ',
-    editor_suffix: string = ' (ed.):'
+    editor_suffix: string = ' (ed.),'
   ): string {
     if (!contributors) { return ''; }
     const editors = contributors.filter(x => x.roleType === enums.roleType.editor);

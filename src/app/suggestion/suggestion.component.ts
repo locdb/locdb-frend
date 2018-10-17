@@ -242,6 +242,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges | any) {
+    this.committed = false; // entry has changed, so don't show success message
     console.log('[Suggestion Component] ngOnChanges called');
     // reset filters
     this.initFilterOptions();
@@ -268,8 +269,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
               );
               } else {
                 this.currentTarget = [trv, null];
+                this.onSelect(this.currentTarget);
               }
-            this.onSelect(this.currentTarget);
           },
           (err) => { console.log('Invalid entry.references pointer', this.entry.references) });
       } else {
@@ -389,7 +390,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
   onSelect(br?: [TypedResourceView, TypedResourceView]): void {
     this.loggingService.logReferenceTargetSelected(this.entry, br[0])
-    // <--------------------------------------------------------------------
     this.selectedResource = br;
     this.committed = false;
     this.suggest.emit(br[0]);

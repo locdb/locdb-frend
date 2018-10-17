@@ -48,7 +48,7 @@ export class RouterScanInspectorComponent implements OnInit {
       /* allways drop status obsolete */
       filtered_entries = entries.filter(e => e.status !== 'OBSOLETE')
 
-      for (const attribute of this.filter_attributes){
+      for (const attribute of this.filter_attributes) {
           filtered_entries = filtered_entries.filter(this.search_filter(attribute,
             this.selection[attribute]))
       }
@@ -64,16 +64,18 @@ export class RouterScanInspectorComponent implements OnInit {
   /* extract filter options and generate the necessary filterfunctions */
   refreshFilterOptions() {
     for (const current_entry of this.refs) {
-        for (const attribute of this.filter_attributes){
+        for (const attribute of this.filter_attributes) {
           const value = current_entry.ocrData[attribute]
           if (value && this.filter_options[attribute].every(y => y.name !== value)) {
-            this.filter_options[attribute].push({name: value,
-                  filter: x => x ? x.ocrData[attribute] === value : false})}}
+            this.filter_options[attribute].push({name: value, filter: x => x ? x.ocrData[attribute] === value : false})
+          }
         }
-    for (let attribute of this.filter_attributes){
+    }
+    for (const attribute of this.filter_attributes) {
       this.filter_options[attribute].sort((e1, e2) => ( e1.name < e2.name ||
-                  e1.name == 'All' && e2.name != 'All' ? -1 : 1))
-    }}
+                  e1.name === 'All' && e2.name !== 'All' ? -1 : 1))
+    }
+  }
 
 
   /* Flag whether the scan or the digital references list is shown */

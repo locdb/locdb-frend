@@ -2,8 +2,7 @@
   <div class="form-group row">
     <label for="resourcetype" class="col-sm-2 col-form-label">Type</label>
     <div class="col-sm-10">
-
-      <select id="resourcetype" class="form-control" formControlName="resourcetype" (change)="onChangeType($event.target.value)">
+<select id="resourcetype" class="form-control" formControlName="resourcetype" (change)="onChangeType($event.target.value)">
         <option *ngFor="let rt of resourceTypes" [value]="rt">{{rt}}</option>
       </select>
 
@@ -134,7 +133,7 @@
 
   <div *ngIf="questions.length" formGroupName="foreignProperties" class="mb-2">
     <hr/>
-    <h5> Additional Container properties </h5>
+    <h5> Container-specific properties </h5>
     <div *ngFor="let question of questions">
       <app-question [question]="question" [form]="foreignProperties"></app-question>
     </div>

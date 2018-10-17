@@ -4,4 +4,5 @@ export { PublisherPipe } from './publisher.pipe';
 export { EmbracePipe } from './embrace.pipe';
 export { ContainerPipe } from './container.pipe';
 export { IdentifierPipe } from './identifier.pipe';
+export { PrefixPipe } from './prefix.pipe';
 export * from './type-pipes';
