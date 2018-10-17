@@ -7,6 +7,9 @@ export {models};
 import * as enums from './enums';
 export { enums };
 
+// used for TypedResourceView's toString()
+import { ContainerTitlePipe } from './pipes';
+
 export const NAME_SEPARATOR = ', '
 
   /*
@@ -305,17 +308,14 @@ export class TypedResourceView implements Metadata {
   }
 
   toString(): string {
-    /** Method to return authors or editors plus title, note
-    that this can be reused but is not sufficient for itself.
-    Where to place the 'year' depends on whether a container is available. */
-      // could treat editors differently
-    // always put title!
-    let s = this.authorString();
+    /** Method to return a short-hand string representation
+     *  which can be used for auto-completion techniques.
+     */
+    let s = '';
     if (this.publicationDate) {
-      s += `(${this.publicationDate})`;
+      s += this.publicationDate.getFullYear() + ' - '
     }
-    s += '.';
-    s += this.title + '.';
+    s += new ContainerTitlePipe().transform(this) + '.';
     return s;
   }
 

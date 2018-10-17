@@ -489,9 +489,9 @@ class TypeaheadObj {
 
 
       if (!container) {
-         this.name  = new ContainerPipe().transform(resource, true);
+         this.name = resource.toString();
       } else {
-         this.name = new StandardPipe().transform(resource) + ' <em>In:</em> ' + new ContainerPipe().transform(container, false);
+         this.name = resource.toString() + ' <em>In:</em> ' + container.toString();
       }
    }
 

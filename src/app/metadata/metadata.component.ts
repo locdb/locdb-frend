@@ -8,7 +8,7 @@ import {
 import { LocdbService } from '../locdb.service';
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 
-import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe, PrefixPipe} from '../pipes';
+import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe, PrefixPipe, ContainerTitlePipe } from '../pipes';
 
 import { StandardPipe, ContainerPipe } from '../pipes';
 
@@ -17,7 +17,7 @@ const DOI_PREFIX = 'https://doi.org/'
 
 @Component({
   selector: 'app-metadata',
-  templateUrl: './author-year-format.html',
+  templateUrl: './metadata.component.html',
   styleUrls: ['./metadata.component.css']
 })
 export class MetadataComponent implements OnInit, OnChanges {
@@ -61,21 +61,6 @@ export class MetadataComponent implements OnInit, OnChanges {
     } else {
       return 'https://doi.org/' + doi;
     }
-  }
-
-  black_magic(rType: enums.resourceType): string {
-    // TODO FIXME get rid of black magic
-    // it is only evaluated once which is shitty
-    console.log('black_magic()', rType)
-    if (rType === enums.resourceType.journalIssue || rType === enums.resourceType.journalVolume) {
-      console.log('journal-like');
-      return 'journal-like';
-    }
-    if (rType === enums.resourceType.monograph || rType === enums.resourceType.editedBook || rType === enums.resourceType.book || rType === enums.resourceType.referenceBook) {
-      console.log('book-like');
-      return 'book-like';
-    }
-    return '';
   }
 
 }

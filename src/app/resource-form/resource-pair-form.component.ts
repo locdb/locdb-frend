@@ -49,7 +49,7 @@ export class ResourcePairFormComponent implements OnInit {
       // runs on every search
       observer.next(this.asyncSelected)
     }).mergeMap((token: string) => this.getStatesAsObservable(token)).map( r =>
-      r.map( pair => new TypeaheadObj(pair[0]))
+      r.map( pair => new TypeaheadObj(pair[0], pair[1]))
     )
   }
 
@@ -140,10 +140,20 @@ class TypeaheadObj {
    id: string;
    name: string;
 
-   constructor(tr: TypedResourceView) {
-      this.id = tr._id;
-      // this.name = (new StandardPipe().transform(tr)).replace(/<.*?>/, '').replace(/<\/.*?>/, '')
-      this.name = new ContainerPipe().transform(tr);
+   constructor(resource: TypedResourceView, container: TypedResourceView | null) {
+     // Here is important logic
+     // The goal is to identify possible containers
+     if (!container) {
+       // When no parent is give, the child is a stand-alone which can be a potential container
+       this.id = resource._id;
+       this.name = resource.toString();
+     } else {
+       // Both resource and container are given.
+       // In this case, the child **MAY NOT BE** a container
+       // because we are dealing with a two level hierarchy.
+       this.id = container._id;
+       this.name = container.toString();
+     }
    }
 
    public toString (): string {

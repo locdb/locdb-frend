@@ -242,6 +242,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges | any) {
+    this.committed = false; // entry has changed, so don't show success message
     console.log('[Suggestion Component] ngOnChanges called');
     // reset filters
     this.initFilterOptions();
