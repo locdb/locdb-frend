@@ -134,6 +134,7 @@ export class ResourcePairFormComponent implements OnInit {
   }
 
   disconnectFromAlternate() {
+    this.alternateIsActive = false;
     this.lastAlternate = this.alternate;
     this.alternate = null;
   }

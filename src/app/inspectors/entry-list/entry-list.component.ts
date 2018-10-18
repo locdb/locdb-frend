@@ -99,8 +99,7 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
     this.entry.emit(entry)
   }
 
-  forwardOpenEdit(event){
-    console.log("click")
+  forwardOpenEdit(event) {
     this.openEdit.emit(event)
   }
 
