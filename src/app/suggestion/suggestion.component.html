@@ -100,6 +100,7 @@
             <h4 class="card-title">
               Current citation target
             </h4>
+            <button type="button" class="btn btn-sm btn-danger" (click)="removeTarget()">Remove Link</button>
             <app-resource-card [resources]="currentTarget"
                 [selected]="currentTarget == selectedResource"
                 (click)="onSelect(currentTarget)">

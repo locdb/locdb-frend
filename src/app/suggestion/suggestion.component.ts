@@ -21,6 +21,7 @@ import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 
 import { StandardPipe } from '../pipes/type-pipes';
 
+import { BibliographicEntryService } from '../typescript-angular-client/api/bibliographicEntry.service'
 
 function sortByName(a, b) {
   const nameA = a.name.toUpperCase(); // ignore upper and lowercase
@@ -121,7 +122,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
   constructor(private locdbService: LocdbService,
     private loggingService: LoggingService,
-    private modalService: BsModalService) {
+    private modalService: BsModalService
+  private entryService: BibliographicEntryService) {
     this.dataSource = Observable.create((observer: any) => {
       // Runs on every search
       observer.next(this.query);
@@ -495,6 +497,13 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
   toggle_extended_search() {
     this.search_extended = !this.search_extended;
+  }
+
+  removeTarget() {
+    this.entryService.removeTargetBibliographicResource(this.entry._id).subscribe(
+      (success) => { this.entry.references = ''; this.currentTarget = null; },
+      (error) => alert('Could not remove citation link: ' + error.message)
+    );
   }
 
 }

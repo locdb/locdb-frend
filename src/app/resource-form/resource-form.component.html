@@ -139,19 +139,20 @@
     </div>
   </div>
 
-
+  <hr/>
   <div style="margin: 1rem; margin-bottom: 0rem;">
     <div class="row justify-content-between" style="margin-top: 1rem;">
       <div class="col-xs-6 text-left">
-        <!-- <button type="button" class="btn btn-warning" (click)="cancel()" [disabled]="submitting"> -->
-        <!--   <span class="glyphicon" aria-hidden="true"></span> Cancel -->
-        <!-- </button> -->
-        <button type="button" class="btn btn-warning" (click)="revert()">
-          <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset
+        <button *ngIf="resource._id" type="button" class="btn btn-danger" (click)="deleteResource()" [disabled]="submitting">
+          <span aria-hidden="true"></span> Delete Resource
+        </button>&nbsp;
+        <button type="button" class="btn btn-warning" (click)="revert()" [disabled]="submitting">
+          <span aria-hidden="true"></span> Reset Form
         </button>
       </div>
+      <span *ngIf="submitting" class="loader"></span>
       <div class="col-xs-6 text-right">
-        <button type="submit" class="btn btn-primary" [disabled]="!resourceForm.valid">
+        <button type="submit" class="btn btn-primary" [disabled]="submitting || !resourceForm.valid || (!!resource._id && resourceForm.pristine)">
           <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {{ resource._id ? 'Submit' : 'Migrate' }}
         </button>
       </div>

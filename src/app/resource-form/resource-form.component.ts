@@ -67,13 +67,13 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    identifierTypes: string[] = enum_values(enums.identifier);
    // such that they are accessible in drop-down style selects
 
-   // DEPRECATED (other option with dynamic question form wins)
-   allowedViews: Array<string> = [];
-   currentView: string;
-   // the two lines above might be removed in the future
 
    // Presumably unused?
    embodiments: FormGroup[] = [];
+
+   // visualize stuff that is happening
+   submitted = false;
+   submitting = false;
 
 
 
@@ -110,28 +110,6 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    }
 
 
-   typeHasChanged() {
-      // unused
-      const newType = this.resourceForm.value.resourcetype;
-      console.log('[BRF:typeHasChanged]', newType);
-
-      // updated allowed container types
-      const allowedViews = containerTypes(newType);
-      // Add very own view
-      allowedViews.unshift(<enums.resourceType>newType);
-      // Set standard selection to own view
-      this.allowedViews = allowedViews;
-      this.currentView = newType;
-      console.log('[BRF:typeHasChanged] valid container types:', this.allowedViews);
-   }
-
-   viewHasChanged() {
-      // unused
-      console.log('[BRF:viewHasChanged]', this.currentView)
-      this.resource.astype(this.currentView);
-      console.log('[BRF:viewHasChanged] Form status', this.resourceForm.status)
-      this.ngOnChanges()
-   }
 
    extractTypeahead(typedTuple: [TypedResourceView, TypedResourceView]) {
       // pass two objects into typeahead to properly create teh string?
@@ -320,10 +298,9 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    ngOnChanges()  {
       const resource = this.resource;
       console.log('[BRF] ngOnChanges triggered', resource);
-      // console.log("Set publicationyear: ",  this.resource.publicationDate)
-      const allowedViews = containerTypes(resource.type);
-      allowedViews.unshift(resource.type)
-      this.currentView = resource.viewport_;
+
+      this.submitted = false;
+      this.submitting = false;
 
       let stringDate = '';
       if (resource.publicationDate !== undefined && resource.publicationDate !== null) {
@@ -354,6 +331,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       const newResource = this.prepareSaveResource();
       console.log('[BRF] Submitting resource: ', newResource);
 
+      this.submitting = true;
+
       const data = <models.BibliographicResource>newResource.data;
       if (newResource._id) {
          // Update internal database if it has an ID
@@ -361,8 +340,13 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             response => {
                this.resource = new TypedResourceView(response);
                this.resourceChange.emit(this.resource);
+               this.submitting = false;
+               this.submitted = true;
             },
-            error => alert('Could not save changes: ' + error.message)
+            error => {
+               alert('Could not save changes: ' + error.message);
+               this.submitting = false;
+            }
          )
       } else {
          // Create new resource if it has an ID
@@ -370,11 +354,33 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
             response => {
                this.resource = new TypedResourceView(response);
                this.resourceChange.emit(this.resource);
+               this.submitting = false;
+               this.submitted = true;
             },
-            error => alert('Could not save changes: ' + error.message)
+            error => {
+               alert('Could not save changes: ' + error.message);
+               this.submitting = false;
+            }
          )
       }
       // In any case, notify higher-level components
+   }
+
+   deleteResource() {
+      if (confirm(`Are you sure to permanently delete '${this.resource}' from the database?`)) {
+         this.brService.deleteSingle(this.resource._id).subscribe(
+            (success) => {
+               {
+                  this.resource = null; this.resourceChange.emit(null);
+               }
+            },
+            (error) => alert(`Error deleting resource ${this.resource}:` + error.message)
+         );
+
+      }
+
+
+
    }
 
    revert() {
