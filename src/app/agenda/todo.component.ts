@@ -43,7 +43,9 @@ export class TodoComponent implements OnChanges {
   }
 
   fullyValidateResource() {
-    if (confirm(`You are about to mark the resource '${this.todo.title}' as done.  The resource will not appear on the agenda again and all of its unlinked reference entries will be marked as obsolete. Okay?`)) {
+    if (confirm(`You are about to mark the resource '${this.todo}' as done. `
+      + 'The resource will not appear on the agenda again and all of its '
+      + 'unlinked reference entries will be marked as obsolete. Okay?')) {
       this.brService.setValid(this.todo._id).subscribe(
         (success) => location.reload(),
         (error) => alert('An error occurred: ' + error.message)
