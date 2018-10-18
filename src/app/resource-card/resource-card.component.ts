@@ -26,15 +26,16 @@ export class ResourceCardComponent implements OnInit, OnChanges {
     // this.open = false;
   }
 
+  onItemHasChanged(position: number, event: TypedResourceView) {
+    if (position < this.resources.length) {// guard
+      console.log(`[RCC] Item at position ${position} of tuple haschanged.`, event)
+      this.resources[position] = event;
+    }
+  }
+
   onSelectExternal() {
     this.externalReferences.emit(true)
   }
-
-  // short() {
-  //   let s:string = this.resource ? this.resource.toString() : '<empty>';
-  //   // TODO put info on container resource if partof is available
-  //
-  // }
 
   toggleOpen() {
     this.open = !this.open;

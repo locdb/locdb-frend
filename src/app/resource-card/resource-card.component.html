@@ -10,7 +10,7 @@
             </div>
       </div>
       <div class="card-body bg-light" *ngIf="open" >
-            <app-resource-pair-form [resource]="resources[0]" [alternate]="resources[1] || null" (resourceChange)="resources[0]=$event; open = false" (alternateChange)="resources[1]=$event; open = false">
+            <app-resource-pair-form [resource]="resources[0]" [alternate]="resources[1] || null" (resourceChange)="onItemHasChanged(0, $event)" (alternateChange)="onItemHasChanged(1, $event)">
             </app-resource-pair-form>
       </div>
 </div>

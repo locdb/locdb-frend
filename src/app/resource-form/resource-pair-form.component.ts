@@ -119,7 +119,8 @@ export class ResourcePairFormComponent implements OnInit {
 
     this.isLoading = true;
     this.brService.update(this.resource._id, updates).subscribe(
-      (response) => { this.resource = new TypedResourceView(response); this.isLoading = false; },
+      // properly notify everyone when this resource has changes
+      (response) => { this.onResourceChange(new TypedResourceView(response)); this.isLoading = false; },
       (error) => {
         alert('An unexpected error occurred: ' + error.message);
         // undo changes on error, such that user can try again.
