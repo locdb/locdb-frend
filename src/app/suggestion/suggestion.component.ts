@@ -506,6 +506,17 @@ export class SuggestionComponent implements OnInit, OnChanges {
     );
   }
 
+  // Compute number of non-internal resources
+  countExternal(resourcePair: [TypedResourceView, TypedResourceView | null]) {
+    return resourcePair.filter(x => x !== null).filter(x => !x._id).length;
+  }
+
+  // Short-hand method to select and commit.
+  linkToThis(resourcePair: [TypedResourceView, TypedResourceView | null]) {
+    this.onSelect(resourcePair);
+    this.commit();
+  }
+
 }
 
 class TypeaheadObj {
