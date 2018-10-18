@@ -116,8 +116,10 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
               y = (parseFloat(target.getAttribute('y')) || 0);
           // update the element's style
           let svg = target.parentNode.parentNode
-          const clientToImageWidthRatio = imgWidth / svg.clientWidth
-          const clientToImageHeightRatio = imgHeight / svg.clientHeight
+          let svgWidth = svg.parentNode.clientWidth || svg.width.baseVal.value
+          let svgHeight = svg.parentNode.clientHeight || svg.height.baseVal.value
+          const clientToImageWidthRatio = imgWidth / svgWidth
+          const clientToImageHeightRatio = imgHeight / svgHeight
           let width  = event.rect.width;
           let height = event.rect.height;
           let deltaLeft = event.deltaRect.left;
@@ -146,8 +148,10 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
            y = (parseFloat(target.getAttribute('y')) || 0);
 
            let svg = target.parentNode.parentNode
-           const clientToImageWidthRatio = imgWidth / svg.clientWidth
-           const clientToImageHeightRatio = imgHeight / svg.clientHeight
+           let svgWidth = svg.parentNode.clientWidth || svg.width.baseVal.value
+           let svgHeight = svg.parentNode.clientHeight || svg.height.baseVal.value
+           const clientToImageWidthRatio = imgWidth / svgWidth
+           const clientToImageHeightRatio = imgHeight / svgHeight
 
            x += event.dx * clientToImageWidthRatio;
            y += event.dy * clientToImageHeightRatio;
@@ -252,8 +256,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         }
         else {
           if(rect.entry._id){
-          this.selectedEntry = rect.entry;
-          this.entry.next(rect.entry);
+            this.selectedEntry = rect.entry;
+            this.entry.next(rect.entry);
         }
         }
     }
@@ -263,11 +267,14 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     clicked(evt){
-      console.log(evt.path[0].nodeName)
-      const element = evt.path[0]
-      const svg = evt.path.find(e => e.nodeName == 'svg')
-      const clientToImageWidthRatio = this.imgX / svg.clientWidth
-      const clientToImageHeightRatio = this.imgY / svg.clientHeight
+      // console.log(evt.composedPath()[0].nodeName)
+      const element = evt.composedPath()[0]
+      const svg = evt.composedPath().find(e => e.nodeName == 'svg')
+      // console.log(svg)
+      let svgWidth = svg.parentNode.clientWidth || svg.width.baseVal.value
+      let svgHeight = svg.parentNode.clientHeight || svg.height.baseVal.value
+      const clientToImageWidthRatio = this.imgX / svgWidth
+      const clientToImageHeightRatio = this.imgY / svgHeight
 
       if(element.nodeName === 'image' && this.editMode == 'add'){
 
@@ -276,15 +283,16 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         let x = evt.clientX - dim.left;
         let y = evt.clientY - dim.top;
         // alert("x: "+x+" y:"+y);
-        console.log(evt)
-        console.log(evt.path)
-        console.log(evt.path[0].nodeName)
-        console.log(e.getBoundingClientRect())
-        console.log(x, y)
+        // console.log(evt)
+        // console.log(evt.path)
+        // console.log(evt.path[0].nodeName)
+        // console.log(e.getBoundingClientRect())
+        // console.log(x, y)
+        // console.log(x, y, clientToImageWidthRatio, clientToImageHeightRatio)
         this.newRectAndEntry(x * clientToImageWidthRatio, y * clientToImageHeightRatio)
         }
       else if (element.nodeName === 'rect' && this.editMode == 'delete'){
-        console.log(element)
+        // console.log(element)
         const id = element.id
         this.deleteRectAndEntry(id, element.x.baseVal.value, element.y.baseVal.value,
           element.width.baseVal.value, element.height.baseVal.value)
@@ -293,30 +301,32 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
 
     markRect(event){
-      console.log("Markme", event)
-      event.path[0].style.fill = 'rgb(0,0,0)'
-      event.path[0].style.stroke = 'rgb(0,0,0)'
+      // console.log("Markme", event)
+      const element = event.composedPath()[0]
+      element.style.fill = 'rgb(0,0,0)'
+      element.style.stroke = 'rgb(0,0,0)'
       // event.path[0].style['fill-opacity'] = '0.9'
       // event.path[0].style['stroke-opacity'] = '1'
     }
 
     unmarkRect(event){
-      console.log("Unmarkme", event)
-      event.path[0].style.fill = ''
-      event.path[0].style.stroke = ''
-      event.path[0].style['fill-opacity'] = ''
-      event.path[0].style['stroke-opacity'] = ''
+      // console.log("Unmarkme", event)
+      const element = event.composedPath()[0]
+      element.style.fill = ''
+      element.style.stroke = ''
+      element.style['fill-opacity'] = ''
+      element.style['stroke-opacity'] = ''
     }
 
     // TODO: take care of creating entry in entries too
     newRectAndEntry(x: number, y: number){
       const scanId = this.img_src.split('/').pop()
-      console.log('create on coordinates ', x, y)
+      // console.log('create on coordinates ', x, y)
       const coords = `${Math.round(x)} ${Math.round(y)} ${Math.round(x+300)} ${Math.round(y+125)}`
-      console.log('coords: ', coords)
+      // console.log('coords: ', coords)
       const entry = {ocrData: {coordinates: coords},
                     scanId: scanId}
-      console.log(entry)
+      // console.log(entry)
       this.rects.push(new Rect(entry))
       // this.entries.push(entry)
     }
