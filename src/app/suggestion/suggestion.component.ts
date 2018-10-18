@@ -122,8 +122,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
   constructor(private locdbService: LocdbService,
     private loggingService: LoggingService,
-    private modalService: BsModalService
-  private entryService: BibliographicEntryService) {
+    private modalService: BsModalService,
+    private entryService: BibliographicEntryService) {
     this.dataSource = Observable.create((observer: any) => {
       // Runs on every search
       observer.next(this.query);
