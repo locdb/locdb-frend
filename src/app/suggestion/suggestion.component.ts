@@ -68,6 +68,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
   selectedResource: [TypedResourceView, TypedResourceView] = [null, null];
   query: string;
 
+  isAdaptingQuery = false;
+  isRefiningResults = false;
   search_extended = false;
 
   private _internalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
@@ -103,7 +105,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   modalRef: BsModalRef;
-  newResource: [TypedResourceView, TypedResourceView] = [null, null];
+  newResource: [TypedResourceView, TypedResourceView] = null;
 
   committed = false;
   max_shown_suggestions = 5
@@ -258,7 +260,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       // add new Resource
       // does not work with new datamodel
       // this.newResource = this.resourceFromEntry(this.entry);
-      this.newResource = [null, null];
+      this.newResource = null;
       if (this.entry.references) {
         // entry already has a link
         this.locdbService.bibliographicResource(this.entry.references).subscribe(
@@ -486,8 +488,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
   createResourceFromMetaData() {
     const metadata = OCR2MetaData(this.entry.ocrData);
     const nresource = new TypedResourceView({type: metadata.type});
-    nresource.set_from(metadata)
-    this.newResource = [nresource, null]
+    nresource.set_from(metadata);
+    this.newResource = [nresource, null];
+    console.log('Created new resource', this.newResource);
     this.selectedResource = this.newResource;
   }
 
@@ -508,6 +511,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
 
   // Compute number of non-internal resources
   countExternal(resourcePair: [TypedResourceView, TypedResourceView | null]) {
+    if (!resourcePair) { return 0; }
     return resourcePair.filter(x => x !== null).filter(x => !x._id).length;
   }
 
