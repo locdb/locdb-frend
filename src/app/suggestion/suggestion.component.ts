@@ -424,26 +424,107 @@ export class SuggestionComponent implements OnInit, OnChanges {
     this.externalInProgress = false;
   }
 
-  commit() {
-    console.log('Start commit', this.selectedResource)
-    const pr = this.selectedResource[0];
-    console.log('selected Resource ', pr )
-    console.log('entry ', this.entry)
-    console.log('Call Logging');
-    this.loggingService.logCommitPressed(this.entry, this.selectedResource[0], null);
-    // unused
-    // const pinnedResource = this.selectedResource;
-    console.log('Committing pair:', this.selectedResource);
-    this.locdbService.safeCommitLink(this.entry, this.selectedResource).then(
-      res => {
-        this.currentTarget = res;
-        this.onSelect(this.currentTarget);
-        this.committed = true;
-        console.log('Log after commit');
-        this.loggingService.logCommited(this.entry, this._currentTarget[0], null);
+  unlink(entry) {
+    this.entryService.removeTargetBibliographicResource(this.entry._id).subscribe(
+      (success) => {
+        entry.status = enums.status.ocrProcessed; // back-end does it this way
+        entry.references = '';
+        this.currentTarget = null;
       },
-      err => { console.log(err); alert('An error occurred.' + err.message) }
-    )
+      (error) => alert('Could not remove citation link: ' + error.message)
+    );
+  }
+
+  link(entry: models.BibliographicEntry, citationTargetPair: [TypedResourceView, TypedResourceView | null]) {
+    const citationTargetResourceId = citationTargetPair[0]._id;
+    if (!entry) { console.log('[link] No valid entry', entry); return ''; };
+    if (!citationTargetResourceId) { console.log('[link] No valid target', citationTargetPair); return ''; };
+    if (entry.references) {
+      // Replace old citation target
+      this.entryService.removeTargetBibliographicResource(entry._id).subscribe(
+        (newEntry) => {
+          entry.status = enums.status.ocrProcessed; // back-end does it this way
+          this.entryService.addTargetBibliographicResource(newEntry._id, citationTargetResourceId).subscribe(
+            (success) => {
+              this.loggingService.logCommited(this.entry, this._currentTarget[0], null);
+              entry.status = enums.status.valid;
+              this.committed = true;
+              console.log('Replaced citation target')
+              this.currentTarget = citationTargetPair;
+              this.onSelect(this.currentTarget);
+            }
+            ,
+            (error) => alert('Error while replacing citation target: ' + error.json)
+          )
+        },
+        (error) => alert('Could not remove citation link: ' + error.message)
+      );
+    } else {
+      // Add new citation target
+      this.entryService.addTargetBibliographicResource(entry._id, citationTargetResourceId).subscribe(
+        (success) => {
+          this.loggingService.logCommited(this.entry, this._currentTarget[0], null);
+          entry.status = enums.status.valid;
+          this.committed = true;
+          console.log('Added citation target')
+          this.currentTarget = citationTargetPair;
+          this.onSelect(this.currentTarget);
+        },
+        (error) => alert('Error while replacing citation target: ' + error.json)
+      );
+    }
+  }
+
+  commit(entry: models.BibliographicEntry, citationTargetPair: [TypedResourceView, TypedResourceView | null]) {
+    this.loggingService.logCommitPressed(this.entry, this.selectedResource[0], null);
+    const [resource, container] = citationTargetPair;
+    if (container) {
+      this.locdbService.updateOrCreateResource(container).subscribe(
+        (newContainer) => {
+          citationTargetPair[1] = newContainer;
+          resource.data.partOf = newContainer._id;
+          this.locdbService.updateOrCreateResource(resource).subscribe(
+            (newResource) => {
+              citationTargetPair[0] = newResource;
+              this.link(entry, [newResource, newContainer]);
+            },
+            (error) => alert('Error while updating resource: ' + error.json())
+          );
+          },
+        (error) => { alert('Error while updating container: ' + error.json()) }
+      );
+    } else {
+      this.locdbService.updateOrCreateResource(resource).subscribe(
+        (newResource) => {
+          // update own view with response from back-end
+          citationTargetPair[0] = newResource;
+          // actually link the source to parent
+          this.link(entry, [newResource, null]);
+
+        },
+        (error) => alert('Error while updating resource error.json()')
+      );
+    }
+
+
+    // this.locdbService.safeCreateAndUpdate(citationTargetPair).then()
+    // console.log('Start commit', this.selectedResource)
+    // const pr = this.selectedResource[0];
+    // console.log('selected Resource ', pr )
+    // console.log('entry ', this.entry)
+    // console.log('Call Logging');
+    // // unused
+    // // const pinnedResource = this.selectedResource;
+    // console.log('Committing pair:', this.selectedResource);
+    // this.locdbService.safeCommitLink(this.entry, this.selectedResource).then(
+    //   res => {
+    //     this.currentTarget = res;
+    //     this.onSelect(this.currentTarget);
+    //     this.committed = true;
+    //     console.log('Log after commit');
+    //   },
+    //   err => { console.log(err); alert('An error occurred.' + err.message) }
+    // )
   }
 
 
@@ -502,12 +583,6 @@ export class SuggestionComponent implements OnInit, OnChanges {
     this.search_extended = !this.search_extended;
   }
 
-  removeTarget() {
-    this.entryService.removeTargetBibliographicResource(this.entry._id).subscribe(
-      (success) => { this.entry.references = ''; this.currentTarget = null; },
-      (error) => alert('Could not remove citation link: ' + error.message)
-    );
-  }
 
   // Compute number of non-internal resources
   countExternal(resourcePair: [TypedResourceView, TypedResourceView | null]) {
@@ -518,7 +593,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   // Short-hand method to select and commit.
   linkToThis(resourcePair: [TypedResourceView, TypedResourceView | null]) {
     this.onSelect(resourcePair);
-    this.commit();
+    this.commit(this.entry, resourcePair);
   }
 
   getLinkButtonTextForPair(resourcePair: [TypedResourceView, TypedResourceView | null]) {

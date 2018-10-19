@@ -6,19 +6,24 @@
   <app-resource-card [resources]="currentTarget"
       [selected]="currentTarget == selectedResource"
       (click)="onSelect(currentTarget)">
-    <button type="button" class="btn btn-sm btn-danger" (click)="removeTarget()"><i class="fa fa-unlink"></i> Unlink</button>
+    <button type="button" class="btn btn-sm btn-danger" (click)="unlink(entry)"><i class="fa fa-unlink"></i> Unlink</button>
   </app-resource-card>
   </div>
 </div>
 
 <div class="card">
   <div class="card-header">
+    <div class="mb-2">
     <h4> Suggestions for Citation Target </h4>
+    <!-- Controls -->
     <button type="button" class="btn btn-sm btn-secondary" (click)="isAdaptingQuery = !isAdaptingQuery">Adapt Query</button>&nbsp;
     <button type="button" class="btn btn-sm btn-secondary" (click)="isRefiningResults = !isRefiningResults">Refine Results</button>&nbsp;
     <button *ngIf="!newResource" type="button" class="btn btn-sm btn-secondary" (click)="createResourceFromMetaData()" [disabled]="!entry">
       New Resource
     </button>
+    </div>
+    <!-- Variable Area -->
+    <div>
     <div *ngIf="isAdaptingQuery" class="row" style="mt-1">
       <div class="form-group col-md-1" style="padding-right: 0px">
         <button type="button" class="btn btn-block mx-auto" (click)="toggle_extended_search()" style="height: 100px;">
@@ -108,7 +113,10 @@
         </select>
       </div>
     </div>
+
+    </div>
   </div> <!-- End of card header -->
+
   <div class="card-body">
     <div class="row" *ngIf="newResource">
       <div class="col-md-12">
@@ -117,9 +125,8 @@
             <button type="button" class="btn btn-sm btn-warning" [class.btn-warning]="!!countExternal(newResource)" [class.btn-success]="!countExternal(newResource)" (click)="linkToThis(newResource)"><i class="fa fa-link"></i> {{ getLinkButtonTextForPair(newResource) }} </button>
           </app-resource-card>
         </div>
-
+        <hr/>
       </div>
-      <hr/>
     </div>
     <!-- Panel body providing suggestions -->
     <div class="row">
@@ -187,7 +194,7 @@
   <div class="card-footer">
     <div class="text-right">
       <button type="button" class="btn btn-primary" [disabled]="selectedResource == [null,null]"
-                            (click)="commit()">
+                            (click)="commit(entry, selectedResource)">
         <i class="fa fa-link"></i> Commit Link
       </button>
     </div>
