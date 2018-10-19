@@ -11,6 +11,10 @@
   </div>
 </div>
 
+<div *ngIf="committed" style="margin: 1rem;" class="alert alert-success" role="alert">
+  <strong>Link committed.</strong>
+</div>
+
 <div class="card">
   <div class="card-header">
     <div class="mb-2">
@@ -200,7 +204,3 @@
     </div>
   </div>
 </div> <!-- end of card -->
-
-<div *ngIf="committed" style="margin: 1rem;" class="alert alert-success" role="alert">
-  <strong>Link committed.</strong>
-</div>

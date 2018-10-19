@@ -439,23 +439,26 @@ export class SuggestionComponent implements OnInit, OnChanges {
     const citationTargetResourceId = citationTargetPair[0]._id;
     if (!entry) { console.log('[link] No valid entry', entry); return ''; };
     if (!citationTargetResourceId) { console.log('[link] No valid target', citationTargetPair); return ''; };
+
     if (entry.references) {
       // Replace old citation target
       console.log('Replacing citation target');
       this.entryService.removeTargetBibliographicResource(entry._id).subscribe(
-        (newEntry) => {
+        (newResource) => {
+          console.log('Result of remove target', newResource);
           entry.status = enums.status.ocrProcessed; // back-end does it this way
-          this.entryService.addTargetBibliographicResource(newEntry._id, citationTargetResourceId).subscribe(
+          entry.references = '';
+          this.entryService.addTargetBibliographicResource(entry._id, citationTargetResourceId).subscribe(
             (success) => {
               this.loggingService.logCommited(this.entry, citationTargetPair[0], null);
               entry.status = enums.status.valid;
+              entry.references = citationTargetResourceId;
               this.committed = true;
               console.log('Replaced citation target')
               this.currentTarget = citationTargetPair;
-              this.onSelect(this.currentTarget);
-            }
-            ,
-            (error) => alert('Error while replacing citation target: ' + error.json)
+              this.selectedResource = this.currentTarget;
+            },
+            (error) => alert('Error while replacing citation target: ' + error.message)
           )
         },
         (error) => alert('Could not remove citation link: ' + error.message)
@@ -466,12 +469,13 @@ export class SuggestionComponent implements OnInit, OnChanges {
         (success) => {
           this.loggingService.logCommited(this.entry, citationTargetPair[0], null);
           entry.status = enums.status.valid;
+          entry.references = citationTargetResourceId;
           this.committed = true;
           console.log('Added citation target')
           this.currentTarget = citationTargetPair;
-          this.onSelect(this.currentTarget);
+          this.selectedResource = this.currentTarget;
         },
-        (error) => alert('Error while replacing citation target: ' + error.json)
+        (error) => alert('Error while replacing citation target: ' + error.message)
       );
     }
   }
