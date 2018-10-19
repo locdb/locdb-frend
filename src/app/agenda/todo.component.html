@@ -22,7 +22,7 @@
         <button type="button" class="btn btn-secondary btn-sm" (click)="edit()">
             <i class="fa fa-edit"></i> Edit
         </button>&nbsp;
-        <button type="button" class="btn btn-success btn-sm" (click)="fullyValidateResource()">
+        <button *ngIf="!isContainer" type="button" class="btn btn-success btn-sm" (click)="fullyValidateResource()">
             <i class="fa fa-check"></i> Done
         </button>
 

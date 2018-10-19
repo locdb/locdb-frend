@@ -1,3 +1,15 @@
+<div *ngIf="currentTarget" class="card mb-5">
+  <div class="card-header">
+    <h4> Current Citation Target </h4>
+  </div>
+  <div class="card-body">
+  <app-resource-card [resources]="currentTarget"
+      [selected]="currentTarget == selectedResource"
+      (click)="onSelect(currentTarget)">
+    <button type="button" class="btn btn-sm btn-danger" (click)="removeTarget()"><i class="fa fa-unlink"></i> Unlink</button>
+  </app-resource-card>
+  </div>
+</div>
 <div class="card">
   <div class="card-header">
     <div class="row" style="">
@@ -92,30 +104,13 @@
       </div>
     </div>
     <!-- Panel body providing suggestions -->
-    <div *ngIf="currentTarget">
-      <hr/>
-      <div class="row">
-        <div class="col-md-12">
-          <div *ngIf="currentTarget" class="card-block">
-            <h4 class="card-title">
-              Current citation target
-            </h4>
-            <app-resource-card [resources]="currentTarget"
-                [selected]="currentTarget == selectedResource"
-                (click)="onSelect(currentTarget)">
-              <button type="button" class="btn btn-sm btn-danger" (click)="removeTarget()"><i class="fa fa-unlink"></i> Unlink</button>
-            </app-resource-card>
-          </div>
-        </div>
-      </div>
-    </div>
     <hr/>
     <div class="row">
       <div class="col-md-12">
         <div class="card-block">
-          <h4 class="card-title">
-            Suggestions
-          </h4>
+          <!-- <h4 class="card-title"> -->
+          <!--   Suggestions -->
+          <!-- </h4> -->
           <div *ngIf="internalSuggestions && !internalInProgress">
             <div *ngFor="let r of internalSuggestions; let i = index">
               <app-resource-card *ngIf="max_in <= 0 || i < max_in"
@@ -143,9 +138,9 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card-block">
-          <h4 class="card-title">
-            Suggestions from external sources
-          </h4>
+          <!-- <h4 class="card-title"> -->
+          <!--   Suggestions from external sources -->
+          <!-- </h4> -->
           <div *ngIf="externalSuggestions && !externalInProgress">
             <div *ngFor="let r of externalSuggestions;let i = index">
               <app-resource-card *ngIf="max_ex <= 0 || i < max_ex"
@@ -175,9 +170,9 @@
     <div class="row" *ngIf="newResource">
       <div class="col-md-12">
         <div class="card-block">
-          <h4 class="card-title">
-            New resource from reference metadata
-          </h4>
+          <!-- <h4 class="card-title"> -->
+          <!--   New resource from reference metadata -->
+          <!-- </h4> -->
           <app-resource-card [resources]="newResource"
               [selected]="newResource == selectedResource"
               (click)="onSelect(newResource)" #newResourcePanel>
@@ -188,10 +183,10 @@
 
     <div class="row" *ngIf="newResource[0] == null && newResource[1] == null">
       <div class="col-md-12">
-        <button type="button" class="btn btn-secondary"
+        <button type="button" class="btn btn-warn"
                               (click)="createResourceFromMetaData()" [disabled]="!entry">
-          <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-          Create Resource
+          <i class="glyphicon glyphicon-link" aria-hidden="true"></i>
+          Create New Resource
         </button>
       </div>
     </div>
