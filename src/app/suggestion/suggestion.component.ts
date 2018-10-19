@@ -441,12 +441,13 @@ export class SuggestionComponent implements OnInit, OnChanges {
     if (!citationTargetResourceId) { console.log('[link] No valid target', citationTargetPair); return ''; };
     if (entry.references) {
       // Replace old citation target
+      console.log('Replacing citation target');
       this.entryService.removeTargetBibliographicResource(entry._id).subscribe(
         (newEntry) => {
           entry.status = enums.status.ocrProcessed; // back-end does it this way
           this.entryService.addTargetBibliographicResource(newEntry._id, citationTargetResourceId).subscribe(
             (success) => {
-              this.loggingService.logCommited(this.entry, this._currentTarget[0], null);
+              this.loggingService.logCommited(this.entry, citationTargetPair[0], null);
               entry.status = enums.status.valid;
               this.committed = true;
               console.log('Replaced citation target')
@@ -463,7 +464,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       // Add new citation target
       this.entryService.addTargetBibliographicResource(entry._id, citationTargetResourceId).subscribe(
         (success) => {
-          this.loggingService.logCommited(this.entry, this._currentTarget[0], null);
+          this.loggingService.logCommited(this.entry, citationTargetPair[0], null);
           entry.status = enums.status.valid;
           this.committed = true;
           console.log('Added citation target')
