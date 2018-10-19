@@ -517,6 +517,22 @@ export class SuggestionComponent implements OnInit, OnChanges {
     this.commit();
   }
 
+  getLinkButtonTextForPair(resourcePair: [TypedResourceView, TypedResourceView | null]) {
+    const cnt = this.countExternal(resourcePair);
+    if (!cnt) {
+      // Nothing needs to be migrated
+      return 'Link';
+    }
+
+    if (cnt === 1) {
+      // Special singular treatment for one
+      return 'Migrate 1 Resource and Link';
+    }
+
+    return `Migrate ${cnt} Resources and Link`;
+
+  }
+
 }
 
 class TypeaheadObj {

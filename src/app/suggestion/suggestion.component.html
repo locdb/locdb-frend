@@ -120,8 +120,7 @@
             <div *ngFor="let r of internalSuggestions; let i = index">
               <app-resource-card *ngIf="max_in <= 0 || i < max_in"
               [resources]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
-
-                <button type="button" class="btn btn-sm btn-success" (click)="linkToThis(r)"><i class="fa fa-link"></i> Link</button>
+                <button type="button" class="btn btn-sm btn-warning" [class.btn-warning]="!!countExternal(r)" [class.btn-success]="!countExternal(r)" (click)="linkToThis(r)"><i class="fa fa-link"></i> {{ getLinkButtonTextForPair(r) }} </button>
               </app-resource-card>
             </div>
             <button type="button" *ngIf="max_in == max_shown_suggestions && internalSuggestions.length > max_shown_suggestions"
@@ -152,7 +151,7 @@
               <app-resource-card *ngIf="max_ex <= 0 || i < max_ex"
               [resources]="r" [selected]="r == selectedResource"
               (click)="onSelect(r)">
-                <button type="button" class="btn btn-sm btn-warning" (click)="linkToThis(r)"><i class="fa fa-link"></i> Migrate {{ countExternal(r) }} resource{{ countExternal(r) === 1 ? '' : 's' }} and Link</button>
+                <button type="button" class="btn btn-sm btn-warning" [class.btn-warning]="!!countExternal(r)" [class.btn-success]="!countExternal(r)" (click)="linkToThis(r)"><i class="fa fa-link"></i> {{ getLinkButtonTextForPair(r) }} </button>
               </app-resource-card>
             </div>
             <button type="button" *ngIf="max_ex == max_shown_suggestions  && externalSuggestions.length > max_shown_suggestions"

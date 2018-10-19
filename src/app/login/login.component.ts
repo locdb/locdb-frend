@@ -9,11 +9,9 @@ import { models } from '../locdb'
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  // @Input() instances = [{name: 'LOCDB Dev', url: 'https://locdb.bib.uni-mannheim.de/locdb-dev'},
-  //   {name: 'UB Mannheim', url: 'https://locdb.bib.uni-mannheim.de/locdb'}];
   @Output() feeds: EventEmitter<models.Feed[]> = new EventEmitter();
   @Output() userChanged: EventEmitter<boolean> = new EventEmitter();
-  currentUser = null;
+  currentUser: models.User = null;
   connecting = false;
 
   constructor ( private locdbService: LocdbService ) {}
@@ -21,7 +19,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  validate(user: string, msg: Response | any) {
+  validate(user: models.User, msg: Response | any) {
     if (msg.ok) {
       console.log('Login succeeded', user, msg.json());
       this.currentUser = user;
