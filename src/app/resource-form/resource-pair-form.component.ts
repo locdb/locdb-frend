@@ -61,6 +61,7 @@ export class ResourcePairFormComponent implements OnInit {
   }
 
   onResourceChange(event: TypedResourceView) {
+    console.log('On Resource Change:', event);
     this.resource = event;
     this.resourceChange.emit(event);
   }
