@@ -63,4 +63,23 @@ export class MetadataComponent implements OnInit, OnChanges {
     }
   }
 
+  getPageString(resource: TypedResourceView): string {
+    if (!resource.embodiedAs || !resource.embodiedAs.length) { return ''; }
+    const firstPage = resource.embodiedAs[0].firstPage;
+    const lastPage = resource.embodiedAs[0].lastPage;
+
+    if (!!firstPage) {
+      if (!lastPage || firstPage === lastPage) {
+        // last page not given or same as first page
+        return `p. ${firstPage}`;
+      } else {
+        // two pages are given and different
+        return `pp. ${firstPage}-${lastPage}`;
+      }
+    }
+
+    // First page was not given, only Last Page might be given, but ignore.
+    return '';
+  }
+
 }

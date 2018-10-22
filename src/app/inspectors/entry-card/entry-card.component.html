@@ -10,74 +10,74 @@
           {{ short()}}
         </div>
         <div class="col-1">
-          <button type="button" class="btn btn-secondary float-right btn-sm"
-                                (click)="edit()"> {{open ? 'Cancel': 'Edit' }}</button>
+          <button type="button" class="btn btn-secondary float-right btn-sm" (click)="toggleOpen()"><i class="fa fa-edit"></i> {{open ? 'Cancel': 'Edit' }}</button>
         </div>
     </div>
   </div>
-  <div class="card-body bg-light" *ngIf="open && active" >
-    <div *ngIf="submitted">
-      <table class="table table-striped" style="table-layout:fixed;">
-        <tbody>
-          <tr *ngIf="entry.bibliographicEntryText">
-            <td> <label>Text</label> </td>
-            <td> <p>{{entry.bibliographicEntryText}}</p> </td>
-          </tr>
-          <tr *ngIf="entry.references">
-            <td> <label>References</label> </td>
-            <td> <p>{{entry.references}}</p> </td>
-          </tr>
-          <tr *ngIf="entry.ocrData.title">
-            <td> <label>Title</label> </td>
-            <td> <p>{{entry.ocrData.title}}</p> </td>
-          </tr>
-          <tr *ngIf="entry.ocrData.date">
-            <td> <label>Date</label> </td>
-            <td> <p>{{entry.ocrData.date}}</p> </td>
-          </tr>
-          <tr *ngFor="let author of entry.ocrData.authors; let i=index">
-            <td> <label> Author #{{i + 1}}</label> </td>
-            <td> <p>{{author}}</p> </td>
-          </tr>
-          <tr *ngFor="let ident of entry.identifiers; let i=index">
-            <td> <label> {{ident.scheme}} </label> </td>
-            <td> <p>{{ident.literalValue}}</p> </td>
-          </tr>
-          <tr>
-            <tr *ngIf="entry.ocrData.marker">
-              <td> <label>Marker</label> </td>
-              <td> <p>{{entry.ocrData.marker}}</p> </td>
-            </tr>
-            <tr *ngIf="entry.ocrData.comments">
-              <td> <label>Comments</label> </td>
-              <td> <p>{{entry.ocrData.comments}}</p> </td>
-            </tr>
-            <tr *ngIf="entry.ocrData.journal">
-              <td> <label>Journal</label> </td>
-              <td> <p>{{entry.ocrData.journal}}</p> </td>
-            </tr>
-            <tr *ngIf="entry.ocrData.volume">
-              <td> <label>Volume</label> </td>
-              <td> <p>{{entry.ocrData.volume}}</p> </td>
-            </tr>
-        </tbody>
-      </table>
-      <div style="margin: 1rem; margin-bottom: 0rem;">
-        <div class="row justify-content-between" style="margin-top: 1rem;">
-          <div class="col-xs-6 text-left">
-          </div>
-          <div class="col-xs-6 text-right">
-            <button type="button" class="btn btn-warning" aria-label="Edit" (click)="showForm(true)">
-              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+  <!-- <div class="card-body bg-light" *ngIf="open && active" > -->
+  <!--   <div *ngIf="submitted"> -->
+  <!--     <table class="table table-striped" style="table-layout:fixed;"> -->
+  <!--       <tbody> -->
+  <!--         <tr *ngIf="entry.bibliographicEntryText"> -->
+  <!--           <td> <label>Text</label> </td> -->
+  <!--           <td> <p>{{entry.bibliographicEntryText}}</p> </td> -->
+  <!--         </tr> -->
+  <!--         <tr *ngIf="entry.references"> -->
+  <!--           <td> <label>References</label> </td> -->
+  <!--           <td> <p>{{entry.references}}</p> </td> -->
+  <!--         </tr> -->
+  <!--         <tr *ngIf="entry.ocrData.title"> -->
+  <!--           <td> <label>Title</label> </td> -->
+  <!--           <td> <p>{{entry.ocrData.title}}</p> </td> -->
+  <!--         </tr> -->
+  <!--         <tr *ngIf="entry.ocrData.date"> -->
+  <!--           <td> <label>Date</label> </td> -->
+  <!--           <td> <p>{{entry.ocrData.date}}</p> </td> -->
+  <!--         </tr> -->
+  <!--         <tr *ngFor="let author of entry.ocrData.authors; let i=index"> -->
+  <!--           <td> <label> Author #{{i + 1}}</label> </td> -->
+  <!--           <td> <p>{{author}}</p> </td> -->
+  <!--         </tr> -->
+  <!--         <tr *ngFor="let ident of entry.identifiers; let i=index"> -->
+  <!--           <td> <label> {{ident.scheme}} </label> </td> -->
+  <!--           <td> <p>{{ident.literalValue}}</p> </td> -->
+  <!--         </tr> -->
+  <!--         <tr> -->
+  <!--           <tr *ngIf="entry.ocrData.marker"> -->
+  <!--             <td> <label>Marker</label> </td> -->
+  <!--             <td> <p>{{entry.ocrData.marker}}</p> </td> -->
+  <!--           </tr> -->
+  <!--           <tr *ngIf="entry.ocrData.comments"> -->
+  <!--             <td> <label>Comments</label> </td> -->
+  <!--             <td> <p>{{entry.ocrData.comments}}</p> </td> -->
+  <!--           </tr> -->
+  <!--           <tr *ngIf="entry.ocrData.journal"> -->
+  <!--             <td> <label>Journal</label> </td> -->
+  <!--             <td> <p>{{entry.ocrData.journal}}</p> </td> -->
+  <!--           </tr> -->
+  <!--           <tr *ngIf="entry.ocrData.volume"> -->
+  <!--             <td> <label>Volume</label> </td> -->
+  <!--             <td> <p>{{entry.ocrData.volume}}</p> </td> -->
+  <!--           </tr> -->
+  <!--       </tbody> -->
+  <!--     </table> -->
+  <!--     <div style="margin: 1rem; margin-bottom: 0rem;"> -->
+  <!--       <div class="row justify-content-between" style="margin-top: 1rem;"> -->
+  <!--         <div class="col-xs-6 text-left"> -->
+  <!--         </div> -->
+  <!--         <div class="col-xs-6 text-right"> -->
+  <!--           <button type="button" class="btn btn-warning" aria-label="Edit" (click)="showForm(true)"> -->
+  <!--             <i class="fa fa-edit" aria-hidden="true"></i> Edit -->
+  <!--           </button> -->
+  <!--         </div> -->
+  <!--       </div> -->
+  <!--     </div> -->
+  <!--   </div> -->
 
     <!-- - - - - -->
 
-    <div *ngIf="!submitted">
+  <div class="card-body bg-light" *ngIf="active && open" >
+    <div *ngIf="open">
       <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" novalidate>
         <div class="form-group row">
           <label for="bibliographicEntryText" class="col-sm-2 col-form-label">Raw text</label>
@@ -106,7 +106,7 @@
         <div class="form-group row">
           <label for="volume" class="col-sm-2 col-form-label">Volume</label>
           <div class="col-sm-10">
-            <input type="string" id="journal" class="form-control" formControlName="volume">
+            <input type="string" id="volume" class="form-control" formControlName="volume">
           </div>
         </div>
         <!--   Idents   -->
@@ -154,24 +154,18 @@
             <input type="string" id="comments" class="form-control" formControlName="comments">
           </div>
         </div>
-        <div class="form-group row">
-          <label for="references" class="col-sm-2 col-form-label">References</label>
-          <div class="col-sm-10">
-            <input type="string" id="references" class="form-control" formControlName="references">
-          </div>
-        </div>
         <div style="margin: 1rem; margin-bottom: 0rem;">
           <div class="row justify-content-between" style="margin-top: 1rem;">
             <div class="col-xs-6 text-left">
-              <button type="button" class="btn btn-warning" (click)="revert()" [disabled]="submitting">
-                <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset Form
-              </button>
-              <button type="button" class="btn btn-danger" (click)="delete(entry)" [disabled]="submitting">
+              <button type="button" class="btn btn-sm btn-danger" (click)="delete(entry)" [disabled]="submitting">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete Entry
+              </button>&nbsp;
+              <button type="button" class="btn btn-sm btn-warning" (click)="revert()" [disabled]="submitting">
+                <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset Form
               </button>
             </div>
             <div class="col-xs-6 text-right">
-              <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="submitting">
+              <button type="button" class="btn btn-sm btn-primary" (click)="onSubmit()" [disabled]="submitting">
                 <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Submit
               </button>
             </div>

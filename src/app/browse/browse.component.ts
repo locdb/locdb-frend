@@ -19,7 +19,7 @@ export class BrowseComponent implements OnInit, OnChanges {
       // make this visible to template
       environment = environment;
 
-      selectedResource: TypedResourceView;
+      selectedResource: [TypedResourceView, TypedResourceView];
       query: string;
 
       search_extended = false;
@@ -47,7 +47,7 @@ export class BrowseComponent implements OnInit, OnChanges {
 
       refresh() {
         // when search button is triggered
-        this.loggingService.logSearchIssued(this.searchentry, this.selectedResource, this.query, [0, 1])
+        // this.loggingService.logSearchIssued(this.searchentry, this.selectedResource, this.query, [0, 1])
         this.fetchInternalSuggestions();
       }
 
@@ -65,8 +65,8 @@ export class BrowseComponent implements OnInit, OnChanges {
       }
 
 
-      onSelect(br?: TypedResourceView): void {
-          this.committed = false;
+      onSelect(pair: [TypedResourceView, TypedResourceView | null]): void {
+         this.selectedResource = pair;
       }
 
       saveInternal(sgt) {

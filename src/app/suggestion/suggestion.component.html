@@ -1,6 +1,34 @@
+<div *ngIf="currentTarget" class="card mb-4">
+  <div class="card-header">
+    <h4> Current Citation Target </h4>
+  </div>
+  <div class="card-body">
+  <app-resource-card [resources]="currentTarget"
+      [selected]="currentTarget == selectedResource"
+      (click)="onSelect(currentTarget)">
+    <button type="button" class="btn btn-sm btn-danger" (click)="unlink(entry)"><i class="fa fa-unlink"></i> Unlink</button>
+  </app-resource-card>
+  </div>
+</div>
+
+<div *ngIf="committed" class="alert alert-success mb-4" role="alert">
+  <strong>Link committed.</strong>
+</div>
+
 <div class="card">
   <div class="card-header">
-    <div class="row" style="">
+    <div class="mb-2">
+    <h4> Suggestions for Citation Target </h4>
+    <!-- Controls -->
+    <button type="button" class="btn btn-sm btn-secondary" (click)="isAdaptingQuery = !isAdaptingQuery">Adapt Query</button>&nbsp;
+    <button type="button" class="btn btn-sm btn-secondary" (click)="isRefiningResults = !isRefiningResults">Refine Results</button>&nbsp;
+    <button *ngIf="!newResource" type="button" class="btn btn-sm btn-secondary" (click)="createResourceFromMetaData()" [disabled]="!entry">
+      New Resource
+    </button>
+    </div>
+    <!-- Variable Area -->
+    <div>
+    <div *ngIf="isAdaptingQuery" class="row" style="mt-1">
       <div class="form-group col-md-1" style="padding-right: 0px">
         <button type="button" class="btn btn-block mx-auto" (click)="toggle_extended_search()" style="height: 100px;">
           <i *ngIf="!search_extended" class="fa fa-angle-double-down"></i>
@@ -53,9 +81,7 @@
           Ask Others</button>
       </div>
     </div>
-  </div>
-  <div class="card-body">
-    <div class="row" style="margin-left: .5rem;">
+    <div *ngIf="isRefiningResults" class="row" style="margin-left: .5rem;">
       <label for="source" class="col-form-label" style="margin-right: .25rem">
         Source:</label>
       <div id="source">
@@ -91,35 +117,33 @@
         </select>
       </div>
     </div>
-    <!-- Panel body providing suggestions -->
-    <div *ngIf="currentTarget">
-      <hr/>
-      <div class="row">
-        <div class="col-md-12">
-          <div *ngIf="currentTarget" class="card-block">
-            <h4 class="card-title">
-              Current citation target
-            </h4>
-            <button type="button" class="btn btn-sm btn-danger" (click)="removeTarget()">Remove Link</button>
-            <app-resource-card [resources]="currentTarget"
-                [selected]="currentTarget == selectedResource"
-                (click)="onSelect(currentTarget)">
-            </app-resource-card>
-          </div>
+
+    </div>
+  </div> <!-- End of card header -->
+
+  <div class="card-body">
+    <div class="row" *ngIf="newResource">
+      <div class="col-md-12">
+        <div class="card-block">
+          <app-resource-card *ngIf="newResource" [resources]="newResource" [selected]="newResource == selectedResource" (click)="onSelect(newResource)" #newResourcePanel>
+            <button type="button" class="btn btn-sm btn-warning" [class.btn-warning]="!!countExternal(newResource)" [class.btn-success]="!countExternal(newResource)" (click)="linkToThis(newResource)"><i class="fa fa-link"></i> {{ getLinkButtonTextForPair(newResource) }} </button>
+          </app-resource-card>
         </div>
+        <hr/>
       </div>
     </div>
-    <hr/>
+    <!-- Panel body providing suggestions -->
     <div class="row">
       <div class="col-md-12">
         <div class="card-block">
-          <h4 class="card-title">
-            Suggestions
-          </h4>
+          <!-- <h4 class="card-title"> -->
+          <!--   Suggestions -->
+          <!-- </h4> -->
           <div *ngIf="internalSuggestions && !internalInProgress">
             <div *ngFor="let r of internalSuggestions; let i = index">
               <app-resource-card *ngIf="max_in <= 0 || i < max_in"
               [resources]="r" [selected]="r == selectedResource" (click)="onSelect(r)">
+                <button type="button" class="btn btn-sm btn-warning" [class.btn-warning]="!!countExternal(r)" [class.btn-success]="!countExternal(r)" (click)="linkToThis(r)"><i class="fa fa-link"></i> {{ getLinkButtonTextForPair(r) }} </button>
               </app-resource-card>
             </div>
             <button type="button" *ngIf="max_in == max_shown_suggestions && internalSuggestions.length > max_shown_suggestions"
@@ -142,14 +166,15 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card-block">
-          <h4 class="card-title">
-            Suggestions from external sources
-          </h4>
+          <!-- <h4 class="card-title"> -->
+          <!--   Suggestions from external sources -->
+          <!-- </h4> -->
           <div *ngIf="externalSuggestions && !externalInProgress">
             <div *ngFor="let r of externalSuggestions;let i = index">
               <app-resource-card *ngIf="max_ex <= 0 || i < max_ex"
               [resources]="r" [selected]="r == selectedResource"
               (click)="onSelect(r)">
+                <button type="button" class="btn btn-sm btn-warning" [class.btn-warning]="!!countExternal(r)" [class.btn-success]="!countExternal(r)" (click)="linkToThis(r)"><i class="fa fa-link"></i> {{ getLinkButtonTextForPair(r) }} </button>
               </app-resource-card>
             </div>
             <button type="button" *ngIf="max_ex == max_shown_suggestions  && externalSuggestions.length > max_shown_suggestions"
@@ -168,44 +193,14 @@
         </div>
       </div>
     </div>
-    <hr/>
-
-    <div class="row" *ngIf="newResource">
-      <div class="col-md-12">
-        <div class="card-block">
-          <h4 class="card-title">
-            New resource from reference metadata
-          </h4>
-          <app-resource-card [resources]="newResource"
-              [selected]="newResource == selectedResource"
-              (click)="onSelect(newResource)" #newResourcePanel>
-          </app-resource-card>
-        </div>
-      </div>
-    </div>
-
-    <div class="row" *ngIf="newResource[0] == null && newResource[1] == null">
-      <div class="col-md-12">
-        <button type="button" class="btn btn-secondary"
-                              (click)="createResourceFromMetaData()" [disabled]="!entry">
-          <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-          Create Resource
-        </button>
-      </div>
-    </div>
   </div> <!-- end card body -->
   <!-- Panel footer allowing actions -->
   <div class="card-footer">
     <div class="text-right">
       <button type="button" class="btn btn-primary" [disabled]="selectedResource == [null,null]"
-                            (click)="commit()">
-        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-        Commit Link
+                            (click)="commit(entry, selectedResource)">
+        <i class="fa fa-link"></i> Commit Link
       </button>
     </div>
   </div>
 </div> <!-- end of card -->
-
-<div *ngIf="committed" style="margin: 1rem;" class="alert alert-success" role="alert">
-  <strong>Link committed.</strong>
-</div>
