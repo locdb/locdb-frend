@@ -212,19 +212,16 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    }
 
    get contributors(): FormArray {
-      console.log('[BRF] contribs getter called');
       return this.resourceForm.get('contributors') as FormArray;
    }
 
    set contributors(contributorArray: FormArray) {
       console.log('[BRF] contribs setter called');
-      // TODO FIXME dangerous?
       this.setContributors(contributorArray.value.map(
          e => this.reconstructAgentRole(e.name, e.role, e.identifiers)))
    }
 
    get foreignProperties(): FormGroup {
-      console.log('[BRF] fp getter called');
       return this.resourceForm.get('foreignProperties') as FormGroup;
    }
 
