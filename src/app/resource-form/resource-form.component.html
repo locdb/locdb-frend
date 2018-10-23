@@ -168,8 +168,8 @@
       </div>
       <span *ngIf="submitting" class="loader"></span>
       <div class="col-xs-6 text-right">
-        <button type="submit" class="btn btn-primary" [disabled]="submitting || !resourceForm.valid || (!!resource._id && resourceForm.pristine)">
-          <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {{ resource._id ? 'Submit' : 'Migrate' }}
+        <button type="submit" class="btn btn-primary" [disabled]="submitting || !resourceForm.valid ">
+          <span class="fa fa-save" aria-hidden="true"></span> {{ resource._id ? 'Submit' : 'Migrate' }}
         </button>
       </div>
     </div>
