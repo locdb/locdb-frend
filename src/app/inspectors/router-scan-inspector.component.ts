@@ -296,11 +296,12 @@ export class RouterScanInspectorComponent implements OnInit {
 
   getMode(mode: string) {
     if (this.scanIsDisplayable && this.display) {
-      return this.display.editMode
+      return this.display.editMode;
     }
+    return 'select';
   }
 
-  deleteEntry(entry: models.BibliographicEntry){
+  deleteEntry(entry: models.BibliographicEntry) {
     console.log('[scan-inspector][Debug] entry to delete: ', entry)
     this.locdbService.deleteBibliographicEntry(entry).subscribe(
       (ret) => console.log('[scan-inspector][Debug] called delete Entry. Response: ', ret),
