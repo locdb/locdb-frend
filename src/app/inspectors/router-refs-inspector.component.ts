@@ -42,9 +42,9 @@ export class RouterRefsInspectorComponent implements OnInit, OnChanges {
     console.log('Resource laden... ')
     // load Bibliographic resource because only id is passed along the route
     this.locdbService.getBibliographicResource(this._id).subscribe((res) => {
-      this.resource = res
-      console.log('Resource ', res)
-      this.refs = res.parts
+      this.resource = res;
+      console.log('Resource ', res);
+      this.refs = res.parts.filter(x => x.status !== enums.status.obsolete);
       console.log('refs', this.refs)
       if (this.resource.partOf) {
         console.log('Retrieving parent with id', this.resource.partOf)

@@ -1,5 +1,5 @@
 
-import { ViewChild, Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
+import { ViewChild, Component, OnInit, Input, Output, OnChanges, AfterViewInit, EventEmitter} from '@angular/core';
 import { models, enums, TypedResourceView, gatherScans } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import {Observable} from 'rxjs/Rx';
@@ -18,7 +18,12 @@ import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 })
 export class RouterScanInspectorComponent implements OnInit {
   // Do we need this?
+  // enables method invocation on child to connect the buttons on this component
+  // to the logic in the child component
   @ViewChild('display') display;
+  // get rid of condition changed while checking error
+  // still there...
+  initialized = false;
   title = 'Scan Inspector';
   // if sorry_text is set it is shows instead of the app display in the card body
   sorry_text = '';
@@ -32,54 +37,19 @@ export class RouterScanInspectorComponent implements OnInit {
   /* Currently displayed references (should always correspond to scan) */
   private _refs: Array<models.BibliographicEntry> = [];
   /* setter and getter to enable filtering without loosing the actual data */
-  get refs(){
-      // return this._refs
+  get refs() {
+      // return Filtered entries
       return this.filterEntries(this._refs)
   }
-  set refs(refs: Array<models.BibliographicEntry>){
+  set refs(refs: Array<models.BibliographicEntry>) {
     this._refs = refs
+    // Always refresh filter options when references are updated
     this.refreshFilterOptions()
   }
-  /* apply the filter functions */
-  filterEntries(entries: models.BibliographicEntry[]) {
-    // console.log("filter Entries: ", entries)
-    if (entries !== null && entries !== undefined) {
-      let filtered_entries = entries.filter(e => e !== null && e !== undefined)
-      /* allways drop status obsolete */
-      filtered_entries = entries.filter(e => e.status !== 'OBSOLETE')
-
-      for (const attribute of this.filter_attributes) {
-          filtered_entries = filtered_entries.filter(this.search_filter(attribute,
-            this.selection[attribute]))
-      }
-      return filtered_entries;
-    }
-  }
-
-  search_filter(selection_type: string, selection_name: string) {
-    return this.filter_options[selection_type]
-                    .find(e => e.name === selection_name)
-                    .filter
-  }
-  /* extract filter options and generate the necessary filterfunctions */
-  refreshFilterOptions() {
-    for (const current_entry of this.refs) {
-        for (const attribute of this.filter_attributes) {
-          const value = current_entry.ocrData[attribute]
-          if (value && this.filter_options[attribute].every(y => y.name !== value)) {
-            this.filter_options[attribute].push({name: value, filter: x => x ? x.ocrData[attribute] === value : false})
-          }
-        }
-    }
-    for (const attribute of this.filter_attributes) {
-      this.filter_options[attribute].sort((e1, e2) => ( e1.name < e2.name ||
-                  e1.name === 'All' && e2.name !== 'All' ? -1 : 1))
-    }
-  }
-
 
   /* Flag whether the scan or the digital references list is shown */
   scanIsVisible = true;
+
 
   /* Currently active entry, is passed down to the app-display and
   app-entry-list components */
@@ -130,6 +100,56 @@ export class RouterScanInspectorComponent implements OnInit {
     private router: Router) {
   }
 
+  ngAfterViewInit(){
+    this.initialized = true
+  }
+
+  /* apply the filter functions */
+  filterEntries(entries: models.BibliographicEntry[]) {
+    // console.log("filter Entries: ", entries)
+    if (entries !== null && entries !== undefined) {
+      let filtered_entries = entries.filter(e => e !== null && e !== undefined)
+      /* allways drop status obsolete */
+      filtered_entries = entries.filter(e => e.status !== 'OBSOLETE')
+
+      for (const attribute of this.filter_attributes) {
+        // console.log('[Debug][scan-inspector]', attribute, this.selection[attribute])
+          filtered_entries = filtered_entries.filter(this.search_filter(attribute,
+            this.selection[attribute]))
+      }
+      return filtered_entries;
+    }
+  }
+
+  search_filter(selection_type: string, selection_name: string) {
+    if (this.filter_options[selection_type] === undefined){
+      return e => true
+    }
+    return this.filter_options[selection_type]
+                    .find(e => e.name === selection_name)
+                    .filter
+  }
+  /* extract filter options and generate the necessary filterfunctions */
+  refreshFilterOptions() {
+    /* inititialize filter_options */
+    /* INIT HERE, else the values accumulate, e.g. when switching pages */
+    for (const attribute of this.filter_attributes) {
+      this.filter_options[attribute] = [{name: 'All', filter: e => true}]
+      this.selection[attribute] = 'All'
+    }
+    for (const current_entry of this.refs) {
+        for (const attribute of this.filter_attributes) {
+          const value = current_entry.ocrData[attribute]
+          if (value && this.filter_options[attribute].every(y => y.name !== value)) {
+            this.filter_options[attribute].push({name: value,
+                  filter: x => x ? x.ocrData[attribute] === value : false})}}
+        }
+    for (const attribute of this.filter_attributes) {
+      this.filter_options[attribute].sort((e1, e2) => ( e1.name < e2.name ||
+                  e1.name === 'All' && e2.name !== 'All' ? -1 : 1))
+    }
+  }
+
   /* This method is called when the user clicks on a specific bibliographic entry either in the scan view or in the list view.
    * It is good that both views operate on the same selection, such that one can toggle the view while the same entry stays active.
    */
@@ -178,11 +198,6 @@ export class RouterScanInspectorComponent implements OnInit {
     // Fetch the scans associated with scan id (can be performed in parallel to resource retrieval
     this.fetchEntriesForScan(scanId);
 
-    /* inititialize filter_options */
-    for(const attribute of this.filter_attributes){
-      this.filter_options[attribute] = [{name: 'All', filter: e => true}]
-      this.selection[attribute] = 'All'
-    }
   }
 
   /* Given a scanId, fetches all associated entries from the backend */
@@ -193,7 +208,7 @@ export class RouterScanInspectorComponent implements OnInit {
     this.locdbService.getToDoBibliographicEntries(scanId).subscribe(
       // DO NOT extract them from resource
       (entries) => {
-        this.refs = entries;
+        this.refs = entries.filter(x => x.status !== enums.status.obsolete);
         this.selectFirst(entries); // here we select an appropriate entry from the new list
         console.log('[debug] scan inspector received from scan_id: entries:', this.refs)
       },
@@ -265,6 +280,52 @@ export class RouterScanInspectorComponent implements OnInit {
       this.display.zoomReset();
     }
   }
+
+  saveBoxes() {
+    if (this.scanIsDisplayable) {
+      this.display.saveBoxes();
+    }
+  }
   // Zooming methods END
+
+  setMode(mode: string) {
+    if (this.scanIsDisplayable) {
+      this.display.setMode(mode);
+    }
+  }
+
+  getMode(mode: string) {
+    if (this.scanIsDisplayable && this.display) {
+      return this.display.editMode;
+    }
+    return 'select';
+  }
+
+  deleteEntry(entry: models.BibliographicEntry) {
+    console.log('[scan-inspector][Debug] entry to delete: ', entry)
+    this.locdbService.deleteBibliographicEntry(entry).subscribe(
+      (ret) => console.log('[scan-inspector][Debug] called delete Entry. Response: ', ret),
+      (error) => alert('[scan-inspector][Error] Error while deleting Entry: ' + error.message)
+    );
+    const refs_id = this._refs.findIndex(e => e._id === entry._id)
+    console.log('[scan-inspector][Debug] ID of entry to delete:', refs_id)
+    this._refs.splice(refs_id, 1)
+    console.log('[scan-inspector][Warning] Entry just deleted in frontend,' +
+                ' backend connection missing at the Moment:')
+  }
+
+  updateEntry(tuple: [models.BibliographicEntry, string]) {
+    console.log('[Scan-inspector][Debug]', tuple, this._refs)
+    const refs_id = this._refs.findIndex(e => e._id === tuple[1])
+    if (refs_id) {
+      console.log('[Scan-inspector][Debug]', refs_id)
+      this._refs[refs_id] = tuple[0]
+    } else {
+      this._refs.push(tuple[0])
+    }
+    this.entry = tuple[0]
+    console.log('[Scan-inspector][Debug]', this._refs)
+
+  }
 
 }
