@@ -255,6 +255,10 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           this.deleteRectAndEntry(this.selectedEntry)
           return false;
         }, [], 'Delete selected entry'));
+        this._hotkeysService.add(new Hotkey('s', (event: KeyboardEvent): boolean => {
+          this.saveBoxes()
+          return false;
+        }, [], 'Save entries'));
     }
 
     onSelect(rect: Rect) {
