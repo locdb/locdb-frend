@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { QuestionBase } from './question-base';
 import { TextboxQuestion } from './question-textbox';
 
-import { models, TypedResourceView } from '../../locdb';
+import { enums, models, TypedResourceView, typedProperty } from '../../locdb';
 
 
 /* We're dealing with raw property names:
@@ -25,6 +25,16 @@ function getOrderForProperty(property: string) {
   if (property.endsWith('number')) { return 3 }
   return 99; // default case
 }
+
+// Determines the sorting order of the dynamically generated fields
+const PROPERTY_ORDER =
+  [ typedProperty(enums.resourceType.journal, 'title'),
+    typedProperty(enums.resourceType.journal, 'subtitle'),
+    typedProperty(enums.resourceType.journalVolume, 'number'),
+    typedProperty(enums.resourceType.bookSeries, 'title'),
+    typedProperty(enums.resourceType.bookSeries, 'number'),
+    typedProperty(enums.resourceType.bookSet, 'title'),
+  ]
 
 function getTypeForProperty(property: string) {
   if (property.endsWith('number')) { return 'number' }
@@ -47,7 +57,7 @@ export class QuestionService {
             label: humanReadable(fp),
             value: trv.data[fp],
             required: false,
-            order: getOrderForProperty(fp),
+            order: PROPERTY_ORDER.findIndex(x => x === fp),
             type: getTypeForProperty(fp)
           }
         )

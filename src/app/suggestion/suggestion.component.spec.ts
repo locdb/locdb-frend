@@ -13,7 +13,7 @@ import { LocdbService, CredentialsService } from '../locdb.service';
 import { PopoverModule } from 'ngx-popover';
 import { LoggingService } from '../logging.service';
 import { ResourceCardComponent } from '../resource-card/resource-card.component'
-import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe, ContainerPipe} from '../pipes';
+import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe, ContainerPipe, PrefixPipe} from '../pipes';
 // api
 import { ScanService } from '../typescript-angular-client/api/scan.service'
 import { UserService } from '../typescript-angular-client/api/user.service'
@@ -57,6 +57,7 @@ describe('SuggestionComponent', () => {
         EmbracePipe,
         StandardPipe,
         ContainerPipe,
+        PrefixPipe,
         DynamicFormQuestionComponent,
       ],
       providers: [ LocdbService, CredentialsService, LoggingService,

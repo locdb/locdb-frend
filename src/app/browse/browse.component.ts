@@ -19,7 +19,7 @@ export class BrowseComponent implements OnInit, OnChanges {
       // make this visible to template
       environment = environment;
 
-      selectedResource: TypedResourceView;
+      selectedResource: [TypedResourceView, TypedResourceView];
       query: string;
 
       search_extended = false;
@@ -33,7 +33,7 @@ export class BrowseComponent implements OnInit, OnChanges {
       max_in = -1;
 
       internalInProgress = false;
-      internalThreshold = 20;
+      internalThreshold = 30;
 
       searchentry: models.BibliographicEntry = {}
 
@@ -47,11 +47,12 @@ export class BrowseComponent implements OnInit, OnChanges {
 
       refresh() {
         // when search button is triggered
-        this.loggingService.logSearchIssued(this.searchentry, this.selectedResource, this.query, [0, 1])
+        // this.loggingService.logSearchIssued(this.searchentry, this.selectedResource, this.query, [0, 1])
         this.fetchInternalSuggestions();
       }
 
       fetchInternalSuggestions(): void {
+        if (!this.query) { return; }
         this.internalInProgress = true; // loading icon
         this.internalSuggestions = [];
         console.log('Fetching internal suggestions for', this.query, 'with threshold', this.internalThreshold);
@@ -63,16 +64,13 @@ export class BrowseComponent implements OnInit, OnChanges {
         );
       }
 
-      // these two functions could go somewhere else e.g. static in locdb.ts
-      // BEGIN
 
-
-      onSelect(br?: TypedResourceView): void {
-          this.committed = false;
+      onSelect(pair: [TypedResourceView, TypedResourceView | null]): void {
+         this.selectedResource = pair;
       }
 
       saveInternal(sgt) {
-          this.internalSuggestions = sgt
+          this.internalSuggestions = sgt;
           if (this.internalSuggestions && this.internalSuggestions.length <= this.max_shown_suggestions) {
             this.max_in = -1;
           } else {
@@ -89,8 +87,8 @@ export class BrowseComponent implements OnInit, OnChanges {
             this.max_in = 0;
         }
       }
-      
-      toggle_extended_search(){
+
+      toggle_extended_search() {
         this.search_extended = !this.search_extended
       }
   }

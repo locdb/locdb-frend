@@ -26,11 +26,6 @@ import * as interact from 'interact.js';
     providers: [ LocdbService ]
 })
 
-// interface BibliographicEntry {
-// // we can use an interface to add propertys
-//     rect: rect;
-// }
-
 export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     private zoomSVG: any;
     @ViewChild('zoomSVG') set content(content: any) {
@@ -38,17 +33,14 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     // @Input() todo: ToDoScans;
-
     @Input() img_src = '';
     private _entries = []
     @Input() set entries(entries: models.BibliographicEntry[]){
-     console.log("set entries")
+      // check if new entries arrived
       if(entries.length == this._entries.length &&
         entries.every(e => this._entries.includes(e))){
-         console.log("old == new")
        }
        else {
-        console.log("old != new")
           this._entries = entries
           this.reload_rects()
     }
@@ -76,25 +68,25 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     imgX = 3000;    // initvalues no relevance if new picture is set
     imgY = 3000;
 
+    editMode = 'select'
+
     @Output() imglength: EventEmitter<Number> = new EventEmitter();
     @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
+    @Output() deleteEntry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
+    @Output() updateEntry: EventEmitter<[models.BibliographicEntry, string]> =
+              new EventEmitter();
 
     @ViewChild('svgroot') svgroot: ElementRef;
 
   constructor(
     private scanService: ScanService,
-    private locdbService: LocdbService, private _hotkeysService: HotkeysService) {
+    private locdbService: LocdbService,
+    private _hotkeysService: HotkeysService) {
     }
 
     // TODO: https://github.com/interactjs/website/blob/master/source/javascripts/star.js
 
     initInteract(imgWidth, imgHeight) {
-      // get the interact variable from the parent window
-      // console.log('imgWidth', imgWidth)
-      // console.log('imgHeight', imgHeight)
-      // console.log('screenWidth: ', this.svgroot)
-      // console.log('screenWidth: ', this.svgroot.nativeElement.clientWidth)
-      // console.log('screenHeight:', this.svgroot.nativeElement.scrollHeight)
       interact('.resizeable-rect')
         .draggable({
           restrict: {
@@ -122,20 +114,15 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         .on('resizemove', function (event) {
           const min_width = 50
           const min_height = 20
-          // console.log(imgWidth)
-          // console.log(imgHeight)
           let target = event.target,
               x = (parseFloat(target.getAttribute('x')) || 0),
               y = (parseFloat(target.getAttribute('y')) || 0);
-          // console.log(target.id, x,y, event.deltaRect, event.rect)
-        //
           // update the element's style
-          // console.log(event)
           let svg = target.parentNode.parentNode
-          const clientToImageWidthRatio = imgWidth / svg.clientWidth
-          const clientToImageHeightRatio = imgHeight / svg.clientHeight
-          // console.log(svg.clientWidth, clientToImageWidthRatio)
-          // console.log(svg.clientHeight, clientToImageHeightRatio)
+          let svgWidth = svg.parentNode.clientWidth || svg.width.baseVal.value
+          let svgHeight = svg.parentNode.clientHeight || svg.height.baseVal.value
+          const clientToImageWidthRatio = imgWidth / svgWidth
+          const clientToImageHeightRatio = imgHeight / svgHeight
           let width  = event.rect.width;
           let height = event.rect.height;
           let deltaLeft = event.deltaRect.left;
@@ -153,52 +140,31 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           x += deltaLeft * clientToImageWidthRatio;
           y += deltaTop * clientToImageHeightRatio;
 
-
-          // target.style.webkitTransform = target.style.transform =
-          //     'translate(' + x + 'px,' + y + 'px)';
-          // target.x = x;
-          // target.y = y
-
         target.setAttribute('width', width * clientToImageWidthRatio);
         target.setAttribute('height', height * clientToImageHeightRatio);
         target.setAttribute('x', x);
         target.setAttribute('y', y);
-
-        // target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height);
-         })
+})
          .on('dragmove', function (event){
            let target = event.target,
            x = (parseFloat(target.getAttribute('x')) || 0),
            y = (parseFloat(target.getAttribute('y')) || 0);
 
            let svg = target.parentNode.parentNode
-           const clientToImageWidthRatio = imgWidth / svg.clientWidth
-           const clientToImageHeightRatio = imgHeight / svg.clientHeight
+           let svgWidth = svg.parentNode.clientWidth || svg.width.baseVal.value
+           let svgHeight = svg.parentNode.clientHeight || svg.height.baseVal.value
+           const clientToImageWidthRatio = imgWidth / svgWidth
+           const clientToImageHeightRatio = imgHeight / svgHeight
 
            x += event.dx * clientToImageWidthRatio;
            y += event.dy * clientToImageHeightRatio;
 
-
-           // target.style.webkitTransform = target.style.transform =
-           //     'translate(' + x + 'px,' + y + 'px)';
-           // target.x = x;
-           // target.y = y
            target.setAttribute('x', x);
            target.setAttribute('y', y);
-           // console.log(target.id, x,y, event.deltaRect, event.rect)
-           // console.log(event)
         });
     }
     initSVGZoom() {
         console.log('[Display] init Zoom')
-        // let zoom = d3.zoom().on('zoom', function () {
-        //     svgContainer.attr('transform', 'translate(' +
-        //                       d3.event.transform.x + ', ' + d3.event.transform.y +
-        //                       ')scale(' + d3.event.transform.k + ')')
-        // })
-        // .scaleExtent([1, 5])
-        // .translateExtent([[0, 0], [this.imgX, this.imgY]])
-        // .duration(250);
         let zoom = d3.zoom().on("zoom", function () {
           svgContainer.attr("transform", d3.event.transform)
         })
@@ -226,8 +192,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     saveBoxes() {
-      console.log('Saving coordinates')
-      // console.log(this.rects.map(e => e.entry.ocrData.coordinates))
+      // console.log(this.entries[0].scanId)
+      console.log('[Display][Debug] Saving coordinates')
       for (const rect of this.zoomSVG.nativeElement.querySelectorAll('rect')) {
         const id = rect.getAttribute('id')
         const x = Math.round(rect.getAttribute('x'))
@@ -235,33 +201,28 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         const w = Math.round(rect.getAttribute('width'))
         const h = Math.round(rect.getAttribute('height'))
         const pristine = this.rects[id].isPristine(x, y, w, h)
-        // console.log('Old values:', this.rects[id].toString())
-        // console.log('New values:', 'x', x, 'y', y, 'width', w, 'height', h, 'pristine', pristine)
         if (!pristine) {
-          console.log('Detected a change', this.rects[id].toString());
+          console.log('[Display][Debug] Detected a change', this.rects[id].toString());
           this.rects[id].saveCoordinates(x, y, w, h);
           const scan_id = this.rects[id].entry.scanId;
           const coords = this.rects[id].toString();
-          console.log('Uploading coordinates:', coords)
+          console.log('[Display][Debug] Uploading coordinates:', coords)
           const entry_id = this.rects[id].entry._id || undefined;
           this.scanService.correctReferencePosition(scan_id, coords, entry_id).subscribe(
-            (newEntry) => this.rects[id].entry = newEntry,
+            (newEntry) => {this.rects[id].entry = newEntry,
+                            console.log('[Display][Debug] recieved entry: ', newEntry),
+                          this.updateEntry.emit([newEntry, entry_id])},
             (error) => alert('Error while uploading new coordinates: ' + error.message)
           );
         }
-        // console.log('id', id, 'x', x, 'y',
-        // y, 'pristine?', 'width', w, 'height', h,
-        // this.rects[id].x == x && this.rects[id].y == y &&
-        // this.rects[id].width == w && this.rects[id].height == h? true : false)
       }
-      // console.log(this.rects.map(e => e.entry.ocrData.coordinates))
-      // this.reload_rects()
-
     }
+
     ngOnChanges(changes: SimpleChanges | any) {
     }
 
     reload_rects() {
+      console.log('[Display][Debug] reload rects')
       // Input todo and this method should replace manual calling of updateDisplay
       if (this.entries && this.entries.length) {
           // extract rectanlges and so on
@@ -274,7 +235,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
-        console.log('Image source:', this.img_src)
+        console.log('[Display][Debug] Image source:', this.img_src)
         this._hotkeysService.add(new Hotkey('j', (event: KeyboardEvent): boolean => {
             let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
             if (current === -1 || current >= this.rects.length - 1) { return false }; // not in array or at bounds
@@ -289,12 +250,119 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             this.onSelect(this.rects[current]);
             return false;
         }, [], 'one rectangle downward'));
+        this._hotkeysService.add(new Hotkey('del', (event: KeyboardEvent): boolean => {
+          console.log('[Display][Debug] delete pressed.')
+          this.deleteRectAndEntry(this.selectedEntry)
+          return false;
+        }, [], 'Delete selected entry'));
+        this._hotkeysService.add(new Hotkey('s', (event: KeyboardEvent): boolean => {
+          this.saveBoxes()
+          return false;
+        }, [], 'Save entries'));
     }
 
     onSelect(rect: Rect) {
-        console.log('[display] onselect called');
-        this.selectedEntry = rect.entry;
-        this.entry.next(rect.entry);
+        console.log('[Display][Debug] onselect called', this.editMode);
+        if(this.editMode == 'add'){
+          console.log('[Display][Debug] onSelect in add Mode')
+        }
+        else if(this.editMode == 'delete'){
+          console.log('[Display][Debug] onSelect in delete Mode')
+        }
+        else {
+          if(rect.entry._id){
+            console.log('[Display][Debug] Selected Entry id: ', rect.entry._id)
+            this.selectedEntry = rect.entry;
+            this.entry.next(rect.entry);
+        }
+          else{
+            console.log('[Display][Debug] Selected Entry has no ID.')
+          }
+        }
+    }
+
+    setMode(mode: string){
+      this.editMode = mode
+    }
+
+    clicked(evt){
+      // console.log(evt.composedPath()[0].nodeName)
+      const element = evt.composedPath()[0]
+      const svg = evt.composedPath().find(e => e.nodeName == 'svg')
+      // console.log(svg)
+      let svgWidth = svg.parentNode.clientWidth || svg.width.baseVal.value
+      let svgHeight = svg.parentNode.clientHeight || svg.height.baseVal.value
+      const clientToImageWidthRatio = this.imgX / svgWidth
+      const clientToImageHeightRatio = this.imgY / svgHeight
+
+      if(element.nodeName === 'image' && this.editMode == 'add'){
+
+        let e = evt.target;
+        let dim = e.getBoundingClientRect();
+        let x = evt.clientX - dim.left;
+        let y = evt.clientY - dim.top;
+        // alert("x: "+x+" y:"+y);
+        // console.log(evt)
+        // console.log(evt.path)
+        // console.log(evt.path[0].nodeName)
+        // console.log(e.getBoundingClientRect())
+        // console.log(x, y)
+        // console.log(x, y, clientToImageWidthRatio, clientToImageHeightRatio)
+        this.newRectAndEntry(x * clientToImageWidthRatio, y * clientToImageHeightRatio)
+        }
+      else if (element.nodeName === 'rect' && this.editMode == 'delete'){
+        // console.log(element)
+        const id = element.id
+        this.deleteRectAndEntry(this.entries[id])
+        }
+    }
+
+
+    markRect(event){
+      // console.log("Markme", event)
+      const element = event.composedPath()[0]
+      element.style.fill = 'rgb(0,0,0)'
+      element.style.stroke = 'rgb(0,0,0)'
+      // event.path[0].style['fill-opacity'] = '0.9'
+      // event.path[0].style['stroke-opacity'] = '1'
+    }
+
+    unmarkRect(event){
+      // console.log("Unmarkme", event)
+      const element = event.composedPath()[0]
+      element.style.fill = ''
+      element.style.stroke = ''
+      element.style['fill-opacity'] = ''
+      element.style['stroke-opacity'] = ''
+    }
+
+    // TODO: take care of creating entry in entries too
+    newRectAndEntry(x: number, y: number){
+      const scanId = this.img_src.split('/').pop()
+      // console.log('create on coordinates ', x, y)
+      const coords = `${Math.round(x)} ${Math.round(y)} ${Math.round(x+300)} ${Math.round(y+125)}`
+      // console.log('coords: ', coords)
+      const entry = {ocrData: {coordinates: coords},
+                    scanId: scanId}
+      // console.log(entry)
+      this.rects.push(new Rect(entry))
+      // this.entries.push(entry)
+    }
+
+    deleteRectAndEntry(entry: models.BibliographicEntry){
+      // const rectToDelete = this.rects[id]
+      if(confirm(`Delete entry ${entry.bibliographicEntryText}?`)){
+        // console.log('[Display][Debug] delete: ', this.rects[id])
+
+        // console.log('[Display][Debug] Deleted rect', this.rects.splice(id, 1))
+        // console.log('[Display][Debug] Deleted entry', this.entries.splice(id, 1))
+        // console.log('[Display][Debug] Deleted entry', this.entries[id])
+        if(entry){
+          this.deleteEntry.emit(entry)
+      }
+
+      }
+
     }
 
     validateCoordinates(coordinates: string): boolean {
@@ -382,7 +450,7 @@ class Rect {
 
     isPristine(x: number, y: number, width: number, height: number) {
       // is this ok?
-      // console.log('Pristine check', this.x, x, this.y, y, this.width, width, this.height, height)
+      console.log('Pristine check', this.x, x, this.y, y, this.width, width, this.height, height)
       return this.x === x && this.y === y && this.width === width && this.height === height
     }
 

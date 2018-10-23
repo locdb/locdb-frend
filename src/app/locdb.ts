@@ -1,4 +1,3 @@
-import * as moment from 'moment';
 import * as models from './typescript-angular-client/model/models'
 
 export {models};
@@ -7,6 +6,7 @@ export {models};
 // use this enums with Object.keys or Object.values if necessary
 import * as enums from './enums';
 export { enums };
+
 
 export const NAME_SEPARATOR = ', '
 
@@ -90,12 +90,6 @@ export function enum_values(obj) {
   return values;
 }
 
-export function isoFullDate(date: Date): string {
-  const dateMoment = moment(date);
-  const isoDate = dateMoment.format('YYYY-MM-DD');
-  return isoDate;
-}
-
 
 export const PropertyPrefixByType = invert_enum(enums.resourceType);
 export function typedProperty(type: string, property: string) {
@@ -115,8 +109,6 @@ export function foreignPropertiesByType(containerType: enums.resourceType): Arra
       // when its an issue, we need properties of volume and journal
       return [typedProperty(rtype.journal, 'title'),
               typedProperty(rtype.journal, 'subtitle'),
-              // typedProperty(rtype.journal, 'identifiers'),
-              // typedProperty(rtype.journal, 'contributors'),
               typedProperty(rtype.journalVolume, 'number')];
 
     case rtype.journalVolume:
@@ -124,15 +116,18 @@ export function foreignPropertiesByType(containerType: enums.resourceType): Arra
       return [
         typedProperty(rtype.journal, 'title'),
         typedProperty(rtype.journal, 'subtitle'),
-        // typedProperty(rtype.journal, 'identifiers'),
-        // typedProperty(rtype.journal, 'contributors'),
       ];
 
-    case rtype.monograph || rtype.editedBook || rtype.book || rtype.referenceBook:
+    case rtype.book:
+    case rtype.editedBook:
+    case rtype.monograph:
+    case rtype.referenceBook: {
       // in these cases, the book series and sets are flattened.
       return [typedProperty(rtype.bookSeries, 'title'),
               typedProperty(rtype.bookSeries, 'number'),
               typedProperty(rtype.bookSet, 'title')];
+    }
+
     default:
       return [];
   }
@@ -209,7 +204,7 @@ export function authors2contributors (authors: string[]): models.AgentRole[] {
 
 export function OCR2MetaData(ocr: models.OCRData): Metadata {
   console.log('Extracting OCR data from', ocr);
-  const ocrDate = moment(ocr.date, 'YYYY').toDate();
+  const ocrDate = new Date(ocr.date);
   const obj =  {
     title: ocr.title || '',
     subtitle: '',
@@ -315,18 +310,83 @@ export class TypedResourceView implements Metadata {
     return foreignPropertiesByType(<enums.resourceType>this.viewport_);
   }
 
+  isJournalLike() {
+    // could use viewport instead
+    const rType = this.type;
+    return rType === enums.resourceType.journalIssue || rType === enums.resourceType.journalVolume;
+  }
+
+  isBookLike() {
+    // could use viewport instead
+    const rType = this.type;
+    return (
+      rType === enums.resourceType.monograph ||
+      rType === enums.resourceType.editedBook ||
+      rType === enums.resourceType.book ||
+      rType === enums.resourceType.referenceBook
+    )
+  }
+
   toString(): string {
-    /** Method to return authors or editors plus title, note
-    that this can be reused but is not sufficient for itself.
-    Where to place the 'year' depends on whether a container is available. */
-      // could treat editors differently
-    // always put title!
-    let s = this.authorString();
-    if (this.publicationDate) {
-      s += `(${this.publicationDate})`;
+    /** Method to return a short-hand string representation
+     *  which can be used for auto-completion techniques.
+     *  It is also used for the main-title generation.
+     */
+    let s = '';
+    const value = this;
+    if (this.isJournalLike()) {
+      s = value.astype(enums.resourceType.journal).title;
+      const journalSubtitle = value.astype(enums.resourceType.journal).subtitle;
+      if (journalSubtitle) {
+        s += ' ' + journalSubtitle;
+      }
+
+
+      const volumeNumber = value.astype(enums.resourceType.journalVolume).number;
+      if (volumeNumber) {
+        s += ', Vol. ' + volumeNumber;
+      }
+
+      const issueNumber = value.astype(enums.resourceType.journalIssue).number;
+      if (issueNumber) {
+        s += ', Issue ' + issueNumber;
+      }
+
+      // journals issues and volumes do not need anything else, we're done here.
+      return s;
     }
-    s += '.';
-    s += this.title + '.';
+
+    // Otherwise, always use own title:
+    // the very important default, is the resource's OWN TITLE.
+    // also plain journals are dealt with here
+    if (value.title) {
+      s += value.title;
+      if (value.subtitle) {
+        s += ' ' + value.subtitle;
+      }
+    } else if (value.number) {
+      // If no title is given, e.g. for a book chapter, use try to use its number
+      s += value.number;
+    }
+
+    if (this.isBookLike()) {
+      // For book-like resources, add (flattened) info on Series
+      const seriesTitle = value.astype(enums.resourceType.bookSeries).title;
+      const seriesNumber = value.astype(enums.resourceType.bookSeries).number;
+      if (seriesTitle) {
+        s += ', ' + seriesTitle;
+        if (seriesNumber) {
+          s += seriesNumber;
+        }
+
+      }
+      // and book sets
+      const setTitle = value.astype(enums.resourceType.bookSet).title;
+      if (setTitle) {
+        s += ', ' + setTitle;
+      }
+    }
+
     return s;
   }
 
@@ -437,36 +497,26 @@ export class TypedResourceView implements Metadata {
   }
 
   get publicationDate(): Date {
-    // rely on moment library to do the conversion from string
-    // moment can deal with both the initial date-time and later on full-date
     const strDate = this.data[this._prefix + 'publicationDate'];
-    // console.log("getDate", strDate)
     if (!strDate) { return null; }
-    const mom = moment(strDate);
-    const date = mom.toDate();
+    const date = new Date(strDate);
     if (!isValidDate(date)) {
       // return null if not valid
       return null;
     }
-    // console.log("moment null", isoFullDate(moment(null).format("YYYY-MM-DD")))
-    // console.log("moment undefined", moment(undefined).format("YYYY-MM-DD"))
-    // console.log("moment ''", moment("").format("YYYY-MM-DD"))
-    // console.log("moment ' '", moment(" ").format("YYYY-MM-DD"))
-    // console.log("getDate", date)
     return date;
   }
 
   set publicationDate(newDate: Date) {
-    console.log('Setting publicationDate', newDate);
-    // if (!newDate) {
-    const dateMoment = moment(newDate);
-    if (!isValidDate(dateMoment.toDate())) {
+    console.log('Date setter called with', newDate);
+    if (!isValidDate(newDate)) {
       console.log('Date was not valid, discarding', newDate);
       this.data[this._prefix + 'publicationDate'] = undefined;
     } else {
       // console.log("setDate", newDate)
-      const isoDate = dateMoment.format('YYYY-MM-DD');
-      // console.log("isoFullDate ", isoFullDate)
+      let isoDate = newDate.toISOString();
+      isoDate = isoDate.slice(0, isoDate.indexOf('T'));
+      console.log('Setting publicationDate', isoDate);
       this.data[this._prefix + 'publicationDate'] = isoDate;
     }
   }
@@ -491,27 +541,6 @@ export class TypedResourceView implements Metadata {
 
 }
 
-export function findContainerMetadata(trv: TypedResourceView, checkInitial = true): TypedResourceView {
-  /* Finds the least general container type that has meta data available,
-   * traverses the list of preferred container types for the current type
-   * from most preferable to least preferable.
-   * Designed for usage in metadata's of part.
-   * When `checkInitial` is false, the initial `trv` will not be checked against the condition.
-   * As a fallback, the same view as the input is returned.
-   * TODO: this could even be recursive, but for now we assume that our lookup table is flattened.
-   */
-  if (!trv) { return null; };
-  if (checkInitial && trv.title) { return trv; };
-
-  console.log('DeprecationWarning: findContainerMetadata');
-  const validTypes = containerTypes(trv.type);
-  for (const candidateType of validTypes) {
-    const view = trv.astype(candidateType);
-    // could even put callback as condition...
-    if (view.title) { return view };
-  }
-  return trv;
-}
 
 export function decomposeName(someString: string): Partial<models.ResponsibleAgent> {
   const [lastname, firstname, ...other] = someString.split(NAME_SEPARATOR);

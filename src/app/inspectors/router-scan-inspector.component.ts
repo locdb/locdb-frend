@@ -1,5 +1,5 @@
 
-import { ViewChild, Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
+import { ViewChild, Component, OnInit, Input, Output, OnChanges, AfterViewInit, EventEmitter} from '@angular/core';
 import { models, enums, TypedResourceView, gatherScans } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import {Observable} from 'rxjs/Rx';
@@ -18,7 +18,12 @@ import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 })
 export class RouterScanInspectorComponent implements OnInit {
   // Do we need this?
+  // enables method invocation on child to connect the buttons on this component
+  // to the logic in the child component
   @ViewChild('display') display;
+  // get rid of condition changed while checking error
+  // still there...
+  initialized = false;
   title = 'Scan Inspector';
   // if sorry_text is set it is shows instead of the app display in the card body
   sorry_text = '';
@@ -95,6 +100,10 @@ export class RouterScanInspectorComponent implements OnInit {
     private router: Router) {
   }
 
+  ngAfterViewInit(){
+    this.initialized = true
+  }
+
   /* apply the filter functions */
   filterEntries(entries: models.BibliographicEntry[]) {
     // console.log("filter Entries: ", entries)
@@ -104,6 +113,7 @@ export class RouterScanInspectorComponent implements OnInit {
       filtered_entries = entries.filter(e => e.status !== 'OBSOLETE')
 
       for (const attribute of this.filter_attributes) {
+        // console.log('[Debug][scan-inspector]', attribute, this.selection[attribute])
           filtered_entries = filtered_entries.filter(this.search_filter(attribute,
             this.selection[attribute]))
       }
@@ -112,6 +122,9 @@ export class RouterScanInspectorComponent implements OnInit {
   }
 
   search_filter(selection_type: string, selection_name: string) {
+    if (this.filter_options[selection_type] === undefined){
+      return e => true
+    }
     return this.filter_options[selection_type]
                     .find(e => e.name === selection_name)
                     .filter
@@ -274,5 +287,45 @@ export class RouterScanInspectorComponent implements OnInit {
     }
   }
   // Zooming methods END
+
+  setMode(mode: string) {
+    if (this.scanIsDisplayable) {
+      this.display.setMode(mode);
+    }
+  }
+
+  getMode(mode: string) {
+    if (this.scanIsDisplayable && this.display) {
+      return this.display.editMode;
+    }
+    return 'select';
+  }
+
+  deleteEntry(entry: models.BibliographicEntry) {
+    console.log('[scan-inspector][Debug] entry to delete: ', entry)
+    this.locdbService.deleteBibliographicEntry(entry).subscribe(
+      (ret) => console.log('[scan-inspector][Debug] called delete Entry. Response: ', ret),
+      (error) => alert('[scan-inspector][Error] Error while deleting Entry: ' + error.message)
+    );
+    const refs_id = this._refs.findIndex(e => e._id === entry._id)
+    console.log('[scan-inspector][Debug] ID of entry to delete:', refs_id)
+    this._refs.splice(refs_id, 1)
+    console.log('[scan-inspector][Warning] Entry just deleted in frontend,' +
+                ' backend connection missing at the Moment:')
+  }
+
+  updateEntry(tuple: [models.BibliographicEntry, string]) {
+    console.log('[Scan-inspector][Debug]', tuple, this._refs)
+    const refs_id = this._refs.findIndex(e => e._id === tuple[1])
+    if (refs_id) {
+      console.log('[Scan-inspector][Debug]', refs_id)
+      this._refs[refs_id] = tuple[0]
+    } else {
+      this._refs.push(tuple[0])
+    }
+    this.entry = tuple[0]
+    console.log('[Scan-inspector][Debug]', this._refs)
+
+  }
 
 }

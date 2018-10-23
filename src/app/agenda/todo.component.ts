@@ -13,7 +13,7 @@ import { BibliographicResourceService } from '../typescript-angular-client/api/b
 export class TodoComponent implements OnChanges {
   @Input() todo: TypedResourceView = null;
   @Input() container: TypedResourceView = null;
-  @Input() showAsContainer = false;
+  @Input() isContainer = false;
   @Output() scan: EventEmitter<[models.ResourceEmbodiment, models.Scan]> = new EventEmitter();
   @Output() refs: EventEmitter<Array<models.BibliographicEntry>> = new EventEmitter();
   // empty list indicates no scans
@@ -43,7 +43,9 @@ export class TodoComponent implements OnChanges {
   }
 
   fullyValidateResource() {
-    if (confirm(`You are about to mark the resource '${this.todo.title}' as done.  The resource will not appear on the agenda again and all of its unlinked reference entries will be marked as obsolete. Okay?`)) {
+    if (confirm(`You are about to mark the resource '${this.todo}' as done. `
+      + 'The resource will not appear on the agenda again and all of its '
+      + 'unlinked reference entries will be marked as obsolete. Okay?')) {
       this.brService.setValid(this.todo._id).subscribe(
         (success) => location.reload(),
         (error) => alert('An error occurred: ' + error.message)

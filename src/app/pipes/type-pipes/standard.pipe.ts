@@ -1,4 +1,3 @@
-import * as moment from 'moment';
 import { Pipe, PipeTransform } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { models, enums, composeName, TypedResourceView} from '../../locdb';
@@ -22,7 +21,7 @@ export class StandardPipe implements PipeTransform {
     typedResource: TypedResourceView,
     forced_type: enums.resourceType = null,
     seperator: string = ', ',
-    standalone: boolean = false,
+    standalone: boolean = true,
   ): string {
     if (!typedResource) { return '(no resource)'; }
     /* Suffix for contributors, use colon (:) in standalone variants, else a comma (,) */
@@ -34,7 +33,7 @@ export class StandardPipe implements PipeTransform {
     const datePepe = new DatePipe('en'); // locale
     let standardString = '';
     let trv = typedResource;
-    if (forced_type != null) {
+    if (forced_type !== null) {
       // Change the view on the resource to the forced type
       trv = trv.astype(forced_type);
     }
@@ -92,7 +91,7 @@ export class StandardPipe implements PipeTransform {
     for (const attr of [title, subtitle]) {
       if (attr && attr.trim()) {
         if (standalone) {
-          otherAttributes.push('<b>' + attr + '</b>');
+          otherAttributes.push('<strong>' + attr + '</strong>');
         } else {
           otherAttributes.push(attr);
         }
@@ -107,17 +106,6 @@ export class StandardPipe implements PipeTransform {
     }
     // console.log('Standard pipe result before joining:', s);
     s += otherAttributes.join(seperator);
-
-
-    // TODO FIXME this caused some trouble! :)
-    // if(standardString.length >= seperator.length+1){
-    //   standardString = standardString.slice(0, -(seperator.length+1))
-    // }
-
-    // we do this in the template so that we can also display only the container
-    // if(standardString.length > 1){
-    //   standardString = "<em>In:&nbsp;</em>"  + standardString
-    // }
     return s;
 
 

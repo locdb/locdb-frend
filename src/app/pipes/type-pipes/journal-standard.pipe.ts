@@ -1,4 +1,3 @@
-import * as moment from 'moment';
 import { Pipe, PipeTransform } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { models, enums, composeName, TypedResourceView } from '../../locdb';
@@ -21,7 +20,7 @@ export class JournalStandardPipe implements PipeTransform {
   transform(
     typedResource: TypedResourceView,
     seperator: string = ', ',
-    standalone: boolean = false,
+    standalone: boolean = true,
   ): string {
     console.log('resource', typedResource)
     const identifierPepe = new IdentifierPipe()
@@ -34,7 +33,7 @@ export class JournalStandardPipe implements PipeTransform {
     let journalTitle = typedResource.getTypedProperty(enums.resourceType.journal, 'title')
     if (standalone) {
       // duplicate with below?
-      journalTitle = '<b>' + journalTitle + '</b>';
+      journalTitle = '<strong>' + journalTitle + '</strong>';
     }
     const issueTitle = typedResource.getTypedProperty(enums.resourceType.journalIssue, 'title')
     const volumeTitle = typedResource.getTypedProperty(enums.resourceType.journalVolume, 'title')
@@ -46,8 +45,14 @@ export class JournalStandardPipe implements PipeTransform {
     const contributors = typedResource.getTypedProperty(enums.resourceType.journal, 'contributors')
     // const authors = authorsPepe.transform(contributors, '; ', contrib_suffix)
     // const editors = editorsPepe.transform(contributors, '; ', contrib_suffix)
-    const issueNumber =  'issue ' + typedResource.getTypedProperty(enums.resourceType.journalIssue, 'number')
-    const volumeNumber =  'volume ' + typedResource.getTypedProperty(enums.resourceType.journalVolume, 'number')
+    let issueNumber =  typedResource.getTypedProperty(enums.resourceType.journalIssue, 'number')
+    if (issueNumber) {
+      issueNumber = 'issue ' + issueNumber;
+    }
+    let volumeNumber = typedResource.getTypedProperty(enums.resourceType.journalVolume, 'number')
+    if (volumeNumber) {
+      volumeNumber = 'vol. ' + volumeNumber;
+    }
     const publisher = publisherPepe.transform(typedResource.contributors) || publisherPepe.transform(contributors)
     // const identifiers =  typedResource.getTypedProperty(forced_type, 'identifiers')
     return this.prettyStandardString(
@@ -92,10 +97,10 @@ export class JournalStandardPipe implements PipeTransform {
     if (standalone) {
       // If shown as standalone, make titles bold font
       if (journalTitle && journalTitle.trim()) {
-        otherAttributes.push('<b>' + journalTitle + '</b>')
+        otherAttributes.push('<strong>' + journalTitle + '</strong>')
       }
       if (issueTitle && issueTitle.trim()) {
-        otherAttributes.push('<b>' + issueTitle + '</b>')
+        otherAttributes.push('<strong>' + issueTitle + '</strong>')
       }
     } else {
       // if shown as container, leave Titles as is

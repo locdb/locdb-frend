@@ -8,30 +8,33 @@ import {
 import { LocdbService } from '../locdb.service';
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 
-import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe, ContainerPipe} from '../pipes';
+import { AuthorsPipe, EditorsPipe, PublisherPipe, EmbracePipe, PrefixPipe } from '../pipes';
 
+import { StandardPipe, ContainerPipe } from '../pipes';
 
 const DOI_PREFIX = 'https://doi.org/'
 
 
 @Component({
   selector: 'app-metadata',
-  templateUrl: './author-year-format.html',
+  templateUrl: './metadata.component.html',
   styleUrls: ['./metadata.component.css']
 })
 export class MetadataComponent implements OnInit, OnChanges {
   // if this is a string, we can try to dereference it from the back-end
-  @Input() of: Metadata = null; // child resource
+  @Input() of: TypedResourceView = null; // child resource
   /* in Must be typed resource view to automagically find the correct metadata */
   @Input() in: TypedResourceView | null = null; // parent resource
 
-  ngOnInit()  {
+  // make resource type available
+  resourceType = enums.resourceType;
 
+
+  ngOnInit()  {
 
   }
 
   ngOnChanges() {
-    // this.in = findContainerMetadata(this.in);
   }
 
   open_link(link: string) {
@@ -45,15 +48,12 @@ export class MetadataComponent implements OnInit, OnChanges {
   }
 
   /* Transforms a DOI into a clickable URL
-   * 10.1111j.1468-4446.2010.01345.x.pdf
+   * 10.1111j.1468-4446.2010.01345.x
    * to
    * https://doi.org/10.1111/j.1468-4446.2010.01345.x
    *
-   * FIXME this WILL go wrong, if the doi has any other format
    */
   doi2url(doi: string): string {
-    // UNSAFE
-    // return DOI_PREFIX + doi.slice(0, 7) + '/' + doi.slice(7);
     if (doi.startsWith('http')) {
       return doi;
     } else if (doi.startsWith('doi.org')) {
@@ -61,6 +61,25 @@ export class MetadataComponent implements OnInit, OnChanges {
     } else {
       return 'https://doi.org/' + doi;
     }
+  }
+
+  getPageString(resource: TypedResourceView): string {
+    if (!resource.embodiedAs || !resource.embodiedAs.length) { return ''; }
+    const firstPage = resource.embodiedAs[0].firstPage;
+    const lastPage = resource.embodiedAs[0].lastPage;
+
+    if (!!firstPage) {
+      if (!lastPage || firstPage === lastPage) {
+        // last page not given or same as first page
+        return `p. ${firstPage}`;
+      } else {
+        // two pages are given and different
+        return `pp. ${firstPage}-${lastPage}`;
+      }
+    }
+
+    // First page was not given, only Last Page might be given, but ignore.
+    return '';
   }
 
 }

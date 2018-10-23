@@ -55,7 +55,10 @@
 
           <app-display [img_src]="scanUrl" [entries]="refs" [selectedEntry]="entry"
            (entry)="selectEntry($event)"
-           (imglength)="setHeight()" #display></app-display>
+           (imglength)="setHeight()"
+           (deleteEntry)="deleteEntry($event)"
+           (updateEntry)="updateEntry($event)"
+           #display></app-display>
         </div>
         <div [hidden]="!scanIsVisible" *ngIf="!scanIsDisplayable">
           <p><em> Displaying raw, unprocessed PDF.</em></p>
@@ -84,10 +87,18 @@
               <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Save Bounding Boxes
             </button>
           </div>
-          <div class="col-6">
-            <button type="button" class="btn btn-secondary float-right" (click)="newEntry()">
-              <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Add Entry
+          <div class="col-6 text-right">
+            <div class="btn-group">
+            <button type="button" [ngClass]="getMode() === 'select' ? 'btn btn-secondary active' : 'btn btn-secondary'" (click)="setMode('select')">
+              <span aria-hidden="true"></span> Select
             </button>
+            <button type="button" [ngClass]="getMode() === 'add' ? 'btn btn-secondary active' : 'btn btn-secondary'"  (click)="setMode('add')">
+              <span aria-hidden="true"></span> Add
+            </button>
+            <button type="button" [ngClass]="getMode() === 'delete' ? 'btn btn-secondary active' : 'btn btn-secondary'"  (click)="setMode('delete')">
+              <span aria-hidden="true"></span> Delete
+            </button>
+            </div>
           </div>
         </div>
       </div> <!-- End of footer -->

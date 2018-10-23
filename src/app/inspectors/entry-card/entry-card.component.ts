@@ -17,7 +17,7 @@ export class EntryCardComponent implements OnChanges {
     @Input() entry: models.BibliographicEntry;
     @Input() active: false;
     entryForm: FormGroup;
-    submitted = false;
+    submitted = true;
     disabled = true;
     open = false;
     @Output() state: EventEmitter<models.BibliographicEntry> = new EventEmitter()
@@ -54,10 +54,9 @@ export class EntryCardComponent implements OnChanges {
       }
       this.entryForm.reset({
         bibliographicEntryText: this.entry.bibliographicEntryText,
-        references: this.entry.references,
+        references: undefined,
         title: this.entry.ocrData.title,
         date: this.entry.ocrData.date,
-        // not reflected yet TODO FIXME
         marker: this.entry.ocrData.marker,
         comments: this.entry.ocrData.comments,
         journal: this.entry.ocrData.journal,
@@ -65,7 +64,6 @@ export class EntryCardComponent implements OnChanges {
       });
       this.setAuthors(this.entry.ocrData.authors);
       this.setIdentifiers(this.entry.identifiers);
-      this.open = false;
     }
 
     setAuthors(authors: string[]) {
@@ -126,13 +124,13 @@ export class EntryCardComponent implements OnChanges {
 
       if (entry._id) {
         this.locdbService.updateBibliographicEntry(entry).subscribe(
-          (result) => { this.entry = result; this.toggleOpen(); this.ngOnChanges()},
-          (error) => console.log('Error updating entry', error)
+          (result) => { this.entry = result; this.submitted = true; this.ngOnChanges(); },
+          (error) => alert('Error updating entry: ' + error.message)
         );
       } else {
         this.locdbService.createBibliographicEntry(this.resource._id, entry).subscribe(
-          (result) => { this.entry = result; this.toggleOpen(); this.ngOnChanges()},
-          (error) => console.log('Error creating entry', error)
+          (result) => { this.entry = result; this.submitted = true; this.ngOnChanges()},
+          (error) => alert('Error creating entry: ' + error.message)
         )
 
       }
@@ -161,7 +159,6 @@ export class EntryCardComponent implements OnChanges {
       const saveEntry: models.BibliographicEntry = {
         _id: this.entry._id,
         bibliographicEntryText: formModel.bibliographicEntryText as string || '',
-        references: formModel.references as string || '',
         identifiers: identsDeepCopy || [],
         ocrData: {
           title: formModel.title as string || '',
@@ -242,14 +239,14 @@ export class EntryCardComponent implements OnChanges {
       }
     }
 
-        toggleOpen(){
-          this.open = !this.open
-        }
+  toggleOpen() {
+    this.open = !this.open;
+  }
 
-      edit(){
-        this.openEdit.emit({ resource: this.resource._id, entry: this.entry._id })
-        // this.router.navigate(['/edit/'],{ queryParams: { resource: this.resource._id, entry: this.entry._id } });
+  edit() {
+    this.openEdit.emit({ resource: this.resource._id, entry: this.entry._id })
+    // this.router.navigate(['/edit/'],{ queryParams: { resource: this.resource._id, entry: this.entry._id } });
 
-      }
+  }
 
   }
