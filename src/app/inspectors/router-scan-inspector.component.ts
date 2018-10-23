@@ -113,6 +113,7 @@ export class RouterScanInspectorComponent implements OnInit {
       filtered_entries = entries.filter(e => e.status !== 'OBSOLETE')
 
       for (const attribute of this.filter_attributes) {
+        // console.log('[Debug][scan-inspector]', attribute, this.selection[attribute])
           filtered_entries = filtered_entries.filter(this.search_filter(attribute,
             this.selection[attribute]))
       }
@@ -310,6 +311,16 @@ export class RouterScanInspectorComponent implements OnInit {
     this._refs.splice(refs_id, 1)
     console.log('[scan-inspector][Warning] Entry just deleted in frontend,' +
                 ' backend connection missing at the Moment:')
+  }
+
+  updateEntry(tuple: [models.BibliographicEntry, string]){
+    // console.log('[Scan-inspector][Debug]', tuple, this._refs)
+    const refs_id = this._refs.findIndex(e => e._id === tuple[1])
+    // console.log('[Scan-inspector][Debug]', refs_id)
+    this._refs[refs_id] = tuple[0]
+    this.entry = tuple[0]
+    // console.log('[Scan-inspector][Debug]', this._refs)
+
   }
 
 }

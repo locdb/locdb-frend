@@ -56,7 +56,9 @@
           <app-display [img_src]="scanUrl" [entries]="refs" [selectedEntry]="entry"
            (entry)="selectEntry($event)"
            (imglength)="setHeight()"
-           (deleteEntry)="deleteEntry($event)" #display></app-display>
+           (deleteEntry)="deleteEntry($event)"
+           (updateEntry)="updateEntry($event)"
+           #display></app-display>
         </div>
         <div [hidden]="!scanIsVisible" *ngIf="!scanIsDisplayable">
           <p><em> Displaying raw, unprocessed PDF.</em></p>

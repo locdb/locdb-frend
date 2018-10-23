@@ -73,6 +73,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     @Output() imglength: EventEmitter<Number> = new EventEmitter();
     @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
     @Output() deleteEntry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
+    @Output() updateEntry: EventEmitter<[models.BibliographicEntry, string]> =
+              new EventEmitter();
 
     @ViewChild('svgroot') svgroot: ElementRef;
 
@@ -207,7 +209,9 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           console.log('[Display][Debug] Uploading coordinates:', coords)
           const entry_id = this.rects[id].entry._id || undefined;
           this.scanService.correctReferencePosition(scan_id, coords, entry_id).subscribe(
-            (newEntry) => this.rects[id].entry = newEntry,
+            (newEntry) => {this.rects[id].entry = newEntry,
+                            console.log(newEntry),
+                          this.updateEntry.emit([newEntry, entry_id])},
             (error) => alert('Error while uploading new coordinates: ' + error.message)
           );
         }
