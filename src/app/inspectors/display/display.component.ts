@@ -33,7 +33,6 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     // @Input() todo: ToDoScans;
-
     @Input() img_src = '';
     private _entries = []
     @Input() set entries(entries: models.BibliographicEntry[]){
@@ -73,6 +72,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     @Output() imglength: EventEmitter<Number> = new EventEmitter();
     @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
+    @Output() deleteEntry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
 
     @ViewChild('svgroot') svgroot: ElementRef;
 
@@ -190,7 +190,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     saveBoxes() {
       // console.log(this.entries[0].scanId)
-      console.log('Saving coordinates')
+      console.log('[Display][Debug] Saving coordinates')
       for (const rect of this.zoomSVG.nativeElement.querySelectorAll('rect')) {
         const id = rect.getAttribute('id')
         const x = Math.round(rect.getAttribute('x'))
@@ -199,11 +199,11 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         const h = Math.round(rect.getAttribute('height'))
         const pristine = this.rects[id].isPristine(x, y, w, h)
         if (!pristine) {
-          console.log('Detected a change', this.rects[id].toString());
+          console.log('[Display][Debug] Detected a change', this.rects[id].toString());
           this.rects[id].saveCoordinates(x, y, w, h);
           const scan_id = this.rects[id].entry.scanId;
           const coords = this.rects[id].toString();
-          console.log('Uploading coordinates:', coords)
+          console.log('[Display][Debug] Uploading coordinates:', coords)
           const entry_id = this.rects[id].entry._id || undefined;
           this.scanService.correctReferencePosition(scan_id, coords, entry_id).subscribe(
             (newEntry) => this.rects[id].entry = newEntry,
@@ -217,6 +217,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     reload_rects() {
+      console.log('[Display][Debug] reload rects')
       // Input todo and this method should replace manual calling of updateDisplay
       if (this.entries && this.entries.length) {
           // extract rectanlges and so on
@@ -229,7 +230,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
-        console.log('Image source:', this.img_src)
+        console.log('[Display][Debug] Image source:', this.img_src)
         this._hotkeysService.add(new Hotkey('j', (event: KeyboardEvent): boolean => {
             let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
             if (current === -1 || current >= this.rects.length - 1) { return false }; // not in array or at bounds
@@ -247,12 +248,12 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     onSelect(rect: Rect) {
-        console.log('[display] onselect called', this.editMode);
+        console.log('[Display][Debug] onselect called', this.editMode);
         if(this.editMode == 'add'){
-          console.log('onSelect in add Mode')
+          console.log('[Display][Debug] onSelect in add Mode')
         }
         else if(this.editMode == 'delete'){
-          console.log('onSelect in delete Mode')
+          console.log('[Display][Debug] onSelect in delete Mode')
         }
         else {
           if(rect.entry._id){
@@ -335,12 +336,15 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     deleteRectAndEntry(id: number, x: number, y: number, width: number, height: number){
       const rectToDelete = this.rects[id]
       if(confirm(`Delete entry ${rectToDelete.entry.bibliographicEntryText}?`)){
-        console.log('delete: ', this.rects[id])
+        console.log('[Display][Debug] delete: ', this.rects[id])
         // prestine check may be to harsh,
         // const prestine = rectToDelete.isPristine(x, y, width, height)
         // console.log('right element?', prestine)
-        console.log('Deleted rect', this.rects.splice(id, 1))
-        console.log('Deleted entry', this.entries.splice(id, 1))
+        console.log('[Display][Debug] Deleted rect', this.rects.splice(id, 1))
+        // console.log('[Display][Debug] Deleted entry', this.entries.splice(id, 1))
+        console.log('[Display][Debug] Deleted entry', this.entries[id])
+        this.deleteEntry.emit(this.entries[id])
+
       }
 
     }

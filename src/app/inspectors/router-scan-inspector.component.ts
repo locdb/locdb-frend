@@ -22,7 +22,7 @@ export class RouterScanInspectorComponent implements OnInit {
   // to the logic in the child component
   @ViewChild('display') display;
   // get rid of condition changed while checking error
-  // still there... 
+  // still there...
   initialized = false;
   title = 'Scan Inspector';
   // if sorry_text is set it is shows instead of the app display in the card body
@@ -285,6 +285,7 @@ export class RouterScanInspectorComponent implements OnInit {
       this.display.saveBoxes();
     }
   }
+  // Zooming methods END
 
   setMode(mode: string) {
     if (this.scanIsDisplayable) {
@@ -297,6 +298,14 @@ export class RouterScanInspectorComponent implements OnInit {
       return this.display.editMode
     }
   }
-  // Zooming methods END
+
+  deleteEntry(entry: models.BibliographicEntry){
+    console.log('[scan-inspector][Debug] entry to delete: ', entry)
+    const refs_id = this._refs.findIndex(e => e._id === entry._id)
+    console.log('[scan-inspector][Debug] ID of entry to delete:', refs_id)
+    this._refs.splice(refs_id, 1)
+    console.log('[scan-inspector][Warning] Entry just deleted in frontend,' +
+                ' backend connection missing at the Moment:')
+  }
 
 }
