@@ -78,7 +78,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private scanService: ScanService,
-    private locdbService: LocdbService, private _hotkeysService: HotkeysService) {
+    private locdbService: LocdbService,
+    private _hotkeysService: HotkeysService) {
     }
 
     // TODO: https://github.com/interactjs/website/blob/master/source/javascripts/star.js
@@ -245,6 +246,10 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             this.onSelect(this.rects[current]);
             return false;
         }, [], 'one rectangle downward'));
+        this._hotkeysService.add(new Hotkey('DEL', (event: KeyboardEvent): boolean => {
+          this.deleteRectAndEntry(this.selectedEntry)
+          return false;
+        }, [], 'Delete selected entry'));
     }
 
     onSelect(rect: Rect) {
@@ -299,8 +304,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
       else if (element.nodeName === 'rect' && this.editMode == 'delete'){
         // console.log(element)
         const id = element.id
-        this.deleteRectAndEntry(id, element.x.baseVal.value, element.y.baseVal.value,
-          element.width.baseVal.value, element.height.baseVal.value)
+        this.deleteRectAndEntry(this.entries[id])
         }
     }
 
@@ -336,19 +340,16 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
       // this.entries.push(entry)
     }
 
-    // TODO: make sure entries are deleted in backend too
-    deleteRectAndEntry(id: number, x: number, y: number, width: number, height: number){
-      const rectToDelete = this.rects[id]
-      if(confirm(`Delete entry ${rectToDelete.entry.bibliographicEntryText}?`)){
-        console.log('[Display][Debug] delete: ', this.rects[id])
-        // prestine check may be to harsh,
-        // const prestine = rectToDelete.isPristine(x, y, width, height)
-        // console.log('right element?', prestine)
-        console.log('[Display][Debug] Deleted rect', this.rects.splice(id, 1))
+    deleteRectAndEntry(entry: models.BibliographicEntry){
+      // const rectToDelete = this.rects[id]
+      if(confirm(`Delete entry ${entry.bibliographicEntryText}?`)){
+        // console.log('[Display][Debug] delete: ', this.rects[id])
+
+        // console.log('[Display][Debug] Deleted rect', this.rects.splice(id, 1))
         // console.log('[Display][Debug] Deleted entry', this.entries.splice(id, 1))
-        console.log('[Display][Debug] Deleted entry', this.entries[id])
-        if(this.entries[id]){
-          this.deleteEntry.emit(this.entries[id])
+        // console.log('[Display][Debug] Deleted entry', this.entries[id])
+        if(entry){
+          this.deleteEntry.emit(entry)
       }
 
       }
