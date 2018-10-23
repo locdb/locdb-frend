@@ -301,6 +301,10 @@ export class RouterScanInspectorComponent implements OnInit {
 
   deleteEntry(entry: models.BibliographicEntry){
     console.log('[scan-inspector][Debug] entry to delete: ', entry)
+    this.locdbService.deleteBibliographicEntry(entry).subscribe(
+      (ret) => console.log('[scan-inspector][Debug] called delete Entry. Response: ', ret),
+      (error) => alert('[scan-inspector][Error] Error while deleting Entry: ' + error.message)
+    );
     const refs_id = this._refs.findIndex(e => e._id === entry._id)
     console.log('[scan-inspector][Debug] ID of entry to delete:', refs_id)
     this._refs.splice(refs_id, 1)

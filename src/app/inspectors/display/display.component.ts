@@ -257,9 +257,13 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         }
         else {
           if(rect.entry._id){
+            console.log('[Display][Debug] Selected Entry id: ', rect.entry._id)
             this.selectedEntry = rect.entry;
             this.entry.next(rect.entry);
         }
+          else{
+            console.log('[Display][Debug] Selected Entry has no ID.')
+          }
         }
     }
 
@@ -343,7 +347,9 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         console.log('[Display][Debug] Deleted rect', this.rects.splice(id, 1))
         // console.log('[Display][Debug] Deleted entry', this.entries.splice(id, 1))
         console.log('[Display][Debug] Deleted entry', this.entries[id])
-        this.deleteEntry.emit(this.entries[id])
+        if(this.entries[id]){
+          this.deleteEntry.emit(this.entries[id])
+      }
 
       }
 
