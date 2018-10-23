@@ -23,6 +23,26 @@
     </div>
 
   </div>
+  <div class="form-group row">
+
+    <label for="resourcenumber" class="col-sm-2 col-form-label">Number</label>
+    <div class="col-sm-10">
+
+      <input id="resourcenumber" class="form-control" formControlName="resourcenumber">
+
+    </div>
+
+  </div>
+  <div class="form-group row">
+
+    <label for="publicationyear" class="col-sm-2 col-form-label">Pub. year</label>
+    <div class="col-sm-10">
+
+      <input type="date" id="publicationyear" class="form-control" formControlName="publicationyear">
+
+    </div>
+
+  </div>
   <!--   contribs   -->
   <label for="contributors">Contributors</label>
   <div id="contributors" formArrayName="contributors" class="mb-2">
@@ -74,20 +94,16 @@
   </div>
   <div class="form-group row">
 
-    <label for="publicationyear" class="col-sm-2 col-form-label">Pub. year</label>
-    <div class="col-sm-10">
+    <label for="firstPage" class="col-sm-2 col-form-label">Pages from</label>
+    <div class="col-sm-4">
 
-      <input type="date" id="publicationyear" class="form-control" formControlName="publicationyear">
+      <input type="number" id="firstPage" class="form-control" formControlName="firstPage">
 
     </div>
+    <label for="lastPage" class="col-sm-2 col-form-label">to</label>
+    <div class="col-sm-4">
 
-  </div>
-  <div class="form-group row">
-
-    <label for="resourcenumber" class="col-sm-2 col-form-label">Number</label>
-    <div class="col-sm-10">
-
-      <input id="resourcenumber" class="form-control" formControlName="resourcenumber">
+      <input type="number" id="lastPage" class="form-control" formControlName="lastPage">
 
     </div>
 
@@ -112,10 +128,10 @@
   </div>
   <div>
     <button type="button" class="btn btn-secondary btn-sm" aria-label="Add Identifier" (click)="addIdentifier()">
-      Add identifier
+      Add Identifier
     </button>
     <button type="button" class="btn btn-secondary btn-sm pull-right" aria-label="Toggle Migrating" (click)="toggleMigrating()">
-      {{ !migrating ? 'Migrate identifiers' : 'Cancel' }}
+      {{ !migrating ? 'Migrate Identifiers' : 'Cancel' }}
     </button>
   </div>
   <div *ngIf="migrating" class="form-group row" style="margin: 1rem;">
@@ -131,9 +147,7 @@
            [placeholder]="placeholderMigration">
   </div>
 
-  <div *ngIf="questions.length" formGroupName="foreignProperties" class="mb-2">
-    <hr/>
-    <h5> Container-specific properties </h5>
+  <div *ngIf="questions.length" formGroupName="foreignProperties" class="mb-2 mt-2">
     <div *ngFor="let question of questions">
       <app-question [question]="question" [form]="foreignProperties"></app-question>
     </div>
@@ -152,8 +166,8 @@
       </div>
       <span *ngIf="submitting" class="loader"></span>
       <div class="col-xs-6 text-right">
-        <button type="submit" class="btn btn-primary" [disabled]="submitting || !resourceForm.valid || (!!resource._id && resourceForm.pristine)">
-          <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {{ resource._id ? 'Submit' : 'Migrate' }}
+        <button type="submit" class="btn btn-primary" [disabled]="submitting || !resourceForm.valid ">
+          <span class="fa fa-save" aria-hidden="true"></span> {{ resource._id ? 'Submit' : 'Migrate' }}
         </button>
       </div>
     </div>

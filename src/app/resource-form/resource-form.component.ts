@@ -6,6 +6,7 @@ import {
    composeName,
    decomposeName,
    containerTypes,
+   isValidDate
 } from '../locdb';
 import { LocdbService } from '../locdb.service';
 import { Component, OnInit, Input, Output, OnChanges, EventEmitter} from '@angular/core';
@@ -138,6 +139,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          edition: '',
          resourcenumber: '',
          publicationyear: '',  // is this default ok?
+         firstPage: 0,
+         lastPage: 0,
          contributors: this.fb.array([]),
          identifiers: this.fb.array([]),
          // this holds all foreign properties (flattened)
@@ -209,19 +212,16 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    }
 
    get contributors(): FormArray {
-      console.log('[BRF] contribs getter called');
       return this.resourceForm.get('contributors') as FormArray;
    }
 
    set contributors(contributorArray: FormArray) {
       console.log('[BRF] contribs setter called');
-      // TODO FIXME dangerous?
       this.setContributors(contributorArray.value.map(
          e => this.reconstructAgentRole(e.name, e.role, e.identifiers)))
    }
 
    get foreignProperties(): FormGroup {
-      console.log('[BRF] fp getter called');
       return this.resourceForm.get('foreignProperties') as FormGroup;
    }
 
@@ -297,6 +297,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
    ngOnChanges()  {
       const resource = this.resource;
+      if (!resource) { return; }
       console.log('[BRF] ngOnChanges triggered', resource);
 
       this.submitted = false;
@@ -308,13 +309,23 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          stringDate = stringDate.slice(0, stringDate.indexOf('T'));
       }
 
+      let firstPage = 0;
+      let lastPage = 0;
+
+      if (resource.embodiedAs && resource.embodiedAs.length) {
+         firstPage = resource.embodiedAs[0].firstPage || 0;
+         lastPage = resource.embodiedAs[0].lastPage || 0;
+      }
+
       this.resourceForm.reset( {
          title: resource.title,
          subtitle: resource.subtitle,
          resourcetype: resource.type,
          edition: resource.edition,
          resourcenumber: resource.number,
-         publicationyear: stringDate
+         publicationyear: stringDate,
+         firstPage: firstPage,
+         lastPage: lastPage
       });
       // console.log("publicationyear: ",  this.resourceForm.value.publicationyear)
       // new clean set contribs
@@ -455,7 +466,31 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       resource.number = formModel.resourcenumber as string || '';
       resource.contributors = contribsDeepCopy;
       resource.publicationDate = new Date(formModel.publicationyear);
-      resource.embodiedAs = oldResource.embodiedAs;
+
+      if (oldResource.embodiedAs && oldResource.embodiedAs.length) {
+         const oldEmbodiment = oldResource.embodiedAs[0];
+         const newEmbodiment: models.ResourceEmbodiment = {
+            type: oldEmbodiment.type,
+            format: oldEmbodiment.format,
+            url: oldEmbodiment.url,
+            scans: oldEmbodiment.scans,
+            firstPage: formModel.firstPage as number || 0,
+            lastPage: formModel.lastPage as number || 0
+         }
+         // shallow copy most
+         resource.embodiedAs = oldResource.embodiedAs;
+         // overwrite first embodiment with deep copy
+         resource.embodiedAs[0] = newEmbodiment;
+      } else {
+         // embodiedAs empty or not present
+         const newEmbodiment: models.ResourceEmbodiment = {
+            firstPage: formModel.firstPage as number || 0,
+            lastPage: formModel.lastPage as number || 0
+         }
+         resource.embodiedAs = [newEmbodiment];
+      }
+
+
       // warning: retain internal identifiers (dont show primary keys to the user)
       // not editable, but copied values
 
