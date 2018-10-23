@@ -50,13 +50,11 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     _selectedEntry: models.BibliographicEntry = null;
-    get selectedEntry(){
-      if(this._selectedEntry)
-      return this._selectedEntry
+    get selectedEntry() {
+      return this._selectedEntry;
     }
-    @Input() set selectedEntry(val: models.BibliographicEntry){
-      if(val)
-      this._selectedEntry = val
+    @Input() set selectedEntry(val: models.BibliographicEntry) {
+      this._selectedEntry = val;
     }
 
     title = 'Scan Display';
@@ -207,11 +205,11 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           const scan_id = this.rects[id].entry.scanId;
           const coords = this.rects[id].toString();
           console.log('[Display][Debug] Uploading coordinates:', coords)
-          const entry_id = this.rects[id].entry._id || undefined;
+          const entry_id = this.rects[id].entry._id || '';
           this.scanService.correctReferencePosition(scan_id, coords, entry_id).subscribe(
             (newEntry) => {this.rects[id].entry = newEntry,
                             console.log('[Display][Debug] recieved entry: ', newEntry),
-                          this.updateEntry.emit([newEntry, entry_id])},
+                          this.updateEntry.emit([newEntry, ''])},
             (error) => alert('Error while uploading new coordinates: ' + error.message)
           );
         }
@@ -351,15 +349,15 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     deleteRectAndEntry(entry: models.BibliographicEntry){
       // const rectToDelete = this.rects[id]
-      if(confirm(`Delete entry ${entry.bibliographicEntryText}?`)){
+      if (confirm(`Delete entry ${entry.bibliographicEntryText}?`)) {
         // console.log('[Display][Debug] delete: ', this.rects[id])
 
         // console.log('[Display][Debug] Deleted rect', this.rects.splice(id, 1))
         // console.log('[Display][Debug] Deleted entry', this.entries.splice(id, 1))
         // console.log('[Display][Debug] Deleted entry', this.entries[id])
-        if(entry){
+        if (entry) {
           this.deleteEntry.emit(entry)
-      }
+        }
 
       }
 

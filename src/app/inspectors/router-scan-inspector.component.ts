@@ -315,16 +315,37 @@ export class RouterScanInspectorComponent implements OnInit {
   }
 
   updateEntry(tuple: [models.BibliographicEntry, string]) {
+    const [newEntry, oldId] = tuple;
     console.log('[Scan-inspector][Debug]', tuple, this._refs)
-    const refs_id = this._refs.findIndex(e => e._id === tuple[1])
-    if (refs_id) {
-      console.log('[Scan-inspector][Debug]', refs_id)
-      this._refs[refs_id] = tuple[0]
+
+    if (!oldId) {
+      // OldId is '' or null, we create a **new** entry
+      this._refs.push(newEntry);
     } else {
-      this._refs.push(tuple[0])
+      const idx = this._refs.findIndex(e => e._id === oldId);
+      if (idx >= 0) {
+        this._refs[idx] = newEntry;
+      } else {
+        // old id for some reason not found
+        // Just add it no matter what
+        this._refs.push(newEntry);
+      }
+
     }
-    this.entry = tuple[0]
-    console.log('[Scan-inspector][Debug]', this._refs)
+    // do we need this? there can be updates from 10 different rects
+    // It *is* convenient, when only one entry is adapted.
+    // Thus leave it in
+    this.entry = newEntry;
+
+
+    // const refs_id = this._refs.findIndex(e => e._id === tuple[1])
+    // if (refs_id) {
+    //   console.log('[Scan-inspector][Debug]', refs_id)
+    //   this._refs[refs_id] = tuple[0]
+    // } else {
+    //   this._refs.push(tuple[0])
+    // }
+    // console.log('[Scan-inspector][Debug]', this._refs)
 
   }
 
