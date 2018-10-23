@@ -246,7 +246,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             this.onSelect(this.rects[current]);
             return false;
         }, [], 'one rectangle downward'));
-        this._hotkeysService.add(new Hotkey('DEL', (event: KeyboardEvent): boolean => {
+        this._hotkeysService.add(new Hotkey('del', (event: KeyboardEvent): boolean => {
+          console.log('[Display][Debug] delete pressed.')
           this.deleteRectAndEntry(this.selectedEntry)
           return false;
         }, [], 'Delete selected entry'));
