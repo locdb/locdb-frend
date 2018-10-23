@@ -147,9 +147,7 @@
            [placeholder]="placeholderMigration">
   </div>
 
-  <div *ngIf="questions.length" formGroupName="foreignProperties" class="mb-2">
-    <hr/>
-    <h5> Container-specific properties </h5>
+  <div *ngIf="questions.length" formGroupName="foreignProperties" class="mb-2 mt-2">
     <div *ngFor="let question of questions">
       <app-question [question]="question" [form]="foreignProperties"></app-question>
     </div>
