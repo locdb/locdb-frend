@@ -314,16 +314,16 @@ export class RouterScanInspectorComponent implements OnInit {
   }
 
   updateEntry(tuple: [models.BibliographicEntry, string]){
-    console.log('[Scan-inspector][Debug]', tuple, this._refs)
+    // console.log('[Scan-inspector][Debug]', tuple, this._refs)
     const refs_id = this._refs.findIndex(e => e._id === tuple[1])
     if(refs_id){
-      console.log('[Scan-inspector][Debug]', refs_id)
+      // console.log('[Scan-inspector][Debug]', refs_id)
       this._refs[refs_id] = tuple[0]
     } else {
       this._refs.push(tuple[0])
     }
     this.entry = tuple[0]
-    console.log('[Scan-inspector][Debug]', this._refs)
+    // console.log('[Scan-inspector][Debug]', this._refs)
 
   }
 
