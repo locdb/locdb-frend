@@ -162,7 +162,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
     initSVGZoom() {
-        console.log('[Display] init Zoom')
+        // console.log('[Display] init Zoom')
         let zoom = d3.zoom().on("zoom", function () {
           svgContainer.attr("transform", d3.event.transform)
         })
@@ -191,7 +191,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     saveBoxes() {
       // console.log(this.entries[0].scanId)
-      console.log('[Display][Debug] Saving coordinates')
+      console.log('[Display][info] Saving coordinates')
       for (const rect of this.zoomSVG.nativeElement.querySelectorAll('rect')) {
         const id = rect.getAttribute('id')
         const x = Math.round(rect.getAttribute('x'))
@@ -200,17 +200,17 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         const h = Math.round(rect.getAttribute('height'))
         const pristine = this.rects[id].isPristine(x, y, w, h)
         if (!pristine) {
-          console.log('[Display][Debug] Detected a change', this.rects[id].toString());
+          // console.log('[Display][Debug] Detected a change', this.rects[id].toString());
           this.rects[id].saveCoordinates(x, y, w, h);
           const scan_id = this.rects[id].entry.scanId;
           const coords = this.rects[id].toString();
-          console.log('[Display][Debug] Uploading coordinates:', coords)
-          const entry_id = this.rects[id].entry._id || '';
+          // console.log('[Display][Debug] Uploading coordinates:', coords)
+          const entry_id = this.rects[id].entry._id || undefined;
           this.scanService.correctReferencePosition(scan_id, coords, entry_id).subscribe(
             (newEntry) => {this.rects[id].entry = newEntry,
-                            console.log('[Display][Debug] recieved entry: ', newEntry),
-                          this.updateEntry.emit([newEntry, ''])},
-            (error) => alert('Error while uploading new coordinates: ' + error.message)
+                            console.log('[Display][info] Correction successfull, recieved entry: ', newEntry),
+                          this.updateEntry.emit([newEntry, entry_id])},
+            (error) => alert('[Display][error] Error while uploading new coordinates: ' + error.message)
           );
         }
       }
@@ -220,7 +220,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     reload_rects() {
-      console.log('[Display][Debug] reload rects')
+      // console.log('[Display][Debug] Reloading rects ... ')
       // Input todo and this method should replace manual calling of updateDisplay
       if (this.entries && this.entries.length) {
           // extract rectanlges and so on
@@ -230,10 +230,13 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           ).map(this.rectFromEntry);
           const firstUnprocessed = this.rects.find(r => !r.entry.references);
       }
+      else{
+        this.rects = []
+      }
     }
 
     ngOnInit() {
-        console.log('[Display][Debug] Image source:', this.img_src)
+        // console.log('[Display][Debug] Image source:', this.img_src)
         this._hotkeysService.add(new Hotkey('j', (event: KeyboardEvent): boolean => {
             let current = this.rects.findIndex(r => r.entry === this.selectedEntry);
             if (current === -1 || current >= this.rects.length - 1) { return false }; // not in array or at bounds
@@ -260,16 +263,16 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     onSelect(rect: Rect) {
-        console.log('[Display][Debug] onselect called', this.editMode);
+        // console.log('[Display][Debug] onselect called', this.editMode);
         if(this.editMode == 'add'){
-          console.log('[Display][Debug] onSelect in add Mode')
+          // console.log('[Display][Debug] onSelect in add Mode')
         }
         else if(this.editMode == 'delete'){
-          console.log('[Display][Debug] onSelect in delete Mode')
+          // console.log('[Display][Debug] onSelect in delete Mode')
         }
         else {
           if(rect.entry._id){
-            console.log('[Display][Debug] Selected Entry id: ', rect.entry._id)
+            // console.log('[Display][Debug] Selected Entry id: ', rect.entry._id)
             this.selectedEntry = rect.entry;
             this.entry.next(rect.entry);
         }
