@@ -42,12 +42,20 @@
     </div>
   </div>
 
-  <div *ngIf="stats" class="card">
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h2 class="card-title">Stats</h2>
     <div class="card-body">
-      <h2 class="card-title">Stats</h2>
-      <div class="card-body">
-        {{ stats | json }}
+      <div *ngIf="!stats" class="loader">
       </div>
+      <ul *ngIf="!!stats">
+        <!-- Think of building a  " | keys " Pipe if not exists -->
+        <li *ngFor="let statItem of stats">
+          {{ statItem | json }}
+        </li>
+      </ul>
     </div>
   </div>
 </div>
