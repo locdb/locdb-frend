@@ -111,22 +111,26 @@ export class RouterScanInspectorComponent implements OnInit {
       let filtered_entries = entries.filter(e => e !== null && e !== undefined)
       /* allways drop status obsolete */
       filtered_entries = entries.filter(e => e.status !== 'OBSOLETE')
-
+      console.log('before filtering: ', filtered_entries)
       for (const attr of this.filter_attributes) {
         // console.log('[Debug][scan-inspector]', attribute, this.selection[attribute])
           filtered_entries = filtered_entries.filter(this.search_filter(attr,
             this.selection[attr]))
       }
+      console.log('after filtering: ', filtered_entries)
       return filtered_entries;
     }
   }
 
   search_filter(selection_type: string, selection_name: string) {
-    if (this.filter_options[selection_type] === undefined){
+    const filter_name = selection_name
+    const type = selection_type
+    if (this.filter_options[type] === undefined){
       return e => true
     }
-    return this.filter_options[selection_type]
-                    .find(e => e.name === selection_name)
+    return this.filter_options[type]
+                    .find(e => {console.log('filter_options: ', filter_name);
+                      return e.name === filter_name})
                     .filter
   }
   /* extract filter options and generate the necessary filterfunctions */
