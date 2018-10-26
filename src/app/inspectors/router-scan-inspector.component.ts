@@ -112,10 +112,10 @@ export class RouterScanInspectorComponent implements OnInit {
       /* allways drop status obsolete */
       filtered_entries = entries.filter(e => e.status !== 'OBSOLETE')
 
-      for (const attribute of this.filter_attributes) {
+      for (const attr of this.filter_attributes) {
         // console.log('[Debug][scan-inspector]', attribute, this.selection[attribute])
-          filtered_entries = filtered_entries.filter(this.search_filter(attribute,
-            this.selection[attribute]))
+          filtered_entries = filtered_entries.filter(this.search_filter(attr,
+            this.selection[attr]))
       }
       return filtered_entries;
     }
