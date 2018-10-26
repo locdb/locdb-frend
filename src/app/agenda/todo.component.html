@@ -1,18 +1,13 @@
-<div class="row">
-    <div class="col-md-8">
-        <app-metadata [of]="todo"></app-metadata>
-    </div>
-    <div class="col-md-4">
-        <div class="text-right">
-
-        <!-- <div class="btn-group" dropdown [isDisabled]="!embodiment_scans.length"> -->
+<div>
+    <app-metadata [of]="todo"></app-metadata>
+    <div class="text-right">
         <div class="btn-group" dropdown [style.visibility]="!embodiment_scans.length? 'hidden' : 'visible'">
             <button id="button-basic" dropdownToggle type="button" class="btn
-                btn-secondary btn-sm dropdown toggle">
+            btn-secondary btn-sm dropdown toggle">
                 <i class="fa fa-file"></i> Scans
             </button>
             <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
-                                                  role="menu" aria-labelledby="button-basic">
+                role="menu" aria-labelledby="button-basic">
                 <li *ngFor="let emsc of embodiment_scans; index as i" role="menuitem">
                     <a class="dropdown-item" (click)="inspectScan(emsc); false">
                         Page {{ this.unpackFirstPage(emsc) + i}}
@@ -21,35 +16,15 @@
                 </li>
             </ul>
         </div>&nbsp;
-        <!-- <button type="button" class="btn btn-secondary btn-sm" (click)="inspectReferences()" [disabled]="!todo.parts.length"> -->
         <button type="button" class="btn btn-secondary btn-sm" (click)="inspectReferences()" [style.visibility]="!todo.parts.length? 'hidden' : 'visible'">
             <i class="fa fa-list"></i> References
         </button>&nbsp;
         <button type="button" class="btn btn-secondary btn-sm" (click)="edit()">
             <i class="fa fa-edit"></i> Edit
         </button>&nbsp;
-        <button type="button" class="btn btn-success btn-sm" (click)="fullyValidateResource()">
-            Done
+        <button *ngIf="!isContainer" type="button" class="btn btn-success btn-sm" (click)="fullyValidateResource()">
+            <i class="fa fa-check"></i> Done
         </button>
 
-        </div> <!--close text right-->
-    </div>
+    </div> <!--close text right-->
 </div>
-
-
-  <!-- <ul class="list-group list-group-flush" *ngIf="todo.embodiedAs && todo.embodiedAs.length">
-    <div *ngFor="let embodiment of todo.embodiedAs">
-      <li *ngIf="embodiment.scans.length" class="list-group-item">
-        <app-embodiment [embodiment]="embodiment" (onSelect)="inspectScan($event)"></app-embodiment>
-      </li>
-    </div>
-  </ul> -->
-
-  <!--
-  <app-metadata [of]="this.todo"></app-metadata>
-  <button type="button" class="btn btn-primary" (click)="inspectReferences()"> Inspect References </button>
-  <ul class="list-group list-group-flush "*ngIf="todo.embodiedAs && todo.embodiedAs.length">
-  <li class="list-group-item" *ngFor="let embodiment of todo.embodiedAs">
-  <app-embodiment [embodiment]="embodiment" (onSelect)="inspectScan($event)"></app-embodiment>
-</li>
-</ul> -->

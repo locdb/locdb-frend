@@ -315,18 +315,27 @@ export class RouterScanInspectorComponent implements OnInit {
     this._refs.splice(refs_id, 1)
   }
 
-  updateEntry(tuple: [models.BibliographicEntry, string]){
-    // console.log('[Scan-inspector][Debug]', tuple, this._refs)
-    const refs_id = this._refs.findIndex(e => e._id === tuple[1])
-    if(refs_id){
-      // console.log('[Scan-inspector][Debug]', refs_id)
-      this._refs[refs_id] = tuple[0]
-    } else {
-      this._refs.push(tuple[0])
-    }
-    this.entry = tuple[0]
-    // console.log('[Scan-inspector][Debug]', this._refs)
+  updateEntry(tuple: [models.BibliographicEntry, string]) {
+    const [newEntry, oldId] = tuple;
+    console.log('[Scan-inspector][Debug]', tuple, this._refs)
 
+    if (!oldId) {
+      // OldId is '' or null, we create a **new** entry
+      this._refs.push(newEntry);
+    } else {
+      const idx = this._refs.findIndex(e => e._id === oldId);
+      if (idx >= 0) {
+        this._refs[idx] = newEntry;
+      } else {
+        // old id for some reason not found
+        // Just add it no matter what
+        this._refs.push(newEntry);
+      }
+
+    }
+    // It *is* convenient, when only one entry is adapted.
+    // Thus leave it in
+    this.entry = newEntry;
   }
 
 }

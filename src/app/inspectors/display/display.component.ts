@@ -50,13 +50,11 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     _selectedEntry: models.BibliographicEntry = null;
-    get selectedEntry(){
-      if(this._selectedEntry)
-      return this._selectedEntry
+    get selectedEntry() {
+      return this._selectedEntry;
     }
-    @Input() set selectedEntry(val: models.BibliographicEntry){
-      if(val)
-      this._selectedEntry = val
+    @Input() set selectedEntry(val: models.BibliographicEntry) {
+      this._selectedEntry = val;
     }
 
     title = 'Scan Display';
@@ -354,15 +352,15 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     deleteRectAndEntry(entry: models.BibliographicEntry){
       // const rectToDelete = this.rects[id]
-      if(confirm(`Delete entry ${entry.bibliographicEntryText}?`)){
+      if (confirm(`Delete entry ${entry.bibliographicEntryText}?`)) {
         // console.log('[Display][Debug] delete: ', this.rects[id])
 
         // console.log('[Display][Debug] Deleted rect', this.rects.splice(id, 1))
         // console.log('[Display][Debug] Deleted entry', this.entries.splice(id, 1))
         // console.log('[Display][Debug] Deleted entry', this.entries[id])
-        if(entry){
+        if (entry) {
           this.deleteEntry.emit(entry)
-      }
+        }
 
       }
 

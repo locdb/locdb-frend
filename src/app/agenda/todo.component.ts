@@ -13,7 +13,7 @@ import { BibliographicResourceService } from '../typescript-angular-client/api/b
 export class TodoComponent implements OnChanges {
   @Input() todo: TypedResourceView = null;
   @Input() container: TypedResourceView = null;
-  @Input() showAsContainer = false;
+  @Input() isContainer = false;
   @Output() scan: EventEmitter<[models.ResourceEmbodiment, models.Scan]> = new EventEmitter();
   @Output() refs: EventEmitter<Array<models.BibliographicEntry>> = new EventEmitter();
   // empty list indicates no scans

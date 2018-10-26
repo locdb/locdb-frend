@@ -68,7 +68,7 @@ export class AgendaComponent implements OnInit, OnChanges {
     this.statusMap[enums.status.notOcrProcessed] = 'Waiting';
     this.statusMap[enums.status.ocrProcessing] = 'In Queue';
     this.statusMap[enums.status.ocrProcessed] = 'Ready';
-    this.statusMap[enums.status.external] = 'Electronic Journals';
+    this.statusMap[enums.status.external] = 'Electronic Resources';
   }
 
   ngOnInit() {

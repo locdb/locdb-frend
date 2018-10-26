@@ -279,6 +279,21 @@ export class LocdbService {
     return [child, container];
   }
 
+  updateOrCreateResource(resource: TypedResourceView): Observable<TypedResourceView> {
+    resource.fixDate(); // sanity
+    const data: models.BibliographicResource = <models.BibliographicResource>resource.data;
+    if (!resource._id || resource._id === undefined) {
+      // Super important
+      // otherwise, the migrated resource will appear in ToDo's
+      data.status = enums.status.valid;
+      return this.bibliographicResourceService.save(data).pipe(map(
+        br => new TypedResourceView(br) ));
+    } else {
+      return this.bibliographicResourceService.update(resource._id, data).pipe(map(
+        br => new TypedResourceView(br) ));
+    }
+  }
+
 
 
 
