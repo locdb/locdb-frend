@@ -111,22 +111,25 @@ export class RouterScanInspectorComponent implements OnInit {
       let filtered_entries = entries.filter(e => e !== null && e !== undefined)
       /* allways drop status obsolete */
       filtered_entries = entries.filter(e => e.status !== 'OBSOLETE')
-
-      for (const attribute of this.filter_attributes) {
+      // console.log('before filtering: ', filtered_entries)
+      for (const attr of this.filter_attributes) {
         // console.log('[Debug][scan-inspector]', attribute, this.selection[attribute])
-          filtered_entries = filtered_entries.filter(this.search_filter(attribute,
-            this.selection[attribute]))
+          filtered_entries = filtered_entries.filter(this.search_filter(attr,
+            this.selection[attr]))
       }
+      // console.log('after filtering: ', filtered_entries)
       return filtered_entries;
     }
   }
 
   search_filter(selection_type: string, selection_name: string) {
-    if (this.filter_options[selection_type] === undefined){
+    const filter_name = selection_name
+    const type = selection_type
+    if (this.filter_options[type] === undefined){
       return e => true
     }
-    return this.filter_options[selection_type]
-                    .find(e => e.name === selection_name)
+    return this.filter_options[type]
+                    .find(e => {return e.name === filter_name})
                     .filter
   }
   /* extract filter options and generate the necessary filterfunctions */
@@ -158,7 +161,7 @@ export class RouterScanInspectorComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('ScanInspector onInit');
+    // console.log('ScanInspector onInit');
     /* Get arguments from route */
     const resourceId = this.route.snapshot.params.resid;
     const scanId = this.route.snapshot.params.scanid;
@@ -166,33 +169,33 @@ export class RouterScanInspectorComponent implements OnInit {
     // Fetch the resource and its container from the backend
     this.locdbService.getBibliographicResource(resourceId).subscribe((trv) => {
       this.loading = true;
-      console.log('[debug] scan inspector received from ids in URL: resource:', this.resource)
+      console.log('[scan-inspector][info] scan inspector received from ids in URL: resource:', this.resource)
       // console.log('scans: ', trv.embodiedAs)
       if (trv.partOf) {
         this.locdbService.getBibliographicResource(trv.partOf).subscribe(
           (parent_trv) => {
             this.parentResource = parent_trv;
-            console.log('[debug] scan inspector received from ids in URL: parent_resource:', this.parentResource)
+            console.log('[scan-inspector][info] scan inspector received from ids in URL: parent_resource:', this.parentResource)
           },
-          (error) => console.log('[error] Error occurred while retrieving parent resource', error)
+          (error) => console.log('[scan-inspector][error] Error occurred while retrieving parent resource', error)
         )
       }
       this.allScans = gatherScans(trv.embodiedAs, s => s.status !== enums.status.obsolete);
       // find index of desired scan in id
       const scan_idx = this.allScans.findIndex(scan => scan._id === scanId )
-      console.log('Finding the index', scanId, 'in', this.allScans, ':', scan_idx);
+      console.log('[scan-inspector][info] Finding the index', scanId, 'in', this.allScans, ':', scan_idx);
       // If found, select scan else default to first one
       this.scan = scan_idx > 0 ? this.allScans[scan_idx] : this.allScans.length ? this.allScans[0] : null;
       // increment by one to obtain the correct current page
       this.currentPage = scan_idx + 1;
-      console.log('[debug] scan inspector received from ids in URL: scan:', this.scan);
+      console.log('[scan-inspector][info] scan inspector received from ids in URL: scan:', this.scan);
       this.resource = trv;
       this.loading = false;
     },
       (error) => {
         this.loading = false;
         this.sorry_text = 'An error occurred. could not retrieve resource.';
-        console.log('[error] Error occurred while retrieving resource', error);
+        console.log('[scan-inspector][error] Error occurred while retrieving resource', error);
       }
     );
     // Fetch the scans associated with scan id (can be performed in parallel to resource retrieval
@@ -204,25 +207,25 @@ export class RouterScanInspectorComponent implements OnInit {
   fetchEntriesForScan(scanId: string): void {
     // fetching new Entries (e.g. on page change, invalidates the current entry //
     this.entry = null;
-    console.log('Fetching entries for scan with id', scanId);
+    console.log('[scan-inspector][info] Fetching entries for scan with id', scanId);
     this.locdbService.getToDoBibliographicEntries(scanId).subscribe(
       // DO NOT extract them from resource
       (entries) => {
         this.refs = entries.filter(x => x.status !== enums.status.obsolete);
         this.selectFirst(entries); // here we select an appropriate entry from the new list
-        console.log('[debug] scan inspector received from scan_id: entries:', this.refs)
+        console.log('[scan-inspector][info] scan inspector received from scan_id: entries:', this.refs)
       },
       (error) => {
         this.refs = [];
         this.sorry_text = 'Could not retrieve bibliographic entries for scan\n';
-        console.log('[error] Error occurred while retrieving entries for scan', error);
+        console.log('[scan-inspector][error]  Error occurred while retrieving entries for scan', error);
       }
     );
   }
 
   selectFirst(entries: Array<models.BibliographicEntry>): void {
     const entryToSelect = entries.find(e => e !== enums.status.valid);
-    console.log('[ScanInspector] Selecting first entry by heuristic', entryToSelect);
+    console.log('[scan-inspector][info] Selecting first entry by heuristic', entryToSelect);
     this.selectEntry(entryToSelect);
   }
 
@@ -302,30 +305,37 @@ export class RouterScanInspectorComponent implements OnInit {
   }
 
   deleteEntry(entry: models.BibliographicEntry) {
-    console.log('[scan-inspector][Debug] entry to delete: ', entry)
+    // console.log('[scan-inspector][Debug] entry to delete: ', entry)
     this.locdbService.deleteBibliographicEntry(entry).subscribe(
-      (ret) => console.log('[scan-inspector][Debug] called delete Entry. Response: ', ret),
+      (ret) => console.log('[scan-inspector][info] Successesfully delete entry: ', ret),
       (error) => alert('[scan-inspector][Error] Error while deleting Entry: ' + error.message)
     );
     const refs_id = this._refs.findIndex(e => e._id === entry._id)
-    console.log('[scan-inspector][Debug] ID of entry to delete:', refs_id)
+    // console.log('[scan-inspector][Debug] ID of entry to delete:', refs_id)
     this._refs.splice(refs_id, 1)
-    console.log('[scan-inspector][Warning] Entry just deleted in frontend,' +
-                ' backend connection missing at the Moment:')
   }
 
   updateEntry(tuple: [models.BibliographicEntry, string]) {
+    const [newEntry, oldId] = tuple;
     console.log('[Scan-inspector][Debug]', tuple, this._refs)
-    const refs_id = this._refs.findIndex(e => e._id === tuple[1])
-    if (refs_id) {
-      console.log('[Scan-inspector][Debug]', refs_id)
-      this._refs[refs_id] = tuple[0]
-    } else {
-      this._refs.push(tuple[0])
-    }
-    this.entry = tuple[0]
-    console.log('[Scan-inspector][Debug]', this._refs)
 
+    if (!oldId) {
+      // OldId is '' or null, we create a **new** entry
+      this._refs.push(newEntry);
+    } else {
+      const idx = this._refs.findIndex(e => e._id === oldId);
+      if (idx >= 0) {
+        this._refs[idx] = newEntry;
+      } else {
+        // old id for some reason not found
+        // Just add it no matter what
+        this._refs.push(newEntry);
+      }
+
+    }
+    // It *is* convenient, when only one entry is adapted.
+    // Thus leave it in
+    this.entry = newEntry;
   }
 
 }

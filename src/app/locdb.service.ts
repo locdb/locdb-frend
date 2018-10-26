@@ -283,6 +283,9 @@ export class LocdbService {
     resource.fixDate(); // sanity
     const data: models.BibliographicResource = <models.BibliographicResource>resource.data;
     if (!resource._id || resource._id === undefined) {
+      // Super important
+      // otherwise, the migrated resource will appear in ToDo's
+      data.status = enums.status.valid;
       return this.bibliographicResourceService.save(data).pipe(map(
         br => new TypedResourceView(br) ));
     } else {
