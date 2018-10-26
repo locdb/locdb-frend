@@ -37,6 +37,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     private _entries = []
     @Input() set entries(entries: models.BibliographicEntry[]){
       // check if new entries arrived
+      // console.log('Set entries: ', entries)
+      // console.log('entries length: ', entries.length, this._entries.length)
       if(entries.length == this._entries.length &&
         entries.every(e => this._entries.includes(e))){
        }
@@ -231,6 +233,9 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
               e => e.ocrData.coordinates && this.validateCoordinates(e.ocrData.coordinates)
           ).map(this.rectFromEntry);
           const firstUnprocessed = this.rects.find(r => !r.entry.references);
+      }
+      else{
+        this.rects = []
       }
     }
 
