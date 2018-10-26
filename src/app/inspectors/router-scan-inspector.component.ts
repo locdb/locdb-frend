@@ -314,11 +314,19 @@ export class RouterScanInspectorComponent implements OnInit {
                 ' backend connection missing at the Moment:')
   }
 
+<<<<<<< HEAD
   updateEntry(tuple: [models.BibliographicEntry, string]){
     // console.log('[Scan-inspector][Debug]', tuple, this._refs)
     const refs_id = this._refs.findIndex(e => e._id === tuple[1])
     if(refs_id){
       // console.log('[Scan-inspector][Debug]', refs_id)
+=======
+  updateEntry(tuple: [models.BibliographicEntry, string]) {
+    console.log('[Scan-inspector][Debug]', tuple, this._refs)
+    const refs_id = this._refs.findIndex(e => e._id === tuple[1])
+    if (refs_id) {
+      console.log('[Scan-inspector][Debug]', refs_id)
+>>>>>>> 6b234be18a696dd93033be467654ad804a269dfb
       this._refs[refs_id] = tuple[0]
     } else {
       this._refs.push(tuple[0])
