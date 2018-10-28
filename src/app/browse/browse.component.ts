@@ -29,13 +29,10 @@ export class BrowseComponent implements OnInit, OnChanges {
       currentTarget: TypedResourceView;
 
       committed = false;
-      max_shown_suggestions = 5
-      max_in = -1;
 
       internalInProgress = false;
       internalThreshold = 30;
 
-      searchentry: models.BibliographicEntry = {}
 
 
 
@@ -47,7 +44,6 @@ export class BrowseComponent implements OnInit, OnChanges {
 
       refresh() {
         // when search button is triggered
-        // this.loggingService.logSearchIssued(this.searchentry, this.selectedResource, this.query, [0, 1])
         this.fetchInternalSuggestions();
       }
 
@@ -58,7 +54,6 @@ export class BrowseComponent implements OnInit, OnChanges {
         console.log('Fetching internal suggestions for', this.query, 'with threshold', this.internalThreshold);
         this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold).subscribe(
           (sug) => {this.saveInternal(sug);
-                        // this.loggingService.logSuggestionsArrived(this.searchentry, sug, true)
                       },
           (err) => { this.internalInProgress = false }
         );
@@ -71,21 +66,8 @@ export class BrowseComponent implements OnInit, OnChanges {
 
       saveInternal(sgt) {
           this.internalSuggestions = sgt;
-          if (this.internalSuggestions && this.internalSuggestions.length <= this.max_shown_suggestions) {
-            this.max_in = -1;
-          } else {
-            this.max_in = this.max_shown_suggestions;
-          }
           this.internalInProgress = false;
           console.log('Received Internal Suggestions: ', this.internalSuggestions);
-      }
-
-      toggle_max_in() {
-        if (this.max_in === 0) {
-          this.max_in = this.max_shown_suggestions;
-        } else {
-            this.max_in = 0;
-        }
       }
 
       toggle_extended_search() {
