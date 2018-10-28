@@ -49,28 +49,30 @@
     <!-- <table class="table-condensed" style="width: 100%;"> -->
     <!--   <tbody> -->
     <div class="form-group row" *ngFor="let contributor of contributors.controls; let j = index" [formGroupName]="j">
-      <button (click)="removeContributor(j)" type="button" class="close" aria-label="Remove Contributor">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      <div class="col">
+      <div class="col-sm-1">
+        <button (click)="removeContributor(j)" type="button" class="close" aria-label="Remove Contributor">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="col-sm-4">
         <select class="form-control" formControlName="role">
           <option *ngFor="let r of roleTypes" [value]="r">{{r}}</option>
         </select>
       </div>
-      <div class="col">
+      <div class="input-group col-sm-5">
         <input class="form-control" formControlName="name">
-      </div>
-      <div class="col">
+        <div class="input-group-append">
         <button (click)="openModal(template, contributor)" type="button" class="btn btn-sm btn-secondary" aria-label="Inspect Contributor">
           Identifiers
         </button>
+        </div>
       </div>
-      <div class="col">
-        <button (click)="moveFormarrayEntry(j, -1)" type="button" aria-label="Decrement contributor position">
-          <i class="fa fa-arrow-down"></i>
-        </button>
-        <button (click)="moveFormarrayEntry(j, 1)" type="button" aria-label="Increment contributor position">
+      <div class="col-sm-2">
+        <button (click)="moveFormarrayEntry(j, -1)" type="button" aria-label="Increment contributor position">
           <i class="fa fa-arrow-up"></i>
+        </button>
+        <button (click)="moveFormarrayEntry(j, 1)" type="button" aria-label="Decrement contributor position">
+          <i class="fa fa-arrow-down"></i>
         </button>
       </div>
     </div>
