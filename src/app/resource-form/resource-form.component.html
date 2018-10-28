@@ -60,17 +60,19 @@
       <div class="col">
         <input class="form-control" formControlName="name">
       </div>
-      <button (click)="moveFormarrayEntry(j, -1)" type="button" class="close" aria-label="Remove Contributor"
-                                                                              style="margin-left: 0px; margin-right: 5px">
-        <span aria-hidden="true">&uarr;</span>
-      </button>
-      <button (click)="moveFormarrayEntry(j, 1)" type="button" class="close" aria-label="Remove Contributor"
-                                                                             style="margin-left: 5px; margin-right: 10px">
-        <span aria-hidden="true">&darr;</span>
-      </button>
-      <button (click)="openModal(template, contributor)" type="button" class="close" aria-label="Inspect Contributor">
-        <span aria-hidden="true">i</span>
-      </button>
+      <div class="col">
+        <button (click)="openModal(template, contributor)" type="button" class="btn btn-sm btn-secondary" aria-label="Inspect Contributor">
+          Identifiers
+        </button>
+      </div>
+      <div class="col">
+        <button (click)="moveFormarrayEntry(j, -1)" type="button" aria-label="Decrement contributor position">
+          <i class="fa fa-arrow-down"></i>
+        </button>
+        <button (click)="moveFormarrayEntry(j, 1)" type="button" aria-label="Increment contributor position">
+          <i class="fa fa-arrow-up"></i>
+        </button>
+      </div>
     </div>
     <!-- </tbody> -->
     <!-- </table> -->
@@ -177,7 +179,7 @@
 <!-- TODO possibility to save new content TODO formatting TODO change id scheme to selector-->
 <ng-template #template>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">Identifiers of {{agentIdForm.value.name + " (" + agentIdForm.value.role + ")"}}</h4>
+    <h5 class="modal-title pull-left">Identifiers of {{agentIdForm.value.name + " (" + agentIdForm.value.role + ")"}}</h5>
     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -187,35 +189,24 @@
     <form [formGroup]="agentIdForm">
       <div formArrayName="identifiers">
         <div *ngFor="let Id of agentIdForm.get('identifiers').controls; let i=index">
-          <div [formGroupName]="i">
-            <div class="pull-left">
+          <div [formGroupName]="i" class="form-group row">
+            <div class="col-sm-1">
               <button (click)="removeContributorIdentifier(agentIdForm, i)" type="button" class="close" aria-label="Remove Identifier">
-                <span aria-hidden="true">&times;</span>
+                <small><i class="fa fa-remove"></i></small>
               </button>
             </div>
-            <label class="col-sm-2" style="padding-left: 0px">Scheme</label>
+            <label class="col-sm-2 col-form-label">Scheme:</label>
             <select class="form-control" formControlName="scheme" class="col-sm-3">
               <option *ngFor="let i of agentIdentifierTypes" [value]="i">{{i}}</option>
             </select>
-            <label class="col-sm-2">Value</label>
+            <label class="col-sm-2 col-form-label">Value:</label>
             <input formControlName="literalValue" class="col-sm-4"/>
           </div>
         </div>
-        <div>
-          <label class="col-sm-2" style="padding-left: 0px">Scheme</label>
-          <select class="form-control" class="col-sm-3" #addSelector>
-            <option *ngFor="let i of agentIdentifierTypes" [value]="i">{{i}}</option>
-          </select>
-          <label class="col-sm-2">Value</label>
-          <input class="col-sm-4" #addLitValue/>
-          <button (click)="addContributorIdentifier(agentIdForm, addSelector.value, addLitValue.value)"
-                 type="button" class="close" aria-label="Add Identifier">
-            <span aria-hidden="true">&oplus;</span>
-          </button>
-        </div>
-        <button (click)="modalRef.hide()" class="pull-right">
-          Confirm
-        </button>
+        <button (click)="addEmptyContributorIdentifier(agentIdForm)" type="button" class="btn btn-secondary btn-sm"><i class="fa fa-plus"></i> Add Identifier</button>
+        <!-- <button (click)="modalRef.hide()" class="btn btn-primary btn-sm pull-right"> -->
+        <!--   Confirm -->
+        <!-- </button> -->
       </div>
     </form>
   </div>

@@ -181,7 +181,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
    addEmptyContributorIdentifier(contributor) {
       contributor.controls.identifiers.push(
-         this.fb.group({scheme: enums.agentIdentifier.orcid, literalValue: ''})
+         this.fb.group({scheme: enums.agentIdentifier.gndid, literalValue: ''})
       );
    }
 
@@ -234,7 +234,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
    addContributor() {
       // reference from getter above
-      this.contributors.push(this.fb.group({role: 'AUTHOR', name: '', identifiers: []}));
+      this.contributors.push(this.fb.group({role: 'AUTHOR', name: '', identifiers: this.fb.array([])}));
    }
 
    removeContributor(index: number) {
@@ -521,10 +521,15 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    }
 
    openModal(template: TemplateRef<any>, contributor) {
-      this.currentContributorForModal = contributor
-      console.log(contributor)
-      this.agentIdForm = contributor
-      console.log(this.agentIdForm)
+      this.currentContributorForModal = contributor;
+      console.log(contributor);
+      this.agentIdForm = contributor;
+      console.log(this.agentIdForm);
+      if (!contributor.controls.identifiers.length) {
+         // Add initial field for easier display
+         // Empty literalValues is ignored in reconstructAgentRole
+         this.addEmptyContributorIdentifier(contributor);
+      }
       this.modalRef = this.modalService.show(template);
    }
 
