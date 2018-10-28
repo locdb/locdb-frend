@@ -18,20 +18,20 @@ export class BrowseComponent implements OnInit, OnChanges {
 
       // make this visible to template
       environment = environment;
+  title = 'Browse';
 
       selectedResource: [TypedResourceView, TypedResourceView];
       query: string;
 
-      search_extended = false;
 
-      internalSuggestions: TypedResourceView[];
+      internalSuggestions: Array<[TypedResourceView, TypedResourceView]>;
 
       currentTarget: TypedResourceView;
 
       committed = false;
 
       internalInProgress = false;
-      internalThreshold = 30;
+      internalThreshold = null;
 
 
 
@@ -48,14 +48,15 @@ export class BrowseComponent implements OnInit, OnChanges {
       }
 
       fetchInternalSuggestions(): void {
-        if (!this.query) { return; }
+        if (!this.query) { return; } // guard cause back-end fails
+
+        const threshold = this.internalThreshold ? this.internalThreshold : 20; // default
         this.internalInProgress = true; // loading icon
         this.internalSuggestions = [];
-        console.log('Fetching internal suggestions for', this.query, 'with threshold', this.internalThreshold);
-        this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold).subscribe(
-          (sug) => {this.saveInternal(sug);
-                      },
-          (err) => { this.internalInProgress = false }
+        console.log('Fetching internal suggestions for', this.query, 'with threshold', threshold);
+        this.locdbService.suggestionsByQuery(this.query, false, threshold).subscribe(
+          (sug) => {this.saveInternal(sug); },
+          (err) => { alert('An error occurred: ' + err.message); this.internalInProgress = false }
         );
       }
 
