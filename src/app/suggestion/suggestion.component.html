@@ -17,7 +17,7 @@
 
 <div class="card">
   <div class="card-header">
-    <div class="mb-2">
+    <div class="mb-3">
     <h4> Suggestions for Citation Target </h4>
     <!-- Controls -->
     <button type="button" class="btn btn-sm btn-secondary" (click)="isAdaptingQuery = !isAdaptingQuery">Adapt Query</button>&nbsp;
@@ -28,58 +28,18 @@
     </div>
     <!-- Variable Area -->
     <div>
-    <div *ngIf="isAdaptingQuery" class="row" style="mt-1">
-      <div class="form-group col-md-1" style="padding-right: 0px">
-        <button type="button" class="btn btn-block mx-auto" (click)="toggle_extended_search()" style="height: 100px;">
-          <i *ngIf="!search_extended" class="fa fa-angle-double-down"></i>
-          <i *ngIf="search_extended" class="fa fa-angle-double-up"></i>
-        </button>
-      </div>
-      <div class="col-md-10" style="padding: 0px">
-        <div class="form-group">
-          <textarea id="searcharea"
-                    [(ngModel)]="query"
-                    class="form-control"
-                    (keyup.enter)="refresh()"
-                    rows="3"
-                    style="resize: none;"
-                    ></textarea>
-
+    <div *ngIf="isAdaptingQuery" class="row">
+      <!-- Search bar -->
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <input [(ngModel)]="threshold" class="form-control" type="number" min=5 step=5 placeholder="Limit (default 20)">
+        </div>
+        <input [(ngModel)]="query" (keyup.enter)="refresh()" type="text" class="form-control" placeholder="Search..." aria-label="Search bar" aria-describedby="search-button">
+        <div class="input-group-append">
+          <button (click)="refresh()" type="button" class="btn btn-primary" id="search-button"><i class="fa fa-search"></i> Search</button>
         </div>
       </div>
-      <div class="col-md-1" style="padding-left: 0px">
-        <button type="button" class="btn btn-success btn-block mx-auto" aria-label="Search" (click)="refresh()" style="height: 100px;">
-          <i class="fa fa-search"></i>
-        </button>
-      </div>
-
-    </div>
-    <div class="row" *ngIf="search_extended">
-      <div class="form-group col-md-5">
-        <label for="internalThreshold" class="center-block">Number of internal suggestions</label>
-      </div>
-      <div class="form-group col-md-5">
-        <label for="externalThreshold" class="center-block">Number of external suggestions</label>
-      </div>
-      <div class="col-md-2">
-      </div>
-    </div>
-    <div class="row" *ngIf="search_extended">
-      <div class="form-group col-md-5">
-        <input class="form-control" type="number" min=1 step=1 name="internalThreshold" [(ngModel)]="internalThreshold">
-      </div>
-      <div class="form-group col-md-5">
-        <input class="form-control" type="number" min=1 step=1 name="externalThreshold" [(ngModel)]="externalThreshold">
-      </div>
-      <div class="col-md-2">
-        <popover-content #searchPopover [closeOnClickOutside]="true">
-          <a href="{{'https://scholar.google.com/scholar?q='+encodeURI(query)}}"
-             target="_blank" style="target-new: tab;" class="btn float-right" role="button"
-                                                                              (click)="logAskOthers()">Google Scolar</a>
-        </popover-content>
-        <button *ngIf="search_extended" type="button" [popover]="searchPopover" class="btn float-right">
-          Ask Others</button>
-      </div>
+      <!-- Search bar END -->
     </div>
     <div *ngIf="isRefiningResults" class="row" style="margin-left: .5rem;">
       <label for="source" class="col-form-label" style="margin-right: .25rem">

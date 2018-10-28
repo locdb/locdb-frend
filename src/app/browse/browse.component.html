@@ -6,9 +6,9 @@
       <!-- Search bar -->
       <div class="input-group">
         <div class="input-group-prepend">
-          <input [(ngModel)]="internalThreshold" type="number" min=5 step=5 placeholder="Limit (default 20)">
+          <input [(ngModel)]="internalThreshold" class="form-control" type="number" min=5 step=5 placeholder="Limit (default 20)">
         </div>
-        <input [(ngModel)]="query" type="text" class="form-control" placeholder="Search..." aria-label="Search bar" aria-describedby="search-button">
+        <input [(ngModel)]="query" (keyup.enter)="refresh()" type="text" class="form-control" placeholder="Search..." aria-label="Search bar" aria-describedby="search-button">
         <div class="input-group-append">
           <button (click)="refresh()" type="button" class="btn btn-primary" id="search-button"><i class="fa fa-search"></i> Search</button>
         </div>

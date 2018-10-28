@@ -117,8 +117,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
   internalInProgress = false;
 
   /* Default top-k thresholds */
-  internalThreshold = 5;
-  externalThreshold = 30;
+  threshold: number = null;
+  // internalThreshold = 5;
+  // externalThreshold = 30;
   dataSource: Observable<any>;
 
 
@@ -228,7 +229,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   getStatesAsObservable(token: string): Observable<any> {
-    return this.locdbService.suggestionsByQuery(token, false, this.internalThreshold)
+    return this.locdbService.suggestionsByQuery(token, false, 20);
   }
 
   typeaheadOnSelect(e: TypeaheadMatch): void {
@@ -242,7 +243,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   getTypeaheadSuggestions(value, index) {
-    return this.locdbService.suggestionsByQuery(value, false, this.internalThreshold)
+    return this.locdbService.suggestionsByQuery(value, false, 20);
   }
 
   ngOnChanges(changes: SimpleChanges | any) {
@@ -294,7 +295,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       this.entry,
       this.selectedResource[0],
       this.query,
-      [this.internalThreshold, this.externalThreshold]
+      [this.threshold, this.threshold]
     );
     // Why would we reset the newResource here
     // this.newResource = [null, null];
@@ -325,35 +326,34 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   fetchInternalSuggestions(): void {
-    if (this.query) {
-      const oldEntry = this.entry;
-      this.internalInProgress = true; // loading icon
-      this.internalSuggestions = [];
-      console.log('Fetching internal suggestions for', this.query, 'with threshold', this.internalThreshold);
-      // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
-      this.locdbService.suggestionsByQuery(this.query, false, this.internalThreshold).subscribe(
-        (sug) => { Object.is(this.entry, oldEntry) ? this.saveInternal(sug) : console.log('discarded suggestions')
-        },
-        (err) => { this.internalInProgress = false;
-          console.log(err) }
-      );
-    }
+    if (!this.query) { return };
+    const threshold = this.threshold ? this.threshold : 20;
+    const oldEntry = this.entry;
+    this.internalInProgress = true; // loading icon
+    this.internalSuggestions = [];
+    console.log('Fetching internal suggestions for', this.query, 'with threshold', threshold);
+    // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
+    this.locdbService.suggestionsByQuery(this.query, false, threshold).subscribe(
+      (sug) => { Object.is(this.entry, oldEntry) ? this.saveInternal(sug) : console.log('discarded suggestions')
+      },
+      (err) => { this.internalInProgress = false; console.log(err) }
+    );
   }
 
   fetchExternalSuggestions(): void {
-    if (this.query) {
-      const oldEntry = this.entry;
-      this.externalInProgress = true; // loading icon
-      this.externalSuggestions = [];
-      console.log('Fetching external suggestions for', this.query, 'with threshold', this.externalThreshold);
-      // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
-      this.locdbService.suggestionsByQuery(this.query, true, this.externalThreshold).subscribe(
-        (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions')
-          // this.loggingService.logSuggestionsArrived(this.entry, sug, false)
-        },
-        (err) => { this.externalInProgress = false; console.log(err)}
-      );
-    }
+    if (!this.query) { return };
+    const threshold = this.threshold ? this.threshold : 20;
+    const oldEntry = this.entry;
+    this.externalInProgress = true; // loading icon
+    this.externalSuggestions = [];
+    console.log('Fetching external suggestions for', this.query, 'with threshold', threshold);
+    // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
+    this.locdbService.suggestionsByQuery(this.query, true, threshold).subscribe(
+      (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions')
+        // this.loggingService.logSuggestionsArrived(this.entry, sug, false)
+      },
+      (err) => { this.externalInProgress = false; console.log(err)}
+    );
   }
 
   // these two functions could go somewhere else e.g. static in locdb.ts
