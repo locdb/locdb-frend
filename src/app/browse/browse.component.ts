@@ -70,8 +70,4 @@ export class BrowseComponent implements OnInit, OnChanges {
           this.internalInProgress = false;
           console.log('Received Internal Suggestions: ', this.internalSuggestions);
       }
-
-      toggle_extended_search() {
-        this.search_extended = !this.search_extended
-      }
   }
