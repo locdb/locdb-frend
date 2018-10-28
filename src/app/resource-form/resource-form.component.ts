@@ -174,6 +174,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    }
 
 
+
    removeContributorIdentifier(contributor, index: number) {
       contributor.controls.identifiers.removeAt(index)
    }
