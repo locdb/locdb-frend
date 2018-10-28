@@ -179,6 +179,12 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       contributor.controls.identifiers.removeAt(index)
    }
 
+   addEmptyContributorIdentifier(contributor) {
+      contributor.controls.identifiers.push(
+         this.fb.group({scheme: enums.agentIdentifier.orcid, literalValue: ''})
+      );
+   }
+
 
    ngOnInit()  {
       // console.log("On init form", this.resources)
@@ -403,7 +409,11 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    reconstructAgentRole(name: string, role: string, identifiers: models.Identifier[]): models.AgentRole {
       const agent = decomposeName(name);
       // decompose only yields familyName givenName and nameString
-      agent.identifiers = identifiers || [];
+      if (identifiers) {
+         // filter for non-empty literalValues
+         const validIdentifiers = identifiers.filter(ident => !!ident.literalValue);
+         agent.identifiers = validIdentifiers;
+      }
       const agentRole = {
          // role identifiers are pointless
          identifiers: [],
