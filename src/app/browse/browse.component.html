@@ -13,10 +13,50 @@
           <button (click)="refresh()" type="button" class="btn btn-primary" id="search-button"><i class="fa fa-search"></i> Search</button>
         </div>
       </div>
+      <div class="mt-3">
+        <button type="button" class="btn btn-sm btn-secondary" (click)="isRefiningResults = !isRefiningResults">Refine Results</button>&nbsp;
+      </div>
       <!-- Search bar END -->
-    </div>
+      <div *ngIf="isRefiningResults" class="mt-3">
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="source">Source:</label>
+          <div class="col-sm-10">
+            <select id="source" [(ngModel)]="selection.source" class="form-control" >
+              <option *ngFor="let opt of filter_options.source"
+                                                               [value]="opt.name">{{opt.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="resource_type">Type:</label>
+          <div class="col-sm-10">
+            <select id="resource_type" [(ngModel)]="selection.resource_type" class="form-control" >
+              <option *ngFor="let opt of filter_options.resource_type"
+                                                                             [value]="opt.name">{{opt.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="contained">Contained:</label>
+          <div class="col-sm-10">
+            <select id="contained" [(ngModel)]="selection.contained" class="form-control" >
+              <option *ngFor="let opt of filter_options.contained"
+                                                                     [value]="opt.name">{{opt.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="year_filter"> Year:</label> 
+          <div class="col-sm-10">
+            <select id="year_filter" [(ngModel)]="selection.year" class="form-control" >
+              <option *ngFor="let opt of filter_options.year" [value]="opt.name">{{opt.name}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div> <!-- end of header -->
     <div class="card-body">
-      <div *ngFor="let pair of internalSuggestions; let i = index">
+      <div *ngFor="let pair of resourcePairs; let i = index">
         <app-resource-card [resources]="pair" [selected]="pair == selectedResource" (click)="onSelect(pair)">
         </app-resource-card>
       </div>
