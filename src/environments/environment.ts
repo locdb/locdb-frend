@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  locdbUrl: '../locdb-dev'
+  locdbUrl: 'https://locdb.bib.uni-mannheim.de/locdb-dev'
 };
