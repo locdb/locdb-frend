@@ -536,6 +536,7 @@ export class TypedResourceView implements Metadata {
 
   fixDate() {
     // Apply getter and setter to fix the date.... n/c
+    // Necessary until back-end accepts the date format it sends
     this.publicationDate = this.publicationDate;
   }
 

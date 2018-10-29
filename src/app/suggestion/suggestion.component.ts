@@ -489,11 +489,11 @@ export class SuggestionComponent implements OnInit, OnChanges {
     this.committing = true;
     const [resource, container] = citationTargetPair;
     if (container) {
-      this.locdbService.updateOrCreateResource(container).subscribe(
+      this.locdbService.maybePostResource(container).subscribe(
         (newContainer) => {
           citationTargetPair[1] = newContainer;
           resource.data.partOf = newContainer._id;
-          this.locdbService.updateOrCreateResource(resource).subscribe(
+          this.locdbService.maybePostResource(resource).subscribe(
             (newResource) => {
               citationTargetPair[0] = newResource;
               this.link(entry, [newResource, newContainer]);
@@ -504,7 +504,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
         (error) => { alert('Error while updating container: ' + error.message); this.committing = false; }
       );
     } else {
-      this.locdbService.updateOrCreateResource(resource).subscribe(
+      this.locdbService.maybePostResource(resource).subscribe(
         (newResource) => {
           // update own view with response from back-end
           citationTargetPair[0] = newResource;

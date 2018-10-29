@@ -316,19 +316,15 @@ export class LocdbService {
   maybePostResource(tr: TypedResourceView): Observable<TypedResourceView> {
     /* Post the resource if it is not stored in back-end yet
      * 0-1 backend requests */
-    // return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).pipe(map( br => new TypedResourceView(br) )).catch(
-    //   (err) => { console.log(err.msg); return of(tr)}
-    // );
-    // ALT dont use anymore since checking for ._id is not safe at the moment (Precalculated suggestions)
     if (!tr._id || tr._id === undefined) {
-      console.log('Suggestion has no _id. Inserting it into the backend.', tr);
+      console.log('Resource has no _id. Inserting it into the backend.', tr);
       // !!! Never ever forget this when on righthand-side, they should never be external
       // 19.03.2018: Dont do this, we would corrupt todo item..
       tr.fixDate(); // correct date format if it was set incorrectly
       tr.status = enums.status.valid;
       return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).pipe(map( br => new TypedResourceView(br) ));
     } else {
-      console.log('Suggestion has _id. Proceeding...', tr._id);
+      console.log('Resource has _id. Proceeding...', tr._id);
       return of(tr);
     }
   }
