@@ -200,15 +200,15 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
       }
 
       const validRoles = roles.filter(arole => arole !== null);
-      console.log(validRoles);
       const contribFGs = validRoles.map(
          arole => this.fb.group(
             {
                role: arole.roleType,
                name: composeName(arole.heldBy),
                identifiers: this.fb.array(
-                  arole.heldBy.identifiers && arole.heldBy.identifiers.length ?
-                  arole.heldBy.identifiers.map(e => this.fb.group(e)) : []
+                  (arole.heldBy.identifiers !== undefined
+                  && arole.heldBy.identifiers !==
+                  null && arole.heldBy.identifiers.length) ? arole.heldBy.identifiers.map(e => this.fb.group(e)) : []
                )
             }
          )
@@ -243,23 +243,18 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
    // shift an entry in a formarray
    moveFormarrayEntry(index: number, shift: number) {
-      if (index + shift < 0 || index + shift >= this.contributors.length) {
+      const to: number = index + shift;
+      if (to < 0 || to >= this.contributors.length) {
          console.log('[error] Target index not reachable (index: ' + index + ', way: ' + shift + ')')
-         return this.contributors;
-      } else {
-         if (shift < 0) {
-            shift *= -1
-            index -= shift
-         }
-         const tmp = this.contributors.value; // TODO FIXME this is not a deep copy.. its ok here
-         // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
-         tmp.splice(index + shift + 1, 0, tmp[index]);
-         // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
-         tmp.splice(index, 1);
-         // console.log("[debug]" + tmp.toString() + " (index: " + index + ", way: " + shift + ")")
-         this.contributors = this.fb.array(tmp);
-         return this.contributors;
+         return;
       }
+      const contribsFormArray: FormArray = this.contributors;
+      // get element
+      const element = contribsFormArray.at(index);
+      // remove old element from the list
+      contribsFormArray.removeAt(index);
+      // insert element at new position
+      contribsFormArray.insert(to, element);
    }
 
    // clean array treatment end
