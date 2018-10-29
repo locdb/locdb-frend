@@ -1,51 +1,67 @@
 <!-- Panel heading including search bar -->
 <div class="container">
   <div class="card">
-
     <div class="card-header">
-      <div class="row" style="">
-        <div class="form-group col-md-1" style="padding-right: 0px">
-          <button type="button" class="btn btn-block mx-auto" (click)="toggle_extended_search()" style="height: 100px;">
-            <i *ngIf="!search_extended" class="fa fa-angle-double-down"></i>
-            <i *ngIf="search_extended" class="fa fa-angle-double-up"></i>
-          </button>
+      <h3 class="card-title">{{ title }}</h3>
+      <!-- Search bar -->
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <input [(ngModel)]="internalThreshold" class="form-control" type="number" min=5 step=5 placeholder="Limit (default 20)">
         </div>
-        <div class="col-md-10" style="padding: 0px">
-          <div class="form-group">
-            <textarea class="form-control" [(ngModel)]="query" rows="3" style="resize: none;"></textarea>
+        <input [(ngModel)]="query" (keyup.enter)="refresh()" type="text" class="form-control" placeholder="Search..." aria-label="Search bar" aria-describedby="search-button">
+        <div class="input-group-append">
+          <button (click)="refresh()" type="button" class="btn btn-primary" id="search-button"><i class="fa fa-search"></i> Search</button>
+        </div>
+      </div>
+      <div class="mt-3">
+        <button type="button" class="btn btn-sm btn-secondary" (click)="isRefiningResults = !isRefiningResults">Refine Results</button>&nbsp;
+      </div>
+      <!-- Search bar END -->
+      <div *ngIf="isRefiningResults" class="mt-3">
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="source">Source:</label>
+          <div class="col-sm-10">
+            <select id="source" [(ngModel)]="selection.source" class="form-control" >
+              <option *ngFor="let opt of filter_options.source"
+                                                               [value]="opt.name">{{opt.name}}</option>
+            </select>
           </div>
         </div>
-        <div class="col-md-1" style="padding-left: 0px">
-          <button type="button" class="btn btn-success btn-block mx-auto" aria-label="Search" (click)="refresh()" style="height: 100px;">
-            <i class="fa fa-search"></i>
-          </button>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="resource_type">Type:</label>
+          <div class="col-sm-10">
+            <select id="resource_type" [(ngModel)]="selection.resource_type" class="form-control" >
+              <option *ngFor="let opt of filter_options.resource_type"
+                                                                             [value]="opt.name">{{opt.name}}</option>
+            </select>
+          </div>
         </div>
-
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="contained">Contained:</label>
+          <div class="col-sm-10">
+            <select id="contained" [(ngModel)]="selection.contained" class="form-control" >
+              <option *ngFor="let opt of filter_options.contained"
+                                                                     [value]="opt.name">{{opt.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="year_filter"> Year:</label> 
+          <div class="col-sm-10">
+            <select id="year_filter" [(ngModel)]="selection.year" class="form-control" >
+              <option *ngFor="let opt of filter_options.year" [value]="opt.name">{{opt.name}}</option>
+            </select>
+          </div>
+        </div>
       </div>
-      <div class="row" style="">
-        <div class="form-group col-md-4">
-          <label *ngIf="search_extended" class="center-block">Number of results
-            <input class="form-control" type="number" min=1 step=1 [(ngModel)]="internalThreshold">
-          </label>
-        </div>
-        <div class="col-md-2">
-        </div>
+    </div> <!-- end of header -->
+    <div class="card-body">
+      <div *ngFor="let pair of resourcePairs; let i = index">
+        <app-resource-card [resources]="pair" [selected]="pair == selectedResource" (click)="onSelect(pair)">
+        </app-resource-card>
       </div>
-    </div>
-
-    <div class="card-body" style="height: 800px; overflow-y: scroll;">
-      <!-- Panel body providing suggestions -->
-      <div class="card-block">
-        <div *ngFor="let pair of internalSuggestions; let i = index">
-          <app-resource-card [resources]="pair" [selected]="pair == selectedResource" (click)="onSelect(pair)">
-          </app-resource-card>
-        </div>
-        <div *ngIf="internalInProgress" class="loader">
-        </div>
+      <div *ngIf="internalInProgress" class="loader">
       </div>
-    </div>
-    <!-- Panel footer allowing actions -->
-    <div class="card-footer">
     </div>
   </div>
 </div>

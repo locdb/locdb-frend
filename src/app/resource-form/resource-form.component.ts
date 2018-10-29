@@ -174,8 +174,15 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    }
 
 
+
    removeContributorIdentifier(contributor, index: number) {
       contributor.controls.identifiers.removeAt(index)
+   }
+
+   addEmptyContributorIdentifier(contributor) {
+      contributor.controls.identifiers.push(
+         this.fb.group({scheme: enums.agentIdentifier.gndid, literalValue: ''})
+      );
    }
 
 
@@ -227,7 +234,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
 
    addContributor() {
       // reference from getter above
-      this.contributors.push(this.fb.group({role: 'AUTHOR', name: '', identifiers: []}));
+      this.contributors.push(this.fb.group({role: 'AUTHOR', name: '', identifiers: this.fb.array([])}));
    }
 
    removeContributor(index: number) {
@@ -402,7 +409,11 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    reconstructAgentRole(name: string, role: string, identifiers: models.Identifier[]): models.AgentRole {
       const agent = decomposeName(name);
       // decompose only yields familyName givenName and nameString
-      agent.identifiers = identifiers || [];
+      if (identifiers) {
+         // filter for non-empty literalValues
+         const validIdentifiers = identifiers.filter(ident => !!ident.literalValue);
+         agent.identifiers = validIdentifiers;
+      }
       const agentRole = {
          // role identifiers are pointless
          identifiers: [],
@@ -510,10 +521,15 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
    }
 
    openModal(template: TemplateRef<any>, contributor) {
-      this.currentContributorForModal = contributor
-      console.log(contributor)
-      this.agentIdForm = contributor
-      console.log(this.agentIdForm)
+      this.currentContributorForModal = contributor;
+      console.log(contributor);
+      this.agentIdForm = contributor;
+      console.log(this.agentIdForm);
+      if (!contributor.controls.identifiers.length) {
+         // Add initial field for easier display
+         // Empty literalValues is ignored in reconstructAgentRole
+         this.addEmptyContributorIdentifier(contributor);
+      }
       this.modalRef = this.modalService.show(template);
    }
 
