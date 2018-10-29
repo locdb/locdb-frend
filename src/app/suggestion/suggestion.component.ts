@@ -108,6 +108,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   newResource: [TypedResourceView, TypedResourceView] = null;
 
   committed = false;
+  committing = false;
   max_shown_suggestions = 5
   max_ex = -1;
   max_in = -1;
@@ -247,6 +248,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges | any) {
+    this.committing = false; // entry has changed, apparrently not committing
     this.committed = false; // entry has changed, so don't show success message
     console.log('[Suggestion Component] ngOnChanges called');
     // reset filters
@@ -454,14 +456,15 @@ export class SuggestionComponent implements OnInit, OnChanges {
               entry.status = enums.status.valid;
               entry.references = citationTargetResourceId;
               this.committed = true;
+              this.committing = false;
               console.log('Replaced citation target')
               this.currentTarget = citationTargetPair;
               this.selectedResource = this.currentTarget;
             },
-            (error) => alert('Error while replacing citation target: ' + error.message)
+            (error) => { alert('Error while replacing citation target: ' + error.message); this.committing = false; }
           )
         },
-        (error) => alert('Could not remove citation link: ' + error.message)
+        (error) => { alert('Could not remove citation link: ' + error.message); this.committing = false; }
       );
     } else {
       // Add new citation target
@@ -471,17 +474,19 @@ export class SuggestionComponent implements OnInit, OnChanges {
           entry.status = enums.status.valid;
           entry.references = citationTargetResourceId;
           this.committed = true;
+          this.committing = false;
           console.log('Added citation target')
           this.currentTarget = citationTargetPair;
           this.selectedResource = this.currentTarget;
         },
-        (error) => alert('Error while replacing citation target: ' + error.message)
+        (error) => { alert('Error while replacing citation target: ' + error.message); this.committing = false; }
       );
     }
   }
 
   commit(entry: models.BibliographicEntry, citationTargetPair: [TypedResourceView, TypedResourceView | null]) {
     this.loggingService.logCommitPressed(this.entry, this.selectedResource[0], null);
+    this.committing = true;
     const [resource, container] = citationTargetPair;
     if (container) {
       this.locdbService.updateOrCreateResource(container).subscribe(
@@ -493,10 +498,10 @@ export class SuggestionComponent implements OnInit, OnChanges {
               citationTargetPair[0] = newResource;
               this.link(entry, [newResource, newContainer]);
             },
-            (error) => alert('Error while updating resource: ' + error.json())
+            (error) => { alert('Error while updating resource: ' + error.message); this.committing = false;  }
           );
           },
-        (error) => { alert('Error while updating container: ' + error.json()) }
+        (error) => { alert('Error while updating container: ' + error.message); this.committing = false; }
       );
     } else {
       this.locdbService.updateOrCreateResource(resource).subscribe(
@@ -507,7 +512,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
           this.link(entry, [newResource, null]);
 
         },
-        (error) => alert('Error while updating resource error.json()')
+        (error) => { alert('Error while updating resource: ' + error.message); this.committing = false; }
       );
     }
 
