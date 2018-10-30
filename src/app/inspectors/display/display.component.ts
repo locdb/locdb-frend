@@ -119,6 +119,14 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           let svgHeight = svg.parentNode.clientHeight || svg.height.baseVal.value
           const clientToImageWidthRatio = imgWidth / svgWidth
           const clientToImageHeightRatio = imgHeight / svgHeight
+          // const translateX = svg.transform.baseVal[0].matrix.e
+          // console.log(translateX)
+          // const translateY = svg.transform.baseVal[0].matrix.f
+          // console.log(translateY)
+          const scaleX = svg.transform.baseVal[1].matrix.a
+          // console.log(scaleX)
+          const scaleY = svg.transform.baseVal[1].matrix.d
+          // console.log(scaleY)
           let width  = event.rect.width;
           let height = event.rect.height;
           let deltaLeft = event.deltaRect.left;
@@ -133,11 +141,11 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             deltaTop = 0
           }
                // translate when resizing from top or left edges
-          x += deltaLeft * clientToImageWidthRatio;
-          y += deltaTop * clientToImageHeightRatio;
+          x += deltaLeft * clientToImageWidthRatio / scaleX;
+          y += deltaTop * clientToImageHeightRatio / scaleY;
 
-        target.setAttribute('width', width * clientToImageWidthRatio);
-        target.setAttribute('height', height * clientToImageHeightRatio);
+        target.setAttribute('width', width * clientToImageWidthRatio / scaleX);
+        target.setAttribute('height', height * clientToImageHeightRatio / scaleY);
         target.setAttribute('x', x);
         target.setAttribute('y', y);
 })
@@ -152,8 +160,13 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
            const clientToImageWidthRatio = imgWidth / svgWidth
            const clientToImageHeightRatio = imgHeight / svgHeight
 
-           x += event.dx * clientToImageWidthRatio;
-           y += event.dy * clientToImageHeightRatio;
+           const scaleX = svg.transform.baseVal[1].matrix.a
+           // console.log(scaleX)
+           const scaleY = svg.transform.baseVal[1].matrix.d
+           // console.log(scaleY)
+           
+           x += event.dx * clientToImageWidthRatio / scaleX;
+           y += event.dy * clientToImageHeightRatio  / scaleY;
 
            target.setAttribute('x', x);
            target.setAttribute('y', y);
