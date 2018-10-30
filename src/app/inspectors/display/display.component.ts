@@ -67,6 +67,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     clientY = 0;
     zoomFactor = 1.0;
     editMode = 'select';
+    first_init = true;
 
     @Output() imglength: EventEmitter<Number> = new EventEmitter();
     @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
@@ -143,6 +144,12 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
                // translate when resizing from top or left edges
           x += deltaLeft * clientToImageWidthRatio / scaleX;
           y += deltaTop * clientToImageHeightRatio / scaleY;
+          // console.log(clientToImageWidthRatio)
+          // console.log(clientToImageHeightRatio)
+          // console.log(scaleX)
+          // console.log(scaleY)
+          // console.log(deltaLeft)
+          // console.log(deltaTop)
 
         target.setAttribute('width', width * clientToImageWidthRatio / scaleX);
         target.setAttribute('height', height * clientToImageHeightRatio / scaleY);
@@ -164,7 +171,10 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
            // console.log(scaleX)
            const scaleY = svg.transform.baseVal[1].matrix.d
            // console.log(scaleY)
-           
+           // console.log(event.dx)
+           // console.log(event.dy)
+           // console.log(x)
+           // console.log(y)
            x += event.dx * clientToImageWidthRatio / scaleX;
            y += event.dy * clientToImageHeightRatio  / scaleY;
 
@@ -396,7 +406,10 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         if ((this.imgX + this.imgY) <= 0) {
             console.log('Image size = 0', realDim);
         }
-        this.initInteract(this.imgX, this.imgY)
+        if (this.first_init) {
+          this.initInteract(this.imgX, this.imgY)
+          this.first_init = false
+        }
         this.reload_rects();
     }
 
