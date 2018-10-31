@@ -19,13 +19,6 @@ function humanReadable(property: string) {
   return nocamel;
 }
 
-function getOrderForProperty(property: string) {
-  if (property.endsWith('title')) { return 1 }
-  if (property.endsWith('subtitle')) { return 2 }
-  if (property.endsWith('number')) { return 3 }
-  return 99; // default case
-}
-
 // Determines the sorting order of the dynamically generated fields
 const PROPERTY_ORDER =
   [ typedProperty(enums.resourceType.journal, 'title'),
@@ -37,7 +30,8 @@ const PROPERTY_ORDER =
   ]
 
 function getTypeForProperty(property: string) {
-  if (property.endsWith('number')) { return 'number' }
+  // Also number fields sometimes hold strings...
+  // if (property.endsWith('number')) { return 'number' }
   return ''; // default to text input field
 }
 
