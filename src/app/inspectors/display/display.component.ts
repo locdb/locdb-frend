@@ -27,12 +27,9 @@ import * as interact from 'interact.js';
 })
 
 export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
-    private zoomSVG: any;
-    @ViewChild('zoomSVG') set content(content: any) {
-        this.zoomSVG = content;
-    }
-
     // @Input() todo: ToDoScans;
+    @ViewChild('zoomSVG') zoomSVG: ElementRef;
+    @ViewChild('svgroot') svgroot: ElementRef;
     @Input() img_src = '';
     private _entries = []
     @Input() set entries(entries: models.BibliographicEntry[]){
@@ -59,22 +56,24 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     title = 'Scan Display';
     currentIndex = 0;
-    zoom: any;
     selection: any;
 
     rects: Rect[] = [];
     imgX = 3000;    // initvalues no relevance if new picture is set
     imgY = 3000;
-
-    editMode = 'select'
+    baseX = 0;
+    baseY = 0;
+    clientX = 0;
+    clientY = 0;
+    zoomFactor = 1.0;
+    editMode = 'select';
+    first_init = true;
 
     @Output() imglength: EventEmitter<Number> = new EventEmitter();
     @Output() entry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
     @Output() deleteEntry: EventEmitter<models.BibliographicEntry> = new EventEmitter();
     @Output() updateEntry: EventEmitter<[models.BibliographicEntry, string]> =
               new EventEmitter();
-
-    @ViewChild('svgroot') svgroot: ElementRef;
 
   constructor(
     private scanService: ScanService,
@@ -121,6 +120,14 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           let svgHeight = svg.parentNode.clientHeight || svg.height.baseVal.value
           const clientToImageWidthRatio = imgWidth / svgWidth
           const clientToImageHeightRatio = imgHeight / svgHeight
+          // const translateX = svg.transform.baseVal[0].matrix.e
+          // console.log(translateX)
+          // const translateY = svg.transform.baseVal[0].matrix.f
+          // console.log(translateY)
+          const scaleX = svg.transform.baseVal[1].matrix.a
+          // console.log(scaleX)
+          const scaleY = svg.transform.baseVal[1].matrix.d
+          // console.log(scaleY)
           let width  = event.rect.width;
           let height = event.rect.height;
           let deltaLeft = event.deltaRect.left;
@@ -135,11 +142,17 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             deltaTop = 0
           }
                // translate when resizing from top or left edges
-          x += deltaLeft * clientToImageWidthRatio;
-          y += deltaTop * clientToImageHeightRatio;
+          x += deltaLeft * clientToImageWidthRatio / scaleX;
+          y += deltaTop * clientToImageHeightRatio / scaleY;
+          // console.log(clientToImageWidthRatio)
+          // console.log(clientToImageHeightRatio)
+          // console.log(scaleX)
+          // console.log(scaleY)
+          // console.log(deltaLeft)
+          // console.log(deltaTop)
 
-        target.setAttribute('width', width * clientToImageWidthRatio);
-        target.setAttribute('height', height * clientToImageHeightRatio);
+        target.setAttribute('width', width * clientToImageWidthRatio / scaleX);
+        target.setAttribute('height', height * clientToImageHeightRatio / scaleY);
         target.setAttribute('x', x);
         target.setAttribute('y', y);
 })
@@ -154,39 +167,39 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
            const clientToImageWidthRatio = imgWidth / svgWidth
            const clientToImageHeightRatio = imgHeight / svgHeight
 
-           x += event.dx * clientToImageWidthRatio;
-           y += event.dy * clientToImageHeightRatio;
+           const scaleX = svg.transform.baseVal[1].matrix.a
+           // console.log(scaleX)
+           const scaleY = svg.transform.baseVal[1].matrix.d
+           // console.log(scaleY)
+           // console.log(event.dx)
+           // console.log(event.dy)
+           // console.log(x)
+           // console.log(y)
+           x += event.dx * clientToImageWidthRatio / scaleX;
+           y += event.dy * clientToImageHeightRatio  / scaleY;
 
            target.setAttribute('x', x);
            target.setAttribute('y', y);
         });
     }
-    initSVGZoom() {
-        // console.log('[Display] init Zoom')
-        let zoom = d3.zoom().on("zoom", function () {
-          svgContainer.attr("transform", d3.event.transform)
-        })
-        .scaleExtent([1, 5])
-        .translateExtent([[0, 0], [this.imgX, this.imgY]])
-        .duration(250);
-        let svgContainer = d3.select(this.zoomSVG.nativeElement);
-        this.selection = svgContainer
-            .attr('width', '100%')
-            .attr('height', '100%')
-            .call(zoom)
-            .on("dblclick.zoom", null)
-            .on("wheel.zoom", null);
-        this.zoom = zoom;
-    }
 
     zoomIn(){
-      this.zoom.scaleBy(this.selection, 1.2)
+      // this.zoom.scaleBy(this.selection, 1.2)
+      this.clientX = this.svgroot.nativeElement.clientWidth
+      this.clientY = this.svgroot.nativeElement.clientHeight
+      const threshold = 2
+      if(this.zoomFactor< threshold){
+        this.zoomFactor += 0.1
+      }
+
     }
     zoomOut(){
-      this.zoom.scaleBy(this.selection, 0.8)
+    if(this.zoomFactor< 0){
+      this.zoomFactor -= 0.1
+    }
     }
     zoomReset(){
-      this.selection.transition().duration(500).call(this.zoom.transform, d3.zoomIdentity);
+      this.zoomFactor = 1.0
     }
 
     saveBoxes() {
@@ -393,9 +406,11 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         if ((this.imgX + this.imgY) <= 0) {
             console.log('Image size = 0', realDim);
         }
-        this.initInteract(this.imgX, this.imgY)
+        if (this.first_init) {
+          this.initInteract(this.imgX, this.imgY)
+          this.first_init = false
+        }
         this.reload_rects();
-        // this.initSVGZoom();
     }
 
     ngOnDestroy() {
