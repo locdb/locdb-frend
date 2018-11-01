@@ -183,22 +183,24 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
-    zoomIn(){
+    zoomIn(): void {
       // this.zoom.scaleBy(this.selection, 1.2)
       this.clientX = this.svgroot.nativeElement.clientWidth
       this.clientY = this.svgroot.nativeElement.clientHeight
       const threshold = 2
-      if(this.zoomFactor< threshold){
+      if ( this.zoomFactor < threshold) {
         this.zoomFactor += 0.1
       }
 
     }
-    zoomOut(){
-    if(this.zoomFactor< 0){
-      this.zoomFactor -= 0.1
+
+    zoomOut(): void {
+      if (this.zoomFactor > 1.0) {
+        this.zoomFactor -= 0.1
+      }
     }
-    }
-    zoomReset(){
+
+    zoomReset(): void {
       this.zoomFactor = 1.0
     }
 
