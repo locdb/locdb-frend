@@ -104,6 +104,7 @@ export interface ToDo {
     editedBook_number?: string;
     component_number?: string;
     bookSet_number?: string;
+    bookSeries_number?: string;
     bookChapter_number?: string;
     bookSection_number?: string;
     bookTrack_number?: string;
