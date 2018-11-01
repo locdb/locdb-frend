@@ -257,27 +257,36 @@ export class TypedResourceView implements Metadata {
 
   }
 
-  /** ToDo Specific (DEPRECATED) TODO REMOVE**/
-  // children(typed: boolean = true): Array<models.BibliographicResource> | Array<TypedResourceView> {
-  //   if (this.data.hasOwnProperty('children')) {
-  //     const children = (<models.ToDo>this.data).children;
-  //     if (typed) {
-  //       return children.map(child => new TypedResourceView(child));
-  //     } else {
-  //       // return as plain BRs
-  //       return children;
-  //     }
-  //   }
-  //   return null;
-  // }
-
   /* Short-hand to decide whether the underlying resource is a ToDo item.
   This is preferred over checking for childrens directly, as the types and
   implementation may change.
 
   */
   isTodo() {
-    return this.children != null;
+    if (this.status === enums.status.valid) {
+      // valid resources are not To Do, per def
+      return false;
+    }
+
+    if (this.status === enums.status.ocrProcessed
+      || this.status === enums.status.ocrProcessing
+      || this.status === enums.status.notOcrProcessed) {
+      // Status is OCR related
+      return true;
+    }
+
+    if (this.status === enums.status.external && this.data.parts && this.data.parts.length) {
+      // Status is external and has some notion of references (parts)
+      return true;
+    }
+
+    if (!this.status) {
+      // Some explicit ToDo items do not have an actual status
+      return true;
+    }
+
+    // default-case
+    return false;
   }
 
   set_from(other: Partial<Metadata>): void {
@@ -332,33 +341,47 @@ export class TypedResourceView implements Metadata {
      *  which can be used for auto-completion techniques.
      *  It is also used for the main-title generation.
      */
-    let s = '';
     const value = this;
     if (this.isJournalLike()) {
-      s = value.astype(enums.resourceType.journal).title;
-      const journalSubtitle = value.astype(enums.resourceType.journal).subtitle;
-      if (journalSubtitle) {
-        s += ' ' + journalSubtitle;
+      const components: Array<string> = [];
+
+      if (value.title) {
+        let ownTitle = value.title;
+        if (value.subtitle) {
+          ownTitle += ' ' + value.subtitle;
+        }
+        components.push(ownTitle);
       }
 
+      let journalTitle = value.astype(enums.resourceType.journal).title;
+
+      if (journalTitle) {
+
+        const journalSubtitle = value.astype(enums.resourceType.journal).subtitle;
+        if (journalSubtitle) {
+          journalTitle += ' ' + journalSubtitle;
+        }
+        components.push(journalTitle);
+      }
 
       const volumeNumber = value.astype(enums.resourceType.journalVolume).number;
       if (volumeNumber) {
-        s += ', Vol. ' + volumeNumber;
+        components.push('Vol. ' + volumeNumber);
       }
 
       const issueNumber = value.astype(enums.resourceType.journalIssue).number;
       if (issueNumber) {
-        s += ', Issue ' + issueNumber;
+        components.push('Issue ' + issueNumber);
       }
 
-      // journals issues and volumes do not need anything else, we're done here.
-      return s;
+        // journals issues and volumes do not need anything else, we're done here.
+      return components.join(', ');
     }
 
     // Otherwise, always use own title:
     // the very important default, is the resource's OWN TITLE.
     // also plain journals are dealt with here
+    let s = '';
     if (value.title) {
       s += value.title;
       if (value.subtitle) {

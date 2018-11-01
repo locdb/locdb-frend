@@ -27,6 +27,7 @@
   <a class="badge badge-secondary ml-1" *ngIf="findIdentifier(of.identifiers, 'URI')" [href]="findIdentifier(of.identifiers, 'URI')" target="_blank">
     <i class="fa fa-external-link"></i> URI
   </a>
-  <span class="badge badge-success ml-1" *ngIf="of && of._id">LOCDB</span>
-  <span class="badge badge-warning ml-1" *ngIf="!(of && of._id)">{{in?.data?.source || of?.data?.source}}</span>
+  <span class="badge badge-success ml-1" *ngIf="of.isTodo()">To Do</span>
+  <span class="badge badge-success ml-1" *ngIf="!of.isTodo() && of._id">LOCDB</span>
+  <span class="badge badge-warning ml-1" *ngIf="!of.isTodo() && !of._id">{{in?.data?.source || of?.data?.source}}</span>
 </p>
