@@ -27,7 +27,7 @@
                 to prevent fallback to first page -->
                 <!-- <div class="pull-right" *ngIf="scanIsVisible && paginationInitialized"> -->
                 <div class="pull-right" *ngIf="allScans">
-                  <pagination [totalItems]="allScans.length" [itemsPerPage]="1" [(ngModel)]="currentPage" (pageChanged)="pageChanged($event)"></pagination>
+                  <pagination [totalItems]="allScans.length" [itemsPerPage]="1" [maxSize]="5" [(ngModel)]="currentPage" (pageChanged)="pageChanged($event)"></pagination>
                 </div>
                 <!-- </div> -->
             </div>
@@ -75,19 +75,14 @@
         </div>
       </div> <!-- End of body -->
       <div class="card-footer"  *ngIf="!sorry_text">
-        <div class="row">
-          <!-- <div class="col-4"> -->
-          <!--   <button (click)="zoomIn()" class="btn btn-success"><i *ngIf="!search_extended" class="fa fa-search-plus"></i> </button> -->
-          <!--   <button (click)="zoomOut()" class="btn btn-primary"><i *ngIf="!search_extended" class="fa fa-search-minus"></i></button> -->
-          <!--   <button (click)="zoomReset()" class="btn btn-secondary"> <i *ngIf="!search_extended" class="fa fa-compress"></i> </button> -->
-          <!-- </div> -->
-          <div class="col-6">
-            <button type="button" class="btn btn-secondary" (click)="saveBoxes()">
-              <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Save Bounding Boxes
-            </button>
+        <div *ngIf="scanIsDisplayable && scanIsVisible" class="btn btn-toolbar" role="toolbar" aria-label="Controls for scan view">
+          <div class="btn-group mr-2" role="group" aria-label="Zooming controls">
+            <button (click)="zoomIn()" class="btn btn-secondary"><i class="fa fa-search-plus"></i> </button>
+            <button (click)="zoomOut()" class="btn btn-secondary"><i class="fa fa-search-minus"></i></button>
+            <button (click)="zoomReset()" class="btn btn-secondary"> <i class="fa fa-compress"></i> </button>
           </div>
-          <div class="col-6 text-right">
-            <div class="btn-group">
+
+          <div class="btn-group mr-2" role="group" aria-label="Select bounding box editing mode">
             <button type="button" [ngClass]="getMode() === 'select' ? 'btn btn-secondary active' : 'btn btn-secondary'" (click)="setMode('select')">
               <span aria-hidden="true"></span> Select
             </button>
@@ -97,7 +92,11 @@
             <button type="button" [ngClass]="getMode() === 'delete' ? 'btn btn-secondary active' : 'btn btn-secondary'"  (click)="setMode('delete')">
               <span aria-hidden="true"></span> Delete
             </button>
-            </div>
+          </div>
+          <div class="btn-group" role="group" aria-label="Save Bounding Boxes">
+            <button type="button" class="btn btn-success" (click)="saveBoxes()">
+              <i class="fa fa-save"></i> Save Bounding Boxes
+            </button>
           </div>
         </div>
       </div> <!-- End of footer -->

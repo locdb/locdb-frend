@@ -395,4 +395,44 @@ export class UtilsService {
         );
     }
 
+    /**
+     * 
+     * Triggers the expensive calculation of statistics
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public triggerStats(observe?: 'body', reportProgress?: boolean): Observable<SuccessResponse>;
+    public triggerStats(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<SuccessResponse>>;
+    public triggerStats(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<SuccessResponse>>;
+    public triggerStats(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json',
+            'image/png',
+            'application/pdf'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json',
+            'multipart/form-data'
+        ];
+
+        return this.httpClient.get<SuccessResponse>(`${this.basePath}/triggerStats`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
 }

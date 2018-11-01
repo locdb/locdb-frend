@@ -10,8 +10,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { environment } from 'environments/environment';
 
-// d3
-import * as d3 from 'd3';
 
 // ngx-bootstrap
 import { ModalModule } from 'ngx-bootstrap/modal';
