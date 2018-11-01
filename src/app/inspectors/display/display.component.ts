@@ -6,7 +6,6 @@ import {ElementRef} from '@angular/core';
 import { models } from '../../locdb';
 import { LocdbService } from '../../locdb.service';
 
-import * as d3 from 'd3';
 import { PopoverModule } from 'ngx-popover/index';
 
 import { Observable } from 'rxjs';
