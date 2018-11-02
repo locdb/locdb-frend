@@ -87,7 +87,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         .draggable({
           restrict: {
             restriction: 'parent',
-            elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+            elementRect: { top: 1, left: 1, bottom: 1, right: 1 }
           },
         })
         .resizable({
@@ -115,10 +115,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
               y = (parseFloat(target.getAttribute('y')) || 0);
           // update the element's style
           let svg = target.parentNode.parentNode
-          let svgWidth = svg.parentNode.clientWidth || svg.width.baseVal.value
-          let svgHeight = svg.parentNode.clientHeight || svg.height.baseVal.value
-          const clientToImageWidthRatio = imgWidth / svgWidth
-          const clientToImageHeightRatio = imgHeight / svgHeight
+          let svgWidth = svg.parentNode.clientWidth //|| svg.width.baseVal.value
+          let svgHeight = svg.parentNode.clientHeight //|| svg.height.baseVal.value
           // const translateX = svg.transform.baseVal[0].matrix.e
           // console.log(translateX)
           // const translateY = svg.transform.baseVal[0].matrix.f
@@ -140,6 +138,9 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             height = min_height
             deltaTop = 0
           }
+
+          const clientToImageWidthRatio = imgWidth / svgWidth
+          const clientToImageHeightRatio = imgHeight / svgHeight
                // translate when resizing from top or left edges
           x += deltaLeft * clientToImageWidthRatio / scaleX;
           y += deltaTop * clientToImageHeightRatio / scaleY;
@@ -150,10 +151,13 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           // console.log(deltaLeft)
           // console.log(deltaTop)
 
-        target.setAttribute('width', width * clientToImageWidthRatio / scaleX);
-        target.setAttribute('height', height * clientToImageHeightRatio / scaleY);
-        target.setAttribute('x', x);
-        target.setAttribute('y', y);
+          // deactivate resize if zoom is active on firefox
+          if(!("InstallTrigger" in window) || scaleX < 1.05){
+            target.setAttribute('width', width * clientToImageWidthRatio / scaleX);
+            target.setAttribute('height', height * clientToImageHeightRatio / scaleY);
+            target.setAttribute('x', x);
+            target.setAttribute('y', y);
+          }
 })
          .on('dragmove', function (event){
            let target = event.target,
@@ -161,11 +165,10 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
            y = (parseFloat(target.getAttribute('y')) || 0);
 
            let svg = target.parentNode.parentNode
-           let svgWidth = svg.parentNode.clientWidth || svg.width.baseVal.value
+           let svgWidth = svg.parentNode.clientWidth // || svg.parentNode.parentNode.clientWidth
            // offsetWidth
-           let svgHeight = svg.parentNode.clientHeight || svg.height.baseVal.value
-           const clientToImageWidthRatio = imgWidth / svgWidth
-           const clientToImageHeightRatio = imgHeight / svgHeight
+           let svgHeight = svg.parentNode.clientHeight //|| svg.parentNode.parentNode.clientHeight
+
 
            const scaleX = svg.transform.baseVal[1].matrix.a
            // console.log(scaleX)
@@ -175,19 +178,24 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
            // console.log(event.dy)
            // console.log(x)
            // console.log(y)
+           const clientToImageWidthRatio = imgWidth / svgWidth
+           const clientToImageHeightRatio = imgHeight / svgHeight
+
            x += event.dx * clientToImageWidthRatio / scaleX;
            y += event.dy * clientToImageHeightRatio  / scaleY;
 
-           target.setAttribute('x', x);
-           target.setAttribute('y', y);
+           // deactivate resize if zoom is active on firefox
+           if(!("InstallTrigger" in window) || scaleX < 1.05){
+             target.setAttribute('x', x);
+             target.setAttribute('y', y);
+           }
         });
     }
 
     zoomIn(): void {
       // this.zoom.scaleBy(this.selection, 1.2)
-      this.clientX = this.svgroot.nativeElement.clientWidth || this.svgroot.nativeElement.width.baseVal.value
-      this.clientY = this.svgroot.nativeElement.clientHeight || this.svgroot.nativeElement.height.baseVal.value
-      console.log(this.svgroot)
+      // this.clientY = this.svgroot.nativeElement.parentNode.clientHeight
+      // this.clientX = this.svgroot.nativeElement.parentNode.clientWidth
       const threshold = 2
       if ( this.zoomFactor < threshold) {
         this.zoomFactor += 0.1
@@ -199,10 +207,14 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
       if (this.zoomFactor > 1.0) {
         this.zoomFactor -= 0.1
       }
+      // this.clientX = this.svgroot.nativeElement.parentNode.clientWidth
+      // this.clientY = this.svgroot.nativeElement.parentNode.clientHeight
     }
 
     zoomReset(): void {
       this.zoomFactor = 1.0
+      // this.clientX = this.svgroot.nativeElement.parentNode.clientWidth
+      // this.clientY = this.svgroot.nativeElement.parentNode.clientHeight
     }
 
     saveBoxes() {
