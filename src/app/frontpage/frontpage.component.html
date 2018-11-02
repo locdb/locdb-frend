@@ -44,18 +44,18 @@
 
 </div>
 
-<div class="card">
+<div class="card mt-4">
   <div class="card-body">
     <h2 class="card-title">Stats</h2>
     <div class="card-body">
-      <div *ngIf="!stats" class="loader">
+      <button (click)="retrieveStats()" class="btn btn-secondary" type="button"><i class="fa fa-refresh"></i> Retrieve statistics</button>&nbsp;
+      <button (click)="triggerStats()" class="btn btn-secondary" type="button">Trigger computation of statistics</button>
+      <div *ngIf="statsTriggered" class="alert alert-info mt-2">Computation of statistics has been triggered.</div>
+      <div *ngIf="stats">
+        <hr/>
+        <div *ngIf="isRetrievingStats" class="loader"></div>
+        <pre>{{ stats | json }}</pre>
       </div>
-      <ul *ngIf="!!stats">
-        <!-- Think of building a  " | keys " Pipe if not exists -->
-        <li *ngFor="let statItem of stats">
-          {{ statItem | json }}
-        </li>
-      </ul>
     </div>
   </div>
 </div>
