@@ -162,6 +162,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
            let svg = target.parentNode.parentNode
            let svgWidth = svg.parentNode.clientWidth || svg.width.baseVal.value
+           // offsetWidth
            let svgHeight = svg.parentNode.clientHeight || svg.height.baseVal.value
            const clientToImageWidthRatio = imgWidth / svgWidth
            const clientToImageHeightRatio = imgHeight / svgHeight
@@ -184,8 +185,9 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     zoomIn(): void {
       // this.zoom.scaleBy(this.selection, 1.2)
-      this.clientX = this.svgroot.nativeElement.clientWidth
-      this.clientY = this.svgroot.nativeElement.clientHeight
+      this.clientX = this.svgroot.nativeElement.clientWidth || this.svgroot.nativeElement.width.baseVal.value
+      this.clientY = this.svgroot.nativeElement.clientHeight || this.svgroot.nativeElement.height.baseVal.value
+      console.log(this.svgroot)
       const threshold = 2
       if ( this.zoomFactor < threshold) {
         this.zoomFactor += 0.1
@@ -400,7 +402,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     imageOnload() {
         const realDim = this.realImgDimension(this.img_src);
-        console.log('Image Loaded, Dimensions: ', realDim); // e.g 4299, 3035
+        console.log('[Display][debug]Image Loaded, Dimensions: ', realDim); // e.g 4299, 3035
         this.imgX = realDim.naturalWidth;
         this.imgY = realDim.naturalHeight;
         this.imglength.emit(this.imgY)

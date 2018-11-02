@@ -234,7 +234,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   typeaheadOnSelect(e: TypeaheadMatch): void {
-    console.log('Selected value: ', e.item.id);
+    console.log('[Suggestion][debug]Selected value: ', e.item.id);
     this.query = e.item.id
     this.internalSuggestions = [e.item.typedTuple]
     this.selectedResource = e.item.typedTuple
@@ -250,7 +250,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges | any) {
     this.committing = false; // entry has changed, apparrently not committing
     this.committed = false; // entry has changed, so don't show success message
-    console.log('[Suggestion Component] ngOnChanges called');
+    // console.log('[Suggestion][debug] ngOnChanges called');
     // reset filters
     this.initFilterOptions();
     // This is called every time the input this.entry changes //
@@ -272,14 +272,14 @@ export class SuggestionComponent implements OnInit, OnChanges {
             if (trv.partOf) {
               this.locdbService.bibliographicResource(trv.partOf).subscribe(
                 (container) => this.currentTarget = [trv, container],
-                (error) => { console.log('Could not retrieve container'); this.currentTarget = [trv, null]; }
+                (error) => { console.log('[Suggestion][error]Could not retrieve container'); this.currentTarget = [trv, null]; }
               );
               } else {
                 this.currentTarget = [trv, null];
                 this.onSelect(this.currentTarget);
               }
           },
-          (err) => { console.log('Invalid entry.references pointer', this.entry.references) });
+          (err) => { console.log('[Suggestion][error]Invalid entry.references pointer', this.entry.references) });
       } else {
         // entry was not linked yet
         this._currentTarget = null;
@@ -309,18 +309,18 @@ export class SuggestionComponent implements OnInit, OnChanges {
     if (!this.entry) { return; }
     const pinnedEntry = this.entry;
     this.externalInProgress = true;
-    console.log('Fetching precalculated suggestions for:', this.entry)
+    console.log('[Suggestion][info]Fetching precalculated suggestions for:', this.entry)
     this.locdbService.precalculatedSuggestions(this.entry).subscribe(
       (suggestions) => {
-        Object.is(this.entry, pinnedEntry) ? this.saveExternal(suggestions) : console.log('Discard precalc suggestions');
-        console.log('Received Precalculated External Suggestions:', suggestions)
+        Object.is(this.entry, pinnedEntry) ? this.saveExternal(suggestions) : console.log('[Suggestion][info]Discard precalc suggestions');
+        console.log('[Suggestion][info]Received Precalculated External Suggestions:', suggestions)
         if (!suggestions.length) {
-          console.log('Empty precalc. suggestions: falling back to standard retrieval');
+          console.log('[Suggestion][info]Empty precalc. suggestions: falling back to standard retrieval');
           this.fetchExternalSuggestions();
         }
       },
       (err) => {
-        console.log('Precalculated suggestions errored, fetching standard external suggestions');
+        console.log('[Suggestion][error]Precalculated suggestions errored, fetching standard external suggestions');
         this.fetchExternalSuggestions(); // if there was an error, fall back to normal suggs
       }
     );
@@ -333,7 +333,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     const oldEntry = this.entry;
     this.internalInProgress = true; // loading icon
     this.internalSuggestions = [];
-    console.log('Fetching internal suggestions for', this.query, 'with threshold', threshold);
+    console.log('[Suggestion][info]Fetching internal suggestions for', this.query, 'with threshold', threshold);
     // this.locdbService.suggestionsByEntry(this.entry, false).subscribe( (sgt) => this.saveInternal(sgt) );
     this.locdbService.suggestionsByQuery(this.query, false, threshold).subscribe(
       (sug) => { Object.is(this.entry, oldEntry) ? this.saveInternal(sug) : console.log('discarded suggestions')
@@ -348,7 +348,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     const oldEntry = this.entry;
     this.externalInProgress = true; // loading icon
     this.externalSuggestions = [];
-    console.log('Fetching external suggestions for', this.query, 'with threshold', threshold);
+    console.log('[Suggestion][info]Fetching external suggestions for', this.query, 'with threshold', threshold);
     // this.locdbService.suggestionsByEntry(this.entry, true).subscribe( (sgt) => this.saveExternal(sgt) );
     this.locdbService.suggestionsByQuery(this.query, true, threshold).subscribe(
       (sug) => { Object.is(this.entry, oldEntry) ? this.saveExternal(sug) : console.log('discarded suggestions')
@@ -410,7 +410,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
       this.max_in = this.max_shown_suggestions;
     }
     this.internalInProgress = false;
-    console.log('Received Internal Suggestions: ', this.internalSuggestions);
+    console.log('[Suggestion][info]Received Internal Suggestions: ', this.internalSuggestions);
     // }
   }
 
@@ -422,7 +422,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     } else {
       this.max_ex = this.max_shown_suggestions;
     }
-    console.log('Received External Suggestions: ', this.externalSuggestions);
+    console.log('[Suggestion][info]Received External Suggestions: ', this.externalSuggestions);
     this.externalInProgress = false;
   }
 
@@ -433,21 +433,21 @@ export class SuggestionComponent implements OnInit, OnChanges {
         entry.references = '';
         this.currentTarget = null;
       },
-      (error) => alert('Could not remove citation link: ' + error.message)
+      (error) => alert('[Suggestion][error]Could not remove citation link: ' + error.message)
     );
   }
 
   link(entry: models.BibliographicEntry, citationTargetPair: [TypedResourceView, TypedResourceView | null]) {
     const citationTargetResourceId = citationTargetPair[0]._id;
-    if (!entry) { console.log('[link] No valid entry', entry); return ''; };
-    if (!citationTargetResourceId) { console.log('[link] No valid target', citationTargetPair); return ''; };
+    if (!entry) { console.log('[Suggestion][error][link]No valid entry', entry); return ''; };
+    if (!citationTargetResourceId) { console.log('[Suggestion][error][link] No valid target', citationTargetPair); return ''; };
 
     if (entry.references) {
       // Replace old citation target
-      console.log('Replacing citation target');
+      console.log('[Suggestion][info]Replacing citation target');
       this.entryService.removeTargetBibliographicResource(entry._id).subscribe(
         (newResource) => {
-          console.log('Result of remove target', newResource);
+          console.log('[Suggestion][info]Result of remove target', newResource);
           entry.status = enums.status.ocrProcessed; // back-end does it this way
           entry.references = '';
           this.entryService.addTargetBibliographicResource(entry._id, citationTargetResourceId).subscribe(
@@ -457,14 +457,14 @@ export class SuggestionComponent implements OnInit, OnChanges {
               entry.references = citationTargetResourceId;
               this.committed = true;
               this.committing = false;
-              console.log('Replaced citation target')
+              console.log('[Suggestion][info]Replaced citation target')
               this.currentTarget = citationTargetPair;
               this.selectedResource = this.currentTarget;
             },
-            (error) => { alert('Error while replacing citation target: ' + error.message); this.committing = false; }
+            (error) => { alert('[Suggestion][error]Error while replacing citation target: ' + error.message); this.committing = false; }
           )
         },
-        (error) => { alert('Could not remove citation link: ' + error.message); this.committing = false; }
+        (error) => { alert('[Suggestion][error]Could not remove citation link: ' + error.message); this.committing = false; }
       );
     } else {
       // Add new citation target
@@ -475,11 +475,11 @@ export class SuggestionComponent implements OnInit, OnChanges {
           entry.references = citationTargetResourceId;
           this.committed = true;
           this.committing = false;
-          console.log('Added citation target')
+          console.log('[Suggestion][info]Added citation target')
           this.currentTarget = citationTargetPair;
           this.selectedResource = this.currentTarget;
         },
-        (error) => { alert('Error while replacing citation target: ' + error.message); this.committing = false; }
+        (error) => { alert('[Suggestion][error]Error while replacing citation target: ' + error.message); this.committing = false; }
       );
     }
   }
@@ -498,10 +498,10 @@ export class SuggestionComponent implements OnInit, OnChanges {
               citationTargetPair[0] = newResource;
               this.link(entry, [newResource, newContainer]);
             },
-            (error) => { alert('Error while updating resource: ' + error.message); this.committing = false;  }
+            (error) => { alert('[Suggestion][error]Error while updating resource: ' + error.message); this.committing = false;  }
           );
           },
-        (error) => { alert('Error while updating container: ' + error.message); this.committing = false; }
+        (error) => { alert('[Suggestion][error]Error while updating container: ' + error.message); this.committing = false; }
       );
     } else {
       this.locdbService.maybePostResource(resource).subscribe(
@@ -512,7 +512,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
           this.link(entry, [newResource, null]);
 
         },
-        (error) => { alert('Error while updating resource: ' + error.message); this.committing = false; }
+        (error) => { alert('[Suggestion][error]Error while updating resource: ' + error.message); this.committing = false; }
       );
     }
 
@@ -581,7 +581,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     const nresource = new TypedResourceView({type: metadata.type});
     nresource.set_from(metadata);
     this.newResource = [nresource, null];
-    console.log('Created new resource', this.newResource);
+    console.log('[Suggestion][info]Created new resource', this.newResource);
     this.selectedResource = this.newResource;
   }
 
