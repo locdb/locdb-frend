@@ -14,7 +14,7 @@
     </div>
   </div>
 </div>
-<div *ngIf="resource && alternate && (!resource.partOf || resource.partOf !== alternate._id)" class="alert alert-warning mt-1" role="alert">
+<div *ngIf="resource && alternate && (!resource.partOf || resource.partOf !== alternate._id)" class="alert alert-warning mt-2" role="alert">
   Resource is not properly linked to its container.
   <button type="button" class="btn btn-secondary btn-sm" (click)="fixPartOf()">Fix it.</button>
 </div>
@@ -24,7 +24,7 @@
     Resource is not properly marked as stand-alone.
     <button type="button" class="btn btn-secondary btn-sm" (click)="fixPartOf()">Fix it.</button>
   </div>
-  <div class="alert alert-info mt-1" role="alert">
+  <div class="alert alert-info mt-2" role="alert">
     <h5>- Standalone Resource -</h5>
     <button type="button" class="btn btn-secondary btn-sm" (click)="createNewContainer()">Create new container</button>&nbsp;
     <button type="button" class="btn btn-secondary btn-sm" (click)="createNewPart()">Create new resource part</button>&nbsp;
