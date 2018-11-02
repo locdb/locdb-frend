@@ -1,31 +1,33 @@
 <div *ngIf="resource && alternate || resource && lastAlternate">
   <div class="btn-toolbar" role="toolbar" aria-label="Toolbar">
-    <div class="btn-group" role="group" aria-label="Toggle scan view">
+    <div class="btn-group" role="group" aria-label="Toggle between resource and container">
       <button type="button" class="btn btn-secondary" (click)="alternateIsActive = false" [class.active]="!alternateIsActive">
         Resource
       </button>
       <button type="button" *ngIf="!!alternate" class="btn btn-secondary" (click)="alternateIsActive = true" [class.active]="!!alternateIsActive">
         Container
       </button>
-      <span class="ml-2 mr-2"></span>
+    </div>
+    <div class="btn-group ml-2" role="group" aria-label="Actions for partOf relation">
       <button type="button" *ngIf="!!alternate" class="btn btn-warning" (click)="disconnectFromAlternate()">Disconnect</button>
       <button type="button" *ngIf="lastAlternate" class="btn btn-warning" (click)="reconnectToLastAlternate()">Reconnect to container</button>
     </div>
   </div>
 </div>
-<div *ngIf="resource && alternate && (!resource.partOf || resource.partOf !== alternate._id)" class="alert alert-warning mt-1" role="alert">
+<div *ngIf="resource && alternate && (!resource.partOf || resource.partOf !== alternate._id)" class="alert alert-warning mt-2" role="alert">
   Resource is not properly linked to its container.
   <button type="button" class="btn btn-secondary btn-sm" (click)="fixPartOf()">Fix it.</button>
 </div>
 <div *ngIf="resource && !alternate">
   <!-- View when no alternate is selected -->
-  <div *ngIf="!!resource.partOf" class="alert alert-warning mt-1" role="alert">
+  <div *ngIf="!!resource.partOf" class="alert alert-warning mt-2" role="alert">
     Resource is not properly marked as stand-alone.
     <button type="button" class="btn btn-secondary btn-sm" (click)="fixPartOf()">Fix it.</button>
   </div>
-  <div class="alert alert-info mt-1" role="alert">
+  <div class="alert alert-info mt-2" role="alert">
     <h5>- Standalone Resource -</h5>
     <button type="button" class="btn btn-secondary btn-sm" (click)="createNewContainer()">Create new container</button>&nbsp;
+    <button type="button" class="btn btn-secondary btn-sm" (click)="createNewPart()">Create new resource part</button>&nbsp;
     <button type="button" class="btn btn-secondary btn-sm" (click)="isLinking = !isLinking">Link to existing container</button>
     <!-- typeahead partOf -->
     <div *ngIf="isLinking" style="margin: .75rem;" class="form-group row">
