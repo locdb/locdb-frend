@@ -126,6 +126,7 @@ export class ResourcePairFormComponent implements OnInit {
         alert('An unexpected error occurred: ' + error.message);
         // undo changes on error, such that user can try again.
         this.resource.data.partOf = oldPartOf;
+        this.onResourceChange(this.resource);
         this.isLoading = false;
       }
     )
@@ -133,17 +134,27 @@ export class ResourcePairFormComponent implements OnInit {
 
   createNewContainer() {
     this.alternate = new TypedResourceView({});
+    // trigger event emitters?
+  }
+
+  createNewPart() {
+    this.alternate = this.resource;
+    this.resource = new TypedResourceView({});
+    this.lastAlternate = null;
+    // trigger event emitters?
   }
 
   disconnectFromAlternate() {
     this.alternateIsActive = false;
     this.lastAlternate = this.alternate;
     this.alternate = null;
+    // trigger event emitters?
   }
 
   reconnectToLastAlternate() {
     this.alternate = this.lastAlternate;
     this.lastAlternate = null;
+    // trigger event emitters?
   }
 
 }
