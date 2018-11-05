@@ -363,6 +363,8 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          )
       } else {
          // Create new resource if it has an ID
+         // Creating new resources implies that they are validated by humans
+         data.status = enums.status.valid;
          this.brService.save(data).subscribe(
             response => {
                this.resource = new TypedResourceView(response);
