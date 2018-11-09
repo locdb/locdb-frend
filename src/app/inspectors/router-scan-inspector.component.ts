@@ -80,6 +80,8 @@ export class RouterScanInspectorComponent implements OnInit {
   filter_options = {}
   selection = {}
 
+  boxEditMode = false
+
   /* Overwrite setter such that scanIsDisplayable is always set correctly */
   private _scan: models.Scan = null;
   get scan(): models.Scan { return this._scan; }
@@ -288,13 +290,26 @@ export class RouterScanInspectorComponent implements OnInit {
     if (this.scanIsDisplayable) {
       this.display.saveBoxes();
     }
+    this.toggleBoxEditMode()
   }
   // Zooming methods END
 
   setMode(mode: string) {
+    if(!this.boxEditMode){
+      this.toggleBoxEditMode()
+    }
+
     if (this.scanIsDisplayable) {
       this.display.setMode(mode);
     }
+  }
+
+  toggleBoxEditMode(){
+    this.boxEditMode = !this.boxEditMode
+        if (this.scanIsDisplayable) {
+          this.display.setMode('select');
+          this.display.reload_rects()
+        }
   }
 
   getMode(mode: string) {

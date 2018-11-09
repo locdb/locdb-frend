@@ -1,9 +1,10 @@
 <div class="row">
   <!-- Scan: {{ scan | json }}<br> -->
   <!-- Entry: {{ entry | json}}<br> -->
-  <div class="col-xs-12 col-sm-6 col-md-6">
+  <div [class]="boxEditMode? 'col-xs-12 col-sm-12 col-md-12' : 'col-xs-12 col-sm-6 col-md-6'">
+
     <div class="card">
-      <div class="card-header"  *ngIf="!sorry_text">
+      <div class="card-header"  *ngIf="!sorry_text && !boxEditMode">
         <!-- <button type="button" class="btn btn-secondary" (click)="showrefs()">
           Ref view
           </button> -->
@@ -46,6 +47,34 @@
             </div>
           </div>
       </div>
+      <div class="card-header" *ngIf="!sorry_text && boxEditMode">
+        <div class="btn-group mr-2" role="group" aria-label="Select bounding box editing mode">
+          <button type="button" [ngClass]="getMode() === 'select' ? 'btn btn-secondary active' : 'btn btn-secondary'" (click)="toggleBoxEditMode()">
+            <i class="fa fa-remove"></i> abort
+          </button>
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Zooming controls">
+          <button (click)="zoomIn()" class="btn btn-secondary"><i class="fa fa-search-plus"></i> </button>
+          <button (click)="zoomOut()" class="btn btn-secondary"><i class="fa fa-search-minus"></i></button>
+          <button (click)="zoomReset()" class="btn btn-secondary"> <i class="fa fa-compress"></i> </button>
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Select bounding box editing mode">
+          <button type="button" [ngClass]="getMode() === 'select' ? 'btn btn-secondary active' : 'btn btn-secondary'" (click)="setMode('select')">
+            <span aria-hidden="true"></span> Select
+          </button>
+          <button type="button" [ngClass]="getMode() === 'add' ? 'btn btn-secondary active' : 'btn btn-secondary'"  (click)="setMode('add')">
+            <span aria-hidden="true"></span> Add
+          </button>
+          <button type="button" [ngClass]="getMode() === 'delete' ? 'btn btn-secondary active' : 'btn btn-secondary'"  (click)="setMode('delete')">
+            <span aria-hidden="true"></span> Delete
+          </button>
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Select bounding box editing mode">
+          <button type="button" class="btn btn-success" (click)="saveBoxes()">
+            <i class="fa fa-save"></i> Save Bounding Boxes
+          </button>
+        </div>
+      </div>
       <div class="card-header" *ngIf="sorry_text">
         <p> {{sorry_text}} </p>
       </div>
@@ -74,7 +103,7 @@
         <div *ngIf="loading" class="loader">
         </div>
       </div> <!-- End of body -->
-      <div class="card-footer"  *ngIf="!sorry_text">
+      <div class="card-footer"  *ngIf="!sorry_text && !boxEditMode">
         <div *ngIf="scanIsDisplayable && scanIsVisible" class="btn btn-toolbar" role="toolbar" aria-label="Controls for scan view">
           <div class="btn-group mr-2" role="group" aria-label="Zooming controls">
             <button (click)="zoomIn()" class="btn btn-secondary"><i class="fa fa-search-plus"></i> </button>
@@ -82,7 +111,7 @@
             <button (click)="zoomReset()" class="btn btn-secondary"> <i class="fa fa-compress"></i> </button>
           </div>
 
-          <div class="btn-group mr-2" role="group" aria-label="Select bounding box editing mode">
+          <!-- <div class="btn-group mr-2" role="group" aria-label="Select bounding box editing mode">
             <button type="button" [ngClass]="getMode() === 'select' ? 'btn btn-secondary active' : 'btn btn-secondary'" (click)="setMode('select')">
               <span aria-hidden="true"></span> Select
             </button>
@@ -92,10 +121,10 @@
             <button type="button" [ngClass]="getMode() === 'delete' ? 'btn btn-secondary active' : 'btn btn-secondary'"  (click)="setMode('delete')">
               <span aria-hidden="true"></span> Delete
             </button>
-          </div>
-          <div class="btn-group" role="group" aria-label="Save Bounding Boxes">
-            <button type="button" class="btn btn-success" (click)="saveBoxes()">
-              <i class="fa fa-save"></i> Save Bounding Boxes
+          </div> -->
+          <div class="btn-group" role="group" aria-label="Edit Bounding Boxes">
+            <button type="button" class="btn btn-success" (click)="toggleBoxEditMode()">
+              <i class="fa fa-edit"></i> edit bounding boxes
             </button>
           </div>
         </div>
