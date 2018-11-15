@@ -31,6 +31,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     @ViewChild('svgroot') svgroot: ElementRef;
     @Input() img_src = '';
     private _entries = []
+    @Input() boxEditMode = false;
+    boxHeight = 750
     @Input() set entries(entries: models.BibliographicEntry[]){
       // check if new entries arrived
       if(entries.length == this._entries.length &&
@@ -157,8 +159,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             target.setAttribute('height', height * clientToImageHeightRatio / scaleY);
             target.setAttribute('x', x);
             target.setAttribute('y', y);
-          }
-})
+          }})
          .on('dragmove', function (event){
            let target = event.target,
            x = (parseFloat(target.getAttribute('x')) || 0),
@@ -194,8 +195,8 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     zoomIn(): void {
       // this.zoom.scaleBy(this.selection, 1.2)
-      // this.clientY = this.svgroot.nativeElement.parentNode.clientHeight
-      // this.clientX = this.svgroot.nativeElement.parentNode.clientWidth
+      this.clientY = this.svgroot.nativeElement.parentNode.clientHeight
+      this.clientX = this.svgroot.nativeElement.parentNode.clientWidth
       const threshold = 2
       if ( this.zoomFactor < threshold) {
         this.zoomFactor += 0.1
@@ -207,14 +208,14 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
       if (this.zoomFactor > 1.0) {
         this.zoomFactor -= 0.1
       }
-      // this.clientX = this.svgroot.nativeElement.parentNode.clientWidth
-      // this.clientY = this.svgroot.nativeElement.parentNode.clientHeight
+      this.clientX = this.svgroot.nativeElement.parentNode.clientWidth
+      this.clientY = this.svgroot.nativeElement.parentNode.clientHeight
     }
 
     zoomReset(): void {
       this.zoomFactor = 1.0
-      // this.clientX = this.svgroot.nativeElement.parentNode.clientWidth
-      // this.clientY = this.svgroot.nativeElement.parentNode.clientHeight
+      this.clientX = this.svgroot.nativeElement.parentNode.clientWidth
+      this.clientY = this.svgroot.nativeElement.parentNode.clientHeight
     }
 
     saveBoxes() {
@@ -233,7 +234,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         // check first if entry is up for deletion
         if(markedForDeletion){
           // ignore unsaved added entries
-          if(rects_copys[id].entry._id){
+          if(rects_copy[id].entry._id){
             this.deleteEntry.emit(rects_copy[id].entry)
           }
         }
@@ -301,6 +302,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           this.saveBoxes()
           return false;
         }, [], 'Save entries'));
+        this.boxHeight = window.innerHeight*0.8
     }
 
     onSelect(rect: Rect) {
@@ -390,7 +392,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
       const entry = {ocrData: {coordinates: coords},
                     scanId: scanId}
       // console.log(entry)
-      this.rects.push(new Rect(entry))
+      this.rects.push(new Rect(entry).markAsNew())
       // this.entries.push(entry)
     }
 
@@ -468,6 +470,7 @@ class Rect {
     width: number;
     entry: models.BibliographicEntry;
     active = true;
+    new = false
 
     constructor(entry: models.BibliographicEntry) {
       const values = entry.ocrData.coordinates.split(' ')
@@ -501,10 +504,18 @@ class Rect {
 
     isPristine(x: number, y: number, width: number, height: number) {
       // is this ok?
-      console.log('Pristine check', this.x, x, this.y, y, this.width, width, this.height, height)
+      if (this.new){
+        console.log('[display][info] Pristine check: skipped')
+        return false
+      }
+      console.log('[display][info] Pristine check', this.x, x, this.y, y, this.width, width, this.height, height)
       return this.x === x && this.y === y && this.width === width && this.height === height
     }
 
+    markAsNew(){
+      this.new = true
+      return this
+    }
     markForDeletion(){
       this.active = false
     }

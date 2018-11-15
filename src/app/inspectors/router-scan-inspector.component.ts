@@ -310,6 +310,7 @@ export class RouterScanInspectorComponent implements OnInit {
           this.display.setMode('select');
           this.display.reload_rects()
         }
+    window.scrollTo(0,0);
   }
 
   getMode(mode: string) {

@@ -82,6 +82,7 @@
 
         <div *ngIf="scanIsDisplayable" [hidden]="!scanIsVisible" [style.height]="imgheight">
           <app-display [img_src]="scanUrl" [entries]="refs" [selectedEntry]="entry"
+           [boxEditMode]="boxEditMode"
            (entry)="selectEntry($event)"
            (imglength)="setHeight()"
            (deleteEntry)="deleteEntry($event)"
@@ -131,7 +132,7 @@
       </div> <!-- End of footer -->
     </div> <!-- End of card -->
   </div> <!-- End of column -->
-  <div class="col-xs-12 col-sm-6 col-md-6">
+  <div class="col-xs-12 col-sm-6 col-md-6" *ngIf="!boxEditMode">
     <!-- <app-suggestion [entry]="entry" (suggest)='updateTarget($event)'></app-suggestion> -->
     <div *ngIf="entry">
       <app-suggestion [entry]="entry"></app-suggestion>

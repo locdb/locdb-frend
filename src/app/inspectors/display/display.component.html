@@ -2,7 +2,8 @@
 <!-- {{clientY}}
 {{clientX}}
 {{zoomFactor}} -->
-<div style="height: 1000px; overflow-y: scroll;">
+<div [style.height]="boxEditMode? boxHeight+'px': 'fit-content'"
+style="overflow-y: scroll">
     <!-- {{_entries}} -->
     <!-- {{ selectedEntry | json}} -->
     <!-- <button (click)='zoomIn()'>zoom</button>
