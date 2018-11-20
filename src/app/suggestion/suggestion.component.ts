@@ -160,15 +160,9 @@ export class SuggestionComponent implements OnInit, OnChanges {
       ],
       year: [{name: 'All', filter: e => true}]
     };
-
-    let oldSourceFilter = 'All'; // use 'All' as default
-    if (this.selection) { // but if there was a previous selection
-      oldSourceFilter = this.selection.source; // keep it
-    }
-
     // pre-selected values
     this.selection = {
-      source: oldSourceFilter,
+      source: 'All',
       resource_type: 'All',
       contained: 'All',
       year: 'All'
