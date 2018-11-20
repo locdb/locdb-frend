@@ -160,9 +160,19 @@ export class SuggestionComponent implements OnInit, OnChanges {
       ],
       year: [{name: 'All', filter: e => true}]
     };
+
+
+    let preselectedSource = 'All'; // default
+    if (!!this.selection && this.selection.source !== 'All') {
+      // Store preselection if it differs from 'All'
+      preselectedSource = this.selection.source;
+      // make sure the preselection filter is in the options
+      this.filter_options.source.push({name: preselectedSource, filter: e => e.some(x => x ? x.source === preselectedSource : false)});
+    }
+
     // pre-selected values
     this.selection = {
-      source: 'All',
+      source: preselectedSource,
       resource_type: 'All',
       contained: 'All',
       year: 'All'
