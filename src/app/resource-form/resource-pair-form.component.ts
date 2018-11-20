@@ -79,7 +79,11 @@ export class ResourcePairFormComponent implements OnInit {
   typeaheadOnSelect(e: TypeaheadMatch) {
     console.log('typeaheadOnSelect', e);
     this.brService.get(e.item.id).subscribe(
-      (resource) => this.alternate = new TypedResourceView(resource),
+      (resource) => {
+        this.alternate = new TypedResourceView(resource)
+        // trigger event emitter
+        this.alternateChange.emit(this.alternate);
+      },
       (error) => alert('Could not retrieve container data.')
     )
     this.isLinking = false;
@@ -134,27 +138,33 @@ export class ResourcePairFormComponent implements OnInit {
 
   createNewContainer() {
     this.alternate = new TypedResourceView({});
-    // trigger event emitters?
+    // trigger event emitters
+    this.alternateChange.emit(this.alternate);
   }
 
   createNewPart() {
     this.alternate = this.resource;
     this.resource = new TypedResourceView({});
     this.lastAlternate = null;
-    // trigger event emitters?
+
+    // trigger event emitters
+    this.resourceChange.emit(this.resource);
+    this.alternateChange.emit(this.alternate);
   }
 
   disconnectFromAlternate() {
     this.alternateIsActive = false;
     this.lastAlternate = this.alternate;
     this.alternate = null;
-    // trigger event emitters?
+    // trigger event emitters
+    this.alternateChange.emit(this.alternate);
   }
 
   reconnectToLastAlternate() {
     this.alternate = this.lastAlternate;
     this.lastAlternate = null;
-    // trigger event emitters?
+    // trigger event emitters
+    this.alternateChange.emit(this.alternate);
   }
 
 }
