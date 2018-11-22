@@ -216,6 +216,46 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
       this.zoomFactor = 1.0
       this.clientX = this.svgroot.nativeElement.parentNode.clientWidth
       this.clientY = this.svgroot.nativeElement.parentNode.clientHeight
+      this.setScrolls(0, 0, 50)
+    }
+
+    zoomOnSelected(){
+      let svgWidth = this.svgroot.nativeElement.parentNode.clientWidth || this.svgroot.nativeElement.width.baseVal.value
+      let svgHeight = this.svgroot.nativeElement.parentNode.clientHeight || this.svgroot.nativeElement.height.baseVal.value
+
+      const clientToImageWidthRatio = this.imgX / svgWidth
+      const clientToImageHeightRatio = this.imgY / svgHeight
+      // console.log(svgroot)
+      this.clientY = this.svgroot.nativeElement.parentNode.clientHeight
+      this.clientX = this.svgroot.nativeElement.parentNode.clientWidth
+      const selectedBoxCoords = this.selectedEntry.ocrData.coordinates.split(' ')
+      console.log('[display][debug] imgX: ',this.imgX)
+      console.log('[display][debug] BoxWidth ', selectedBoxCoords[2])
+      this.zoomFactor = this.imgX / (+selectedBoxCoords[2] - +selectedBoxCoords[0])
+      this.zoomFactor *= 0.95
+      const translateX = this.clientX * (this.zoomFactor-1) /2
+      const translateY = this.clientY * (this.zoomFactor-1) /2
+      console.log('[display][debug] Zoom factor: ',this.zoomFactor)
+      console.log('[display][debug] Selected box coords : ', selectedBoxCoords)
+      console.log('[display][debug] clientToImageRatios: ', clientToImageWidthRatio, clientToImageHeightRatio)
+      console.log('[display][debug] Translate: ', translateX, translateY)
+      console.log('[display][debug] svgWidth, svgHeight ', svgWidth, svgHeight)
+
+      this.setScrolls(+selectedBoxCoords[0] * 0.95 * svgWidth * this.zoomFactor / this.imgX ,
+                      +selectedBoxCoords[1] * 0.95 * svgHeight * this.zoomFactor / this.imgY,
+                      100)
+    }
+
+    /* async workaround, because new Scrollbars have to be present before scrollTop and scrollLeft
+    can be properly set ... */
+    async setScrolls(x, y, d){
+      console.log('[display][debug] ScrollTo: ', x, y)
+      await this.delay(d)
+      this.svgroot.nativeElement.parentNode.parentNode.scrollLeft  = x;
+      this.svgroot.nativeElement.parentNode.parentNode.scrollTop  = y;
+    }
+    async delay(ms: number) {
+      return new Promise( resolve => setTimeout(resolve, ms) );
     }
 
     saveBoxes() {
@@ -306,6 +346,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     onSelect(rect: Rect) {
+      console.log(rect)
         // console.log('[Display][Debug] onselect called', this.editMode);
         if(this.editMode == 'add'){
           // console.log('[Display][Debug] onSelect in add Mode')
@@ -455,6 +496,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             this._hotkeysService.remove(hk);
         }
     }
+
 }
 
 class Rect {

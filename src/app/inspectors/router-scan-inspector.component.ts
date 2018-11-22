@@ -285,6 +285,11 @@ export class RouterScanInspectorComponent implements OnInit {
       this.display.zoomReset();
     }
   }
+  zoomOnSelected(){
+    if (this.scanIsDisplayable) {
+      this.display.zoomOnSelected();
+    }
+  }
 
   saveBoxes() {
     if (this.scanIsDisplayable) {
@@ -305,11 +310,12 @@ export class RouterScanInspectorComponent implements OnInit {
   }
 
   toggleBoxEditMode(){
+    this.zoomReset()
     this.boxEditMode = !this.boxEditMode
-        if (this.scanIsDisplayable) {
-          this.display.setMode('select');
-          this.display.reload_rects()
-        }
+    if (this.scanIsDisplayable) {
+      this.display.setMode('select');
+      this.display.reload_rects()
+    }
     window.scrollTo(0,0);
   }
 
