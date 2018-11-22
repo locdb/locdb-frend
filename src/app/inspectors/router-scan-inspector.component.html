@@ -49,8 +49,8 @@
       </div>
       <div class="card-header" *ngIf="!sorry_text && boxEditMode">
         <div class="btn-group mr-2" role="group" aria-label="Select bounding box editing mode">
-          <button type="button" [ngClass]="getMode() === 'select' ? 'btn btn-secondary active' : 'btn btn-secondary'" (click)="toggleBoxEditMode()">
-            <i class="fa fa-remove"></i> abort
+          <button type="button" Class="btn btn-secondary" (click)="toggleBoxEditMode()">
+            <i class="fa fa-remove"></i> Cancel
           </button>
         </div>
         <div class="btn-group mr-2" role="group" aria-label="Zooming controls">
@@ -60,13 +60,13 @@
         </div>
         <div class="btn-group mr-2" role="group" aria-label="Select bounding box editing mode">
           <button type="button" [ngClass]="getMode() === 'select' ? 'btn btn-secondary active' : 'btn btn-secondary'" (click)="setMode('select')">
-            <span aria-hidden="true"></span> Select
+            <span aria-hidden="true"></span> <i class="fa fa-arrows-alt"></i> Adjust
           </button>
           <button type="button" [ngClass]="getMode() === 'add' ? 'btn btn-secondary active' : 'btn btn-secondary'"  (click)="setMode('add')">
-            <span aria-hidden="true"></span> Add
+            <span aria-hidden="true"></span><i class="fa fa-plus-square "></i> Add
           </button>
           <button type="button" [ngClass]="getMode() === 'delete' ? 'btn btn-secondary active' : 'btn btn-secondary'"  (click)="setMode('delete')">
-            <span aria-hidden="true"></span> Delete
+            <span aria-hidden="true"></span><i class="fa fa-times-circle"></i>  Delete
           </button>
         </div>
         <div class="btn-group mr-2" role="group" aria-label="Select bounding box editing mode">
@@ -126,8 +126,8 @@
             </button>
           </div> -->
           <div class="btn-group" role="group" aria-label="Edit Bounding Boxes">
-            <button type="button" class="btn btn-success" (click)="toggleBoxEditMode()">
-              <i class="fa fa-edit"></i> edit bounding boxes
+            <button type="button" class="btn btn-secondary" (click)="toggleBoxEditMode()">
+              <i class="fa fa-edit"></i> Edit Bounding Boxes
             </button>
           </div>
         </div>
