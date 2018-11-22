@@ -5,6 +5,7 @@ import {ElementRef} from '@angular/core';
 
 import { models } from '../../locdb';
 import { LocdbService } from '../../locdb.service';
+import { ScanListService } from '../router-scan-inspector.service'
 
 import { PopoverModule } from 'ngx-popover/index';
 
@@ -13,7 +14,6 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 import { ScanService } from '../../typescript-angular-client/api/scan.service';
 
-import * as interact from 'interact.js';
 // Display component consists of file upload, todo item selection and actual
 // display of the scan
 
@@ -79,118 +79,12 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private scanService: ScanService,
     private locdbService: LocdbService,
-    private _hotkeysService: HotkeysService) {
+    private _hotkeysService: HotkeysService,
+    private scanListService: ScanListService) {
     }
 
-    // TODO: https://github.com/interactjs/website/blob/master/source/javascripts/star.js
-
-    initInteract(imgWidth, imgHeight) {
-      interact('.resizeable-rect')
-        .draggable({
-          restrict: {
-            restriction: 'parent',
-            elementRect: { top: 1, left: 1, bottom: 1, right: 1 }
-          },
-        })
-        .resizable({
-          // resize from all edges and corners
-          edges: { left: true, right: true, bottom: true, top: true },
-
-          // keep the edges inside the parent
-          restrictEdges: {
-            outer: 'parent',
-            endOnly: true,
-          },
-
-          // minimum size
-          restrictSize: {
-            min: { width: 100, height: 50 },
-          },
-
-          inertia: true,
-        })
-        .on('resizemove', function (event) {
-          const min_width = 50
-          const min_height = 20
-          let target = event.target,
-              x = (parseFloat(target.getAttribute('x')) || 0),
-              y = (parseFloat(target.getAttribute('y')) || 0);
-          // update the element's style
-          let svg = target.parentNode.parentNode
-          let svgWidth = svg.parentNode.clientWidth //|| svg.width.baseVal.value
-          let svgHeight = svg.parentNode.clientHeight //|| svg.height.baseVal.value
-          // const translateX = svg.transform.baseVal[0].matrix.e
-          // console.log(translateX)
-          // const translateY = svg.transform.baseVal[0].matrix.f
-          // console.log(translateY)
-          const scaleX = svg.transform.baseVal[1].matrix.a
-          // console.log(scaleX)
-          const scaleY = svg.transform.baseVal[1].matrix.d
-          // console.log(scaleY)
-          let width  = event.rect.width;
-          let height = event.rect.height;
-          let deltaLeft = event.deltaRect.left;
-          let deltaTop = event.deltaRect.top;
-
-          if(width < min_width){
-            width = min_width
-            deltaLeft = 0
-          }
-          if(height < min_height){
-            height = min_height
-            deltaTop = 0
-          }
-
-          const clientToImageWidthRatio = imgWidth / svgWidth
-          const clientToImageHeightRatio = imgHeight / svgHeight
-               // translate when resizing from top or left edges
-          x += deltaLeft * clientToImageWidthRatio / scaleX;
-          y += deltaTop * clientToImageHeightRatio / scaleY;
-          // console.log(clientToImageWidthRatio)
-          // console.log(clientToImageHeightRatio)
-          // console.log(scaleX)
-          // console.log(scaleY)
-          // console.log(deltaLeft)
-          // console.log(deltaTop)
-
-          // deactivate resize if zoom is active on firefox
-          if(!("InstallTrigger" in window) || scaleX < 1.05){
-            target.setAttribute('width', width * clientToImageWidthRatio / scaleX);
-            target.setAttribute('height', height * clientToImageHeightRatio / scaleY);
-            target.setAttribute('x', x);
-            target.setAttribute('y', y);
-          }})
-         .on('dragmove', function (event){
-           let target = event.target,
-           x = (parseFloat(target.getAttribute('x')) || 0),
-           y = (parseFloat(target.getAttribute('y')) || 0);
-
-           let svg = target.parentNode.parentNode
-           let svgWidth = svg.parentNode.clientWidth // || svg.parentNode.parentNode.clientWidth
-           // offsetWidth
-           let svgHeight = svg.parentNode.clientHeight //|| svg.parentNode.parentNode.clientHeight
-
-
-           const scaleX = svg.transform.baseVal[1].matrix.a
-           // console.log(scaleX)
-           const scaleY = svg.transform.baseVal[1].matrix.d
-           // console.log(scaleY)
-           // console.log(event.dx)
-           // console.log(event.dy)
-           // console.log(x)
-           // console.log(y)
-           const clientToImageWidthRatio = imgWidth / svgWidth
-           const clientToImageHeightRatio = imgHeight / svgHeight
-
-           x += event.dx * clientToImageWidthRatio / scaleX;
-           y += event.dy * clientToImageHeightRatio  / scaleY;
-
-           // deactivate resize if zoom is active on firefox
-           if(!("InstallTrigger" in window) || scaleX < 1.05){
-             target.setAttribute('x', x);
-             target.setAttribute('y', y);
-           }
-        });
+    initInteract(){
+      this.scanListService.initInteract()
     }
 
     zoomIn(): void {
@@ -484,7 +378,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             console.log('Image size = 0', realDim);
         }
         if (this.first_init) {
-          this.initInteract(this.imgX, this.imgY)
+          this.initInteract()
           this.first_init = false
         }
         this.reload_rects();
