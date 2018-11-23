@@ -81,6 +81,7 @@ export class RouterScanInspectorComponent implements OnInit {
   selection = {}
 
   boxEditMode = false
+  editModeFilter = false
 
   /* Overwrite setter such that scanIsDisplayable is always set correctly */
   private _scan: models.Scan = null;
