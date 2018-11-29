@@ -48,8 +48,8 @@
 
 <div *ngIf="!alternateIsActive && resource">
   <!-- Just a resource form, if no alternate is given -->
-  <app-resource-form [resource]="resource" (resourceChange)="onResourceChange($event)"></app-resource-form>
+  <app-resource-form [resource]="resource" (resourceChange)="onResourceChange($event); false"></app-resource-form>
 </div>
 <div *ngIf="alternateIsActive && alternate">
-  <app-resource-form [resource]="alternate" (resourceChange)="onAlternateChange($event)"></app-resource-form>
+  <app-resource-form [resource]="alternate" (resourceChange)="onAlternateChange($event); false"></app-resource-form>
 </div>
