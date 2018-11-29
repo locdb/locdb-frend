@@ -321,6 +321,9 @@ export class LocdbService {
       // !!! Never ever forget this when on righthand-side, they should never be external
       // 19.03.2018: Dont do this, we would corrupt todo item..
       tr.fixDate(); // correct date format if it was set incorrectly
+
+      // Only external suggestions or manually created resources don't have an Id,
+      // so its safe to set it to valid
       tr.status = enums.status.valid;
       return this.bibliographicResourceService.save(<models.BibliographicResource>tr.data).pipe(map( br => new TypedResourceView(br) ));
     } else {
