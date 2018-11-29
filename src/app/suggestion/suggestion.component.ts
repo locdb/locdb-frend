@@ -22,6 +22,7 @@ import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { StandardPipe } from '../pipes/type-pipes';
 
 import { BibliographicEntryService } from '../typescript-angular-client/api/bibliographicEntry.service'
+import { BibliographicResourceService, } from '../typescript-angular-client/api/api';
 
 function sortByName(a, b) {
   const nameA = a.name.toUpperCase(); // ignore upper and lowercase
@@ -127,7 +128,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
   constructor(private locdbService: LocdbService,
     private loggingService: LoggingService,
     private modalService: BsModalService,
-    private entryService: BibliographicEntryService) {
+    private entryService: BibliographicEntryService,
+    private brService: BibliographicResourceService) {
     this.dataSource = Observable.create((observer: any) => {
       // Runs on every search
       observer.next(this.query);
@@ -499,28 +501,49 @@ export class SuggestionComponent implements OnInit, OnChanges {
     this.committing = true;
     const [resource, container] = citationTargetPair;
     if (container) {
+      // Post resource to backend *if external*
       this.locdbService.maybePostResource(container).subscribe(
         (newContainer) => {
           citationTargetPair[1] = newContainer;
-          resource.data.partOf = newContainer._id;
+          // Post resource to backend *if external*
           this.locdbService.maybePostResource(resource).subscribe(
             (newResource) => {
               citationTargetPair[0] = newResource;
-              this.link(entry, [newResource, newContainer]);
+              const updates: models.BibliographicResource = { type: newResource.type, partOf: newContainer._id }
+              // Fix partOf connection
+              this.brService.update(newResource._id, updates).subscribe(
+                (response) => {
+                  citationTargetPair[0] = new TypedResourceView(response);
+                  // Do the actual linking of entry and resource
+                  this.link(entry, citationTargetPair);
+                },
+                (error) => { alert('Error while fix resource-container connection'); }
+              );
             },
-            (error) => { alert('[Suggestion][error]Error while updating resource: ' + error.message); this.committing = false;  }
+            (error) => { alert('Error while updating resource: ' + error.message); this.committing = false;  }
           );
           },
-        (error) => { alert('[Suggestion][error]Error while updating container: ' + error.message); this.committing = false; }
+        (error) => { alert('Error while updating container: ' + error.message); this.committing = false; }
       );
     } else {
       this.locdbService.maybePostResource(resource).subscribe(
         (newResource) => {
           // update own view with response from back-end
           citationTargetPair[0] = newResource;
-          // actually link the source to parent
-          this.link(entry, [newResource, null]);
 
+          const updates: models.BibliographicResource = {
+              type: newResource.type,
+              partOf: ''
+              }
+          // Fix partOf connection
+          this.brService.update(newResource._id, updates).subscribe(
+            (response) => {
+              citationTargetPair[0] = new TypedResourceView(response);
+              // Do the actual linking of entry and resource
+              this.link(entry, citationTargetPair);
+            },
+            (error) => { alert('Error while fix resource-container connection'); }
+          );
         },
         (error) => { alert('[Suggestion][error]Error while updating resource: ' + error.message); this.committing = false; }
       );
