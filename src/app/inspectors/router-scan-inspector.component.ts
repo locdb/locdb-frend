@@ -81,6 +81,7 @@ export class RouterScanInspectorComponent implements OnInit {
   selection = {}
 
   boxEditMode = false
+  boxStatus = 'up to date'
   editModeFilter = false
 
   /* Overwrite setter such that scanIsDisplayable is always set correctly */
@@ -292,11 +293,13 @@ export class RouterScanInspectorComponent implements OnInit {
     }
   }
 
-  saveBoxes() {
+  saveBoxes(exit=false) {
     if (this.scanIsDisplayable) {
       this.display.saveBoxes();
     }
-    this.toggleBoxEditMode()
+    if(exit){
+      this.toggleBoxEditMode()
+    }
   }
   // Zooming methods END
 
