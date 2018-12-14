@@ -1,7 +1,7 @@
 <div>
     <app-metadata [of]="todo"></app-metadata>
     <div class="text-right">
-        <div class="btn-group" dropdown [style.visibility]="!embodiment_scans.length? 'hidden' : 'visible'">
+        <div class="btn-group" dropdown [style.visibility]="!(embodiment_scans && embodiment_scans.length) ? 'hidden' : 'visible'">
             <button id="button-basic" dropdownToggle type="button" class="btn
             btn-secondary btn-sm dropdown toggle">
                 <i class="fa fa-file"></i> Scans
