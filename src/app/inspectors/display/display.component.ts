@@ -152,13 +152,13 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
       return new Promise( resolve => setTimeout(resolve, ms) );
     }
 
-    saveBoxes() {
+    async saveBoxes() {
       // console.log(this.entries[0].scanId)
       console.log('[Display][info] Saving coordinates')
       const rects_copy = Object.assign([], this.rects)
+      let deletionCounter = 0
+      let updateCounter = 0
       for (const rect of this.zoomSVG.nativeElement.querySelectorAll('rect')) {
-        console.log(rect)
-        console.log(this.rects)
         const id = rect.getAttribute('id')
         const x = Math.round(rect.getAttribute('x'))
         const y = Math.round(rect.getAttribute('y'))
@@ -169,6 +169,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         if(markedForDeletion){
           // ignore unsaved added entries
           if(rects_copy[id].entry._id){
+            deletionCounter += 1
             this.deleteEntry.emit(rects_copy[id].entry)
           }
         }
@@ -179,17 +180,20 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             rects_copy[id].saveCoordinates(x, y, w, h);
             const scan_id = rects_copy[id].entry.scanId;
             const coords = rects_copy[id].toString();
-            // console.log('[Display][Debug] Uploading coordinates:', coords)
+            console.log('[Display][Debug] Uploading coordinates:', coords)
+            updateCounter += 1
             const entry_id = rects_copy[id].entry._id || undefined;
-            this.scanService.correctReferencePosition(scan_id, coords, entry_id).subscribe(
-              (newEntry) => {rects_copy[id].entry = newEntry,
-                              console.log('[Display][info] Correction successfull, recieved entry: ', newEntry),
-                            this.updateEntry.emit([newEntry, entry_id])},
-              (error) => alert('[Display][error] Error while uploading new coordinates: ' + error.message)
-            );
+            await this.scanService.correctReferencePosition(scan_id, coords, entry_id)
+              .toPromise().then(
+                (newEntry) => {rects_copy[id].entry = newEntry,
+                                console.log('[Display][info] Correction successfull, recieved entry: ', newEntry),
+                              this.updateEntry.emit([newEntry, entry_id])},
+                (error) => alert('[Display][error] Error while uploading new coordinates: ' + error.message)
+              );
           }
         }
       }
+      console.log(`[Display][info] entries deleted: ${deletionCounter}, entries updated: ${updateCounter}`)
     }
 
     ngOnChanges(changes: SimpleChanges | any) {
@@ -291,6 +295,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         // console.log(x, y)
         // console.log(x, y, clientToImageWidthRatio, clientToImageHeightRatio)
         this.newRectAndEntry(x * clientToImageWidthRatio, y * clientToImageHeightRatio)
+
         }
       else if (element.nodeName === 'rect' && this.editMode == 'delete'){
         console.log(element)
@@ -298,7 +303,6 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         this.deleteRectAndEntry(this.rects[id].entry)
         }
     }
-
 
     markRect(event){
       // console.log("Markme", event)

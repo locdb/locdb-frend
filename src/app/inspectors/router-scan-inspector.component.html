@@ -85,6 +85,11 @@
                   <i class="fa fa-save"></i> Save Bounding Boxes
                 </button>
               </div>
+              <div class="btn-group mr-2" role="group" aria-label="Select bounding box editing mode">
+                <button type="button" class="btn btn-success" (click)="saveBoxes(exit=true)">
+                  <i class="fa fa-save"></i> Save and Exit
+                </button>
+              </div>
               <div class="btn-group mr-2 float-right" role="group" aria-label="Select bounding box editing mode">
                 <button type="button" Class="btn btn-secondary" (click)="editModeFilter = !editModeFilter">
                   <i class="fa fa-angle-double-down "></i> Filters
