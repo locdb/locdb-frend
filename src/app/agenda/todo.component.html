@@ -1,7 +1,8 @@
 <div>
     <app-metadata [of]="todo"></app-metadata>
     <div class="text-right">
-        <div class="btn-group" dropdown [style.visibility]="!(embodiment_scans && embodiment_scans.length) ? 'hidden' : 'visible'">
+        <div class="btn-group" dropdown [style.visibility]="!embodiment_scans.length? 'hidden' : 'visible'"
+        *ngIf="embodiment_scans">
             <button id="button-basic" dropdownToggle type="button" class="btn
             btn-secondary btn-sm dropdown toggle">
                 <i class="fa fa-file"></i> Scans
@@ -16,7 +17,8 @@
                 </li>
             </ul>
         </div>&nbsp;
-        <button type="button" class="btn btn-secondary btn-sm" (click)="inspectReferences()" [style.visibility]="!todo.parts.length? 'hidden' : 'visible'">
+        <button type="button" class="btn btn-secondary btn-sm" (click)="inspectReferences()"
+          *ngIf="todo.parts" [style.visibility]="!todo.parts.length? 'hidden' : 'visible'">
             <i class="fa fa-list"></i> References
         </button>&nbsp;
         <button type="button" class="btn btn-secondary btn-sm" (click)="edit()">

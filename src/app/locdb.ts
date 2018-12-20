@@ -50,6 +50,9 @@ export function gatherScansWithEmbodiment (
   scanFilter: (e: models.Scan) => boolean = null
 ): Array<[models.ResourceEmbodiment, models.Scan]> {
   const embodimendScans: Array<any> = [];
+  if (embodiments === undefined){
+    return embodimendScans;
+  }
   for (const embodiment of embodiments) {
     let scans = embodiment.scans;
     if (scanFilter) {
