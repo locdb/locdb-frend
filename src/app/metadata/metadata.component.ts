@@ -44,9 +44,9 @@ export class MetadataComponent implements OnInit, OnChanges {
   /* Gets the value for a specific identifier scheme */
   findIdentifier(identifiers: Array<models.Identifier>,
     scheme: enums.identifier = enums.identifier.urlCrossref): string | undefined {
-    if(!identifiers) { return ''; }
-    if(identifiers.length == 0) { return ''; }
-    if(!scheme) { return ''; }
+    if (!identifiers) { return ''; }
+    if (!identifiers.length) { return ''; }
+    if (!scheme) { return ''; }
     const firstMatch = identifiers.find(ident => ident.scheme === scheme);
     return firstMatch ? firstMatch.literalValue : undefined;
   }
@@ -70,7 +70,7 @@ export class MetadataComponent implements OnInit, OnChanges {
   getPageString(resource: TypedResourceView): string {
 
     if (!resource.embodiedAs) { return ''; }
-    if (resource.embodiedAs.length == 0) { return ''; }
+    if (!resource.embodiedAs.length) { return ''; }
     const firstPage = resource.embodiedAs[0].firstPage;
     const lastPage = resource.embodiedAs[0].lastPage;
 
