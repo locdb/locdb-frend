@@ -47,8 +47,9 @@ export class EditViewComponent implements OnInit {
         if (params['resource']) {
           // Retrieve the actual resource
           // console.log("enter if resource id")
-          this.locdbService.bibliographicResource(params['resource']).subscribe(
+          this.locdbService.getBibliographicResource(params['resource']).subscribe(
             (trv) => {
+              console.log(trv)
               this.resource = trv || null;
               if (params['entry']) {
                 // If an entry is desired, search it
@@ -58,8 +59,10 @@ export class EditViewComponent implements OnInit {
                     const newEntry: models.BibliographicEntry = {};
                     newEntry.ocrData = {};
                     newEntry.ocrData.authors = [];
+                    newEntry._id = undefined
                     this.entry = newEntry;
                 }
+                console.log('entry', this.entry)
               }
               this.request_answered = true;
             },

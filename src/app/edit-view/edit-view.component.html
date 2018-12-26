@@ -12,7 +12,7 @@
 </div>
 <div *ngIf="request_answered" class="container">
   <!-- resource edit -->
-  <div class="card" *ngIf="resource && !entry">
+  <div class="card" *ngIf="resource && entry._id">
     <div class="card-header">
       <h3 class="card-title">
         Edit Resource
@@ -24,20 +24,20 @@
     </div>
   </div>
   <!-- entry edit -->
-  <div class="card" *ngIf="resource && entry">
+  <div class="card" *ngIf="resource && entry._id">
     <div class="card-header">
       <h3 *ngIf="resource" class="card-title">
         Edit Entry {{entry_id}} attached to <b *ngIf="resource.title">{{resource.title}}</b> <b *ngIf="!resource.title">{{resource_id}}</b>
       </h3>
     </div>
     <div class="card-body">
-      <div class="container" *ngIf='entry'>
+      <div class="container" *ngIf='entry._id'>
         <app-entry-form [entry]="entry" [resource]="resource" [active]="true" (done)="submitted = true"></app-entry-form>
       </div>
     </div>
   </div>
   <!-- entry creation, if entry has no _id it is new! :) -->
-  <div class="card" *ngIf="resource && entry && !entry._id">
+  <div class="card" *ngIf="resource && !entry._id">
     <div class="card-header">
       <h3 *ngIf="resource" class="card-title">
         Create Entry attached to <b *ngIf="resource.title">{{resource.title}}</b> <b *ngIf="!resource.title">{{resource_id}}</b>
