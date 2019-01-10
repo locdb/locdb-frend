@@ -24,7 +24,7 @@
     </div>
   </div>
   <!-- entry edit -->
-  <div class="card" *ngIf="resource && entry">
+  <div class="card" *ngIf="resource && entry && !!entry._id">
     <div class="card-header">
       <h3 *ngIf="resource" class="card-title">
         Edit Entry {{entry_id}} attached to <b *ngIf="resource.title">{{resource.title}}</b> <b *ngIf="!resource.title">{{resource_id}}</b>
