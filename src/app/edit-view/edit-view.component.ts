@@ -46,14 +46,16 @@ export class EditViewComponent implements OnInit {
         console.log('[Edit View] Params:', params)
         if (params['resource']) {
           // Retrieve the actual resource
-          // console.log("enter if resource id")
+          console.log("enter if resource id")
           this.locdbService.getBibliographicResource(params['resource']).subscribe(
             (trv) => {
               console.log(trv)
               this.resource = trv || null;
+              console.log('entry params: ', params['entry'])
               if (params['entry']) {
                 // If an entry is desired, search it
                 this.entry = this.resource.parts.find(x => x._id === params['entry'])
+                console.log(this.entry)
                 if (this.entry === undefined) {
                   // Fallback if entry ID could not be found, DANGEROUS TODO FIXME
                     const newEntry: models.BibliographicEntry = {};

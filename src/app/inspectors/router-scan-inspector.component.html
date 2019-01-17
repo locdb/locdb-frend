@@ -172,6 +172,13 @@
             </button>
           </div>
         </div>
+          <div *ngIf="!scanIsDisplayable || !scanIsVisible" class="btn btn-toolbar" role="toolbar" aria-label="Controls for scan view">
+            <div class="btn-group float-right" role="group" aria-label="Add Entry">
+              <button type="button" class="btn btn-primary float-right" (click)="newEntry()">
+                <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Add Entry
+              </button>
+            </div>
+        </div>
       </div> <!-- End of footer -->
     </div> <!-- End of card -->
   </div> <!-- End of column -->
