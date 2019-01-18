@@ -11,8 +11,12 @@
   </div>
 </div>
 <div *ngIf="request_answered" class="container">
+  <!-- 3 Cases:
+          Resource: id Entry: id edit_entry
+          Resource: id Entry: 'create' create_entry
+          Resource: id Container: id||'' edit_resource -->
   <!-- resource edit -->
-  <div class="card" *ngIf="resource && entry && entry._id">
+  <div class="card" *ngIf="form_mode === 'edit_resource'">
     <div class="card-header">
       <h3 class="card-title">
         Edit Resource
@@ -24,7 +28,7 @@
     </div>
   </div>
   <!-- entry edit -->
-  <div class="card" *ngIf="resource && entry && !!entry._id">
+  <div class="card" *ngIf="form_mode === 'edit_entry'">
     <div class="card-header">
       <h3 *ngIf="resource" class="card-title">
         Edit Entry {{entry_id}} attached to <b *ngIf="resource.title">{{resource.title}}</b> <b *ngIf="!resource.title">{{resource_id}}</b>
@@ -37,7 +41,7 @@
     </div>
   </div>
   <!-- entry creation, if entry has no _id it is new! :) -->
-  <div class="card" *ngIf="resource && !(entry && entry._id)">
+  <div class="card" *ngIf="form_mode === 'create_entry'">
     <div class="card-header">
       <h3 *ngIf="resource" class="card-title">
         Create Entry attached to <b *ngIf="resource.title">{{resource.title}}</b> <b *ngIf="!resource.title">{{resource_id}}</b>
