@@ -57,6 +57,7 @@ export class EditViewComponent implements OnInit {
           this.locdbService.getBibliographicResource(params['resource']).subscribe(
             (trv) => {
               this.resource = trv || null;
+              console.log(`[Edit-view] Ressource:`, trv);
               // check if ID/String for Entry is present
               if (params['entry']) {
                 // If an entry is desired, search it
@@ -78,7 +79,7 @@ export class EditViewComponent implements OnInit {
                 console.log('entry', this.entry)
               }
               else{
-                // if no entry-parameter is omitted, resource_editmode is activated
+                // if no entry-parameter is omitted, resource_edit mode is activated
                 this.form_mode = Form_mode.edit_resource
                 console.log('[Edit-view][Debug] form_mode:', this.form_mode)
 
