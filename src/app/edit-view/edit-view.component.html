@@ -1,18 +1,22 @@
-<!-- <p>
-  edit-view works!# <br>
-  {{resource_id}}<br>
-  {{entry_id}}<br>
-  resource: {{resource}}<br>
-  entry: {{entry}}
+<!-- <p> -->
+<!--   edit-view works!# <br> -->
+<!--   {{resource_id}}<br> -->
+<!--   {{entry_id}}<br> -->
+<!--   resource: {{resource}}<br> -->
+<!--   entry: {{entry}} -->
 
-</p> -->
+<!-- </p> -->
 <div *ngIf="!request_answered && !request_failed" class="container">
   <div class="loader">
   </div>
 </div>
 <div *ngIf="request_answered" class="container">
+  <!-- 3 Cases:
+          Resource: id Entry: id edit_entry
+          Resource: id Entry: 'create' create_entry
+          Resource: id Container: id||'' edit_resource -->
   <!-- resource edit -->
-  <div class="card" *ngIf="resource && !entry">
+  <div class="card" *ngIf="form_mode === 'edit_resource'">
     <div class="card-header">
       <h3 class="card-title">
         Edit Resource
@@ -24,20 +28,20 @@
     </div>
   </div>
   <!-- entry edit -->
-  <div class="card" *ngIf="resource && entry && !!entry._id">
+  <div class="card" *ngIf="form_mode === 'edit_entry'">
     <div class="card-header">
       <h3 *ngIf="resource" class="card-title">
         Edit Entry {{entry_id}} attached to <b *ngIf="resource.title">{{resource.title}}</b> <b *ngIf="!resource.title">{{resource_id}}</b>
       </h3>
     </div>
     <div class="card-body">
-      <div class="container" *ngIf='entry'>
+      <div class="container" *ngIf='entry && entry._id'>
         <app-entry-form [entry]="entry" [resource]="resource" [active]="true" (done)="submitted = true"></app-entry-form>
       </div>
     </div>
   </div>
   <!-- entry creation, if entry has no _id it is new! :) -->
-  <div class="card" *ngIf="resource && entry && !entry._id">
+  <div class="card" *ngIf="form_mode === 'create_entry'">
     <div class="card-header">
       <h3 *ngIf="resource" class="card-title">
         Create Entry attached to <b *ngIf="resource.title">{{resource.title}}</b> <b *ngIf="!resource.title">{{resource_id}}</b>

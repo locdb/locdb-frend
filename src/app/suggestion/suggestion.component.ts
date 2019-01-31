@@ -523,7 +523,48 @@ export class SuggestionComponent implements OnInit, OnChanges {
             (error) => { alert('Error while updating resource: ' + error.message); this.committing = false;  }
           );
           },
-        (error) => { alert('Error while updating container: ' + error.message); this.committing = false; }
+        (error) => {if(error.error.error.includes('already exists')){
+                      console.log('Backend says Container already exists.')
+                      citationTargetPair[1] = container;
+                      // Post resource to backend *if external*
+                      this.locdbService.maybePostResource(resource).subscribe(
+                        (newResource) => {
+                          citationTargetPair[0] = newResource;
+                          const updates: models.BibliographicResource = { type: newResource.type, partOf: container._id }
+                          // Fix partOf connection
+                          this.brService.update(newResource._id, updates).subscribe(
+                            (response) => {
+                              citationTargetPair[0] = new TypedResourceView(response);
+                              // Do the actual linking of entry and resource
+                              this.link(entry, citationTargetPair);
+                            },
+                            (error) => { alert('Error while fix resource-container connection'); }
+                          );
+                        },
+                        (error) => {
+                          if(error.error.error.includes('already exists')){
+                            citationTargetPair[0] = resource;
+                            const updates: models.BibliographicResource = { type: resource.type, partOf: container._id }
+                            // Fix partOf connection
+                            this.brService.update(resource._id, updates).subscribe(
+                              (response) => {
+                                citationTargetPair[0] = new TypedResourceView(response);
+                                // Do the actual linking of entry and resource
+                                this.link(entry, citationTargetPair);
+                              },
+                              (error) => { alert('Error while fix resource-container connection'); }
+                            );
+                          }
+                          else{
+                          alert('Error while updating resource: ' + error.message);
+                          this.committing = false;  }
+                        }
+                      );
+                    }
+                    else{
+                      alert('Error while updating container: ' + error.message);
+                      this.committing = false; }
+                  }
       );
     } else {
       this.locdbService.maybePostResource(resource).subscribe(
@@ -545,7 +586,8 @@ export class SuggestionComponent implements OnInit, OnChanges {
             (error) => { alert('Error while fix resource-container connection'); }
           );
         },
-        (error) => { alert('[Suggestion][error]Error while updating resource: ' + error.message); this.committing = false; }
+        (error) => { alert('[Suggestion][error]Error while updating resource: ' + error.message);
+                    this.committing = false; }
       );
     }
 

@@ -113,7 +113,7 @@ export class EntryFormComponent implements OnChanges {
 
   onSubmit() {
     const entry = this.prepareSaveEntry();
-    console.log('Submitting entry', this.entry);
+    console.log('Submitting entry', entry, this.resource._id);
 
     if (entry._id) {
       this.locdbService.updateBibliographicEntry(entry).subscribe(
