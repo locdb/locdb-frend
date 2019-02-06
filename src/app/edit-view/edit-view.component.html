@@ -6,11 +6,11 @@
 <!--   entry: {{entry}} -->
 
 <!-- </p> -->
-<div *ngIf="!request_answered && !request_failed" class="container">
+<div class="container">
+<div *ngIf="form_mode === 'loading'" class="container">
   <div class="loader">
   </div>
 </div>
-<div *ngIf="request_answered" class="container">
   <!-- 3 Cases:
           Resource: id Entry: id edit_entry
           Resource: id Entry: 'create' create_entry
@@ -57,7 +57,7 @@
     Changes have been saved. <button type="button" class="btn btn-primary" (click)="triggerBack()">Back</button>
   </div>
   <!-- error -->
-  <div class="card" *ngIf="!resource">
+  <div class="card" *ngIf="form_mode === 'error'">
     <div class="card-header">
       <h3 class="card-title">
         Error!

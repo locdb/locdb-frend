@@ -8,7 +8,9 @@ import { TypedResourceView, enums, enum_values, models} from '../locdb';
 enum Form_mode {
   create_entry = 'create_entry',
   edit_entry = 'edit_entry',
-  edit_resource = 'edit_resource'
+  edit_resource = 'edit_resource',
+  loading = 'loading',
+  error = 'error'
 }
 
 @Component({
@@ -45,7 +47,7 @@ export class EditViewComponent implements OnInit {
   async retry_connection() { await this.delay(2000); this.ngOnInit(); }
 
   ngOnInit() {
-    this.request_answered = false;
+    this.form_mode = Form_mode.loading
     // get ids from URL
     this.sub = this.route
       .queryParams
@@ -84,26 +86,25 @@ export class EditViewComponent implements OnInit {
                 console.log('[Edit-view][Debug] form_mode:', this.form_mode)
 
               }
-              this.request_answered = true;
             },
             (error) => {
               console.log('Resource not found', params['resource']);
-              console.log('Error', error.status, error.msg);
-              this.request_failed = true;
+              console.log('Error:', error.status, error.message);
+              this.form_mode = Form_mode.error
             });
         }
         if (params['container']) {
           this.locdbService.bibliographicResource(params['container']).subscribe(
             (returned_container) => {
               this.container = returned_container || null;
-              this.request_answered = true;
               this.form_mode = Form_mode.edit_resource
               console.log('[Edit-view][Debug] form_mode:', this.form_mode)
 
             },
             (error) => {
               console.log('Resource not found', params['resource']);
-              console.log('Error', error.status, error.msg);
+              console.log('Error:', error.status, error.name, error.statusText);
+              this.form_mode = Form_mode.error
             }
           )
         }

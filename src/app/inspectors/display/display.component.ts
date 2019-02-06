@@ -184,6 +184,13 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             updateCounter += 1
             const entry_id = rects_copy[id].entry._id || undefined;
             await this.scanService.correctReferencePosition(scan_id, coords, entry_id)
+              // .retryWhen(errors => {console.log('[locdbService][Error] retrying', id);
+              //                       let retries = 0;
+              //                       return errors.delay(750).map(error => {
+              //                       if (retries++ === 5) {
+              //                         throw error;
+              //                       }
+              //                         return error;})})
               .toPromise().then(
                 (newEntry) => {rects_copy[id].entry = newEntry,
                                 console.log('[Display][info] Correction successfull, recieved entry: ', newEntry),

@@ -1,5 +1,5 @@
 import {Observable, of} from 'rxjs';
-import {delay, take, retryWhen,  map, flatMap } from 'rxjs/operators';
+import {delay, take, retryWhen, retry,  map, flatMap, catchError} from 'rxjs/operators';
 // basic angular http client stuff
 import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams, RequestOptions, Headers } from '@angular/http';
@@ -213,8 +213,16 @@ export class LocdbService {
   }
 
   bibliographicResource(identifier: string): Observable<TypedResourceView> {
-    return this.bibliographicResourceService.get(identifier).pipe(map( br => new
-      TypedResourceView(br)), retryWhen(error => error.pipe(delay(500))), take(5), );
+    return this.bibliographicResourceService.get(identifier)
+      .map(br => new TypedResourceView(br))
+      .retryWhen(errors => {console.log('[locdbService][Error] retrying');
+                            let retries = 0;
+                            return errors.delay(750).map(error => {
+                            if (retries++ === 5) {
+                              throw error;
+                            }
+                              return error;
+                            })});
   }
 
   parentResource(br: TypedResourceView | models.BibliographicResource): Observable<TypedResourceView> {
@@ -333,10 +341,16 @@ export class LocdbService {
   }
 
   getBibliographicResource(id: string): Observable<TypedResourceView> {
-    return this.bibliographicResourceService.get(id).pipe(map(br => new TypedResourceView(br)),
-      retryWhen(error => error.pipe(delay(750))),
-      take(8),
-    );
+    console.log('[locdb.service][debug] get resource: ', id)
+    return this.bibliographicResourceService.get(id).map(br => new TypedResourceView(br))
+              .retryWhen(errors => {console.log('[locdbService][Error] retrying', id);
+                                      let retries = 0;
+                                      return errors.delay(750).map(error => {
+                                      if (retries++ === 5) {
+                                        throw error;
+                                      }
+                                        return error;
+                                      })});
   }
 
   // DEPRECATED or integrate in Maybe Methods
