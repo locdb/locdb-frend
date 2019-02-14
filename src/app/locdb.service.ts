@@ -149,7 +149,7 @@ export class LocdbService {
     const suggestions$ = external ?
     entryService.getExternalSuggestionsByQueryString(query, threshold) :
     entryService.getInternalSuggestionsByQueryString(query, threshold);
-    return suggestions$.pipe(map(suggestions => suggestions.map(pair => this.packTypedPair(pair))));
+    return suggestions$.pipe(map(suggestions => suggestions.map(pair => this.packTypedPair(pair, external))));
   }
 
   precalculatedSuggestions(entry: models.BibliographicEntry): Observable<Array<[TypedResourceView, TypedResourceView]>> {
