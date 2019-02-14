@@ -170,6 +170,12 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
           // ignore unsaved added entries
           if(rects_copy[id].entry._id){
             deletionCounter += 1
+            console.log('Emit Delete.')
+            await this.locdbService
+              .deleteBibliographicEntry(rects_copy[id].entry).toPromise().then(
+              (ret) => console.log('[scan-inspector][info] Successesfully delete entry: ', ret),
+              (error) => alert('[scan-inspector][Error] Error while deleting Entry: ' + error.message)
+            );
             this.deleteEntry.emit(rects_copy[id].entry)
           }
         }
@@ -184,13 +190,13 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             updateCounter += 1
             const entry_id = rects_copy[id].entry._id || undefined;
             await this.scanService.correctReferencePosition(scan_id, coords, entry_id)
-              // .retryWhen(errors => {console.log('[locdbService][Error] retrying', id);
-              //                       let retries = 0;
-              //                       return errors.delay(750).map(error => {
-              //                       if (retries++ === 5) {
-              //                         throw error;
-              //                       }
-              //                         return error;})})
+              .retryWhen(errors => {console.log('[locdbService][Error] retrying', id);
+                                     let retries = 0;
+                                     return errors.delay(750).map(error => {
+                                     if (retries++ === 5) {
+                                       throw error;
+                                     }
+                                       return error;})})
               .toPromise().then(
                 (newEntry) => {rects_copy[id].entry = newEntry,
                                 console.log('[Display][info] Correction successfull, recieved entry: ', newEntry),
@@ -464,6 +470,7 @@ class Rect {
       return this
     }
     markForDeletion(){
+      console.log('Marked for deletion: ' + this.entry.bibliographicEntryText)
       this.active = false
     }
 

@@ -293,7 +293,8 @@ export class RouterScanInspectorComponent implements OnInit {
     }
   }
 
-  saveBoxes(exit=false) {
+  saveBoxes(exit) {
+    console.log('saveBoxes',this.scanIsDisplayable)
     if (this.scanIsDisplayable) {
       this.display.saveBoxes();
     }
@@ -330,14 +331,17 @@ export class RouterScanInspectorComponent implements OnInit {
     return 'select';
   }
 
-  deleteEntry(entry: models.BibliographicEntry) {
-    // console.log('[scan-inspector][Debug] entry to delete: ', entry)
-    this.locdbService.deleteBibliographicEntry(entry).subscribe(
-      (ret) => console.log('[scan-inspector][info] Successesfully delete entry: ', ret),
-      (error) => alert('[scan-inspector][Error] Error while deleting Entry: ' + error.message)
-    );
+  async deleteEntry(entry: models.BibliographicEntry) {
+    console.log('[scan-inspector][Debug] entry to delete: ', entry)
+
+    // this function needs to be syncronized with saveBoxes()@display.component.ts
+    // await this.locdbService
+    //   .deleteBibliographicEntry(entry).subscribe(
+    //   (ret) => console.log('[scan-inspector][info] Successesfully delete entry: ', ret),
+    //   (error) => alert('[scan-inspector][Error] Error while deleting Entry: ' + error.message)
+    // );
     const refs_id = this._refs.findIndex(e => e._id === entry._id)
-    // console.log('[scan-inspector][Debug] ID of entry to delete:', refs_id)
+    console.log('[scan-inspector][Debug] ID of entry to delete:', refs_id)
     this._refs.splice(refs_id, 1)
   }
 

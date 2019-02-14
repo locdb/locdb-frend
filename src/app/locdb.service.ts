@@ -365,12 +365,24 @@ export class LocdbService {
   }
 
   deleteBibliographicResource(resource: TypedResourceView): Observable<models.SuccessResponse> {
-    return this.bibliographicResourceService.deleteSingle(resource._id);
+    return this.bibliographicResourceService.deleteSingle(resource._id)
+      .retryWhen(errors => {console.log('[locdbService][Error] retrying');
+                             let retries = 0;
+                             return errors.delay(750).map(error => {
+                             if (retries++ === 5) {
+                               throw error;
+                             }
+                               return error;})});
   }
   /* Resources API end */
 
   deleteBibliographicEntry(entry: models.BibliographicEntry): Observable<models.BibliographicEntry> {
-    return this.bibliographicEntryService.remove(entry._id);
+    return this.bibliographicEntryService.remove(entry._id)
+    .retryWhen(errors => {console.log('[locdbService][Error] retrying');
+                           let retries = 0;
+                           return errors.delay(750).map(error => {
+                           if (retries++ === 5) {
+                             throw error;}})});
   }
 
   updateBibliographicEntry(entry: models.BibliographicEntry) {
