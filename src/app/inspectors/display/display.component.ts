@@ -357,8 +357,15 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
         // console.log('[Display][Debug] Deleted entry', this.entries.splice(id, 1))
         // console.log('[Display][Debug] Deleted entry', this.entries[id])
         if (entry) {
-          const rects_id = this.rects.findIndex(e => e.entry.ocrData.coordinates === entry.ocrData.coordinates)
-          this.rects[rects_id].markForDeletion()
+          // first solution ignores more entries with the exact same box position
+          //const rects_id = this.rects.findIndex(e => e.entry.ocrData.coordinates === entry.ocrData.coordinates)
+          //this.rects[rects_id].markForDeletion()
+          //would work with findIndex too, since the entry now should be unique
+          //i guess the preformance benefit is minimal
+          this.rects.filter(e => e.entry.ocrData.coordinates === entry.ocrData.coordinates
+                                && e.entry.ocrData.detector === entry.ocrData.detector
+                                && e.entry.ocrData.namer === entry.ocrData.namer)
+                    .map(e => e.markForDeletion())
           console.log(this.rects)
           //this.deleteEntry.emit(entry)
         }
