@@ -3,4 +3,5 @@ export const environment = {
   // This URL should point to the loc-db backend installation
   // (https://github.com/locdb/loc-db/) without trailing slash
   locdbUrl: '../locdb'
+  // locdbUrl: 'https://locdb.bib.uni-mannheim.de/locdb'
 };
