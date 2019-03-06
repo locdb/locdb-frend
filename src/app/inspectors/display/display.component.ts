@@ -123,17 +123,17 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
       this.clientY = this.svgroot.nativeElement.parentNode.clientHeight
       this.clientX = this.svgroot.nativeElement.parentNode.clientWidth
       const selectedBoxCoords = this.selectedEntry.ocrData.coordinates.split(' ')
-      console.log('[display][debug] imgX: ',this.imgX)
-      console.log('[display][debug] BoxWidth ', selectedBoxCoords[2])
+      // console.log('[display][debug] imgX: ',this.imgX)
+      // console.log('[display][debug] BoxWidth ', selectedBoxCoords[2])
       this.zoomFactor = this.imgX / (+selectedBoxCoords[2] - +selectedBoxCoords[0])
       this.zoomFactor *= 0.95
       const translateX = this.clientX * (this.zoomFactor-1) /2
       const translateY = this.clientY * (this.zoomFactor-1) /2
-      console.log('[display][debug] Zoom factor: ',this.zoomFactor)
-      console.log('[display][debug] Selected box coords : ', selectedBoxCoords)
-      console.log('[display][debug] clientToImageRatios: ', clientToImageWidthRatio, clientToImageHeightRatio)
-      console.log('[display][debug] Translate: ', translateX, translateY)
-      console.log('[display][debug] svgWidth, svgHeight ', svgWidth, svgHeight)
+      // console.log('[display][debug] Zoom factor: ',this.zoomFactor)
+      // console.log('[display][debug] Selected box coords : ', selectedBoxCoords)
+      // console.log('[display][debug] clientToImageRatios: ', clientToImageWidthRatio, clientToImageHeightRatio)
+      // console.log('[display][debug] Translate: ', translateX, translateY)
+      // console.log('[display][debug] svgWidth, svgHeight ', svgWidth, svgHeight)
 
       this.setScrolls(+selectedBoxCoords[0] * 0.95 * svgWidth * this.zoomFactor / this.imgX ,
                       +selectedBoxCoords[1] * 0.95 * svgHeight * this.zoomFactor / this.imgY,
@@ -143,7 +143,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     /* async workaround, because new Scrollbars have to be present before scrollTop and scrollLeft
     can be properly set ... */
     async setScrolls(x, y, d){
-      console.log('[display][debug] ScrollTo: ', x, y)
+      // console.log('[display][debug] ScrollTo: ', x, y)
       await this.delay(d)
       this.svgroot.nativeElement.parentNode.parentNode.scrollLeft  = x;
       this.svgroot.nativeElement.parentNode.parentNode.scrollTop  = y;
@@ -154,7 +154,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     async saveBoxes() {
       // console.log(this.entries[0].scanId)
-      console.log('[Display][info] Saving coordinates')
+      // console.log('[Display][info] Saving coordinates')
       const rects_copy = Object.assign([], this.rects)
       let deletionCounter = 0
       let updateCounter = 0
@@ -186,7 +186,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
             rects_copy[id].saveCoordinates(x, y, w, h);
             const scan_id = rects_copy[id].entry.scanId;
             const coords = rects_copy[id].toString();
-            console.log('[Display][Debug] Uploading coordinates:', coords)
+            // console.log('[Display][Debug] Uploading coordinates:', coords)
             updateCounter += 1
             const entry_id = rects_copy[id].entry._id || undefined;
             await this.scanService.correctReferencePosition(scan_id, coords, entry_id)
@@ -213,7 +213,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     reload_rects() {
-      console.log('[Display][Debug] Reloading rects ... ')
+      // console.log('[Display][Debug] Reloading rects ... ')
       // Input todo and this method should replace manual calling of updateDisplay
       if (this.entries && this.entries.length) {
           // extract rectanlges and so on
@@ -257,7 +257,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     onSelect(rect: Rect) {
-      console.log(rect)
+      // console.log(rect)
         // console.log('[Display][Debug] onselect called', this.editMode);
         if(this.editMode == 'add'){
           // console.log('[Display][Debug] onSelect in add Mode')
@@ -394,7 +394,7 @@ export class DisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     imageOnload() {
         const realDim = this.realImgDimension(this.img_src);
-        console.log('[Display][debug]Image Loaded, Dimensions: ', realDim); // e.g 4299, 3035
+        // console.log('[Display][debug]Image Loaded, Dimensions: ', realDim); // e.g 4299, 3035
         this.imgX = realDim.naturalWidth;
         this.imgY = realDim.naturalHeight;
         this.imglength.emit(this.imgY)
@@ -465,10 +465,10 @@ class Rect {
     isPristine(x: number, y: number, width: number, height: number) {
       // is this ok?
       if (this.new){
-        console.log('[display][info] Pristine check: skipped')
+        // console.log('[display][info] Pristine check: skipped')
         return false
       }
-      console.log('[display][info] Pristine check', this.x, x, this.y, y, this.width, width, this.height, height)
+      // console.log('[display][info] Pristine check', this.x, x, this.y, y, this.width, width, this.height, height)
       return this.x === x && this.y === y && this.width === width && this.height === height
     }
 
@@ -477,7 +477,7 @@ class Rect {
       return this
     }
     markForDeletion(){
-      console.log('Marked for deletion: ' + this.entry.bibliographicEntryText)
+      // console.log('Marked for deletion: ' + this.entry.bibliographicEntryText)
       this.active = false
     }
 

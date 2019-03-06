@@ -246,7 +246,7 @@ export class RouterScanInspectorComponent implements OnInit {
     await this.router.navigate([], {
         queryParams: {list: 1}
     });
-    console.log('[debug] Edit: ', params);
+    // console.log('[debug] Edit: ', params);
     this.router.navigate(['/edit/'], { queryParams: params });
 
   }
@@ -258,6 +258,8 @@ export class RouterScanInspectorComponent implements OnInit {
     this.fetchEntriesForScan(this.scan._id);
     // We navigate, but the ngOnInit will *not* be called again, since the component is already initialized
     this.router.navigate(['/linking/ScanInspector/', this.resource._id, this.scan._id]);
+    //console.log('[Debug][pageChanged] allScans:', this.allScans)
+    //console.log('[Debug][pageChanged] Set page:', event.page, this.scan)
   }
 
   // Switch between Scan view and Reference list View
@@ -294,7 +296,6 @@ export class RouterScanInspectorComponent implements OnInit {
   }
 
   saveBoxes(exit) {
-    console.log('saveBoxes',this.scanIsDisplayable)
     if (this.scanIsDisplayable) {
       this.display.saveBoxes();
     }
@@ -332,7 +333,7 @@ export class RouterScanInspectorComponent implements OnInit {
   }
 
   async deleteEntry(entry: models.BibliographicEntry) {
-    console.log('[scan-inspector][Debug] entry to delete: ', entry)
+    // console.log('[scan-inspector][Debug] entry to delete: ', entry)
 
     // this function needs to be syncronized with saveBoxes()@display.component.ts
     // await this.locdbService
@@ -341,13 +342,13 @@ export class RouterScanInspectorComponent implements OnInit {
     //   (error) => alert('[scan-inspector][Error] Error while deleting Entry: ' + error.message)
     // );
     const refs_id = this._refs.findIndex(e => e._id === entry._id)
-    console.log('[scan-inspector][Debug] ID of entry to delete:', refs_id)
+    // console.log('[scan-inspector][Debug] ID of entry to delete:', refs_id)
     this._refs.splice(refs_id, 1)
   }
 
   updateEntry(tuple: [models.BibliographicEntry, string]) {
     const [newEntry, oldId] = tuple;
-    console.log('[Scan-inspector][Debug]', tuple, this._refs)
+    // console.log('[Scan-inspector][Debug]', tuple, this._refs)
 
     if (!oldId) {
       // OldId is '' or null, we create a **new** entry

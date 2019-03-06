@@ -30,6 +30,7 @@ export function gatherScans(
   embodiments: Array<models.ResourceEmbodiment>,
   scanFilter: (e: models.Scan) => boolean = null
 ): Array<models.Scan> {
+  // console.log('[Debug][gatherScans] embodiments: ', embodiments)
   const allScans: Array<any> = [];
   for (const embodiment of embodiments) {
     let scans = embodiment.scans;
@@ -42,6 +43,7 @@ export function gatherScans(
       allScans.push(scan);
     }
   }
+  // console.log('[Debug][gatherScans] allScans: ', allScans)
   return allScans;
 }
 

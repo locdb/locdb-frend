@@ -40,7 +40,7 @@ export class AgendaComponent implements OnInit, OnChanges {
   @Output() refsWithContext: EventEmitter<[Array<models.BibliographicEntry>, Context]> = new EventEmitter();
   @Output() scanWithContext: EventEmitter<[models.Scan, Context]> = new EventEmitter()
   @Input() set routerTracking(rtracking: Tracking) {
-    console.log('rt: ', rtracking)
+    // console.log('rt: ', rtracking)
     if (!(typeof rtracking === 'undefined')) {
       this.loading = true;
       this.tracking[enums.status.ocrProcessed] = rtracking[enums.status.ocrProcessed];

@@ -32,7 +32,7 @@ export class LinkingComponent implements OnInit {
     this.sub = this.route
       .queryParams
       .subscribe(params => {
-        console.log(params)
+        // console.log(params)
         // Defaults if no query param provided.
         this.tracking[enums.status.notOcrProcessed] = params['NOT_OCR_PROCESSED'] == "true" || false;
         this.tracking[enums.status.ocrProcessing] = params['OCR_PROCESSING'] == "true" || false;

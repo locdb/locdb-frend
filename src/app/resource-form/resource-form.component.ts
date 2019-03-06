@@ -509,7 +509,7 @@ export class ResourceFormComponent implements OnInit, OnChanges  {
          console.log('[BRF:prepareSaveResource] Setting', key, 'to', value);
          resource.data[key] = value;
       }
-
+      console.log('Prepared Resource:', resource)
       return resource;
    }
 

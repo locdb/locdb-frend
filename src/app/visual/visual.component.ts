@@ -22,7 +22,7 @@ export class VisualComponent implements OnInit, OnChanges {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.state);
+    // console.log(this.state);
   }
 
   ngOnChanges(changes: SimpleChanges | any) {

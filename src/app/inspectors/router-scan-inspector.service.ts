@@ -70,7 +70,7 @@ export class ScanListService {
   initInteract(){
     if(!this.isInitialized){
       this.setUpInteractFunctions()
-      console.log('[inspector][debug] interactjs initialized')
+      // console.log('[inspector][debug] interactjs initialized')
       this.isInitialized = true
     }
     else{

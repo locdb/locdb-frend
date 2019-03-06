@@ -48,7 +48,7 @@ export class EntryListComponent implements OnInit, OnChanges, OnDestroy {
     this._hotkeysService.add(new Hotkey('j', (event: KeyboardEvent): boolean => {
       let current = this.entries.indexOf(this.selectedEntry);
       if (current === -1 || current >= this.entries.length - 1) { return false }; // guard
-      console.log('current', current, 'of', this.entries.length);
+      // console.log('current', current, 'of', this.entries.length);
       current += 1;
       this.onSelectReference(this.entries[current]);
       return false;

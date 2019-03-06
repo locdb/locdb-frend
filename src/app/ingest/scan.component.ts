@@ -91,7 +91,7 @@ export class ScanComponent {
   }
 
   onChange(event: any) { // file input
-    console.log(event);
+    // console.log(event);
     this.batch = event.target.files;
   }
 
@@ -159,7 +159,7 @@ export class ScanComponent {
       console.log('Extracting pages from remainder', remainder)
       const pages_re = /([1-9][0-9]*)[-_.+]([1-9][0-9]*)/;
       const match = pages_re.exec(remainder);
-      console.log(match)
+      // console.log(match)
       if (match) {
         first = Number(match[1]) || null;
         last = Number(match[2]) || null;
@@ -167,7 +167,7 @@ export class ScanComponent {
         const spage_re = /[1-9][0-9]+/;
         console.log('Extracting single page from remainder', remainder)
         const spage_match = spage_re.exec(remainder);
-        console.log(spage_match)
+        // console.log(spage_match)
         first = last = Number(spage_match) || null;
       }
       return [ppn, first, last];
@@ -238,8 +238,8 @@ export class ScanComponent {
 
   writefilecontent(listelement: ToDoScansWithMeta) {
     // flag idonly objects, accept them but do not read them
-    console.log(this.listoffiles.indexOf(listelement))
-    console.log(listelement.file)
+    // console.log(this.listoffiles.indexOf(listelement))
+    // console.log(listelement.file)
     listelement.uploading = true;
     listelement.err = null;
     if (listelement.file) {
@@ -327,10 +327,10 @@ export class ScanComponent {
 
   successHandler(item, response, autotrigger: boolean) {
     item.uploading = false;
-    console.log(response);
+    // console.log(response);
     // last element is scan
     const entry: models.BibliographicEntry = response[response.length - 1];
-    console.log('Response item: ', response)
+    // console.log('Response item: ', response)
     // clear after upload
     this.removeItemFromList(item);
     this.checkUploading(); // check if there is any element still uploading

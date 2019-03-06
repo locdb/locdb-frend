@@ -246,7 +246,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
   }
 
   typeaheadOnSelect(e: TypeaheadMatch): void {
-    console.log('[Suggestion][debug]Selected value: ', e.item.id);
+    // console.log('[Suggestion][debug]Selected value: ', e.item.id);
     this.query = e.item.id
     this.internalSuggestions = [e.item.typedTuple]
     this.selectedResource = e.item.typedTuple
@@ -267,7 +267,7 @@ export class SuggestionComponent implements OnInit, OnChanges {
     this.initFilterOptions();
     // This is called every time the input this.entry changes //
     if (this.entry) {
-      console.log('Entry: ', this.entry)
+      // console.log('Entry: ', this.entry)
       this.query = this.queryFromEntry(this.entry);
       // this.refresh();
       this.fetchInternalSuggestions();

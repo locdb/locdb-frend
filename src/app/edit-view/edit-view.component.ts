@@ -40,7 +40,7 @@ export class EditViewComponent implements OnInit {
     private location: Location, private router: Router) {}
 
   delay(ms: number) {
-    console.log('delay', ms);
+    // console.log('delay', ms);
       return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
@@ -52,14 +52,14 @@ export class EditViewComponent implements OnInit {
     this.sub = this.route
       .queryParams
       .subscribe(params => {
-        console.log('[Edit View] Params:', params)
+        // console.log('[Edit View] Params:', params)
         // check if ID for Resource is present
         if (params['resource']) {
           // Retrieve the actual resource
           this.locdbService.getBibliographicResource(params['resource']).subscribe(
             (trv) => {
               this.resource = trv || null;
-              console.log(`[Edit-view] Ressource:`, trv);
+              // console.log(`[Edit-view] Ressource:`, trv);
               // check if ID/String for Entry is present
               if (params['entry']) {
                 // If an entry is desired, search it
@@ -72,18 +72,18 @@ export class EditViewComponent implements OnInit {
                     newEntry._id = undefined
                     this.entry = newEntry;
                     this.form_mode = Form_mode.create_entry
-                    console.log('[Edit-view][Debug] form_mode:', this.form_mode)
+                    // console.log('[Edit-view][Debug] form_mode:', this.form_mode)
                 }
                 else{
                   this.form_mode = Form_mode.edit_entry
-                  console.log('[Edit-view][Debug] form_mode:', this.form_mode)
+                  // console.log('[Edit-view][Debug] form_mode:', this.form_mode)
                 }
-                console.log('entry', this.entry)
+                // console.log('entry', this.entry)
               }
               else{
                 // if no entry-parameter is omitted, resource_edit mode is activated
                 this.form_mode = Form_mode.edit_resource
-                console.log('[Edit-view][Debug] form_mode:', this.form_mode)
+                // console.log('[Edit-view][Debug] form_mode:', this.form_mode)
 
               }
             },

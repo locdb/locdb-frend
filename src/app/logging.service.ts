@@ -137,7 +137,7 @@ export class LoggingService {
 
   sendLog(logobject: any) {
     // always log to console
-    console.log(logobject);
+    // console.log(logobject);
     // only log if active
     if (this.log_active) {
       this.uploadLog(logobject).subscribe(
@@ -148,19 +148,19 @@ export class LoggingService {
   }
 
   uploadLog(logObject: any): Observable<any> {
-    console.log('Uploading Log Object')
+    // console.log('Uploading Log Object')
     const body = JSON.stringify(logObject);
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
 
-    console.log(body, headers, options)
+    // console.log(body, headers, options)
     return this.http.post(this.url_, body, options)
     .map(this.extractData)
     .catch(this.handleError);
   }
 
   private extractData(res: Response) {
-    console.log('Response', res);
+    // console.log('Response', res);
     const body = res.json();
     return body;
   }

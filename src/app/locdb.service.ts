@@ -123,18 +123,18 @@ export class LocdbService {
    */
    let tuple: [TypedResourceView, TypedResourceView];
    if (!childAndParent[0]) {
-     console.log('Warning, received undefined or null child resource, should never happen');
+     console.log('[Warning] received undefined or null child resource, should never happen');
    }
    if (!childAndParent[1]) {
      // if parent is none or not even defined
      if (removeId) {
-       console.log('Removing id(s) for child')
+       // console.log('Removing id(s) for child')
        childAndParent[0]._id = undefined;
      }
      tuple = [new TypedResourceView(childAndParent[0]), null];
    } else {
      if (removeId) {
-       console.log('Removing id(s) for pair')
+       // console.log('Removing id(s) for pair')
        childAndParent[0]._id = undefined;
        childAndParent[1]._id = undefined;
      }
@@ -236,15 +236,15 @@ export class LocdbService {
     /* if necessary, creates target resource before updating the reference of the entry */
     /* 1-3 requests */
     let [child, container] = resources;
-    console.log('Child:', child)
-    console.log('Parent:', container)
+    // console.log('Child:', child)
+    // console.log('Parent:', container)
     if (container) {
       console.log('Pushing parent:', container)
       container = await this.maybePostResource(container).toPromise();
       child.data.partOf = container._id;
     }
     child = await this.maybePostResource(child).toPromise();
-    console.log('Child after commit, before updating target', child)
+    // console.log('Child after commit, before updating target', child)
     // let target_parent = null
     // if(resources[1] != undefined && resources[1] != null){
     //   let target_resource = resources[1]
@@ -258,7 +258,7 @@ export class LocdbService {
     //   }
     //   const target = await this.maybePostResource(resource).toPromise();
     // }
-    console.log('Linking to id', child._id)
+    // console.log('Linking to id', child._id)
     await this.updateTargetResource(entry, child._id);
     return [child, container];
   }
@@ -269,10 +269,10 @@ export class LocdbService {
     /* if necessary, creates target resource before updating the reference of the entry */
     /* 1-3 requests */
     let [child, container] = resources;
-    console.log('Child:', child)
-    console.log('Parent:', container)
+    // console.log('Child:', child)
+    // console.log('Parent:', container)
     if (container) {
-      console.log('Pushing parent:', container)
+      // console.log('Pushing parent:', container)
       // to update resource in backend if id already existed:
       await this.maybePutResource(container).toPromise();
       // if it is a new parent, let backend assign an id and save it
@@ -283,7 +283,7 @@ export class LocdbService {
     await this.maybePutResource(child).toPromise();
     // if it is a new child, let backend assign an id and save it
     child = await this.maybePostResource(child).toPromise();
-    console.log('Child after commit', child)
+    // console.log('Child after commit', child)
     return [child, container];
   }
 
@@ -341,7 +341,7 @@ export class LocdbService {
   }
 
   getBibliographicResource(id: string): Observable<TypedResourceView> {
-    console.log('[locdb.service][debug] get resource: ', id)
+    // console.log('[locdb.service][debug] get resource: ', id)
     return this.bibliographicResourceService.get(id).map(br => new TypedResourceView(br))
               .retryWhen(errors => {console.log('[locdbService][Error] retrying', id);
                                       let retries = 0;
