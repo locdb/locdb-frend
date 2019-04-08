@@ -43,7 +43,7 @@ export class ScanComponent {
     resourceType: enums.resourceType,
     identifierScheme: enums.identifier
   } = { resourceType: enums.resourceType.bookChapter, identifierScheme:
-  enums.identifier.swb_ppn }
+  enums.identifier.k10plusId }
   // DEFAULTS FOR batch process
 
   modalRef: BsModalRef;
