@@ -109,7 +109,8 @@ export class ScanComponent {
             file: file,
             resourceType: rtype, uploading: false,
             textualPdf: false,
-            embodimentType: enums.embodimentType.print
+            embodimentType: enums.embodimentType.print,
+            plainText: null
           }
         )
       );
