@@ -2,7 +2,7 @@ import { enums, enum_values, models } from '../locdb';
 
 const REQUIRED_IDENTIFIERS = {};
 REQUIRED_IDENTIFIERS[enums.resourceType.journal] = [enums.identifier.zdb_id];
-REQUIRED_IDENTIFIERS[enums.resourceType.journalArticle] = [enums.identifier.doi];
+REQUIRED_IDENTIFIERS[enums.resourceType.journalArticle] = [enums.identifier.doi, enums.identifier.olc_ppn];
 REQUIRED_IDENTIFIERS[enums.resourceType.bookChapter] = [enums.identifier.swb_ppn, enums.identifier.doi];
 REQUIRED_IDENTIFIERS[enums.resourceType.proceedingsArticle] = [enums.identifier.swb_ppn, enums.identifier.doi];
 REQUIRED_IDENTIFIERS[enums.resourceType.monograph] = [enums.identifier.swb_ppn];
