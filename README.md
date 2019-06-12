@@ -1,7 +1,6 @@
 # LOCDB Fr(ont-)end
 
 [![Travis badge](https://travis-ci.org/locdb/locdb-frend.svg?branch=master)](https://travis-ci.org/)
-[![Greenkeeper badge](https://badges.greenkeeper.io/locdb/locdb-frend.svg)](https://greenkeeper.io/)
 [![Docker Automated build](https://img.shields.io/docker/automated/locdb/locdb-frend.svg)](https://hub.docker.com/r/locdb/locdb-frend/)
 
 This repository provides a guided user interface for extrapolation of new data
