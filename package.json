@@ -26,7 +26,7 @@
     "handlebars": "^4.1.2",
     "interact.js": "^1.2.8",
     "jasmine": "^3.2.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "ng2-pdf-viewer": "^5.1.2",
     "ngx-accordion": "0.0.17",
     "ngx-bootstrap": "^3.0.1",
