@@ -23,7 +23,7 @@
     "angular2-hotkeys": "^2.1.2",
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.7",
-    "handlebars": "^4.1.2",
+    "handlebars": "^4.5.3",
     "interact.js": "^1.2.8",
     "jasmine": "^3.2.0",
     "jquery": "^3.4.1",
